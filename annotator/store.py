@@ -46,7 +46,6 @@ def jsonify(obj, *args, **kwargs):
 
 @store.before_request
 def before_request():
-    print("LLEga al BEFORE REQUEST")
     if not hasattr(g, 'annotation_class'):
         g.annotation_class = Annotation
 

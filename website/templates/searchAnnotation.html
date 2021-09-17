@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% block title %} Servicepedia {% endblock %} {% block
+content %}
+
+<div class="container">
+      <div class="row">
+        <div class="col">
+          <h1>Ingresa el sitio</h1>
+          <hr />
+
+          <form action="views/" method="POST">
+            <label for="sitio">Ingrese el Sitio que deseas anotar.</label>
+            <input
+              type="text"
+              name="nm"
+              class="form-control"
+              id="sitio"
+              placeholder="Sitio"
+            />
+            <br />
+            <center>
+              <input
+                type="submit"
+                value="submit"
+                class="btn btn-success"
+              >
+                Enviar
+              </button>
+            </center>
+          </form>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

@@ -81,37 +81,14 @@ def main(argv):
 
     @app.before_request
     def before_request():
-        print("LLEga al BEFORE REQUEST del RUN")
-
-        #POngo el usuario correcto mirando las cabeceras:
-        print(request)
-        req=request.get_data()
-
-        token = request.headers.get('remember_token')
-
-
-        token1 = request.headers.get('token')
         
-        print(token)
-        
-        print(token1)
-
-        print(request.headers)
-
-        print(request.headers.values())
-
-        #g.user = MockUser('alice')
-
-
         # In a real app, the current user and consumer would be determined by
         # a lookup in either the session or the request headers, as described
         # in the Annotator authentication documentation[1].
         #
         # [1]: https://github.com/okfn/annotator/wiki/Authentication
 
-        #session.get
-
-
+   
         g.user = MockUser('alice')
 
 
@@ -132,39 +109,11 @@ def main(argv):
         else:
             g.authorize = mock_authorizer
 
-    @app.after_request
-    def after_request(response):
-
-        print("LLEga al AFTER REQUEST")
-        ac = 'Access-Control-'
-        rh = response.headers
-
-        #rh[ac + 'Allow-Origin'] = request.headers.get('origin', '*')
-        rh[ac + 'Allow-Origin'] = '*'
-        #rh[ac + 'Expose-Headers'] = 'Content-Length, Content-Type, Location'
-        rh[ac + 'Expose-Headers'] = '*'
-
-        response.headers['Accept']='application/json'
-        response.headers['Content-Type']='application/json'
-        
-        print(rh)
-        if request.method == 'OPTIONS':
-            rh[ac + 'Allow-Headers'] = ('Content-Length, Content-Type, Accept, Referer, sec-ch-ua, sec-ch-ua-mobile, User-Agent, '
-                                        'X-Annotator-Auth-Token, x-annotator-auth-token, X-Requested-With')
-            rh[ac + 'Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-            rh[ac + 'Max-Age'] = '86400'
-        print(rh)
-
-
-
-
-
-        return response
-
-
-
-
     app.register_blueprint(store.store)
+
+    from website.views import views
+
+    app.register_blueprint(views,url_prefix='/website')
 
     host = os.environ.get('HOST', '127.0.0.1')
     port = int(os.environ.get('PORT', 5000))
