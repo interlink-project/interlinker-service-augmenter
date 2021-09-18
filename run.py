@@ -25,6 +25,8 @@ from annotator import es, annotation, auth, authz, document, store
 from tests.helpers import MockUser, MockConsumer, MockAuthenticator
 from tests.helpers import mock_authorizer
 
+from flask_oidc import OpenIDConnect
+
 logging.basicConfig(format='%(asctime)s %(process)d %(name)s [%(levelname)s] '
                            '%(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
@@ -78,6 +80,18 @@ def main(argv):
                           es.index,
                           date)
             raise
+
+    app.config.update({
+        'SECRET_KEY': 'aZt99CN09e2NujIB9zJmY5SzXoM',
+        'TESTING': True,
+        'DEBUG': True,
+        'OIDC_CLIENT_SECRETS': 'client_secrets.json',
+        'OIDC_ID_TOKEN_COOKIE_SECURE': False,
+        'OIDC_REQUIRE_VERIFIED_EMAIL': False,
+        'OIDC_OPENID_REALM': 'https://aac.platform.smartcommunitylab.it/-/interlink/login'
+    })
+    oidc = OpenIDConnect(app)
+    
 
     @app.before_request
     def before_request():

@@ -79,7 +79,7 @@ Annotator.Plugin.Search = (function (_super) {
     if (typeof this.annotator.plugins.AnnotatorViewer != "undefined") {
       //Adding a input box for search
       $("li.filter-panel").before(
-        '<a class="btn" href = "http://127.0.0.1:8000/"><i class="fa fa-home"></i> Servicepedia</a> <br> <br> <input class="search" id="search" type="text" results /><a class="annotator-panel-reset" href="#clear">Reset</a>'
+        '<a class="btn" href = "http://127.0.0.1:5000/website"><i class="fa fa-home"></i> Servicepedia</a> <br> <br> <input class="search" id="search" type="text" results /><a class="annotator-panel-reset" href="#clear">Reset</a>'
       );
       $("input#search").on("change", this.searchAnnotator);
     }

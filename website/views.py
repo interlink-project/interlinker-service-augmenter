@@ -9,6 +9,8 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 from werkzeug.utils import redirect
 
+
+
 views = Blueprint('views',__name__,static_folder="static",template_folder="templates")
 
 @views.route('/',methods=['GET', 'POST'])
@@ -25,6 +27,8 @@ def inicio():
             flash('Annotation added!', category='success')
 
     return render_template("home.html")
+
+
 
 
 
