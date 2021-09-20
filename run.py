@@ -27,6 +27,10 @@ from tests.helpers import mock_authorizer
 
 from flask_oidc import OpenIDConnect
 
+from flask_swagger_ui import get_swaggerui_blueprint
+
+
+
 logging.basicConfig(format='%(asctime)s %(process)d %(name)s [%(levelname)s] '
                            '%(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
@@ -128,6 +132,38 @@ def main(argv):
     from website.views import views
 
     app.register_blueprint(views,url_prefix='/website')
+
+    @app.route('/static/<path:path>')
+    def send_static(path):
+        return send_from_directory('static',path)
+    
+    SWAGGER_URL='/docs'
+    API_URL='/static/swagger.json'
+    
+
+    # Call factory function to create our blueprint
+    swaggerui_blueprint = get_swaggerui_blueprint(
+        SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+        API_URL,
+        config={  # Swagger UI config overrides
+            'app_name': "Annotator Swagger"
+        },
+        # oauth_config={  # OAuth config. See https://github.com/swagger-api/swagger-ui#oauth2-configuration .
+        #    'clientId': "your-client-id",
+        #    'clientSecret': "your-client-secret-if-required",
+        #    'realm': "your-realms",
+        #    'appName': "your-app-name",
+        #    'scopeSeparator': " ",
+        #    'additionalQueryStringParams': {'test': "hello"}
+        # }
+    )
+
+   
+
+    app.register_blueprint(swaggerui_blueprint)
+
+
+
 
     host = os.environ.get('HOST', '127.0.0.1')
     port = int(os.environ.get('PORT', 5000))
