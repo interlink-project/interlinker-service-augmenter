@@ -43,18 +43,173 @@ paths:
                   $ref: '#/components/schemas/Annotation'
         '400':
           description: Invalid status value
-    parameters:
-      - in: query
-        name: offset
-        schema:
-          type: integer
-        description: The number of items to skip before starting to collect the result set
-      - in: query
-        name: limit
-        schema:
-          type: integer
-        description: The numbers of items to return
-  
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+    post:
+      tags:
+        - annotations
+      summary: Add a new annotation to the database
+      operationId: addAnnotation
+      responses:
+        '405':
+          description: Invalid input
+      requestBody:
+        $ref: '#/components/requestBodies/Annotation'
+    
+  /annotations/{annotationId}:
+    get:
+      tags:
+        - annotations
+      summary: Find annotation by ID
+      description: Returns a single annotation
+      operationId: getAnnotationById
+      parameters:
+        - name: annotationId
+          in: path
+          description: ID of annotation to return
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Annotation not found
+
+    delete:
+      tags:
+        - annotations
+      summary: Deletes a annotation
+      operationId: deleteAnnotation
+      parameters:
+        - name: annotationId
+          in: path
+          description: Annotation id to delete
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Annotation not found
+
+    put:
+      tags:
+        - annotations
+      summary: Updated an annotation.
+      description: This can only be done by the logged in user.
+      operationId: updateAnnotation
+      parameters:
+        - name: annotationId
+          in: path
+          description: name that need to be updated
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid annotation supplied
+        '404':
+          description: Annotation not found
+      requestBody:
+        $ref: '#/components/requestBodies/Annotation'
+  /search:
+    get:
+      tags:
+        - annotations
+      summary: Find annotations that contain specific text.
+      description: Returns a list of annotation
+      operationId: searchAnnotationByText
+      parameters:
+        - name: text
+          in: query
+          description: Text included in the annotations to return.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Annotation not found
+  /search_raw:
+    get:
+      tags:
+        - annotations
+      summary: Advanced search API -- direct access to ElasticSearch. Uses the same API as the ElasticSearch query endpoint.
+      description: Returns a list of annotation
+      operationId: searchAnnotationByText
+      parameters:
+        - name: text
+          in: query
+          description: Text included in the annotations to return.
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Annotation not found
+
 
     
 components:
@@ -112,3 +267,15 @@ components:
           type: string
         id:
           type: string
+
+  requestBodies:
+    Annotation:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Annotation'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Annotation'
+      description: Annotation object that needs to be added to the store
+      required: true
