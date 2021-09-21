@@ -138,7 +138,7 @@ def main(argv):
         return send_from_directory('static',path)
     
     SWAGGER_URL='/docs'
-    API_URL='/static/swagger.json'
+    API_URL='/static/swagger.yaml'
     
 
     # Call factory function to create our blueprint
