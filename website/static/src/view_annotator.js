@@ -345,7 +345,41 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     };
 
     AnnotatorViewer.prototype.onAnnotationDeleted = function (annotation) {
-      $("li").remove("#annotation-" + annotation.id);
+
+      //Encuentro la lista de annotaciones del visor:
+
+      function extractContent(html) {
+
+        return new DOMParser().parseFromString(html, "text/html") . 
+            documentElement . textContent;
+    
+    }
+
+
+     
+      $( ".annotator-marginviewer-element").each(function(index){
+        console.log(`div${index}: ${this.id} `);
+        var textoAnotacion=$(this).find(".anotador_text").text()
+        console.log(textoAnotacion)
+        console.log(extractContent(annotation.text))
+        if(extractContent(annotation.text)==textoAnotacion){
+          console.log(annotation.text)
+          $("li").remove("#annotation-" + this.id);
+
+        }
+
+
+
+      })
+      
+      //Comparo cada elemento con los datos del que quiero eliminar
+      
+      //Obtengo el id correcto del elemento que quiero borrar:
+
+
+      //Borro el elemento de la vista:
+
+      
       $("#count-anotations").text(
         $(".container-anotacions").find(".annotator-marginviewer-element")
           .length
