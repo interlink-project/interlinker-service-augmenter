@@ -36,7 +36,8 @@ def inicio():
 @views.route("/buscar",methods=["POST"])
 def buscar():
     sitio = request.form["nm"]
-    return redirect(url_for("views.modifica",rutaPagina=sitio))
+    userNombre=request.form["usr"]
+    return redirect(url_for("views.modifica",rutaPagina=sitio,userId=userNombre))
 
 
 #Formulatio de carga de Pagina
@@ -48,10 +49,11 @@ def visor():
 
 
 #Cargo la pagina desde beautifulSoup y la muestro en pantalla
-@views.route("/modifica/<path:rutaPagina>",methods=["GET","POST"])
-def modifica(rutaPagina):
+@views.route("/modifica/<userId>/<path:rutaPagina>",methods=["GET","POST"])
+def modifica(rutaPagina,userId):
 
     print("La ruta de la Pagina es: "+rutaPagina)
+    print("El nombre de usuario es: "+userId)
 
     headersUserAgent={
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -210,6 +212,8 @@ def modifica(rutaPagina):
             let uriAdress =$(location).attr('href');
             const uriAdressBase = uriAdress.split('#')[0];
 
+            //Dejo unicamente la primera parte del uri
+            //uriAdressBase = "http"+uriAdress.split('http')[2];     
 
             console.log(uriAdressBase)
             $('body').annotator().annotator('addPlugin', 'Store',{
