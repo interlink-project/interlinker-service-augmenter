@@ -169,12 +169,15 @@ def create_annotation():
         if _get_annotation_user(annotation) != g.user.id:
             annotation['user'] = g.user.id
 
+        print(annotation.values)
         if hasattr(g, 'before_annotation_create'):
             g.before_annotation_create(annotation)
 
         if hasattr(g, 'after_annotation_create'):
             annotation.save(refresh=False)
             g.after_annotation_create(annotation)
+        
+        print(annotation.values)
 
         refresh = request.args.get('refresh') != 'false'
         annotation.save(refresh=refresh)

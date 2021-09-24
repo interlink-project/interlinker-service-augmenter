@@ -32,7 +32,8 @@ MAPPING = {
     },
     'document': {
         'properties': document.MAPPING
-    }
+    },
+    'idAnotationReply': {'type': 'string',}
 }
 
 
