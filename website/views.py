@@ -40,10 +40,10 @@ def buscar():
 
 
 #Formulatio de carga de Pagina
-@views.route("/visor",methods=["POST"])
+@views.route("/visor",methods=["GET"])
 def visor():
-    sitio = request.form["nm"]
-    return render_template("annotatorVisor.html",rutaPagina=sitio)
+    return render_template("prototipo.html")
+  
 
 
 

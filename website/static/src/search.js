@@ -65,21 +65,21 @@ Annotator.Plugin.Search = (function (_super) {
     if (!Annotator.supported()) {
       return;
     }
-
+    
     this.annotator.subscribe("annotationCreated", this.addDocument);
 
     this.annotator.subscribe("annotationDeleted", this.removeDocument);
 
     this.annotator.subscribe("annotationUpdated", function (annotation) {
-      this.removeDocument(annotation);
-      this.addDocument(annotation);
+      //this.removeDocument(annotation);
+      //this.addDocument(annotation);
     });
 
     //Adding search capabilities to the annotator Viewer
     if (typeof this.annotator.plugins.AnnotatorViewer != "undefined") {
       //Adding a input box for search
       $("li.filter-panel").before(
-        '<a class="btn" href = "http://127.0.0.1:5000/website"><i class="fa fa-home"></i> Servicepedia</a> <br> <br> <input class="search" id="search" type="text" results /><a class="annotator-panel-reset" href="#clear">Reset</a>'
+        '<a class="btn annotator-panel-reset" href = "http://127.0.0.1:5000/website"><i class="fa fa-home"></i> Servicepedia</a> <br> <br> <input class="search" id="search" type="text" results /><a class="annotator-panel-reset" href="#clear">Reset</a>'
       );
       $("input#search").on("change", this.searchAnnotator);
     }
