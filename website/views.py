@@ -205,7 +205,18 @@ def modifica(rutaPagina):
             $('body').annotator().annotator('addPlugin', 'AnnotatorViewer');
             $('body').annotator().annotator("addPlugin", "Touch");
 
-            $('body').annotator().annotator('addPlugin', 'Store');
+
+ 
+            let uriAdress =$(location).attr('href');
+            const uriAdressBase = uriAdress.split('#')[0];
+
+
+            console.log(uriAdressBase)
+            $('body').annotator().annotator('addPlugin', 'Store',{
+                        annotationData: {uri:uriAdressBase},
+                        loadFromSearch: {uri:uriAdressBase}
+                        }
+            );
 
            
             

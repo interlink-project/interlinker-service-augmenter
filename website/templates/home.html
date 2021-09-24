@@ -1,6 +1,26 @@
 {% extends "base.html" %} {% block title %} Servicepedia {% endblock %} {% block
 content %}
 
+<div id="navbarColor02">
+  <form
+    class="form-inline my-2 my-lg-0"
+    action="/website/buscar"
+    method="POST"
+  >
+    <input
+      type="text"
+      name="nm"
+      id="sitio"
+      style="width: 500px"
+      class="form-control mr-sm-4"
+      placeholder="Website address."
+    />
+    <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+      Annotate
+    </button>
+  </form>
+</div>
+
 <h1 align="center">Annotations List</h1>
 
 <style>

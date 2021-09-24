@@ -600,6 +600,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       if (annotations.length > 0) {
         for (i = 0, len = annotations.length; i < len; i++) {
           annotation = annotations[i];
+          //console.log(annotation.uri)
           this.createReferenceAnnotation(annotation);
         }
       }
