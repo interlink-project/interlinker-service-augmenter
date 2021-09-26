@@ -18,7 +18,7 @@ import csv
 import json
 
 from elasticsearch.exceptions import TransportError
-from flask import Blueprint, Response
+from flask import Blueprint, Response, session
 from flask import current_app, g
 from flask import request
 from flask import url_for
@@ -168,6 +168,7 @@ def create_annotation():
         annotation['consumer'] = g.user.consumer.key
         if _get_annotation_user(annotation) != g.user.id:
             annotation['user'] = g.user.id
+            annotation['user'] = session['username']
 
         print(annotation.values)
         if hasattr(g, 'before_annotation_create'):

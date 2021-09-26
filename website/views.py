@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, request, flash, jsonify
+from flask import Blueprint, render_template, request, flash, jsonify, g,session
 import json, requests
+
 
 from flask import redirect
 from flask.helpers import url_for,make_response
+from tests.helpers import MockUser
 
 from tqdm import tqdm
 from bs4 import BeautifulSoup
@@ -54,6 +56,8 @@ def modifica(rutaPagina,userId):
 
     print("La ruta de la Pagina es: "+rutaPagina)
     print("El nombre de usuario es: "+userId)
+    
+    session['username'] = userId
 
     headersUserAgent={
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -184,7 +188,7 @@ def modifica(rutaPagina,userId):
             $.i18n.load(i18n_dict);
             // Customise the default plugin options with the third argument.
             var annotator = $('body').annotator().annotator().data('annotator');
-            var propietary = 'demoUser';
+            var propietary = '"""+userId+"""';
             annotator.addPlugin('Permissions', {
                 user: propietary,
                 permissions: {
@@ -209,11 +213,11 @@ def modifica(rutaPagina,userId):
 
 
  
-            let uriAdress =$(location).attr('href');
-            const uriAdressBase = uriAdress.split('#')[0];
+            //let uriAdress =$(location).attr('href');
+            //const uriAdressBase = uriAdress.split('#')[0];
 
             //Dejo unicamente la primera parte del uri
-            //uriAdressBase = "http"+uriAdress.split('http')[2];     
+            uriAdressBase = '"""+rutaPagina+"""';     
 
             console.log(uriAdressBase)
             $('body').annotator().annotator('addPlugin', 'Store',{
