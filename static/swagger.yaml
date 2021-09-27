@@ -237,6 +237,8 @@ components:
           type: string
         uri:
           type: string
+        idAnotationReply:
+          type: string
         quote:
           type: string
         permissions:

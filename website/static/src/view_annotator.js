@@ -55,7 +55,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       annotationUpdated: "onAnnotationUpdated",
       ".annotator-viewer-delete click": "onDeleteClick",
       ".annotator-viewer-edit click": "onEditClick",
-    //  ".annotator-viewer-reply click": "onReplyClick",
+      ".annotator-viewer-reply click": "onReplyClick",
       ".annotator-viewer-delete mouseover": "onDeleteMouseover",
       ".annotator-viewer-delete mouseout": "onDeleteMouseout",
       ".annotator-viewer-reply mouseover": "onReplyMouseover",
@@ -256,20 +256,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       if (
         $("li#annotation-" + item.id).find("textarea.panelTextAreaReply").length == 0
       ) {
-        var content = item.text;
-        var editableTextArea = $(
+        var editableTextAreaReply = $(
           "<textarea id='textareaReply-" +
             item.id +
             "'' class='panelTextAreaReply'>" +
             "Texto to Reply..." +
             "</textarea>"
         );
+
+        
+        if(item.category=="reply"){
+        var annotationCSSReference =
+          "li#annotation-" + item.id + "> div.flex-container3 > div.annotator-marginviewer-reply";
+        }else{
         var annotationCSSReference =
           "li#annotation-" + item.id + " > div.annotator-marginviewer-reply";
+        }
 
-        annotator_textArea.replaceWith(editableTextArea);
-        editableTextArea.css("height", editableTextArea[0].scrollHeight + "px");
-        editableTextArea.blur(); //Textarea blur
+        annotator_textArea.replaceWith(editableTextAreaReply);
+        editableTextAreaReply.css("height", editableTextAreaReply[0].scrollHeight + "px");
+        editableTextAreaReply.blur(); //Textarea blur
         if (typeof this.annotator.plugins.RichEditor != "undefined") {
           this.tinymceActivation(
             annotationCSSReference + " > textarea#textareaReply-" + item.id
@@ -277,7 +283,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         }
         $(
           '<div class="annotator-textarea-controls annotator-editor"></div>'
-        ).insertAfter(editableTextArea);
+        ).insertAfter(editableTextAreaReply);
         var control_buttons = $(
           annotationCSSReference + "> .annotator-textarea-controls"
         );
@@ -333,53 +339,53 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  //Event triggered when save the content of the annotation
  AnnotatorViewer.prototype.onSavePanelReply = function (event) {
   var current_annotation = event.data.annotation;
-  var textarea = $("li#annotation-" + current_annotation.id).find(
-    "#textareaReply-" + current_annotation.id
-  );
-  if (typeof this.annotator.plugins.RichEditor != "undefined") {
-    current_annotation.text = tinymce.activeEditor.getContent();
-    tinymce.remove("#textareaReply-" + current_annotation.id);
-    tinymce.activeEditor.setContent(current_annotation.text);
-  } else {
-    current_annotation.text = textarea.val();
-    //this.normalEditor(current_annotation,textarea);
-  }
-
- 
-
- 
+      var textarea = $("li#annotation-" + current_annotation.id).find(
+        "#textareaReply-" + current_annotation.id
+      );
+      if (typeof this.annotator.plugins.RichEditor != "undefined") {
+        textReply = tinymce.activeEditor.getContent();
+        tinymce.remove("#textareaReply-" + current_annotation.id);
+        tinymce.activeEditor.setContent(textReply);
+      } else {
+        textReply = textareaReply.val();
+        //this.normalEditor(current_annotation,textareaReply);
+      }
+      var anotation_reference = "annotation-" + current_annotation.id;
+      $("#" + anotation_reference).data("annotation", current_annotation);
 
 
+      //Hago una copia de la anotación de referencia:
+      let anotacionReply=current_annotation;
+      anotacionReply.id=null;
+      anotacionReply.text=textReply;
+      anotacionReply.idAnotationReply=anotation_reference
+      anotacionReply.user="ReplyUser"
+      anotacionReply.category="reply"
 
-  var styleHeight = 'style="height:12px"';
-  var textAnnotation =
-           '<div class="anotador_text" ' +
-           styleHeight +
-           ">" +
-           "" +
-           "</div>";
-        
-         var anotacio_capa =
-           '<div class="annotator-marginviewer-reply"><div class="' +
-           textAnnotation +
-           "</div>";
- 
-           var textAreaEditor = $(
-             "li#annotation-" +
-               current_annotation.id +
-               " > .annotator-marginviewer-reply"
-           );
-         
- 
-         textAreaEditor.replaceWith(anotacio_capa);
- 
+      function onSuccess(response) {
+        alert("Se ha insertado exitosamente");
+      }
 
+      request = $.ajax({
+        url: "http://127.0.0.1:5000/annotations",
+        dataType: "json",
+        type: "post",
+        contentType: "application/json",
+        data: JSON.stringify(anotacionReply),
+        processData: false,
+        success: onSuccess || function () {},
+        error: function (jqXhr, textStatus, errorThrown) {
+          console.log(errorThrown);
+        },
+      });
 
+      var current_annotation = event.data.annotation;
+      var styleHeight = 'style="height:12px"';
 
-  var anotation_reference = "annotation-" + current_annotation.id;
-  //$("#" + anotation_reference).data("annotation", current_annotation);
-
-  //this.annotator.updateAnnotation(current_annotation);
+      
+      //this.publish("beforeAnnotationCreated", [anotacionReply]);
+      //this.annotation.createAnnotation()
+      //this.annotator.updateAnnotation(current_annotation);
 };
 
 
@@ -399,12 +405,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           ">" +
           current_annotation.text +
           "</div>";
+
+
         var anotacio_capa =
-          '<div class="annotator-marginviewer-text"><div class="' +
+          '<div class="annotator-marginviewer-text">'+
+          
+          '<div class="' +
           current_annotation.category +
           ' anotator_color_box"></div>' +
           textAnnotation +
           "</div>";
+
+
+
         var textAreaEditor = $(
           "li#annotation-" +
             current_annotation.id +
@@ -438,18 +451,27 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           "</div>";
        
         var anotacio_capa =
-          '<div class="annotator-marginviewer-reply"><div class="' +
+          '<div class="annotator-marginviewer-reply">' +
           textAnnotation +
           "</div>";
 
-          var textAreaEditor = $(
-            "li#annotation-" +
-              current_annotation.id +
-              " > .annotator-marginviewer-reply"
-          );
+
+          if(current_annotation.category=="reply"){
+            var textAreaEditorReply = $(
+              "li#annotation-" +
+                current_annotation.id +
+                " > .flex-container3 > .annotator-marginviewer-reply"
+            );
+          }else{
+              var textAreaEditorReply = $(
+              "li#annotation-" +
+                current_annotation.id +
+                " > .annotator-marginviewer-reply"
+            );
+            }
         
 
-        textAreaEditor.replaceWith(anotacio_capa);
+        textAreaEditorReply.replaceWith(anotacio_capa);
       } else {
         var textarea = $("li#annotation-" + current_annotation.id).find(
           "textarea.panelTextAreaReply"
@@ -691,9 +713,65 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       } else {
         anotation_color = "hightlight";
       }
+
       var textAnnotation = annotation.text;
-      var annotation_layer =
-        '<div class="annotator-marginviewer-text"><div class="' +
+
+      if(annotation.category=="reply"){
+        //Format the box if is a reply:
+
+        var annotation_text2 =
+        '<div class="flex-container2">'+
+
+          '<div style="">'+
+
+          '<span style="font-weight: 700;">' +
+                annotation.user +
+            "</span>" +
+    
+          
+          
+          '   ('+
+          $.format.date(annotation.data_creacio, "MM/yyyy HH:mm") +')'+
+            '</div>'+
+          '<div style="">'+
+           textAnnotation+'Me parece que este comentario esta fuera de su lugar. No solamente no toma en cuenta el estandar si no que ademas esta dentro de otro problema de investigacion.'+
+          '</div>'+
+          
+        '</div>'
+        ;
+
+
+        var annotation_layer1 =
+        '<div class="flex-container">'+
+
+          '<div style="border-radius: 5px;flex-basis:20px;background-color:#d4d4d4;width:3.58px;" ></div>'+
+          '<div style="border:0px;flex-grow:4;">'+annotation_text2+'</div>'+
+
+        '</div>'
+        ;
+
+
+        var annotation_layer =
+        '<div class="flex-container3">'+
+          annotation_layer1+
+          
+          '<div class="annotator-marginviewer-footer">'+
+            shared_annotation +
+            delete_icon +
+            reply_icon +
+          '</div>'+
+          '<div class="annotator-marginviewer-reply">' +
+            '<div class="anotador_text">' +
+            "" +
+            '</div>'+
+          '</div>'+
+        '</div>'
+        ;
+
+        
+        /*var annotation_layer =
+        '<div class="annotator-marginviewer-text">'+
+        '<div class="' +
         anotation_color +
         ' anotator_color_box"></div>';
       annotation_layer +=
@@ -711,15 +789,47 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         shared_annotation +
         delete_icon +
         reply_icon 
-        /*+
+        +
         "</div>"+
         '<div class="annotator-marginviewer-reply">' +
             '<div class="anotador_text">' +
-            "ReplyText" +
+            "" +
             '</div>'+
-        '</div>'*/
-        ;
+        '</div>'
+        ;*/
 
+
+      }else{
+
+      var annotation_layer =
+        '<div class="annotator-marginviewer-text">'+
+        '<div class="' +
+        anotation_color +
+        ' anotator_color_box"></div>';
+      annotation_layer +=
+        '<div class="anotador_text">' +
+        textAnnotation +
+        '</div></div><div class="annotator-marginviewer-date">' +
+        $.format.date(annotation.data_creacio, "dd/MM/yyyy HH:mm:ss") +
+        '</div><div class="annotator-marginviewer-quote">' +
+        annotation.quote +
+        '</div><div class="annotator-marginviewer-footer"><span class="' +
+        class_label +
+        '">' +
+        annotation.user +
+        "</span>" +
+        shared_annotation +
+        delete_icon +
+        reply_icon 
+        +
+        "</div>"+
+        '<div class="annotator-marginviewer-reply">' +
+            '<div class="anotador_text">' +
+            "" +
+            '</div>'+
+        '</div>'
+        ;
+      }
 
       return annotation_layer;
     };
