@@ -79,8 +79,25 @@ Annotator.Plugin.Search = (function (_super) {
     if (typeof this.annotator.plugins.AnnotatorViewer != "undefined") {
       //Adding a input box for search
       $("li.filter-panel").before(
-        '<a class="btn annotator-panel-reset" href = "http://127.0.0.1:5000/website"><i class="fa fa-home"></i> Servicepedia</a> <br> <br> <input class="search" id="search" type="text" results /><a class="annotator-panel-reset" href="#clear">Reset</a>'
+        '<a class="btn annotator-panel-reset" href = "http://127.0.0.1:5000/website"><i class="fa fa-home"></i> Servicepedia</a> <div style="font-weight: 700;" id="usuarioConectado"></div>   <input class="search" id="search" type="text" results /><a class="annotator-panel-reset" href="#clear">Reset</a>'
       );
+   
+
+      //Pongo el Usuario Logueado
+      request = $.ajax({
+        url: "http://127.0.0.1:5000/user",
+        dataType: "json",
+        type: "get",
+        contentType: "application/json",
+        success: function(data) {
+         // alert('El usuario esta en la casa.'+data);
+          $("#usuarioConectado").html(data+" is connected.");
+        },
+        error: function (jqXhr, textStatus, errorThrown) {
+          console.log(errorThrown);
+        },
+      });
+
       $("input#search").on("change", this.searchAnnotator);
     }
   };

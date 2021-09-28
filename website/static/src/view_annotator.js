@@ -267,7 +267,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         
         if(item.category=="reply"){
         var annotationCSSReference =
-          "li#annotation-" + item.id + "> div.flex-container3 > div.annotator-marginviewer-reply";
+          "li#annotation-" + item.id + "> div.flex-replyContainer > div.annotator-marginviewer-reply";
         }else{
         var annotationCSSReference =
           "li#annotation-" + item.id + " > div.annotator-marginviewer-reply";
@@ -353,9 +353,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       var anotation_reference = "annotation-" + current_annotation.id;
       $("#" + anotation_reference).data("annotation", current_annotation);
 
+      //Arreglo el URL
+      current_annotation.uri
 
       //Hago una copia de la anotación de referencia:
       let anotacionReply=current_annotation;
+
+      let str = current_annotation.uri;
+      const myArr = str.split("http",);
+      anotacionReply.uri = "http"+myArr[myArr.length-1]; 
+
       anotacionReply.id=null;
       anotacionReply.text=textReply;
       anotacionReply.idAnotationReply=anotation_reference
@@ -383,6 +390,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       var styleHeight = 'style="height:12px"';
 
       
+
+
+      this.createReferenceAnnotation(anotacionReply);
+      $("#count-anotations").text(
+        $(".container-anotacions").find(".annotator-marginviewer-element")
+          .length
+      );
       //this.publish("beforeAnnotationCreated", [anotacionReply]);
       //this.annotation.createAnnotation()
       //this.annotator.updateAnnotation(current_annotation);
@@ -460,7 +474,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
             var textAreaEditorReply = $(
               "li#annotation-" +
                 current_annotation.id +
-                " > .flex-container3 > .annotator-marginviewer-reply"
+                " > .flex-replyContainer > .annotator-marginviewer-reply"
             );
           }else{
               var textAreaEditorReply = $(
@@ -619,6 +633,35 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     AnnotatorViewer.prototype.onAnnotationsLoaded = function (annotations) {
       var annotation;
 
+
+/*
+      if (annotations.length > 0) {
+        for (i = 0, len = annotations.length; i < len; i++) {
+          annotation = annotations[i];
+          //console.log(annotation.uri)
+          if(annotation.category!="reply"){
+            this.createReferenceAnnotation(annotation);
+
+            //Busco Reply of the Annotation
+            var annotationReply;
+            for (j = 0, len = annotations.length; j < len; j++) {
+              annotationReply = annotations[j];
+              if(annotationReply.category=="reply" && annotationReply.idAnotationReply==annotation.id){
+
+                //console.log(annotation.uri)
+                this.createReferenceAnnotation(annotationReply);
+              }
+              
+            }
+      
+          }
+
+
+        }
+      }
+*/
+
+
       if (annotations.length > 0) {
         for (i = 0, len = annotations.length; i < len; i++) {
           annotation = annotations[i];
@@ -720,7 +763,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         //Format the box if is a reply:
 
         var annotation_text2 =
-        '<div class="flex-container2">'+
+        '<div class="replyDetail">'+
 
           '<div style="">'+
 
@@ -742,7 +785,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 
         var annotation_layer1 =
-        '<div class="flex-container">'+
+        '<div class="flex-replyBox">'+
 
           '<div style="border-radius: 5px;flex-basis:20px;background-color:#d4d4d4;width:3.58px;" ></div>'+
           '<div style="border:0px;flex-grow:4;">'+annotation_text2+'</div>'+
@@ -752,7 +795,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 
         var annotation_layer =
-        '<div class="flex-container3">'+
+        '<div class="flex-replyContainer">'+
           annotation_layer1+
           
           '<div class="annotator-marginviewer-footer">'+

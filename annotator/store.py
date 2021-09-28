@@ -329,6 +329,12 @@ def search_annotations_raw():
     return jsonify(res, status=res.get('status', 200))
 
 
+# Return the current user logged.
+@store.route('/user', methods=['GET'])
+def getUser():
+    return jsonify(session['username'])
+
+
 def _filter_input(obj, fields):
     for field in fields:
         obj.pop(field, None)
