@@ -370,7 +370,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       anotacionReply.category="reply"
 
       function onSuccess(response) {
-        alert("Se ha insertado exitosamente");
+        //alert("Se ha insertado exitosamente");
       }
 
       request = $.ajax({
@@ -633,6 +633,28 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     AnnotatorViewer.prototype.onAnnotationsLoaded = function (annotations) {
       var annotation;
 
+      function showOrder(annotationIn=null,anotationList=[],categoria='',referenciaThis){
+        if(annotationIn==null){
+          var listAnnotationsNoReply =  anotationList.filter(annotation => annotation.category != "reply");
+          listAnnotationsNoReply.forEach(element=> showOrder(element,anotationList,categoria='reply',referenciaThis));
+        }else{
+          referenciaThis.createReferenceAnnotation(annotationIn);
+          var listAnnotations =  anotationList.filter(annotation => annotation.idAnotationReply=="annotation-"+annotationIn.id);
+          listAnnotations.forEach(element=> showOrder(element,anotationList,categoria='reply',referenciaThis));
+        }
+
+      }
+
+      function arrayRemove(arr, value) { 
+        return arr.filter(function(ele){ 
+            return ele != value; 
+        });
+    }
+
+      
+      showOrder(null,annotations,'',referenciaThis=this);
+
+    
 
 /*
       if (annotations.length > 0) {
@@ -646,7 +668,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
             var annotationReply;
             for (j = 0, len = annotations.length; j < len; j++) {
               annotationReply = annotations[j];
-              if(annotationReply.category=="reply" && annotationReply.idAnotationReply==annotation.id){
+              if(annotationReply.category=="reply" && annotationReply.idAnotationReply=="annotation-"+annotation.id){
 
                 //console.log(annotation.uri)
                 this.createReferenceAnnotation(annotationReply);
@@ -658,17 +680,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 
         }
-      }
-*/
+      }*/
 
 
-      if (annotations.length > 0) {
+
+     /* if (annotations.length > 0) {
         for (i = 0, len = annotations.length; i < len; i++) {
           annotation = annotations[i];
           //console.log(annotation.uri)
           this.createReferenceAnnotation(annotation);
         }
-      }
+      }*/
 
       $("#count-anotations").text(
         $(".container-anotacions").find(".annotator-marginviewer-element")
