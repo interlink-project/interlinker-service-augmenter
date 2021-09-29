@@ -182,9 +182,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       if (type == "edit") {
         //We want to transform de div to a textarea
         //Find the text field
-        var annotator_textArea = item.find("div.anotador_text");
+        var annotator_divText = item.find("div.annotator-marginviewer-text")
+        var annotator_textArea = annotator_divText.find("div.anotador_text");
         this.textareaEditor(annotator_textArea, item.data("annotation"));
       }
+
+
+
+
     };
 
     //Textarea editor controller
@@ -363,10 +368,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       const myArr = str.split("http",);
       anotacionReply.uri = "http"+myArr[myArr.length-1]; 
 
-      anotacionReply.id=null;
+      anotacionReply.id=this.uniqId();
       anotacionReply.text=textReply;
       anotacionReply.idAnotationReply=anotation_reference
-      anotacionReply.user="ReplyUser"
+      anotacionReply.user="Me"
       anotacionReply.category="reply"
 
       function onSuccess(response) {
@@ -397,6 +402,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         $(".container-anotacions").find(".annotator-marginviewer-element")
           .length
       );
+
+      
+
+      function removeAllChildNodes(parent) {
+        while (parent.firstChild) {
+            parent.removeChild(parent.firstChild);
+        }
+
+        let divAText = document.createElement('div');
+        divAText.classList.add("anotador_text")
+        parent.appendChild(divAText);
+      }
+
+      removeAllChildNodes(event.currentTarget.parentNode.parentNode);
+
+      
+
+
       //this.publish("beforeAnnotationCreated", [anotacionReply]);
       //this.annotation.createAnnotation()
       //this.annotator.updateAnnotation(current_annotation);
@@ -744,13 +767,29 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
       var shared_annotation = "";
       var class_label = "label";
-      var delete_icon =
+
+      if(annotation.category!="reply"){
+
+        var delete_icon =
         '<img src="' +
         IMAGE_DELETE +
         '" class="annotator-viewer-delete" title="' +
         i18n_dict.Delete +
         '" style=" float:right;margin-top:3px;;margin-left:3px"/><img src="/website/static/src/img/edit-icon.png"   class="annotator-viewer-edit" title="Edit" style="float:right;margin-top:3px"/>';
 
+      }else{
+        var delete_icon =
+        '<img src="' +
+        IMAGE_DELETE +
+        '" class="annotator-viewer-delete" title="' +
+        i18n_dict.Delete +
+        '" style=" float:right;margin-top:3px;;margin-left:3px"/>';
+
+
+
+      }
+
+      
       var reply_icon =
         '<img src="' +
         IMAGE_REPLY +
@@ -799,7 +838,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           $.format.date(annotation.data_creacio, "MM/yyyy HH:mm") +')'+
             '</div>'+
           '<div style="">'+
-           textAnnotation+'Me parece que este comentario esta fuera de su lugar. No solamente no toma en cuenta el estandar si no que ademas esta dentro de otro problema de investigacion.'+
+           textAnnotation+ //'Me parece que este comentario esta fuera de su lugar. No solamente no toma en cuenta el estandar si no que ademas esta dentro de otro problema de investigacion.'+
           '</div>'+
           
         '</div>'

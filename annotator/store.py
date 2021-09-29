@@ -30,7 +30,7 @@ from annotator.elasticsearch import RESULTS_MAX_SIZE
 
 store = Blueprint('store', __name__)
 
-CREATE_FILTER_FIELDS = ('updated', 'created', 'consumer', 'id')
+CREATE_FILTER_FIELDS = ('updated', 'created', 'consumer')#, 'id')
 UPDATE_FILTER_FIELDS = ('updated', 'created', 'user', 'consumer')
 
 
@@ -170,7 +170,8 @@ def create_annotation():
             annotation['user'] = g.user.id
             annotation['user'] = session['username']
 
-        print(annotation.values)
+        #print("El id inicial es:"+annotation['id'])
+
         if hasattr(g, 'before_annotation_create'):
             g.before_annotation_create(annotation)
 
@@ -178,10 +179,12 @@ def create_annotation():
             annotation.save(refresh=False)
             g.after_annotation_create(annotation)
         
-        print(annotation.values)
+       
 
         refresh = request.args.get('refresh') != 'false'
         annotation.save(refresh=refresh)
+
+        #print("El id final es:"+annotation['id'])
 
         location = url_for('.read_annotation', docid=annotation['id'])
 
