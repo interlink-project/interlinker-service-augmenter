@@ -169,9 +169,32 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
         var annotator_textArea = item.find("div.annotator-marginviewer-reply");
         annotator_textArea=annotator_textArea.find("div.anotador_text")
-        this.textareaEditorReply(annotator_textArea, item.data("annotation"));
+
+        //Obtengo los valores:
+        idReferencia=annotator_textArea.prevObject.prevObject[0].id;
+        item.id=idReferencia.split("-")[1];
+
+        var localInstance = this;
+
+        async function doAjax(item) {
+          const result = await $.ajax({
+              url: "http://127.0.0.1:5000/annotations/"+item.id,
+              dataType: "json",
+              type: "get",
+              contentType: "application/json",
+              processData: false
+          });
+      
+          return result;
+        }
 
 
+        doAjax(item).then( (item) => {
+          $("#annotation-"+item.id).data(item); 
+          this.textareaEditorReply(annotator_textArea, item);
+        })
+
+       
       }
 
         /*let annotator_textArea=item.find("div.anotador_text");
@@ -180,11 +203,42 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 
       if (type == "edit") {
+
+        console.log("Ha entrado en la accion de edit")
+
+        var annotator_textArea = item.find("div.annotator-marginviewer-text");
+        annotator_textArea=annotator_textArea.find("div.anotador_text")
+
+        //Obtengo los valores:
+        idReferencia=annotator_textArea.prevObject.prevObject[0].id;
+        item.id=idReferencia.split("-")[1];
+
+        var localInstance = this;
+
+        async function doAjax(item) {
+          const result = await $.ajax({
+              url: "http://127.0.0.1:5000/annotations/"+item.id,
+              dataType: "json",
+              type: "get",
+              contentType: "application/json",
+              processData: false
+          });
+      
+          return result;
+        }
+
+
+        doAjax(item).then( (item) => {
+          $("#annotation-"+item.id).data(item); 
+          this.textareaEditor(annotator_textArea, item);
+        })
+
+
         //We want to transform de div to a textarea
         //Find the text field
-        var annotator_divText = item.find("div.annotator-marginviewer-text")
-        var annotator_textArea = annotator_divText.find("div.anotador_text");
-        this.textareaEditor(annotator_textArea, item.data("annotation"));
+        //var annotator_divText = item.find("div.annotator-marginviewer-text")
+       // var annotator_textArea = annotator_divText.find("div.anotador_text");
+       // this.textareaEditor(annotator_textArea, item.data("annotation"));
       }
 
 
@@ -199,7 +253,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     ) {
 
       //Cambio el id del campo 
-      idReferencia=item.highlights[0].id
+      idReferencia=item.id
       $("li#annotation-"+idReferencia).attr("id", "annotation-"+item.id);
 
 
@@ -247,13 +301,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 
     //Textarea editor controller
-    AnnotatorViewer.prototype.textareaEditorReply = function (
+    AnnotatorViewer.prototype.textareaEditorReply =function (
       annotator_textArea,
       item
     ) {
 
+      
+
+      idReferencia=annotator_textArea.prevObject.prevObject[0].id;
+      item.id=idReferencia.split("-")[1];
+
       //Cambio el id del campo 
-      idReferencia=item.highlights[0].id
+      //idReferencia=item.highlights[0].id
       $("li#annotation-"+idReferencia).attr("id", "annotation-"+item.id);
 
 
@@ -628,7 +687,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 
     AnnotatorViewer.prototype.onAnnotationUpdated = function (annotation) {
-      idAnotacionReferencia=annotation.highlights[0].id;
+      idAnotacionReferencia=annotation.id;
 
       $("#annotation-" + idAnotacionReferencia).html(
         this.mascaraAnnotation(annotation)
@@ -640,7 +699,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       );
 
 
-      idAnotacion=annotation.highlights[0].id;
+      idAnotacion=annotation.id;
 
 
       let strippedHtmlText = annotation.text.replace(/<[^>]+>/g, '');
@@ -648,7 +707,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
       $("#annotation-"+idAnotacion+" .annotator-marginviewer-text .anotador_text").text(strippedHtmlText);
 
-    
+      request = $.ajax({
+        url: "http://127.0.0.1:5000/annotations/"+annotation.id,
+        dataType: "json",
+        type: "put",
+        contentType: "application/json",
+        data: JSON.stringify(annotation),
+        processData: false,
+        success: function () {},
+        error: function (jqXhr, textStatus, errorThrown) {
+          console.log(errorThrown);
+        },
+      });
   
 
     };
@@ -722,7 +792,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     };
 
     AnnotatorViewer.prototype.onAnnotationDeleted = function (annotation) {
-      idAnotacionReferencia=annotation.highlights[0].id;
+      idAnotacionReferencia=annotation.id;
 
       //Miro si es posible eliminar la anotacion buscando por el texto 
       $(".annotator-marginviewer-element").each(function (index,valor){
@@ -828,15 +898,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
           '<div style="">'+
 
-          '<span style="font-weight: 700;">' +
-                annotation.user +
-            "</span>" +
-    
-          
-          
-          '   ('+
-          $.format.date(annotation.data_creacio, "MM/yyyy HH:mm") +')'+
-            '</div>'+
+            '<span style="font-weight: 700;">' +
+                  annotation.user +
+              "</span>" +
+
+            '   ('+
+            $.format.date(annotation.data_creacio, "MM/yyyy HH:mm") +')'+
+            '</br>IdRef:'+annotation.idAnotationReply.split('-')[1]+
+            '</br>Id:'+annotation.id+
+            '<div style="width: 160px;height: 2px;border-bottom: 1px solid #d4d4d4;position: relative;" class="line"></div>'+
+          '</div>'+
+
+
+
           '<div style="">'+
            textAnnotation+ //'Me parece que este comentario esta fuera de su lugar. No solamente no toma en cuenta el estandar si no que ademas esta dentro de otro problema de investigacion.'+
           '</div>'+
@@ -844,11 +918,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         '</div>'
         ;
 
+        //Inserto tantas lineas como niveles de profundidad
+
+        textoLineasNiveles="";
+
+     
 
         var annotation_layer1 =
         '<div class="flex-replyBox">'+
 
-          '<div style="border-radius: 5px;flex-basis:20px;background-color:#d4d4d4;width:3.58px;" ></div>'+
+          '<div style="border-radius: 3px;flex-basis:3px;background-color:#d4d4d4;width:3.58px;" ></div>'+
+          
           '<div style="border:0px;flex-grow:4;">'+annotation_text2+'</div>'+
 
         '</div>'
@@ -910,10 +990,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         '<div class="' +
         anotation_color +
         ' anotator_color_box"></div>';
-      annotation_layer +=
+        annotation_layer +=
+        '<div class="anotador_ident">' +
+        'Id:'+annotation.id +
+        '</div>'+
+        '<div style="width: 160px;height: 2px;border-bottom: 1px solid #d4d4d4;position: relative;" class="line"></div>'+
         '<div class="anotador_text">' +
         textAnnotation +
-        '</div></div><div class="annotator-marginviewer-date">' +
+        '</div>'+'</div><div class="annotator-marginviewer-date">' +
         $.format.date(annotation.data_creacio, "dd/MM/yyyy HH:mm:ss") +
         '</div><div class="annotator-marginviewer-quote">' +
         annotation.quote +
