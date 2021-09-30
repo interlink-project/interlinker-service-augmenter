@@ -726,14 +726,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     AnnotatorViewer.prototype.onAnnotationsLoaded = function (annotations) {
       var annotation;
 
-      function showOrder(annotationIn=null,anotationList=[],categoria='',referenciaThis){
+      function showOrder(annotationIn=null,anotationList=[],categoria='',referenciaThis,level=0){
         if(annotationIn==null){
           var listAnnotationsNoReply =  anotationList.filter(annotation => annotation.category != "reply");
-          listAnnotationsNoReply.forEach(element=> showOrder(element,anotationList,categoria='reply',referenciaThis));
+          listAnnotationsNoReply.forEach(element=> showOrder(element,anotationList,categoria='reply',referenciaThis,level=0));
         }else{
+          annotationIn['level']=level;
           referenciaThis.createReferenceAnnotation(annotationIn);
+          level=level+1;
           var listAnnotations =  anotationList.filter(annotation => annotation.idAnotationReply=="annotation-"+annotationIn.id);
-          listAnnotations.forEach(element=> showOrder(element,anotationList,categoria='reply',referenciaThis));
+          listAnnotations.forEach(element=> showOrder(element,anotationList,categoria='reply',referenciaThis,level=level));
         }
 
       }
@@ -920,15 +922,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
         //Inserto tantas lineas como niveles de profundidad
 
-        textoLineasNiveles="";
+        textoLineasNiveles='<div style="border-radius: 3px;flex-basis:3px;background-color:#d4d4d4;width:3.58px;"puch ></div>'.repeat(annotation.level);
 
+        
      
 
         var annotation_layer1 =
         '<div class="flex-replyBox">'+
 
-          '<div style="border-radius: 3px;flex-basis:3px;background-color:#d4d4d4;width:3.58px;" ></div>'+
-          
+          //'<div style="border-radius: 3px;flex-basis:3px;background-color:#d4d4d4;width:3.58px;" ></div>'+
+          textoLineasNiveles+
+
           '<div style="border:0px;flex-grow:4;">'+annotation_text2+'</div>'+
 
         '</div>'
