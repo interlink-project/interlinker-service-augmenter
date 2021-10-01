@@ -229,7 +229,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       $("span[id=" + annotation.id + "]").attr("id", annotation.id);
       cat = annotation.category;
       highlights = annotation.highlights;
-      if (cat) {
+      if (cat!="reply") {
         //If have a category
         _results = [];
         for (_i = 0, _len = highlights.length; _i < _len; _i++) {

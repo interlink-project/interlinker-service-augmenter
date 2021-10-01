@@ -393,8 +393,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       }
       var anotation_reference = "annotation-" + current_annotation.id;
       $("#" + anotation_reference).data("annotation", current_annotation);
-
+      console.log(this.annotations);
       this.annotator.updateAnnotation(current_annotation);
+
+
+      //Actualizo los datos que tienen los highliths.
+      $("span#"+current_annotation.id).data("annotation",current_annotation);
+
     };
 
 
@@ -421,7 +426,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       current_annotation.uri
 
       //Hago una copia de la anotación de referencia:
-      let anotacionReply=current_annotation;
+      let anotacionReply = JSON.parse(JSON.stringify(current_annotation));
 
       let str = current_annotation.uri;
       const myArr = str.split("http",);
@@ -432,6 +437,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       anotacionReply.idAnotationReply=anotation_reference
       anotacionReply.user="Me"
       anotacionReply.category="reply"
+
+      /*
 
       function onSuccess(response) {
         //alert("Se ha insertado exitosamente");
@@ -462,7 +469,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           .length
       );
 
-      
+      */
 
       function removeAllChildNodes(parent) {
         while (parent.firstChild) {
@@ -473,12 +480,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         divAText.classList.add("anotador_text")
         parent.appendChild(divAText);
       }
+      
 
       removeAllChildNodes(event.currentTarget.parentNode.parentNode);
 
       
 
-
+      this.publish("annotationCreated", [anotacionReply]);
       //this.publish("beforeAnnotationCreated", [anotacionReply]);
       //this.annotation.createAnnotation()
       //this.annotator.updateAnnotation(current_annotation);
