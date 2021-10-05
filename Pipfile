@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+elasticsearch = "*"
+flask = "*"
+annotator = {editable = true, extras = ["flask"], path = "."}
+flask-oidc = "*"
+flask-swagger-ui = "*"
+requests = "*"
+tqdm = "*"
+bs4 = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
