@@ -18,16 +18,29 @@ import logging
 import sys
 import time
 
-from flask import Flask, g, current_app
+from flask import Flask, g, current_app, redirect, url_for, session
 import elasticsearch
 from flask import request
 from annotator import es, annotation, auth, authz, document, store
+from authInterlink import authInterlink
+import secrets
 from tests.helpers import MockUser, MockConsumer, MockAuthenticator
 from tests.helpers import mock_authorizer
 
-from flask_oidc import OpenIDConnect
 
 from flask_swagger_ui import get_swaggerui_blueprint
+
+from flask_login import (
+    LoginManager,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
+
+from authInterlink.helpers import  config
+from authInterlink.user import User
+import secrets
 
 
 
@@ -86,16 +99,17 @@ def main(argv):
             raise
 
     app.config.update({
-        'SECRET_KEY': 'aZt99CN09e2NujIB9zJmY5SzXoM',
-        'TESTING': True,
-        'DEBUG': True,
-        'OIDC_CLIENT_SECRETS': 'client_secrets.json',
-        'OIDC_ID_TOKEN_COOKIE_SECURE': False,
-        'OIDC_REQUIRE_VERIFIED_EMAIL': False,
-        'OIDC_OPENID_REALM': 'https://aac.platform.smartcommunitylab.it/-/interlink/login'
+        'SECRET_KEY': secrets.token_urlsafe(16)
     })
-    oidc = OpenIDConnect(app)
-    
+
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+
+
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.get(user_id)
 
     @app.before_request
     def before_request():
@@ -128,6 +142,8 @@ def main(argv):
             g.authorize = mock_authorizer
 
     app.register_blueprint(store.store)
+
+    app.register_blueprint(authInterlink.authInterlink,url_prefix="")
 
     from website.views import views
 
@@ -167,7 +183,9 @@ def main(argv):
 
     host = os.environ.get('HOST', '127.0.0.1')
     port = int(os.environ.get('PORT', 5000))
-    app.run(host=host, port=port)
+    app.run(host=host, port=port,debug=True)
+
+ 
 
 if __name__ == '__main__':
     main(sys.argv)

@@ -15,6 +15,7 @@ from werkzeug.utils import redirect
 
 views = Blueprint('views',__name__,static_folder="static",template_folder="templates")
 
+
 @views.route('/',methods=['GET', 'POST'])
 def inicio():
     if request.method == 'POST':

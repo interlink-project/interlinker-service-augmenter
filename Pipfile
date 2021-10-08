@@ -12,6 +12,7 @@ flask-swagger-ui = "*"
 requests = "*"
 tqdm = "*"
 bs4 = "*"
+flask-login = "*"
 
 [dev-packages]
 

@@ -1,98 +1,26 @@
-{% extends "base.html" %} {% block title %} Servicepedia {% endblock %} {% block
-content %}
+{% extends "template.html" %}
 
-<div id="navbarColor02">
-  <form
-    class="form-inline my-2 my-lg-0"
-    action="/website/buscar"
-    method="POST"
-  >
+{% block content %}
+<h2>Login + Flask Example</h2>
 
-  <div class="grid-container">
-    <div class="item1"><input
-      type="text"
-      name="nm"
-      id="sitio"
-      style="width: 500px"
-      class="form-control mr-sm-4"
-      placeholder="Website address."
-    /></div>
-    <div class="item2"><input
-      type="text"
-      name="usr"
-      id="userId"
-      style="width: 100px"
-      class="form-control mr-sm-4"
-      placeholder="User."
-    /></div>
-    <div class="item2"><button class="btn btn-secondary my-2 my-sm-0" type="submit">
-      Annotate
-    </button></div>
-  </div>
-
-
-  </form>
+{% if current_user.is_authenticated %}
+<div>
+    <p>Welcome back, <span></span>!</p>
+    <p>You have successfully authenticated against your Interlink system, and have been redirected back to this application.</p>
+    <p>Visit the <a href="{{ url_for('authInterlink.profile') }}">My Profile</a> page in this application to view the information
+        retrieved with your OAuth Access Token.</p>
+    <p>Visit the <a href="{{ url_for('authInterlink.dashboard') }}">My Annotations</a> page to annotate any website page.</p>
+</div>
+{% else %}
+<div>
+    <p>Hello!</p>
+    <p>If you're viewing this page then you have successfully configured and started this example server.</p>
+    <p>This example shows you how to to add the <a href="https://developer.okta.com/authentication-guide/implementing-authentication/auth-code.html">Authorization Code Flow</a> to your Flask application.</p>
+    <p>When you click the login button below, you will be redirected to the login page on your Okta org.  After you authenticate, you will be returned to this application.</p>
 </div>
 
-<h1 align="center"></h1>
-
-<style>
-  .content-table {
-    border-collapse: collapse;
-    margin: 25px 0;
-    font-size: 0.9em;
-    min-width: 400px;
-    border-radius: 5px 5px 0 0;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-
-    table-layout: auto;
-
-    /* These are technically the same, but use both */
-    overflow-wrap: break-word;
-    word-wrap: break-word;
-
-    -ms-word-break: break-all;
-    /* This is the dangerous one in WebKit, as it breaks things wherever */
-    word-break: break-all;
-    /* Instead use this non-standard one: */
-    word-break: break-word;
-
-    /* Adds a hyphen where the word breaks, if supported (No Blink) */
-    -ms-hyphens: auto;
-    -moz-hyphens: auto;
-    -webkit-hyphens: auto;
-    hyphens: auto;
-  }
-
-  .content-table thead tr {
-    background-color: #cccccc;
-    color: rgb(0, 0, 0);
-    text-align: left;
-    font-weight: bold;
-  }
-
-  .content-table th,
-  .content-table td {
-    padding: 12px 15px;
-  }
-
-  .content-table tbody tr {
-    border-bottom: 1px solid #dddddd;
-  }
-
-  .content-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
-  }
-
-  .content-table tbody tr:last-of-type {
-    border-bottom: 2px solid #cccccc;
-  }
-
-  .content-table tbody tr.active-row {
-    font-weight: bold;
-    color: #cccccc;
-  }
-</style>
-
-{% endblock %}
+<form method="get" action="/login">
+    <button id="login-button" class="btn btn-primary" type="submit">Login</button>
+</form>
+{% endif %}
+{% endblock content %}
