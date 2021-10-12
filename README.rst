@@ -1,5 +1,5 @@
 Interlinker Service Augmenter
-===============
+=============================
 
 
 The functionality can roughly be separated in the follow parts:
@@ -23,13 +23,17 @@ To create and run a image of Elasticsearch:
 
 The quickest way to get going requires the pipenv
 tools and (``pipenv install`` will get all). Run the
-following in the repository root::
+following in the repository root:
+
+.. code-block:: Python
 
     pipenv shell
     pipenv install
     python run.py
 
-You should see something like::
+You should see something like:
+
+.. code-block:: Python
 
     * Running on http://127.0.0.1:5000/
     * Restarting with reloader...
