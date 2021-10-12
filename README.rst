@@ -1,9 +1,8 @@
-Annotator Store
+Interlinker Service Augmenter
 ===============
 
-This is a backend store for `Annotator <http://annotatorjs.org>`__.
 
-The functionality can roughly be separated in two parts:
+The functionality can roughly be separated in the follow parts:
 
 1. An abstraction layer wrapping Elasticsearch, to easily manage annotation
    storage. It features authorization to filter search results according to
@@ -16,17 +15,18 @@ Getting going
 -------------
 
 You'll need a recent version of `Python <http://python.org>`__ (Python 2 >=2.6
-or Python 3 >=3.3) and `ElasticSearch <http://elasticsearch.org>`__ (>=1.0.0)
+or Python 3 >=3.9) and `ElasticSearch <http://elasticsearch.org>`__ (>=1.7.6)
 installed.
 
-The quickest way to get going requires the ``pip`` and ``virtualenv``
-tools (``easy_install virtualenv`` will get them both). Run the
+To create and run a image of Elasticsearch: 
+   docker-compose up
+
+The quickest way to get going requires the pipenv
+tools and (``pipenv install`` will get all). Run the
 following in the repository root::
 
-    virtualenv pyenv
-    source pyenv/bin/activate
-    pip install -e .[flask]
-    cp annotator.cfg.example annotator.cfg
+    pipenv shell
+    pipenv install
     python run.py
 
 You should see something like::
@@ -34,8 +34,6 @@ You should see something like::
     * Running on http://127.0.0.1:5000/
     * Restarting with reloader...
 
-If you wish to customize the configuration of the Annotator Store, make
-your changes to ``annotator.cfg`` or dive into ``run.py``.
 
 Additionally, the ``HOST`` and ``PORT`` environment variables override
 the default socket binding of address ``127.0.0.1`` and port ``5000``.
@@ -49,6 +47,14 @@ JSON-speaking REST API, will be mounted at ``/api`` by default. See the
 `Annotator
 documentation <http://docs.annotatorjs.org/en/v1.2.x/storage.html>`__ for
 details.
+
+The API access point can be found in:
+<http://127.0.0.1:5000/docs>
+
+Website APP
+-----------
+
+The website app allow to annotate website public service descriptions.
 
 Running tests
 -------------
