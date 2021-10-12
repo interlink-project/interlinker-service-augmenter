@@ -559,6 +559,9 @@
 .annotator-notice-error {
   border-color: #ff7e00;
 }
+.annotator-notice-problem {
+  border-color: #ff7e00;
+}
 .annotator-notice p {
   margin: 0;
 }

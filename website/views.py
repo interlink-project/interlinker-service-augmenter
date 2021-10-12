@@ -205,9 +205,11 @@ def modifica(rutaPagina,userId):
 
             $('body').annotator().annotator('addPlugin', 'RichEditor');
             $('body').annotator().annotator('addPlugin', 'Categories', {
-                        error: 'annotator-hl-errata',
-                        suggestion: 'annotator-hl-destacat',
-                        question: 'annotator-hl-subratllat' }
+                        problem: 'annotator-hl-errata',
+                        feedback: 'annotator-hl-destacat',
+                        question: 'annotator-hl-subratllat',
+                        term: 'annotator-hl-term'
+                        }
             );
             $('body').annotator().annotator('addPlugin', 'AnnotatorViewer');
             $('body').annotator().annotator("addPlugin", "Touch");

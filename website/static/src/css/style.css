@@ -123,16 +123,44 @@ body {
 
 .annotator-hl-subratllat {
   background: rgba(255, 255, 10, 0.3);
-  text-decoration: underline;
+  text-decoration: overline;
   cursor: pointer;
 }
+
+.annotator-hl-term {
+  background: rgba(235, 10, 255, 0.3);
+  text-decoration: underline;
+  text-decoration-color: red;
+  cursor: pointer;
+}
+
+
 .error {
   background: #ffcfbf;
   border: 1px solid #b3b3b3;
   height: 20px;
 }
 
+.problem {
+  background: #ffcfbf;
+  border: 1px solid #b3b3b3;
+  height: 20px;
+}
+
+.term {
+  background: #e6bfff;
+  border: 1px solid #b3b3b3;
+  height: 20px;
+}
+
 .suggestion {
+  background: #dfffbf;
+  border: 1px solid #b3b3b3;
+  height: 20px;
+}
+
+
+.feedback {
   background: #dfffbf;
   border: 1px solid #b3b3b3;
   height: 20px;
