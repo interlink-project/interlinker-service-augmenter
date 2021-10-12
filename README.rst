@@ -4,21 +4,22 @@ Interlinker Service Augmenter
 
 The functionality can roughly be separated in the follow parts:
 
-1. An abstraction layer wrapping Elasticsearch, to easily manage annotation
-   storage. It features authorization to filter search results according to
-   their permission settings.
-2. A Flask blueprint for a web server that exposes an HTTP API to the annotation
-   storage. To use this functionality, build this package with the ``[flask]``
-   option.
+1. A Flask blueprint for a web server that exposes an HTTP API to the annotation
+   storage. 
+
+2. An web application which enables the logged user to insert, delete and reply annotations of public service descriptions.
 
 Getting going
 -------------
 
 You'll need a recent version of `Python <http://python.org>`__ (Python 2 >=2.6
-or Python 3 >=3.9) and `ElasticSearch <http://elasticsearch.org>`__ (>=1.7.6)
+or Python 3 >=3.9) and `ElasticSearch <http://elasticsearch.org>`__ (=1.7.6)
 installed.
 
 To create and run a image of Elasticsearch: 
+
+.. code-block:: Python
+
    docker-compose up
 
 The quickest way to get going requires the pipenv
@@ -65,11 +66,13 @@ Running tests
 
 We use ``nosetests`` to run tests. You can just
 ``pip install -e .[testing]``, ensure ElasticSearch is running, and
-then::
+then:
+
+.. code-block:: 
 
     $ nosetests
-    ......................................................................................
-    ----------------------------------------------------------------------
+
+
     Ran 86 tests in 19.171s
 
     OK

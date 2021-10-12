@@ -1,26 +1,39 @@
-{% extends "template.html" %}
+{% extends "template.html" %} {% block content %}
+<h2>Interlinker Service Augmenter</h2>
 
-{% block content %}
-<h2>Login + Flask Example</h2>
+<div>
+  <p>
+    The Baseline Servicepedia INTERLINKER is a component that optimizes the
+    collaborative process of creating descriptions of public services and
+    processes with the contribution of different stakeholders, representing
+    different information goals and needs. It can be specifically designed to
+    enforce the use of common models for service descriptions and standard
+    classifications.
+  </p>
+  <h3>Description Augmenter.</h3>
+  <p>
+    Enable to annotate already published public services
+    descriptions.
+  </p>
+</div>
 
 {% if current_user.is_authenticated %}
 <div>
-    <p>Welcome back, <span></span>!</p>
-    <p>You have successfully authenticated against your Interlink system, and have been redirected back to this application.</p>
-    <p>Visit the <a href="{{ url_for('authInterlink.profile') }}">My Profile</a> page in this application to view the information
-        retrieved with your OAuth Access Token.</p>
-    <p>Visit the <a href="{{ url_for('authInterlink.dashboard') }}">My Annotations</a> page to annotate any website page.</p>
+  <p>
+    Visit the
+    <a href="{{ url_for('authInterlink.profile') }}">My Profile</a> page in this
+    application to view the profile information.
+  </p>
+  <p>
+    Visit the
+    <a href="{{ url_for('authInterlink.dashboard') }}">My Annotations</a> page
+    to annotate any website page.
+  </p>
 </div>
 {% else %}
-<div>
-    <p>Hello!</p>
-    <p>If you're viewing this page then you have successfully configured and started this example server.</p>
-    <p>This example shows you how to to add the <a href="https://developer.okta.com/authentication-guide/implementing-authentication/auth-code.html">Authorization Code Flow</a> to your Flask application.</p>
-    <p>When you click the login button below, you will be redirected to the login page on your Okta org.  After you authenticate, you will be returned to this application.</p>
-</div>
 
 <form method="get" action="/login">
-    <button id="login-button" class="btn btn-primary" type="submit">Login</button>
+  <button id="login-button" class="btn-nav js-scroll-trigger" type="submit">Access</button>
+  
 </form>
-{% endif %}
-{% endblock content %}
+{% endif %} {% endblock content %}

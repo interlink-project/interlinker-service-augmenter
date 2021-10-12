@@ -11,6 +11,14 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 from werkzeug.utils import redirect
 
+from flask_login import (
+    LoginManager,
+    current_user,
+    login_required,
+    login_user,
+    logout_user,
+)
+
 
 
 views = Blueprint('views',__name__,static_folder="static",template_folder="templates")

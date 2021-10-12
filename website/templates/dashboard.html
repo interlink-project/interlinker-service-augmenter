@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %} Servicepedia {% endblock %} {% block
+{% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {% block
     content %}
     
     <div id="navbarColor02">
@@ -8,23 +8,29 @@
         method="POST"
       >
     
-      <div class="grid-container">
+  
+
+
+      <div class="grid-container" >
         <div class="item1"><input
           type="text"
           name="nm"
           id="sitio"
-          style="width: 500px"
+          style="width: 100%;margin:10px 10px 10px 0px;"
           class="form-control mr-sm-4"
-          placeholder="Website address."
+          placeholder="Enter the public service Website address."
         /></div>
         <div class="item2"><input
           type="text"
           name="usr"
           id="userId"
           value= "{{ user.email }}"
-          style="width: 100px"
+
+          style="width: 200px;margin:0px 10px 10px 0px;"
           class="form-control mr-sm-4"
           placeholder="User."
+          readonly
+          
         /></div>
         <div class="item2"><button class="btn btn-secondary my-2 my-sm-0" type="submit">
           Annotate
