@@ -41,6 +41,69 @@
       </form>
     </div>
     
+    <div>
+
+
+      <h2>Questions</h2>
+      <dl>
+
+
+
+
+          {% for grupo_uri, itemsAnnotations in anotations| groupby("uri") %}
+          
+          <dt><h4>{{ grupo_uri}} <a href= {{ 'http://127.0.0.1:5000/website/modifica/'+ user.email +'/'+ grupo_uri }}>link</a> </h4></dt>
+
+          {% for annotation in itemsAnnotations |sort( attribute="uri")  %}
+            {% if annotation.category == 'question' %}
+            
+            <dt>* Quote: " {{ annotation.quote }} "</dt>
+            <dt>* Question: {{ annotation.text|safe }} </dt>
+
+              {% for annotationRep in anotations |sort(  attribute="data_creacio")|selectattr("uri", "equalto", annotation.uri) %}
+                {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+                <dd> - {{ annotationRep.category }} : {{annotationRep.created}} {{ annotationRep.text|safe }}   </dd>
+                {% endif %}
+              {% endfor %}  
+
+            {% endif %}
+          {% endfor %}
+
+          {% endfor %} 
+
+      </dl>
+
+      <h2>FeedBack</h2>
+      <ul>
+        {% for annotation in anotations %}
+          {% if annotation.category == 'feedback' %}
+          <li>{{ annotation }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+
+      <h2>Term</h2>
+      <ul>
+        {% for annotation in anotations %}
+          {% if annotation.category == 'term' %}
+          <li>{{ annotation }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      
+      <h2>Problems</h2>
+      <ul>
+        {% for annotation in anotations %}
+          {% if annotation.category == 'problem' %}
+          <li>{{ annotation }}</li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+
+    </div>
+
+
+
     <h1 align="center"></h1>
     
     <style>

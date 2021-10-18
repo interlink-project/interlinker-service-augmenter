@@ -13,6 +13,8 @@ from flask_login import (
 from authInterlink.helpers import  config
 from authInterlink.user import User
 
+from annotator.annotation import Annotation
+
 authInterlink = Blueprint('authInterlink', __name__,template_folder="./website/templates")
 
 APP_STATE = 'ApplicationState'
@@ -42,7 +44,11 @@ def login():
 @authInterlink.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html", user=current_user)
+
+    res = Annotation.search(query={'user': current_user.email})
+    
+
+    return render_template("dashboard.html", user=current_user, anotations=res)
 
 
 @authInterlink.route("/profile")
