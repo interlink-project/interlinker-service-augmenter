@@ -820,18 +820,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         if(strippedAnnotation.startsWith(strippedCortadoText)){
           $("li").remove("#" + anotacionId);
         }*/
-        if( textoAnotacion==annotation.text){
+        /*if( textoAnotacion==annotation.text){
           $("li").remove("#" + anotacionId);
 
-        }
+        }*/
 
       })
-
+      if(annotation.id!=null){
       $("li").remove("#annotation-" + annotation.id);
+      }
       $("#count-anotations").text(
         $(".container-anotacions").find(".annotator-marginviewer-element")
           .length
       );
+      
     };
 
     AnnotatorViewer.prototype.onAnnotationReply = function (annotation) {
@@ -1093,6 +1095,58 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         "</li>";
       var malert = i18n_dict.anotacio_lost;
 
+
+      if(annotation.idAnotationReply!=null){
+        //Aqui busco si es un reply y lo inserto debajo de su referencia.
+
+        anotacioObject = $(annotation_layer)
+        .insertAfter("#"+annotation.idAnotationReply)
+        .click(function (event) {
+          var viewPanelHeight = jQuery(window).height();
+          var annotation_reference = annotation.id;
+
+          $element = jQuery("#" + annotation.id);
+          if (!$element.length) {
+            $element = jQuery("#" + annotation.order);
+            annotation_reference = annotation.order; //If exists a sorted annotations we put it in the right order, using order attribute
+          }
+
+          if ($element.length) {
+            elOffset = $element.offset();
+            $(this).children(".annotator-marginviewer-quote").toggle();
+            $("html, body").animate(
+              {
+                scrollTop:
+                  $("#" + annotation_reference).offset().top -
+                  viewPanelHeight / 2,
+              },
+              2000
+            );
+          }
+        })
+        .mouseover(function () {
+          $element = jQuery("span[id=" + annotation.id + "]");
+          if ($element.length) {
+            $element.css({
+              "border-color": "#000000",
+              "border-width": "1px",
+              "border-style": "solid",
+            });
+          }
+        })
+        .mouseout(function () {
+          $element = jQuery("span[id=" + annotation.id + "]");
+          if ($element.length) {
+            $element.css({
+              "border-width": "0px",
+            });
+          }
+        });
+
+      }else{
+        
+      //Caso contrario inserto al final de la lista.
+
       anotacioObject = $(annotation_layer)
         .appendTo(".container-anotacions")
         .click(function (event) {
@@ -1136,6 +1190,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
             });
           }
         });
+
+      }
 
       //Adding annotation to data element for delete and link
       $("#" + anotation_reference).data("annotation", annotation);

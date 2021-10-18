@@ -123,9 +123,32 @@ body {
 
 .annotator-hl-subratllat {
   background: rgba(255, 255, 10, 0.3);
-  text-decoration: overline;
+  /* text-decoration: overline; */
+  
   cursor: pointer;
 }
+
+/* .annotator-hl-subratllat::after{
+  content: "??";
+  word-spacing: -5px;
+  color:#999;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size:10px;
+  position: relative;
+  top:-10px;
+}
+
+.annotator-hl-subratllat::before{
+  content: "¿¿";
+  word-spacing: -5px;
+  color:#999;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size:10px;
+  position: relative;
+  top:-10px;
+}*/
 
 .annotator-hl-term {
   background: rgba(235, 10, 255, 0.3);
