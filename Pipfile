@@ -13,6 +13,7 @@ requests = "*"
 tqdm = "*"
 bs4 = "*"
 flask-login = "*"
+arrow = "*"
 
 [dev-packages]
 

@@ -27,6 +27,9 @@ import secrets
 from tests.helpers import MockUser, MockConsumer, MockAuthenticator
 from tests.helpers import mock_authorizer
 
+from datetime import datetime
+import arrow
+
 
 from flask_swagger_ui import get_swaggerui_blueprint
 
@@ -105,7 +108,27 @@ def main(argv):
     login_manager = LoginManager()
     login_manager.init_app(app)
 
+    @app.template_filter('datetimeformat')
+    def datetimeformat(value, formatText='',localeZone='en'):
+        #Example of format: 'YYYY-MM-DD HH:mm:ss ZZ'
+        #en es-es
+        if (formatText!=''):
+            dateTimeTemp=arrow.get(value)
+            local = dateTimeTemp.to('Europe/Berlin')
+            
+            return local.format(formatText)
 
+
+        else:
+
+            dateTimeTemp=arrow.get(value)
+            local = dateTimeTemp.to('Europe/Berlin')
+            
+            return local.humanize(locale=localeZone)
+
+
+        
+     
 
     @login_manager.user_loader
     def load_user(user_id):

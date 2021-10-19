@@ -41,7 +41,27 @@
       </form>
     </div>
     
+    {% for grupo_uri, itemsAnnotations in anotations| groupby("uri") %}
+
+
     <div>
+
+      <h1>{{ grupo_uri}} <a href= {{ 'http://127.0.0.1:5000/website/modifica/'+ user.email +'/'+ grupo_uri }}>link</a> </h1>
+
+
+      {% macro muestaReplies(annotation,separador) -%}
+        {% set separador = '. '+separador + '_' %}
+        {% for annotationRep in anotations |sort(  attribute="data_creacio") %}
+          {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+            
+          <dd>{{separador}} At  {{ annotationRep.created|datetimeformat() }} : {{ annotationRep.text|striptags }}</dd>
+
+          {{ muestaReplies(annotationRep,separador)}}
+
+          {% endif %}
+        {% endfor %}  
+      
+      {%- endmacro -%}
 
 
       <h2>Questions</h2>
@@ -49,25 +69,24 @@
 
 
 
-
-          {% for grupo_uri, itemsAnnotations in anotations| groupby("uri") %}
-          
-          <dt><h4>{{ grupo_uri}} <a href= {{ 'http://127.0.0.1:5000/website/modifica/'+ user.email +'/'+ grupo_uri }}>link</a> </h4></dt>
-
           {% for annotation in itemsAnnotations |sort( attribute="uri")  %}
             {% if annotation.category == 'question' %}
             
             <dt>* Quote: " {{ annotation.quote }} "</dt>
-            <dt>* Question: {{ annotation.text|safe }} </dt>
+            <dt>* Question: {{ annotation.text|striptags }} </dt>
 
               {% for annotationRep in anotations |sort(  attribute="data_creacio")|selectattr("uri", "equalto", annotation.uri) %}
                 {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
-                <dd> - {{ annotationRep.category }} : {{annotationRep.created}} {{ annotationRep.text|safe }}   </dd>
+                  <dd> - At  
+                    {{ annotationRep.created|datetimeformat() }}
+                     : {{ annotationRep.text|striptags }}   </dd>
+                  {% set separador = '|_' %}
+                  {{ muestaReplies(annotationRep,separador)}}
                 {% endif %}
               {% endfor %}  
 
             {% endif %}
-          {% endfor %}
+       
 
           {% endfor %} 
 
@@ -75,34 +94,70 @@
 
       <h2>FeedBack</h2>
       <ul>
-        {% for annotation in anotations %}
+        {% for annotation in itemsAnnotations %}
           {% if annotation.category == 'feedback' %}
-          <li>{{ annotation }}</li>
+          <dt>* Quote: " {{ annotation.quote }} "</dt>
+          <dt>* Question: {{ annotation.text|striptags }} </dt>
+
+            {% for annotationRep in anotations |sort(  attribute="data_creacio")|selectattr("uri", "equalto", annotation.uri) %}
+              {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+                <dd> - At  
+                  {{ annotationRep.created|datetimeformat() }}
+                   : {{ annotationRep.text|striptags }}   </dd>
+                {% set separador = '|_' %}
+                {{ muestaReplies(annotationRep,separador)}}
+              {% endif %}
+            {% endfor %}  
+
           {% endif %}
         {% endfor %}
       </ul>
 
       <h2>Term</h2>
       <ul>
-        {% for annotation in anotations %}
+        {% for annotation in itemsAnnotations %}
           {% if annotation.category == 'term' %}
-          <li>{{ annotation }}</li>
+          <dt>* Quote: " {{ annotation.quote }} "</dt>
+          <dt>* Question: {{ annotation.text|striptags }} </dt>
+
+            {% for annotationRep in anotations |sort(  attribute="data_creacio")|selectattr("uri", "equalto", annotation.uri) %}
+              {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+                <dd>- At  
+                  {{ annotationRep.created|datetimeformat() }}
+                   : {{ annotationRep.text|striptags }}   </dd>
+                {% set separador = '|_' %}
+                {{ muestaReplies(annotationRep,separador)}}
+              {% endif %}
+            {% endfor %}  
+
           {% endif %}
         {% endfor %}
       </ul>
       
       <h2>Problems</h2>
       <ul>
-        {% for annotation in anotations %}
+        {% for annotation in itemsAnnotations %}
           {% if annotation.category == 'problem' %}
-          <li>{{ annotation }}</li>
+          <dt>* Quote: " {{ annotation.quote }} "</dt>
+          <dt>* Question: {{ annotation.text|striptags }} </dt>
+
+            {% for annotationRep in anotations |sort(  attribute="data_creacio")|selectattr("uri", "equalto", annotation.uri) %}
+              {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+                <dd>- At  
+                  {{ annotationRep.created|datetimeformat() }}
+                   : {{ annotationRep.text|striptags }}   </dd>
+                {% set separador = '|_' %}
+                {{ muestaReplies(annotationRep,separador)}}
+              {% endif %}
+            {% endfor %}  
+
           {% endif %}
         {% endfor %}
       </ul>
 
     </div>
 
-
+    {% endfor %}
 
     <h1 align="center"></h1>
     
