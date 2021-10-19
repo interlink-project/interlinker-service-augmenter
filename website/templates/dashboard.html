@@ -1,224 +1,168 @@
-{% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {% block
-    content %}
-    
-    <div id="navbarColor02">
-      <form
-        class="form-inline my-2 my-lg-0"
-        action="/website/buscar"
-        method="POST"
-      >
-    
-  
+{% extends "template.html" %} {% block title %} Servicepedia {% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/accordion.css') }}">
+{% endblock %}
+
+{% block content %}
+
+{% set contadorPublicDescriptors = 1 %}
+{% for grupo_uri, itemsAnnotations in anotations| groupby("uri") %}
+{% set contadorPublicDescriptors = contadorPublicDescriptors+1 %}
+<p>
+
+<div>
+
+  <h4>{{ grupo_uri}} <a href={{ 'http://127.0.0.1:5000/website/modifica/' + user.email +'/'+ grupo_uri }}>link</a> </h4>
 
 
-      <div class="grid-container" >
-        <div class="item1"><input
-          type="text"
-          name="nm"
-          id="sitio"
-          style="width: 100%;margin:10px 10px 10px 0px;"
-          class="form-control mr-sm-4"
-          placeholder="Enter the public service Website address."
-        /></div>
-        <div class="item2"><input
-          type="text"
-          name="usr"
-          id="userId"
-          value= "{{ user.email }}"
+  {% macro muestaReplies(annotation,separador) -%}
+  {% set separador = '. '+separador + '_' %}
+  {% for annotationRep in anotations |sort( attribute="data_creacio") %}
 
-          style="width: 200px;margin:0px 10px 10px 0px;"
-          class="form-control mr-sm-4"
-          placeholder="User."
-          readonly
-          
-        /></div>
-        <div class="item2"><button class="btn btn-secondary my-2 my-sm-0" type="submit">
-          Annotate
-        </button></div>
-      </div>
-    
-    
-      </form>
-    </div>
-    
-    {% for grupo_uri, itemsAnnotations in anotations| groupby("uri") %}
+  {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+
+  <dd>{{separador}} At {{ annotationRep.created|datetimeformat() }} : {{ annotationRep.text|striptags }}</dd>
+
+  {{ muestaReplies(annotationRep,separador)}}
+
+  {% endif %}
+  {% endfor %}
+
+  {%- endmacro -%}
 
 
+  <div class="accordion">
     <div>
-
-      <h1>{{ grupo_uri}} <a href= {{ 'http://127.0.0.1:5000/website/modifica/'+ user.email +'/'+ grupo_uri }}>link</a> </h1>
-
-
-      {% macro muestaReplies(annotation,separador) -%}
-        {% set separador = '. '+separador + '_' %}
-        {% for annotationRep in anotations |sort(  attribute="data_creacio") %}
-          {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
-            
-          <dd>{{separador}} At  {{ annotationRep.created|datetimeformat() }} : {{ annotationRep.text|striptags }}</dd>
-
-          {{ muestaReplies(annotationRep,separador)}}
-
-          {% endif %}
-        {% endfor %}  
-      
-      {%- endmacro -%}
-
-
-      <h2>Questions</h2>
-      <dl>
-
-
-
-          {% for annotation in itemsAnnotations |sort( attribute="uri")  %}
-            {% if annotation.category == 'question' %}
-            
+      <input type="radio" name="example_accordion" id="{{ 'section1'+ loop.index|string }}" class="accordion__input">
+      <label for="{{ 'section1'+ loop.index|string }}" class="accordion__label">Terms #1</label>
+      <div class="accordion__content">
+        <p>Terms #1</p>
+        <p>
+          <ul>
+            {% for annotation in itemsAnnotations %}
+            {% if annotation.category == 'term' %}
             <dt>* Quote: " {{ annotation.quote }} "</dt>
             <dt>* Question: {{ annotation.text|striptags }} </dt>
 
-              {% for annotationRep in anotations |sort(  attribute="data_creacio")|selectattr("uri", "equalto", annotation.uri) %}
-                {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
-                  <dd> - At  
-                    {{ annotationRep.created|datetimeformat() }}
-                     : {{ annotationRep.text|striptags }}   </dd>
-                  {% set separador = '|_' %}
-                  {{ muestaReplies(annotationRep,separador)}}
-                {% endif %}
-              {% endfor %}  
+            {% for annotationRep in anotations |sort( attribute="data_creacio")|selectattr("uri", "equalto",
+            annotation.uri) %}
+            {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+            <dd>- At
+              {{ annotationRep.created|datetimeformat() }}
+              : {{ annotationRep.text|striptags }} </dd>
+            {% set separador = '|_' %}
+            {{ muestaReplies(annotationRep,separador)}}
+            {% endif %}
+            {% endfor %}
 
             {% endif %}
-       
-
-          {% endfor %} 
-
-      </dl>
-
-      <h2>FeedBack</h2>
-      <ul>
-        {% for annotation in itemsAnnotations %}
-          {% if annotation.category == 'feedback' %}
-          <dt>* Quote: " {{ annotation.quote }} "</dt>
-          <dt>* Question: {{ annotation.text|striptags }} </dt>
-
-            {% for annotationRep in anotations |sort(  attribute="data_creacio")|selectattr("uri", "equalto", annotation.uri) %}
-              {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
-                <dd> - At  
-                  {{ annotationRep.created|datetimeformat() }}
-                   : {{ annotationRep.text|striptags }}   </dd>
-                {% set separador = '|_' %}
-                {{ muestaReplies(annotationRep,separador)}}
-              {% endif %}
-            {% endfor %}  
-
-          {% endif %}
-        {% endfor %}
-      </ul>
-
-      <h2>Term</h2>
-      <ul>
-        {% for annotation in itemsAnnotations %}
-          {% if annotation.category == 'term' %}
-          <dt>* Quote: " {{ annotation.quote }} "</dt>
-          <dt>* Question: {{ annotation.text|striptags }} </dt>
-
-            {% for annotationRep in anotations |sort(  attribute="data_creacio")|selectattr("uri", "equalto", annotation.uri) %}
-              {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
-                <dd>- At  
-                  {{ annotationRep.created|datetimeformat() }}
-                   : {{ annotationRep.text|striptags }}   </dd>
-                {% set separador = '|_' %}
-                {{ muestaReplies(annotationRep,separador)}}
-              {% endif %}
-            {% endfor %}  
-
-          {% endif %}
-        {% endfor %}
-      </ul>
-      
-      <h2>Problems</h2>
-      <ul>
-        {% for annotation in itemsAnnotations %}
-          {% if annotation.category == 'problem' %}
-          <dt>* Quote: " {{ annotation.quote }} "</dt>
-          <dt>* Question: {{ annotation.text|striptags }} </dt>
-
-            {% for annotationRep in anotations |sort(  attribute="data_creacio")|selectattr("uri", "equalto", annotation.uri) %}
-              {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
-                <dd>- At  
-                  {{ annotationRep.created|datetimeformat() }}
-                   : {{ annotationRep.text|striptags }}   </dd>
-                {% set separador = '|_' %}
-                {{ muestaReplies(annotationRep,separador)}}
-              {% endif %}
-            {% endfor %}  
-
-          {% endif %}
-        {% endfor %}
-      </ul>
-
+            {% endfor %}
+          </ul>
+        </p>
+      </div>
     </div>
+    <div>
+      <input type="radio" name="example_accordion" id="{{ 'section2'+ loop.index|string }}" class="accordion__input">
+      <label for="{{ 'section2'+ loop.index|string }}" class="accordion__label">Section #2</label>
+      <div class="accordion__content">
+        <p>Question #2</p>
+        <p>
+          <h1>Questions</h1>
+          {% for annotation in itemsAnnotations |sort( attribute="uri") %}
+          {% if annotation.category == 'question' %}
 
-    {% endfor %}
+          <dt>* Quote: " {{ annotation.quote }} "</dt>
+          <dt>* Question: {{ annotation.text|striptags }} </dt>
 
-    <h1 align="center"></h1>
-    
-    <style>
-      .content-table {
-        border-collapse: collapse;
-        margin: 25px 0;
-        font-size: 0.9em;
-        min-width: 400px;
-        border-radius: 5px 5px 0 0;
-        overflow: hidden;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    
-        table-layout: auto;
-    
-        /* These are technically the same, but use both */
-        overflow-wrap: break-word;
-        word-wrap: break-word;
-    
-        -ms-word-break: break-all;
-        /* This is the dangerous one in WebKit, as it breaks things wherever */
-        word-break: break-all;
-        /* Instead use this non-standard one: */
-        word-break: break-word;
-    
-        /* Adds a hyphen where the word breaks, if supported (No Blink) */
-        -ms-hyphens: auto;
-        -moz-hyphens: auto;
-        -webkit-hyphens: auto;
-        hyphens: auto;
-      }
-    
-      .content-table thead tr {
-        background-color: #cccccc;
-        color: rgb(0, 0, 0);
-        text-align: left;
-        font-weight: bold;
-      }
-    
-      .content-table th,
-      .content-table td {
-        padding: 12px 15px;
-      }
-    
-      .content-table tbody tr {
-        border-bottom: 1px solid #dddddd;
-      }
-    
-      .content-table tbody tr:nth-of-type(even) {
-        background-color: #f3f3f3;
-      }
-    
-      .content-table tbody tr:last-of-type {
-        border-bottom: 2px solid #cccccc;
-      }
-    
-      .content-table tbody tr.active-row {
-        font-weight: bold;
-        color: #cccccc;
-      }
-    </style>
-    
-    {% endblock %}
-    
+          {% for annotationRep in anotations |sort( attribute="data_creacio")|selectattr("uri", "equalto",
+          annotation.uri) %}
+          {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+          <dd> - At
+            {{ annotationRep.created|datetimeformat() }}
+            : {{ annotationRep.text|striptags }} </dd>
+          {% set separador = '|_' %}
+          {{ muestaReplies(annotationRep,separador)}}
+          {% endif %}
+          {% endfor %}
+
+          {% endif %}
+
+
+          {% endfor %}
+        </p>
+      </div>
+    </div>
+    <div>
+      <input type="radio" name="example_accordion" id="{{ 'section3'+ loop.index|string }}" class="accordion__input">
+      <label for="{{ 'section3'+ loop.index|string }}" class="accordion__label">Problem #3</label>
+      <div class="accordion__content">
+        <p>Problem #3</p>
+        <p>
+          <ul>
+            {% for annotation in itemsAnnotations %}
+            {% if annotation.category == 'problem' %}
+            <dt>* Quote: " {{ annotation.quote }} "</dt>
+            <dt>* Question: {{ annotation.text|striptags }} </dt>
+
+            {% for annotationRep in anotations |sort( attribute="data_creacio")|selectattr("uri", "equalto",
+            annotation.uri) %}
+            {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+            <dd>- At
+              {{ annotationRep.created|datetimeformat() }}
+              : {{ annotationRep.text|striptags }} </dd>
+            {% set separador = '|_' %}
+            {{ muestaReplies(annotationRep,separador)}}
+            {% endif %}
+            {% endfor %}
+
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </p>
+      </div>
+    </div>
+    <div>
+      <input type="radio" name="example_accordion" id="{{ 'section4'+ loop.index|string }}" class="accordion__input">
+      <label for="{{ 'section4'+ loop.index|string }}"" class="accordion__label">Feedback #4</label>
+      <div class="accordion__content">
+        <p>Feedback #4</p>
+        <p>
+          <ul>
+            {% for annotation in itemsAnnotations %}
+            {% if annotation.category == 'feedback' %}
+            <dt>* Quote: " {{ annotation.quote }} "</dt>
+            <dt>* Question: {{ annotation.text|striptags }} </dt>
+
+            {% for annotationRep in anotations |sort( attribute="data_creacio")|selectattr("uri", "equalto",
+            annotation.uri) %}
+            {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+            <dd> - At
+              {{ annotationRep.created|datetimeformat() }}
+              : {{ annotationRep.text|striptags }} </dd>
+            {% set separador = '|_' %}
+            {{ muestaReplies(annotationRep,separador)}}
+            {% endif %}
+            {% endfor %}
+
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+ 
+
+
+</div>
+</p>
+
+{% endfor %}
+
+
+
+{% endblock %}

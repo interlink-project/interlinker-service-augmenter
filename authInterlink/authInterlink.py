@@ -50,6 +50,15 @@ def dashboard():
 
     return render_template("dashboard.html", user=current_user, anotations=res)
 
+@authInterlink.route("/annotateIt")
+@login_required
+def annotateIt():
+
+    res = Annotation.search(query={'user': current_user.email})
+    
+
+    return render_template("annotateIt.html", user=current_user, anotations=res)
+
 
 @authInterlink.route("/profile")
 @login_required
