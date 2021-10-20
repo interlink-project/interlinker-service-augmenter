@@ -1,5 +1,5 @@
 .accordion {
-  max-width: 400px;
+  max-width: auto;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   overflow: hidden;

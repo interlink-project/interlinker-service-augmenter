@@ -1,5 +1,21 @@
 {% extends "template.html" %} {% block content %}
-<h2>Interlinker Service Augmenter</h2>
+
+
+
+<div class="container" style="margin:0;height:100vh;display:flex;align-items:center;flex-direction:column;justify-items:center;font-size:18px;" >
+
+
+<div style="text-align:center;" >
+  <img src="{{url_for('static', filename='logo_servicepedia.png')}}" width="500" height="auto"  >
+</div>
+
+
+
+
+<div class="container" style="text-align:justify;align-items:center;width: auto; max-width: 800px; margin: 3rem;padding: rem; box-shadow: 0 0 40px rgba(0,0,0,0.2);border-radius: 4px;background: #ffff;" >
+
+
+<h2 style="text-align: center;">Interlinker Service Augmenter</h2>
 
 <div>
   <p>
@@ -9,11 +25,6 @@
     different information goals and needs. It can be specifically designed to
     enforce the use of common models for service descriptions and standard
     classifications.
-  </p>
-  <h3>Description Augmenter.</h3>
-  <p>
-    Enable to annotate already published public services
-    descriptions.
   </p>
 </div>
 
@@ -36,8 +47,14 @@
 </div>
 {% else %}
 
-<form method="get" action="/login">
-  <button id="login-button" class="btn-nav js-scroll-trigger" type="submit">Access</button>
+<form method="get" action="/login" style="text-align: center;" >
+
+  <button type="submit" class="btn btn-primary btn-lg"  >Login</button>
   
 </form>
 {% endif %} {% endblock content %}
+
+</div>
+
+</div>
+
