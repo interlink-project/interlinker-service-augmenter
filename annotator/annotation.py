@@ -9,6 +9,7 @@ MAPPING = {
     'quote': {'type': 'string', 'analyzer': 'standard'},
     'tags': {'type': 'string', 'index_name': 'tag'},
     'text': {'type': 'string', 'analyzer': 'standard'},
+    'category': {'type': 'string'},
     'uri': {'type': 'string'},
     'user': {'type': 'string'},
     'consumer': {'type': 'string'},

@@ -1,0 +1,141 @@
+{% extends "template.html" %} {% block title %} Servicepedia {% endblock %} 
+
+{%block head %} {{ super() }}
+<script>
+  function showAnnotationsCat(event) {
+
+    if(event.type=='click'){
+    event.preventDefault();
+    var href = event.currentTarget.href;
+    var category= event.currentTarget.textContent;
+    window.location = "/description/"+category+"/"+ href;
+    }
+  }
+</script>
+{% endblock %} 
+
+
+{% block content %}
+
+<div class="container" style="padding-top: 20px">
+  <div class="row">
+    <div class="col-6">
+      <form class="d-flex">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+
+    <div class="col"></div>
+
+    <div class="col">
+      <div class="input-group mb-3">
+        <label class="input-group-text" for="inputGroupSelect01">Domains</label>
+        <select class="form-select" id="inputGroupSelect01">
+          <option selected>Choose...</option>
+          <option value="1">http://www.exteriores.gob.es</option>
+          <option value="2">http://www.interior.gob.es</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col-6">Website Address</th>
+      <th scope="col-3">Creation Date</th>
+      <th scope="col-3">Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% set contadorPublicDescriptors = 1 %} {% for grupo_uri, itemsAnnotations
+    in anotations| groupby("uri") %} {% set contadorPublicDescriptors =
+    contadorPublicDescriptors+1 %}
+
+    <tr>
+      <td>{{ grupo_uri}}</td>
+      <td>21/10/2021</td>
+      <td>
+        <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Options
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li>
+              <a
+                class="dropdown-item"
+                onclick="showAnnotationsCat(event)"
+                href="{{ grupo_uri}}"
+                >Feedback</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                onclick="showAnnotationsCat(event)"
+                href="{{ grupo_uri}}"
+                >Problem</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                onclick="showAnnotationsCat(event)"
+                href="{{ grupo_uri}}"
+                >Question</a
+              >
+            </li>
+            <li>
+              <a
+                class="dropdown-item"
+                onclick="showAnnotationsCat(event)"
+                href="{{ grupo_uri}}"
+                >Term</a
+              >
+            </li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="container">
+  <div class="row">
+    <div class="col" style="align-self: center">
+      <nav aria-label="...">
+        <ul class="pagination">
+          <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+              >Previous</a
+            >
+          </li>
+          <li class="page-item"><a class="page-link" href="#">1</a></li>
+          <li class="page-item active" aria-current="page">
+            <a class="page-link" href="#">2</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

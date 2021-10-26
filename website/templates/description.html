@@ -1,0 +1,154 @@
+{% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {%
+block content %}
+
+
+<script>
+  function showAnnotationsCat(event) {
+
+    if(event.type=='click'){
+    event.preventDefault();
+    var href = event.currentTarget.href;
+    var category= event.currentTarget.textContent;
+    window.location = "/description/"+category+"/"+ href;
+    }
+  }
+
+  function showAnnotationsDet(event) {
+
+        if(event.type=='click'){
+        event.preventDefault();
+        var annotationId = event.currentTarget.getAttribute("value");
+        window.location = "/subjectPage/"+annotationId;
+        }
+  }
+</script>
+
+
+<div class="container container-fluid">
+  <div class="row" style="align-items: center;word-break:break-all">
+    <div class="col-6">
+      {{uri|striptags}}
+
+    </div>
+
+    <div class="col">PREVIEW</div>
+
+    <div class="col text-center">
+      <h3>{{categoryLabel}}s</h3>
+    </div>
+  </div>
+</div>
+<br />
+<div
+  style="
+    margin: 10px;
+    width: 95%;
+    font-size: 1px;
+    color: #435d6b;
+    line-height: 1px;
+    background-color: grey;
+    margin-top: -6px;
+    margin-bottom: 10px;
+  "
+>
+  .
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-8"></div>
+    <div class="col align-content-end">
+      <div class="btn-group align-content-end">
+        <button
+          class="btn btn-secondary btn-lg dropdown-toggle"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Category
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a
+                class="dropdown-item"
+                onclick="showAnnotationsCat(event)"
+                href="{{ uri}}"
+                >Feedback</a>
+          </li>
+          <li>
+            <a
+                class="dropdown-item"
+                onclick="showAnnotationsCat(event)"
+                href="{{ uri}}"
+                >Problem</a>
+          </li>
+          <li>
+            <a
+                class="dropdown-item"
+                onclick="showAnnotationsCat(event)"
+                href="{{ uri}}"
+                >Question</a>
+          </li>
+          <li>
+            <a
+                class="dropdown-item"
+                onclick="showAnnotationsCat(event)"
+                href="{{ uri}}"
+                >Term</a>
+          </li>  
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br />
+<div
+  style="
+    margin: 10px;
+    width: 95%;
+    font-size: 1px;
+    color: #435d6b;
+    line-height: 1px;
+    background-color: grey;
+    margin-top: -6px;
+    margin-bottom: 10px;
+  "
+>
+  .
+</div>
+
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col-6">Description</th>
+      <th scope="col-3">Creation Date</th>
+      <th scope="col-3">Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for anotation in anotations %}
+    {% if anotation.category != 'reply' and anotation.category==categoryLabel|lower %}
+    <tr>
+        <td>{{ anotation.text|striptags}} {{anotation.category}}</td>
+        <td>21/10/2021</td>
+        <td>
+            <a
+            class="dropdown-item"
+            onclick="showAnnotationsDet(event)"
+            value="{{ anotation.id }}"
+            href="#"
+            >...</a>
+        
+        </td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock %}

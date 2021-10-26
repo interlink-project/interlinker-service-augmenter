@@ -50,6 +50,34 @@ def dashboard():
 
     return render_template("dashboard.html", user=current_user, anotations=res)
 
+
+@authInterlink.route('/advanceSearch',)
+def advanceSearch():
+
+
+    res = Annotation.search(query={'user': current_user.email})
+    
+
+
+    return render_template("advanceSearch.html", user=current_user, anotations=res)
+
+@authInterlink.route('/description/<string:category>/<path:uri>',)
+def description(category=None,uri=None):
+
+    res = Annotation.search(query={'user': current_user.email, 'uri': uri   })
+    
+    return render_template("description.html", user=current_user, anotations=res, uri=uri, categoryLabel=category)
+   # return 'la desc: '+category+'lauri is'+str(uri) 
+
+@authInterlink.route('/subjectPage/<string:annotatorId>',)
+def subjectPage(annotatorId=None):
+
+    res = Annotation.search(query={'user': current_user.email, 'id': annotatorId   })
+    
+    return render_template("subjectPage.html", user=current_user, anotations=res)
+   # return 'la desc: '+category+'lauri is'+str(uri) 
+
+
 @authInterlink.route("/annotateIt")
 @login_required
 def annotateIt():
