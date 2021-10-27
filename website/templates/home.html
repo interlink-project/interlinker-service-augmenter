@@ -1,5 +1,22 @@
 {% extends "template.html" %} {% block content %}
 
+
+<script>
+  function searchText(event) {
+
+    if(event.type=='click'){
+    event.preventDefault();
+
+    textoBox = document.getElementById("searchBox");
+    texto=textoBox.value
+ 
+    window.location = '/website/?searchText=' + texto;
+
+      
+    }
+  }
+</script>
+
 <hr />
 
 <div class="container">
@@ -44,12 +61,14 @@
   <div class="row">
     <form class="d-flex">
       <input
+        id="searchBox"
         class="form-control me-2"
         type="search"
         placeholder="Search"
         aria-label="Search"
+        onkeydown="searchText(event)"
       />
-      <button class="btn btn-outline-secondary" type="submit">Search</button>
+      <button class="btn btn-outline-secondary"  type="submit" onclick="searchText(event)" >Search</button>
       <button
         class="btn btn-outline-dark"
         type="button"
@@ -128,7 +147,10 @@
   </div>
   <hr />
 
+
+
   <div class="row">
+    <div class="table-responsive">
     <table class="table" style="height: auto">
       <thead>
         <tr>
@@ -139,64 +161,45 @@
         </tr>
       </thead>
       <tbody>
-        {% set contadorPublicDescriptors = 1 %} {% for grupo_uri,
-        itemsAnnotations in anotations| groupby("uri") %} {% set
-        contadorPublicDescriptors = contadorPublicDescriptors+1 %}
+        {% set contadorPublicDescriptors = 1 %} 
+        {% for grupo_uri, itemsAnnotations in anotations| groupby("uri") %} 
+          {% set contadorPublicDescriptors = contadorPublicDescriptors+1 %}
+          {% if request.args.get('searchText') !=None %}
+            {% if request.args.get('searchText')  in grupo_uri  %}
 
-        <tr>
-          <td>{{ grupo_uri}}</td>
-          <td>21/10/2021</td>
-          <td>
-            <div class="dropdown">
-              <button
-                class="btn btn-secondary dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton1"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Options
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li>
-                  <a
-                    class="dropdown-item"
-                    onclick="showAnnotationsCat(event)"
-                    href="{{ grupo_uri}}"
-                    >Feedback</a
-                  >
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    onclick="showAnnotationsCat(event)"
-                    href="{{ grupo_uri}}"
-                    >Problem</a
-                  >
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    onclick="showAnnotationsCat(event)"
-                    href="{{ grupo_uri}}"
-                    >Question</a
-                  >
-                </li>
-                <li>
-                  <a
-                    class="dropdown-item"
-                    onclick="showAnnotationsCat(event)"
-                    href="{{ grupo_uri}}"
-                    >Term</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </td>
-        </tr>
+            <tr>
+              <td>{{ grupo_uri}}</td>
+              <td>Titulo de la Descripcion</td>
+              <td>21/10/2021</td>
+              <td>
+
+
+                <i class="bi bi-box-arrow-in-right " style="width:100px;"></i>
+
+                
+              </td>
+            </tr>
+            {% endif %}
+          {% else %}
+
+          <tr>
+            <td>{{ grupo_uri}}</td>
+            <td>Titulo de la Descripcion</td>
+            <td>21/10/2021</td>
+            <td>
+
+
+              <i class="bi bi-box-arrow-in-right " style="width:100px;"></i>
+
+              
+            </td>
+          </tr>
+
+          {% endif %}
         {% endfor %}
       </tbody>
     </table>
+  </div>
 
     <div
       class="container"

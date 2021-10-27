@@ -10,6 +10,8 @@ from tqdm import tqdm
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 from werkzeug.utils import redirect
+from annotator.annotation import Annotation
+from annotator.document import Document
 
 from flask_login import (
     LoginManager,
@@ -24,7 +26,7 @@ from flask_login import (
 views = Blueprint('views',__name__,static_folder="static",template_folder="templates")
 
 
-@views.route('/',methods=['GET', 'POST'])
+""" @views.route('/',methods=['GET', 'POST'])
 def inicio():
     if request.method == 'POST':
         anotacion = request.form.get('anotacion')
@@ -38,6 +40,15 @@ def inicio():
             flash('Annotation added!', category='success')
 
     return render_template("home.html")
+ """
+
+@views.route('/')
+def inicio():
+    
+    res = Annotation.search()
+    res2= Document.search()
+
+    return render_template("home.html",anotations=res,thedocuments=res2)
 
 
 

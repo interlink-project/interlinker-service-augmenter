@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 elasticsearch = "*"
 flask = "*"
-annotator = {editable = true, extras = ["flask"], path = "."}
+annotator = {editable = true, extras = ["testing"], path = "."}
 flask-oidc = "*"
 flask-swagger-ui = "*"
 requests = "*"

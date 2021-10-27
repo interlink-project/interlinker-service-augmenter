@@ -26,6 +26,7 @@ from six import iteritems
 
 from annotator.atoi import atoi
 from annotator.annotation import Annotation
+from annotator.document import Document
 from annotator.elasticsearch import RESULTS_MAX_SIZE
 
 store = Blueprint('store', __name__)
