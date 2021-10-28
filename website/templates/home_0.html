@@ -9,23 +9,8 @@
 
     textoBox = document.getElementById("searchBox");
     texto=textoBox.value
-
-    padministration = document.getElementById("padministration");
-    padministrationSel=padministration.selectedOptions[0].label;
-
-    if(padministration.selectedOptions[0].index==0){
-      padministrationSel="";
-    }
-
-    domain = document.getElementById("domain");
-    domainSel=domain.selectedOptions[0].label;
-  
-    
-    if(domain.selectedOptions[0].index==0){
-      domainSel="";
-    }
  
-    window.location = '/website/?searchText=' + texto+'&padministration=' + padministrationSel+'&domain=' + domainSel;
+    window.location = '/website/?searchText=' + texto;
 
       
     }
@@ -102,34 +87,50 @@
   <hr />
   <div class="container">
     <div class="row">
-      <div class="col-6" style="display: flex; align-content: center; justify-content: center">
+      <div class="col" style="display: flex; align-content: center; justify-content: center">
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Public Administration
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#">Municipio de Zaragoza</a></li>
+            <li><a class="dropdown-item" href="#">Gobierno de Latvia</a></li>
+            <li>
+              <a class="dropdown-item" href="#">Municipio de Barcelona</a>
+            </li>
+          </ul>
+        </div>
+      </div>
 
 
-      <select class="form-control" id="padministration">
-        <option selected>Public Administration</option>
-        {% for itemPA in publicsa %} 
+      <div class="col" style="display: flex; align-content: center; justify-content: center">
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Domain
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#">http://interior.gob.es/</a></li>
+            <li><a class="dropdown-item" href="#">http://extranjeria.gob.es/</a></li>
+          </ul>
+        </div>
+      </div>
 
-        <option >{{ itemPA }}</option>
-  
-        {% endfor %}
-        
-      </select>
-
+     
        
       </div>
-      <div class="col-6" style="display: flex; align-content: center; justify-content: center">
-        <select class="form-control cl-3" id="domain">
-          <option selected>Domain</option>
-
-          
-          {% for itemUrl in urls %} 
-
-          <option >{{ itemUrl }}</option>
-    
-          {% endfor %}
-        </select>
-     </div>
-
+     
     </div>
   </div>
 </div>
@@ -160,13 +161,16 @@
         </tr>
       </thead>
       <tbody>
-       
-        {% for description in descriptions %} 
-  
+        {% set contadorPublicDescriptors = 1 %} 
+        {% for Annotations in anotations| groupby("uri") %} 
+          {% set contadorPublicDescriptors = contadorPublicDescriptors+1 %}
+          {% if request.args.get('searchText') !=None %}
+            {% if request.args.get('searchText')  in grupo_uri  %}
+
             <tr>
-              <td>{{ description.padministration }}</td>
-              <td>{{ description.title }}</td>
-              <td>{{ description.created }}</td>
+              <td>{{ grupo_uri}}</td>
+              <td>Titulo de la Descripcion</td>
+              <td>21/10/2021</td>
               <td>
 
 
@@ -175,7 +179,23 @@
                 
               </td>
             </tr>
+            {% endif %}
+          {% else %}
 
+          <tr>
+            <td>{{ grupo_uri}}</td>
+            <td>Titulo de la Descripcion</td>
+            <td>21/10/2021</td>
+            <td>
+
+
+              <i class="bi bi-box-arrow-in-right " style="width:100px;"></i>
+
+              
+            </td>
+          </tr>
+
+          {% endif %}
         {% endfor %}
       </tbody>
     </table>

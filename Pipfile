@@ -14,6 +14,7 @@ tqdm = "*"
 bs4 = "*"
 flask-login = "*"
 arrow = "*"
+six = "*"
 
 [dev-packages]
 

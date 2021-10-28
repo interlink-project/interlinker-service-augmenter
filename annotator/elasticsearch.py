@@ -86,12 +86,16 @@ class _Model(dict):
     """
 
     @classmethod
-    def create_all(cls):
-        log.info("Creating index '%s'.", cls.es.index)
+    def create_all(cls, index=""):
+
+        if(index ==""):
+            index=cls.es.index
+
+        log.info("Creating index '%s'.", index)
         conn = cls.es.conn
-        conn.indices.create(cls.es.index, ignore=400)
+        conn.indices.create(index, ignore=400)
         mapping = cls.get_mapping()
-        conn.indices.put_mapping(index=cls.es.index,
+        conn.indices.put_mapping(index=index,
                                  doc_type=cls.__type__,
                                  body=mapping)
 
@@ -111,16 +115,24 @@ class _Model(dict):
         }
 
     @classmethod
-    def drop_all(cls):
-        if cls.es.conn.indices.exists(cls.es.index):
-            cls.es.conn.indices.close(cls.es.index)
-            cls.es.conn.indices.delete(cls.es.index)
+    def drop_all(cls, index=""):
+        if(index ==""):
+            index=cls.es.index
+
+
+        if cls.es.conn.indices.exists(index):
+            cls.es.conn.indices.close(index)
+            cls.es.conn.indices.delete(index)
 
     # It would be lovely if this were called 'get', but the dict semantics
     # already define that method name.
     @classmethod
-    def fetch(cls, docid):
-        doc = cls.es.conn.get(index=cls.es.index,
+    def fetch(cls, docid, index=""):
+
+        if(index ==""):
+            index=cls.es.index
+
+        doc = cls.es.conn.get(index=index,
                               doc_type=cls.__type__,
                               ignore=404,
                               id=docid)
@@ -151,7 +163,7 @@ class _Model(dict):
         return cls.search_raw(q, **kwargs)
 
     @classmethod
-    def search_raw(cls, query=None, params=None, raw_result=False):
+    def search_raw(cls, query=None, params=None, raw_result=False, index=""):
         """Perform a raw Elasticsearch query
 
         Any ElasticsearchExceptions are to be caught by the caller.
@@ -161,11 +173,14 @@ class _Model(dict):
         params -- Extra keyword arguments to pass to Elasticsearch.search
         raw_result -- Return Elasticsearch's response as is
         """
+        if index=="":
+            cls.es.index
+
         if query is None:
             query = {}
         if params is None:
             params = {}
-        res = cls.es.conn.search(index=cls.es.index,
+        res = cls.es.conn.search(index=index,
                                  doc_type=cls.__type__,
                                  body=query,
                                  **params)
@@ -182,7 +197,12 @@ class _Model(dict):
         res = cls.search(raw_result=True, **kwargs)
         return res['hits']['total']
 
-    def save(self, refresh=True):
+    def save(self, refresh=True, index=""):
+
+        if(index ==""):
+            index=self.es.index
+
+        
         _add_created(self)
         _add_updated(self)
 
@@ -191,16 +211,19 @@ class _Model(dict):
         else:
             op_type = 'index'
 
-        res = self.es.conn.index(index=self.es.index,
+        res = self.es.conn.index(index=index,
                                  doc_type=self.__type__,
                                  body=self,
                                  op_type=op_type,
                                  refresh=refresh)
         self['id'] = res['_id']
 
-    def delete(self):
+    def delete(self, index=""):
+        if(index ==""):
+            index=self.es.index
+
         if 'id' in self:
-            self.es.conn.delete(index=self.es.index,
+            self.es.conn.delete(index=index,
                                 doc_type=self.__type__,
                                 id=self['id'])
 
@@ -220,13 +243,14 @@ def _build_query(query, offset, limit, sort, order):
     return {
         'sort': [{sort: {
             # Sort most recent first
-            'order': order,
+            'order': order
+            #,
             # While we do always provide a mapping for the field, elasticsearch
             # will bomb if there are no documents in the index. Although this
             # is an edge case, we don't want the API to return a 500 with an
             # empty index, so ignore this sort instruction if the field appears
             # unmapped due to an empty index.
-            'ignore_unmapped': True,
+            #'ignore_unmapped': true,
         }}],
         'from': max(0, offset),
         'size': min(RESULTS_MAX_SIZE, max(0, limit)),

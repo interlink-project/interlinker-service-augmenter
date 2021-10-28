@@ -24,19 +24,14 @@ MAPPING = {
     },
 
     "moderators": {
-        "type": "string",
-        "analyzer": "standard"
-    },
-
-    'moderators': {
-        'type': 'nested',
-        'properties': {
-            'email': {'type': 'string'},
-            'created': {
+        "type": "nested",
+        "properties": {
+            "email": {"type": "string"},
+            "createdat": {
                     "type": "date",
                     "format": "dateOptionalTime"
                 },
-            'expire': {
+            "expire": {
                     "type": "date",
                     "format": "dateOptionalTime"
                 },
@@ -50,18 +45,11 @@ MAPPING = {
 
     "url": {
         "type": "string",
-        "analyzer": "standard"
+        "index": "not_analyzed"
     },
 
-    "created": {
-        "type": "date",
-        "format": "dateOptionalTime"
-    },
-
-    "updated": {
-        "type": "date",
-        "format": "dateOptionalTime"
-    },
+    'created': {'type': 'date'},
+    'updated': {'type': 'date'}
 
 
 }
@@ -72,9 +60,143 @@ class Description(es.Model):
     __type__ = TYPE
     __mapping__ = MAPPING
 
-   
-    __type__ = TYPE
-    __mapping__ = MAPPING
+
+    @classmethod
+    def _get_all(cls):
+        """
+        Returns a list of all descriptions 
+        """
+        q= {
+        "sort": [
+            {
+            "updated": {
+                "order": "desc",
+                "ignore_unmapped": True
+            }
+            }
+        ],
+        "from": 0,
+        "size": 20,
+        "query": {
+            "bool": {
+            "must": [
+                {
+                "match_all": {}
+                }
+            ]
+            }
+        }
+        }
+        res = cls.es.conn.search(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+    @classmethod
+    def _get_by_title(cls,searchText="",padministration='',domain=''):
+        
+
+
+        q= {
+        "query": {
+            "prefix":{
+                "title":searchText
+                }
+            }
+        }
+
+        
+
+        res = cls.es.conn.search(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+
+    @classmethod
+    def _get_uniqueValues(cls,campo=""):
+        
+
+
+        q= {
+                "aggs": {
+                    "group_by_url": {
+                        "terms": {
+                            "field": campo
+                        }
+                    }
+                },
+                "size": 0
+        }
+
+        
+
+        res = cls.es.conn.search(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+
+        resultadosDistintos=res["aggregations"]["group_by_url"]["buckets"]
+        
+
+        print(resultadosDistintos)
+
+        return resultadosDistintos
+
+
+
+    @classmethod
+    def _get_by_multiple(cls,**kwargs):
+        
+
+        q= {
+            "query": {
+            "bool": {
+            "must":[
+            {
+            "prefix":{
+                "title":kwargs.get("textoABuscar")
+                }
+            }
+            ]
+            }
+        }
+        }
+
+        #Parametros de busqueda:
+
+        i = 0
+      
+        for key, value in kwargs.items():
+            i += 1
+
+            
+            seccion =  {
+                "match":{
+                    key: value
+                    }
+
+                }
+
+            if(key!='textoABuscar' and value!=''):
+                q['query']['bool']['must'].append(seccion)
+
+           
+        print(q)
+
+        
+
+        
+
+        res = cls.es.conn.search(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+
+
+
+
+
 
     def save(self, *args, **kwargs):
         _add_default_permissions(self)
@@ -136,7 +258,9 @@ class Description(es.Model):
         before = query.pop('before', None)
 
         q = super(Description, cls)._build_query(query, offset, limit, sort, order)
-
+        
+        print(str(q))
+        
         # Create range query from before and/or after
         if before is not None or after is not None:
             clauses = q['query']['bool']['must']

@@ -1,0 +1,34 @@
+{
+    "took": 1,
+    "timed_out": false,
+    "_shards": {
+        "total": 5,
+        "successful": 5,
+        "failed": 0
+    },
+    "hits": {
+        "total": 3,
+        "max_score": 0,
+        "hits": []
+    },
+    "aggregations": {
+        "group_by_url": {
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 0,
+            "buckets": [
+                {
+                    "key": "",
+                    "doc_count": 1
+                },
+                {
+                    "key": "http://exterior.es/treinta/b.html",
+                    "doc_count": 1
+                },
+                {
+                    "key": "http://interior.es/treinta/b.html",
+                    "doc_count": 1
+                }
+            ]
+        }
+    }
+}

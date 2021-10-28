@@ -4,6 +4,7 @@ import json, requests
 
 from flask import redirect
 from flask.helpers import url_for,make_response
+from annotator.description import Description
 from tests.helpers import MockUser
 
 from tqdm import tqdm
@@ -44,11 +45,37 @@ def inicio():
 
 @views.route('/')
 def inicio():
-    
-    res = Annotation.search()
-    res2= Document.search()
+ 
+    #Cargo los combos:
 
-    return render_template("home.html",anotations=res,thedocuments=res2)
+    vectorUrls=Description._get_uniqueValues(campo="url")
+    urlList=[]
+    for urls in vectorUrls:
+        key=urls["key"]
+        if(key!=""):
+            urlList.append(key)
+    print(urlList)
+
+    vectorPAs=Description._get_uniqueValues(campo="padministration")
+    paList=[]
+    for pas in vectorPAs:
+        key=pas["key"]
+        if(key!=""):
+            paList.append(key)
+    print(paList)
+
+
+    textoABuscar=request.args.get("searchText")
+    padministration=request.args.get("padministration")
+    domain=request.args.get("domain")
+
+    if(textoABuscar==None or textoABuscar==''):
+        res= Description.search()
+    else:
+        res= Description._get_by_multiple(textoABuscar=textoABuscar,padministration=padministration,url=domain)
+
+
+    return render_template("home.html",descriptions=res,urls=urlList,publicsa=paList)
 
 
 
