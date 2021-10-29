@@ -63,10 +63,10 @@ PUT description
 
 DELETE description/description/AXzB72JcW2WuxQVN8aJF
 
-POST description/description/1
+POST description/description/113
 {
-    "id":"1",
-    "title":"la descripcion titulada",
+    "id":"113",
+    "title":"la descripcion titulada113",
     "description":"es el texto de la descripcion",
     "keywords":"ads,fads,fa,ds",
     "moderators": [
@@ -82,16 +82,16 @@ POST description/description/1
         }
     ],
     "padministration":"",
-    "url":"",
+    "url":"http://otrosCobrando.es",
     "created":1635334650,
     "updated":1635334650
 }
 
 
-POST description/description/5
+POST description/description/
 {
     "id":"5",
-    "title":"la descripcion 5",
+    "title":"la demanda",
     "description":"es el texto de la 5",
     "keywords":"palabra, esta ,mostrando",
     "moderators": [
@@ -112,12 +112,26 @@ POST description/description/5
     "updated":1635334650
 }
 
+POST description/description/_search?search_type=count
+
 GET description/description/AXzB72JcW2WuxQVN8aJF
 
 DELETE description/description/AXzB72JcW2WuxQVN8aJF
 
-
-
+POST description/description/_search?search_type=count
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "prefix": {
+                        "title": "t"
+                    }
+                }
+            ]
+        }
+    }
+}
 
 
 
@@ -276,8 +290,23 @@ POST description/description/_search
                     }
                 },
                 {
-                    "match": {
-                        "domain": "http://interior.es/treinta/b.html"
+                    "prefix": {
+                        "url": "http://interior.es/treinta/b.html"
+                    }
+                }
+            ]
+        }
+    }
+}
+
+
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "prefix": {
+                        "title": "titulada"
                     }
                 }
             ]
@@ -287,6 +316,9 @@ POST description/description/_search
 
 
 GET description/description/_search
+{
+    "from":1,"size":1
+}
 
 #Agregacion de documentos
 POST description/description/_search

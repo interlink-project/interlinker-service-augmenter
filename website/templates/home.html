@@ -3,7 +3,7 @@
 
 <script>
 
-
+  //Falta cargar de nuevo cuando se tenga una consulta en memoria
   
 
   function searchText(event) {  
@@ -32,9 +32,57 @@
       //recargarTabla();
 
       function addShow(data) {
-      $('#result').text(data);
-      alert(data);
+
+        entries=Object.entries(data)  
+        descripcionesList=entries['0'][1] 
+        numeroReg=entries[1][1]   
+
+        $('#tablaDescriptions').empty();
+       
+        for (let dataItem of descripcionesList) {
+          $('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td> '+dataItem.created+' </td> <td> <i class="bi bi-box-arrow-in-right " style="width:100px;"></i> </td></tr>')
+        }
+      
+        $('#totalRegisters').text(numeroReg);
+
+        $('#page').text('1');
+
+        numeroPaginas=Math.ceil(numeroReg/10);
+        $('#pagesNumbers').text(numeroPaginas);
+
+       
+
+
+
+        textoBox = document.getElementById("searchBox");
+        texto=textoBox.value
+
+        padministration = document.getElementById("padministration");
+        padministrationSel=padministration.selectedOptions[0].label;
+
+        if(padministration.selectedOptions[0].index==0){
+          padministrationSel="";
+        }
+
+        domain = document.getElementById("domain");
+        domainSel=domain.selectedOptions[0].label;
+      
+        
+        if(domain.selectedOptions[0].index==0){
+          domainSel="";
+        }
+
+
+        $('#paginador').empty();
+        for (var j = 1; j < numeroPaginas+1; j++) {
+          $('#paginador').append(" <li class='page-item'><a class='page-link' href='?page="+j+"&textoABuscar="+texto+"&padministration="+padministrationSel+"&domain="+domainSel+"'>"+j+"</a></li>");
+        }
+
+        
+
       }
+
+
 
       $.ajax({
         method: 'POST',
@@ -101,7 +149,7 @@
         aria-label="Search"
         onkeydown="searchText(event)"
       />
-      <button class="btn btn-outline-secondary"  type="submit" onclick="searchText(event)" >Search</button>
+      <button class="btn btn-outline-secondary"  onclick="searchText(event)" >Search</button>
       <button
         class="btn btn-outline-dark"
         type="button"
@@ -170,20 +218,24 @@
 
   <div class="row">
     <div class="table-responsive">
+
+    <h6 id="searchStats">Total found : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span id='page'>{{paginacion.page}}</span> of <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> Pages).</h6>
     <table class="table" style="height: auto">
       <thead>
         <tr>
+      
           <th scope="col-3">Public Service Administration</th>
           <th scope="col-3">Title</th>
           <th scope="col-3">Creation Date</th>
-          <th scope="col-3">Options</th>
+          <th scope="col-2">Options</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="tablaDescriptions" >
        
         {% for description in descriptions %} 
   
             <tr>
+    
               <td>{{ description.padministration }}</td>
               <td>{{ description.title }}</td>
               <td>{{ description.created }}</td>
@@ -199,6 +251,7 @@
         {% endfor %}
       </tbody>
     </table>
+
   </div>
 
     <div
@@ -208,20 +261,15 @@
       <div class="row">
         <div class="col">
           <nav aria-label="...">
-            <ul class="pagination">
-              <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
-                  >Previous</a
-                >
-              </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item active" aria-current="page">
-                <a class="page-link" href="#">2</a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">4</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-              </li>
+            <ul class="pagination" id="paginador">
+
+
+            {% for i in range(paginacion.pagesNumbers|int) %}
+              <li class="page-item"><a class="page-link" href='?page={{ i+1 }}'>{{i+1}}</a></li>
+            {% endfor %}
+
+
+
             </ul>
           </nav>
         </div>

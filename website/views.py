@@ -1,10 +1,9 @@
 from flask import Blueprint, render_template, request, flash, jsonify, g,session
-import json, requests
+import json, requests, math
 
 
 from flask import redirect
 from flask.helpers import url_for,make_response
-from annotator.description import Description
 from tests.helpers import MockUser
 
 from tqdm import tqdm
@@ -13,6 +12,9 @@ from urllib.parse import urljoin, urlparse
 from werkzeug.utils import redirect
 from annotator.annotation import Annotation
 from annotator.document import Document
+from annotator.description import Description
+
+from flask_paginate import Pagination, get_page_parameter
 
 from flask_login import (
     LoginManager,
@@ -69,13 +71,26 @@ def inicio():
     padministration=request.args.get("padministration")
     domain=request.args.get("domain")
 
+    page=request.args.get("page",1)
+    registroInicial=(int(page)-1)*10
+    
+    
+
+    totalRegistros=0
     if(textoABuscar==None or textoABuscar==''):
-        res= Description.search()
+        res= Description.search(offset=registroInicial)
+        totalRegistros= Description.count()
     else:
-        res= Description._get_by_multiple(textoABuscar=textoABuscar,padministration=padministration,url=domain)
+        res= Description._get_Descriptions(textoABuscar=textoABuscar,padministration=padministration,url=domain,offset=registroInicial)
+        totalRegistros= Description._get_DescriptionsCounts(textoABuscar=textoABuscar,padministration=padministration,url=domain)
+        
+
+    pagesNumbers=math.ceil(totalRegistros/10)
+    
+    paginacion={'page':page,'pagesNumbers':pagesNumbers,'totalRegisters':totalRegistros,'searchBox':textoABuscar,'padministration':padministration,'url':domain}
 
 
-    return render_template("home.html",descriptions=res,urls=urlList,publicsa=paList)
+    return render_template("home.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion)
 
 
 

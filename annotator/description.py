@@ -54,6 +54,7 @@ MAPPING = {
 
 }
 MAX_ITERATIONS = 5
+PAGGINATION_SIZE = 10
 
 
 class Description(es.Model):
@@ -76,7 +77,7 @@ class Description(es.Model):
             }
         ],
         "from": 0,
-        "size": 20,
+        "size": PAGGINATION_SIZE,
         "query": {
             "bool": {
             "must": [
@@ -145,10 +146,144 @@ class Description(es.Model):
 
 
     @classmethod
+    def _get_Descriptions(cls,**kwargs):
+        
+      
+        offset=kwargs.pop("offset")
+
+        
+
+
+        q= {
+            "sort": [
+                {
+                "updated": {
+                    "order": "desc",
+                    "ignore_unmapped": True
+                }
+                }
+            ],
+            "from": 0,
+            "size": PAGGINATION_SIZE,
+            "query": {
+            "bool": {
+            "must":[
+            {
+            "prefix":{
+                "title":kwargs.pop("textoABuscar")
+                }
+            },
+            {
+            "prefix":{
+                "url":kwargs.pop("url")
+                }
+            }
+            ]
+            }
+        }
+        }
+
+        #Parametros de busqueda:
+
+        i = 0
+      
+        for key, value in kwargs.items():
+            i += 1
+
+            
+            seccion =  {
+                "match":{
+                    key: value
+                    }
+
+                }
+
+         
+            q['query']['bool']['must'].append(seccion)
+
+           
+        print(q)
+
+        
+
+        
+
+        res = cls.es.conn.search(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q,offset=offset)
+
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+
+
+    @classmethod
+    def _get_DescriptionsCounts(cls,**kwargs):
+        
+
+        q= {
+            "query": {
+                "bool": {
+                "must":[
+                {
+                "prefix":{
+                    "title":kwargs.pop("textoABuscar")
+                    }
+                },
+                {
+                "prefix":{
+                    "url":kwargs.pop("url")
+                    }
+                }
+                ]
+                }
+            }
+        }
+
+        #Parametros de busqueda:
+
+        i = 0
+      
+        for key, value in kwargs.items():
+            i += 1
+
+            
+            seccion =  {
+                "match":{
+                    key: value
+                    }
+
+                }
+
+         
+            q['query']['bool']['must'].append(seccion)
+
+           
+        print(q)
+
+        
+
+        
+
+        res = cls.es.conn.count(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+    @classmethod
     def _get_by_multiple(cls,**kwargs):
         
 
         q= {
+            "sort": [
+                {
+                "updated": {
+                    "order": "desc",
+                    "ignore_unmapped": True
+                }
+                }
+            ],
+            "from": 0,
+            "size": PAGGINATION_SIZE,
             "query": {
             "bool": {
             "must":[
@@ -193,6 +328,54 @@ class Description(es.Model):
         return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
 
 
+    @classmethod
+    def _get_by_multipleCounts(cls,**kwargs):
+        
+
+        q= {
+            "query": {
+                "bool": {
+                "must":[
+                {
+                "prefix":{
+                    "title":kwargs.get("textoABuscar")
+                    }
+                }
+                ]
+                }
+            }
+        }
+
+        #Parametros de busqueda:
+
+        i = 0
+      
+        for key, value in kwargs.items():
+            i += 1
+
+            
+            seccion =  {
+                "match":{
+                    key: value
+                    }
+
+                }
+
+            if(key!='textoABuscar' and value!=''):
+                q['query']['bool']['must'].append(seccion)
+
+           
+        print(q)
+
+        
+
+        
+
+        res = cls.es.conn.count(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+    
+        return res['count']
 
 
 
