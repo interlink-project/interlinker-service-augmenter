@@ -27,6 +27,7 @@ from six import iteritems
 from annotator.atoi import atoi
 from annotator.annotation import Annotation
 from annotator.document import Document
+from annotator.description import Description
 from annotator.elasticsearch import RESULTS_MAX_SIZE
 
 store = Blueprint('store', __name__)
@@ -152,6 +153,31 @@ def index():
 
     annotations = g.annotation_class.search(user=user)
     return jsonify(annotations)
+
+# INDEX
+@store.route('/descriptions', methods=["POST"])
+def descriptionsIndex():
+
+    params = json.loads(request.data.decode('utf-8'))
+
+
+    textoABuscar=params.get("textoABuscar")
+    if(textoABuscar==None):
+        textoABuscar=""
+    padministration=params.get("padministration")
+    if(padministration==None):
+        padministration=""
+    domain=params.get("domain")
+    if(domain==None):
+        domain=""
+
+
+    #annotations = g.annotation_class.search(user=user)
+    descriptions= Description._get_by_multiple(textoABuscar=textoABuscar,padministration=padministration,url=domain)
+    
+    return jsonify(descriptions)
+
+
 
 # CREATE
 @store.route('/annotations', methods=['POST'])
@@ -305,6 +331,8 @@ def search_annotations():
                     'rows': results})
 
 
+
+
 # RAW ES SEARCH
 @store.route('/search_raw', methods=['GET', 'POST'])
 def search_annotations_raw():
@@ -344,6 +372,9 @@ def _filter_input(obj, fields):
         obj.pop(field, None)
 
     return obj
+
+
+
 
 
 def _get_annotation_user(ann):

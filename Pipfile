@@ -15,6 +15,7 @@ bs4 = "*"
 flask-login = "*"
 arrow = "*"
 six = "*"
+simplejson = "*"
 
 [dev-packages]
 

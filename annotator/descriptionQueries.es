@@ -88,12 +88,12 @@ POST description/description/1
 }
 
 
-POST description/description/3
+POST description/description/5
 {
-    "id":"3",
-    "title":"la descripcion titulada3",
-    "description":"es el texto de la descripcion6",
-    "keywords":"ads,fads,fa,ds",
+    "id":"5",
+    "title":"la descripcion 5",
+    "description":"es el texto de la 5",
+    "keywords":"palabra, esta ,mostrando",
     "moderators": [
         {
            "email":"danyc@hotmail.com",
@@ -106,8 +106,8 @@ POST description/description/3
            "expire":1635334650 
         }
     ],
-    "padministration":"MEF",
-    "url":"http://exterior.es/treinta/b.html",
+    "padministration":"Latvia",
+    "url":"http://latvia.vl/x1.html",
     "created":1635334650,
     "updated":1635334650
 }

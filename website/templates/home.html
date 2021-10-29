@@ -2,34 +2,52 @@
 
 
 <script>
-  function searchText(event) {
 
-    if(event.type=='click'){
-    event.preventDefault();
 
-    textoBox = document.getElementById("searchBox");
-    texto=textoBox.value
-
-    padministration = document.getElementById("padministration");
-    padministrationSel=padministration.selectedOptions[0].label;
-
-    if(padministration.selectedOptions[0].index==0){
-      padministrationSel="";
-    }
-
-    domain = document.getElementById("domain");
-    domainSel=domain.selectedOptions[0].label;
   
-    
-    if(domain.selectedOptions[0].index==0){
-      domainSel="";
-    }
- 
-    window.location = '/website/?searchText=' + texto+'&padministration=' + padministrationSel+'&domain=' + domainSel;
 
+  function searchText(event) {  
+    if(event.type=='click'){
+      event.preventDefault();
+
+      textoBox = document.getElementById("searchBox");
+      texto=textoBox.value
+
+      padministration = document.getElementById("padministration");
+      padministrationSel=padministration.selectedOptions[0].label;
+
+      if(padministration.selectedOptions[0].index==0){
+        padministrationSel="";
+      }
+
+      domain = document.getElementById("domain");
+      domainSel=domain.selectedOptions[0].label;
+    
       
+      if(domain.selectedOptions[0].index==0){
+        domainSel="";
+      }
+  
+      //window.location = '/website/?searchText=' + texto+'&padministration=' + padministrationSel+'&domain=' + domainSel;
+      //recargarTabla();
+
+      function addShow(data) {
+      $('#result').text(data);
+      alert(data);
+      }
+
+      $.ajax({
+        method: 'POST',
+        url: {{ url_for('store.descriptionsIndex')|tojson }},
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify({"textoABuscar":texto,"padministration":padministrationSel,"domain":domainSel})
+      }).done(addShow);
+        
     }
   }
+
+
+  
 </script>
 
 <hr />
@@ -146,7 +164,9 @@
   </div>
   <hr />
 
-
+ <div id="result">
+ 
+ </div>
 
   <div class="row">
     <div class="table-responsive">
