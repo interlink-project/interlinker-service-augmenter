@@ -2,7 +2,7 @@
 
 
 DELETE description
-PUT description
+POST description
 {
     "mappings": {
         "description": {
@@ -63,12 +63,12 @@ PUT description
 
 DELETE description/description/AXzB72JcW2WuxQVN8aJF
 
-POST description/description/113
+POST description/description/9
 {
-    "id":"113",
-    "title":"la descripcion titulada113",
+    "id":"9",
+    "title":"la descripcion titulada9",
     "description":"es el texto de la descripcion",
-    "keywords":"ads,fads,fa,ds",
+    "keywords":"ads fads fa ds",
     "moderators": [
         {
            "email":"danyc@hotmail.com",
@@ -81,18 +81,18 @@ POST description/description/113
            "expire":1635334650 
         }
     ],
-    "padministration":"",
-    "url":"http://otrosCobrando.es",
+    "padministration":"Zaragoza",
+    "url":"http://interior.es",
     "created":1635334650,
     "updated":1635334650
 }
 
 
-POST description/description/
+POST description/description/11
 {
-    "id":"5",
+    "id":"11",
     "title":"la demanda",
-    "description":"es el texto de la 5",
+    "description":"es el texto de la 11",
     "keywords":"palabra, esta ,mostrando",
     "moderators": [
         {
@@ -106,8 +106,8 @@ POST description/description/
            "expire":1635334650 
         }
     ],
-    "padministration":"Latvia",
-    "url":"http://latvia.vl/x1.html",
+    "padministration":"MEF",
+    "url":"http://mef.vl/x1.html",
     "created":1635334650,
     "updated":1635334650
 }
@@ -196,10 +196,12 @@ POST description/description/_search
     "query": {
         "bool": {
         "must":[
+        
         {
-        "match":{
-            "url": "http://exterior.es"
-            }
+        "query_string": {
+        "query": "*la descripcion titulada1*",
+        "default_field": "title"
+        }
         }
         ]
         }
@@ -379,8 +381,10 @@ POST description/description/_search
 POST description/description/_search
 {
     "query": {
-        "prefix":{
-            "title": "titula"
+        "query_string":{
+             "query": "*la descripcion titulada9*",
+             "fields": ["title"]
+            
             }
             
         }
@@ -391,7 +395,7 @@ POST description/description/_search
 
 #Obtengo una description usando id:
 
-GET description/description/4
+POST description/description/_search
 
 
 

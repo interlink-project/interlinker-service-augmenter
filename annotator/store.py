@@ -171,9 +171,13 @@ def descriptionsIndex():
     if(domain==None):
         domain=""
 
+    page=params.get("page")
+    if(page==None):
+        page="1"
+
 
     #annotations = g.annotation_class.search(user=user)
-    descriptions= Description._get_by_multiple(textoABuscar=textoABuscar,padministration=padministration,url=domain)
+    descriptions= Description._get_by_multiple(textoABuscar=textoABuscar,padministration=padministration,url=domain,page=page)
     nroRegistros= Description._get_by_multipleCounts(textoABuscar=textoABuscar,padministration=padministration,url=domain)
     
     

@@ -23,7 +23,13 @@
       domain = document.getElementById("domain");
       domainSel=domain.selectedOptions[0].label;
     
-      
+      let page = event.target.getAttribute('page');
+      if(page==null){
+        page=1;
+      }
+
+
+
       if(domain.selectedOptions[0].index==0){
         domainSel="";
       }
@@ -75,7 +81,8 @@
 
         $('#paginador').empty();
         for (var j = 1; j < numeroPaginas+1; j++) {
-          $('#paginador').append(" <li class='page-item'><a class='page-link' href='?page="+j+"&textoABuscar="+texto+"&padministration="+padministrationSel+"&domain="+domainSel+"'>"+j+"</a></li>");
+          //$('#paginador').append(" <li class='page-item'><a class='page-link' href='?page="+j+"&textoABuscar="+texto+"&padministration="+padministrationSel+"&domain="+domainSel+"'>"+j+"</a></li>");
+          $('#paginador').append(" <li class='page-item'><a class='page-link' onclick='searchText(event);' page='"+j+"'  >"+j+"</a></li>");
         }
 
         
@@ -88,7 +95,7 @@
         method: 'POST',
         url: {{ url_for('store.descriptionsIndex')|tojson }},
         contentType: 'application/json;charset=UTF-8',
-        data: JSON.stringify({"textoABuscar":texto,"padministration":padministrationSel,"domain":domainSel})
+        data: JSON.stringify({"textoABuscar":texto,"padministration":padministrationSel,"domain":domainSel,"page":page})
       }).done(addShow);
         
     }

@@ -14,7 +14,6 @@ from annotator.annotation import Annotation
 from annotator.document import Document
 from annotator.description import Description
 
-from flask_paginate import Pagination, get_page_parameter
 
 from flask_login import (
     LoginManager,
@@ -55,15 +54,24 @@ def inicio():
     for urls in vectorUrls:
         key=urls["key"]
         if(key!=""):
-            urlList.append(key)
+            domain = urlparse(key).netloc
+            if not (domain in urlList):
+                urlList.append(domain)
     print(urlList)
+
+
+
+
 
     vectorPAs=Description._get_uniqueValues(campo="padministration")
     paList=[]
     for pas in vectorPAs:
         key=pas["key"]
-        if(key!=""):
-            paList.append(key)
+
+        if key=="":
+            key='Unassigned'
+
+        paList.append(key)
     print(paList)
 
 

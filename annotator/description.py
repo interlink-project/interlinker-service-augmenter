@@ -144,7 +144,6 @@ class Description(es.Model):
         return resultadosDistintos
 
 
-
     @classmethod
     def _get_Descriptions(cls,**kwargs):
         
@@ -187,6 +186,10 @@ class Description(es.Model):
 
         i = 0
       
+
+
+
+
         for key, value in kwargs.items():
             i += 1
 
@@ -201,7 +204,7 @@ class Description(es.Model):
          
             q['query']['bool']['must'].append(seccion)
 
-           
+        print('_get_Descriptions')     
         print(q)
 
         
@@ -213,7 +216,6 @@ class Description(es.Model):
                                  body=q,offset=offset)
 
         return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-
 
 
     @classmethod
@@ -257,7 +259,7 @@ class Description(es.Model):
          
             q['query']['bool']['must'].append(seccion)
 
-           
+        print('_get_DescriptionsCounts')   
         print(q)
 
         
@@ -272,7 +274,8 @@ class Description(es.Model):
     @classmethod
     def _get_by_multiple(cls,**kwargs):
         
-
+        page=kwargs.get("page")
+        initReg=(int(page)-1)*10
         q= {
             "sort": [
                 {
@@ -282,8 +285,104 @@ class Description(es.Model):
                 }
                 }
             ],
-            "from": 0,
+            "from": initReg,
             "size": PAGGINATION_SIZE,
+            "query": {
+            "bool": {
+            "must":[
+            {
+            "prefix":{
+                "title":kwargs.get("textoABuscar")
+                }
+            }
+            ]
+            }
+        }
+        }
+
+        #Parametros de busqueda:
+
+        i = 0
+
+
+        """ "query": {
+                "query_string":{
+                    "query": "*http*",
+                    "fields": ["url"]
+                    
+                    }
+                }
+        } """
+
+      
+        for key, value in kwargs.items():
+            i += 1
+
+            
+           
+
+            if(key=='url'):
+
+                preUrl={"bool": {
+                "should":[
+                ]
+                }}
+
+                seccion1 =  {
+                    "prefix":{
+                        key: 'http://'+value
+                        }
+
+                    }
+                preUrl['bool']['should'].append(seccion1)
+                seccion2 =  {
+                    "prefix":{
+                        key: 'https://'+value
+                        }
+
+                    }
+                preUrl['bool']['should'].append(seccion2)
+                q['query']['bool']['must'].append(preUrl)
+
+            else:    
+                if value=='Unassigned':
+                    value=''
+
+                    seccion =  {
+                        "match":{
+                            key: value
+                            }
+
+                        }
+
+                    if(key!='textoABuscar' and key!='page'):
+                        q['query']['bool']['must'].append(seccion)
+                else:
+                    seccion =  {
+                        "match":{
+                            key: value
+                            }
+
+                        }
+
+                    if(key!='textoABuscar' and key!='page'and value!=''):
+                        q['query']['bool']['must'].append(seccion)
+
+        print('_get_by_multiple')
+        print(q)
+
+        res = cls.es.conn.search(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+        
+    @classmethod
+    def _get_by_multipleCounts(cls,**kwargs):
+        
+    
+      
+        q= {
             "query": {
             "bool": {
             "must":[
@@ -304,51 +403,106 @@ class Description(es.Model):
         for key, value in kwargs.items():
             i += 1
 
-            
-            seccion =  {
-                "match":{
-                    key: value
+            if(key=='url'):
+
+                preUrl={"bool": {
+                "should":[
+                ]
+                }}
+
+                seccion1 =  {
+                    "prefix":{
+                        key: 'http://'+value
+                        }
+
                     }
+                preUrl['bool']['should'].append(seccion1)
+                seccion2 =  {
+                    "prefix":{
+                        key: 'https://'+value
+                        }
 
-                }
+                    }
+                preUrl['bool']['should'].append(seccion2)
+                q['query']['bool']['must'].append(preUrl)
 
-            if(key!='textoABuscar' and value!=''):
-                q['query']['bool']['must'].append(seccion)
+            else:    
+                if value=='Unassigned':
+                    value=''
 
-           
+                    seccion =  {
+                        "match":{
+                            key: value
+                            }
+
+                        }
+
+                    if(key!='textoABuscar' and key!='page'):
+                        q['query']['bool']['must'].append(seccion)
+                else:
+                    seccion =  {
+                        "match":{
+                            key: value
+                            }
+
+                        }
+
+                    if(key!='textoABuscar' and key!='page'and value!=''):
+                        q['query']['bool']['must'].append(seccion)
+
+        print('_get_by_multipleCounts')
         print(q)
 
-        
-
-        
-
-        res = cls.es.conn.search(index="description",
+        res = cls.es.conn.count(index="description",
                                  doc_type=cls.__type__,
                                  body=q)
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+    
+        return res['count']
 
 
     @classmethod
-    def _get_by_multipleCounts(cls,**kwargs):
+    def _searchAndFilters(cls,**kwargs):
         
-
+        page=kwargs.get("page")
+        initReg=(int(page)-1)*10
         q= {
-            "query": {
-                "bool": {
-                "must":[
+            "sort": [
                 {
-                "prefix":{
-                    "title":kwargs.get("textoABuscar")
-                    }
+                "updated": {
+                    "order": "desc",
+                    "ignore_unmapped": True
                 }
-                ]
+                }
+            ],
+            "from": initReg,
+            "size": PAGGINATION_SIZE,
+            "query": {
+            "bool": {
+            "must":[
+            {
+            "prefix":{
+                "title":kwargs.get("textoABuscar")
                 }
             }
+            ]
+            }
+        }
         }
 
         #Parametros de busqueda:
 
         i = 0
+
+
+        """ "query": {
+                "query_string":{
+                    "query": "*http*",
+                    "fields": ["url"]
+                    
+                    }
+                }
+        } """
+
       
         for key, value in kwargs.items():
             i += 1
@@ -361,24 +515,17 @@ class Description(es.Model):
 
                 }
 
-            if(key!='textoABuscar' and value!=''):
+            if(key!='textoABuscar' and key!='page' and value!=''):
                 q['query']['bool']['must'].append(seccion)
 
-           
+        print('_searchAndFilters')   
         print(q)
-
         
 
-        
-
-        res = cls.es.conn.count(index="description",
+        res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
                                  body=q)
-    
-        return res['count']
-
-
-
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
 
 
     def save(self, *args, **kwargs):

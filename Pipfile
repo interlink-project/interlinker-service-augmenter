@@ -16,7 +16,6 @@ flask-login = "*"
 arrow = "*"
 six = "*"
 simplejson = "*"
-flask-paginate = "*"
 
 [dev-packages]
 
