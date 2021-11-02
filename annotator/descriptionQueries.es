@@ -13,7 +13,7 @@ POST description
                 },
                 "title": {
                     "type": "string",
-                    "analyzer": "standard"
+                    "index": "not_analyzed"
                 },
                 "description": {
                     "type": "string",
@@ -40,6 +40,26 @@ POST description
                         }
                     }
                 },
+
+                "permissions": {
+                    "index_name": "permission",
+                    "properties": {
+                        "read": {
+                            "type": "string"
+                        },
+                        "update": {
+                            "type": "string"
+                        },
+                        "delete": {
+                            "type": "string"
+                        },
+                        "admin": {
+                            "type": "string"
+                        }
+                    }
+                },
+
+               
                 "padministration": {
                     "type": "string",
                     "index": "not_analyzed"
@@ -56,8 +76,20 @@ POST description
                     "type": "date",
                     "format": "dateOptionalTime"
                 }
+
+                
             }
         }
+    }
+}
+
+POST description/description/_search
+{
+"query": {
+        "prefix": {
+            "title": ""
+        }
+
     }
 }
 
@@ -88,9 +120,8 @@ POST description/description/9
 }
 
 
-POST description/description/11
+POST description/description/
 {
-    "id":"11",
     "title":"la demanda",
     "description":"es el texto de la 11",
     "keywords":"palabra, esta ,mostrando",
@@ -106,6 +137,7 @@ POST description/description/11
            "expire":1635334650 
         }
     ],
+    "permissions":[{"read": ["group:__world__"]}],
     "padministration":"MEF",
     "url":"http://mef.vl/x1.html",
     "created":1635334650,
@@ -232,6 +264,8 @@ POST description/description/_search
     }
 }
 
+
+POST description/description/_search
 
 
 POST description/description/_search
@@ -377,19 +411,40 @@ POST description/description/_search
     }
 }
 
+POST description/description/_search
+{
+    
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match_all": {}
+                }
+            ]
+        }
+    }
+}
+
 #Busca las palabras que comiencen con la busqueda
 POST description/description/_search
 {
     "query": {
         "query_string":{
-             "query": "*la descripcion titulada9*",
-             "fields": ["title"]
-            
+            "default_field": "title",
+             "query": "*Form3*"
+             
+
             }
             
         }
     }
 }
+
+
+
+
+POST description/description/_search
+
 
 
 
@@ -401,16 +456,7 @@ POST description/description/_search
 
 GET description/description/_search
 {
-    "sort": [
-        {
-            "updated": {
-                "order": "desc",
-                "ignore_unmapped": true
-            }
-        }
-    ],
-    "from": 0,
-    "size": 20,
+
     "query": {
         "bool": {
             "must": [

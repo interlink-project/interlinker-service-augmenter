@@ -51,6 +51,17 @@ MAPPING = {
     'created': {'type': 'date'},
     'updated': {'type': 'date'}
 
+    ,
+    'permissions': {
+        'index_name': 'permission',
+        'properties': {
+            'read': {'type': 'string'},
+            'update': {'type': 'string'},
+            'delete': {'type': 'string'},
+            'admin': {'type': 'string'}
+        }
+    }
+
 
 }
 MAX_ITERATIONS = 5
@@ -304,22 +315,9 @@ class Description(es.Model):
 
         i = 0
 
-
-        """ "query": {
-                "query_string":{
-                    "query": "*http*",
-                    "fields": ["url"]
-                    
-                    }
-                }
-        } """
-
-      
         for key, value in kwargs.items():
-            i += 1
 
-            
-           
+            i += 1
 
             if(key=='url'):
 

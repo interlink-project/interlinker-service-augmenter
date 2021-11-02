@@ -4,6 +4,7 @@ import json, requests, math
 
 from flask import redirect
 from flask.helpers import url_for,make_response
+from annotator import description
 from tests.helpers import MockUser
 
 from tqdm import tqdm
@@ -110,6 +111,60 @@ def buscar():
     sitio = request.form["nm"]
     userNombre=request.form["usr"]
     return redirect(url_for("views.modifica",rutaPagina=sitio,userId=userNombre))
+
+
+#Formulatio de carga de Pagina
+@views.route("/registrar",methods=["POST"])
+def saveDescription():
+    
+    site = request.form["nm"]
+    title = request.form["createTitle"]
+    description = request.form["createDescription"]
+    keywords = request.form["createKeywords"]
+    userNombre=request.form["usr"]
+    publicAdmin=request.form["createPA"]
+    todayDateTime=datetime.datetime.now().replace(microsecond=0).isoformat()
+
+
+    #Example of vector register:
+    #perms = {'read': ['group:__world__']}
+
+    perms = {'read': ['group:__world__']}
+  
+    moderat = {}
+    newdescription=Description(title=title,description=description,
+                                keywords=keywords,moderators=moderat,
+                                padministration=publicAdmin,url=site,
+                                permissions=perms
+                                )
+    newdescription.save(index="description")
+    
+    return jsonify(newdescription)
+""" 
+    
+    "title": {"type": "string","analyzer": "standard"},
+    "description": {"type": "string","analyzer": "standard"},
+    "keywords": {"type": "string","analyzer": "standard"},
+    "moderators": {"type": "nested",
+        "properties": {
+            "email": {"type": "string"},
+            "createdat": {"type": "date","format": "dateOptionalTime"},
+            "expire": { "type": "date","format": "dateOptionalTime"},
+        }
+    },
+    "padministration": {"type": "string","analyzer": "standard"},
+    "url": {"type": "string","index": "not_analyzed"},
+    'created': {'type': 'date'},
+    'updated': {'type': 'date'}
+
+
+ """
+
+
+
+    
+    #return redirect(url_for("views.modifica",rutaPagina=sitio,userId=userNombre))
+
 
 
 #Formulatio de carga de Pagina

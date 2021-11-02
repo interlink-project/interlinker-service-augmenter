@@ -1,5 +1,6 @@
 from flask import Blueprint
-import requests
+import requests, math
+from urllib.parse import urljoin, urlparse
 
 from flask import Flask, render_template, redirect, request, url_for, session
 from flask_login import (
@@ -14,6 +15,7 @@ from authInterlink.helpers import  config
 from authInterlink.user import User
 
 from annotator.annotation import Annotation
+from annotator.description import Description
 
 authInterlink = Blueprint('authInterlink', __name__,template_folder="./website/templates")
 
@@ -41,14 +43,71 @@ def login():
 
 
 
-@authInterlink.route("/dashboard")
+""" @authInterlink.route("/dashboard")
 @login_required
 def dashboard():
 
     res = Annotation.search(query={'user': current_user.email})
     
 
-    return render_template("dashboard.html", user=current_user, anotations=res)
+    return render_template("dashboard.html", user=current_user, anotations=res) """
+@authInterlink.route("/dashboard")
+@login_required
+def dashboard():
+
+     #Cargo los combos:
+
+    vectorUrls=Description._get_uniqueValues(campo="url")
+    urlList=[]
+    for urls in vectorUrls:
+        key=urls["key"]
+        if(key!=""):
+            domain = urlparse(key).netloc
+            if not (domain in urlList):
+                urlList.append(domain)
+    print(urlList)
+
+
+
+
+
+    vectorPAs=Description._get_uniqueValues(campo="padministration")
+    paList=[]
+    for pas in vectorPAs:
+        key=pas["key"]
+
+        if key=="":
+            key='Unassigned'
+
+        paList.append(key)
+    print(paList)
+
+
+    textoABuscar=request.args.get("searchText")
+    padministration=request.args.get("padministration")
+    domain=request.args.get("domain")
+
+    page=request.args.get("page",1)
+    registroInicial=(int(page)-1)*10
+    
+    
+
+    totalRegistros=0
+    if(textoABuscar==None or textoABuscar==''):
+        res= Description.search(offset=registroInicial)
+        totalRegistros= Description.count()
+    else:
+        res= Description._get_Descriptions(textoABuscar=textoABuscar,padministration=padministration,url=domain,offset=registroInicial)
+        totalRegistros= Description._get_DescriptionsCounts(textoABuscar=textoABuscar,padministration=padministration,url=domain)
+        
+
+    pagesNumbers=math.ceil(totalRegistros/10)
+    
+    paginacion={'page':page,'pagesNumbers':pagesNumbers,'totalRegisters':totalRegistros,'searchBox':textoABuscar,'padministration':padministration,'url':domain}
+
+
+    return render_template("dashboard.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion)
+
 
 
 @authInterlink.route('/advanceSearch',)
@@ -82,10 +141,21 @@ def subjectPage(annotatorId=None):
 @login_required
 def annotateIt():
 
+    vectorPAs=Description._get_uniqueValues(campo="padministration")
+    paList=[]
+    for pas in vectorPAs:
+        key=pas["key"]
+
+        if key=="":
+            key='Unassigned'
+
+        paList.append(key)
+    print(paList)
+
     res = Annotation.search(query={'user': current_user.email})
     
 
-    return render_template("annotateIt.html", user=current_user, anotations=res)
+    return render_template("annotateIt.html", user=current_user, anotations=res,publicsa=paList)
 
 
 @authInterlink.route("/profile")
