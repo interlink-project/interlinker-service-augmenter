@@ -156,75 +156,23 @@ class Description(es.Model):
 
 
     @classmethod
-    def _get_Descriptions(cls,**kwargs):
+    def _get_Descriptions_byId(cls,**kwargs):
         
-      
-        offset=kwargs.pop("offset")
-
-        
-
-
         q= {
-            "sort": [
-                {
-                "updated": {
-                    "order": "desc",
-                    "ignore_unmapped": True
-                }
-                }
-            ],
-            "from": 0,
-            "size": PAGGINATION_SIZE,
-            "query": {
-            "bool": {
-            "must":[
-            {
-            "prefix":{
-                "title":kwargs.pop("textoABuscar")
-                }
-            },
-            {
-            "prefix":{
-                "url":kwargs.pop("url")
-                }
-            }
-            ]
-            }
-        }
-        }
-
-        #Parametros de busqueda:
-
-        i = 0
-      
-
-
-
-
-        for key, value in kwargs.items():
-            i += 1
-
             
-            seccion =  {
-                "match":{
-                    key: value
-                    }
+            "query": {
+            "terms": {
+            "_id":[kwargs.pop("id")]
+            }
+        }
+        }
 
-                }
-
-         
-            q['query']['bool']['must'].append(seccion)
-
-        print('_get_Descriptions')     
         print(q)
 
-        
-
-        
 
         res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
-                                 body=q,offset=offset)
+                                 body=q)
 
         return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
 
@@ -539,7 +487,7 @@ class Description(es.Model):
 
     @classmethod
     def search_raw(cls, query=None, params=None, raw_result=False,
-                   user=None, authorization_enabled=None):
+                   user=None, authorization_enabled=None,index='description'):
         """Perform a raw Elasticsearch query
 
         Any ElasticsearchExceptions are to be caught by the caller.
@@ -570,7 +518,7 @@ class Description(es.Model):
             # Use the filtered query instead of the original
             query['query'] = filtered_query
 
-        res = super(Description, cls).search_raw(query=query, params=params,
+        res = super(Description, cls).search_raw(index=index,query=query, params=params,
                                                 raw_result=raw_result)
         return res
 

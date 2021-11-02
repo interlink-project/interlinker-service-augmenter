@@ -1,0 +1,287 @@
+{% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {%
+block head %} {{ super() }}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/accordion.css') }}" />
+{% endblock %} {% block content %}
+
+<script>
+    //Falta cargar de nuevo cuando se tenga una consulta en memoria
+
+
+    function searchText(event) {
+        if (event.type == 'click') {
+            event.preventDefault();
+
+            textoBox = document.getElementById("searchBox");
+            texto = textoBox.value
+
+            padministration = document.getElementById("padministration");
+            padministrationSel = padministration.selectedOptions[0].label;
+
+            if (padministration.selectedOptions[0].index == 0) {
+                padministrationSel = "";
+            }
+
+            domain = document.getElementById("domain");
+            domainSel = domain.selectedOptions[0].label;
+
+            let page = event.target.getAttribute('page');
+            if (page == null) {
+                page = 1;
+            }
+
+
+
+            if (domain.selectedOptions[0].index == 0) {
+                domainSel = "";
+            }
+
+            //window.location = '/website/?searchText=' + texto+'&padministration=' + padministrationSel+'&domain=' + domainSel;
+            //recargarTabla();
+
+            function addShow(data) {
+
+                entries = Object.entries(data)
+                descripcionesList = entries['0'][1]
+                numeroReg = entries[1][1]
+
+                $('#tablaDescriptions').empty();
+
+                for (let dataItem of descripcionesList) {
+                    $('#tablaDescriptions').append(' <tr> <td> ' + dataItem.padministration + ' </td> <td> ' + dataItem
+                        .title + ' </td>  <td> ' + dataItem.created +
+                        ' </td> <td> <i class="bi bi-box-arrow-in-right " style="width:100px;"></i> </td></tr>')
+                }
+
+                $('#totalRegisters').text(numeroReg);
+
+                $('#page').text('1');
+
+                numeroPaginas = Math.ceil(numeroReg / 10);
+                $('#pagesNumbers').text(numeroPaginas);
+
+
+
+
+
+                textoBox = document.getElementById("searchBox");
+                texto = textoBox.value
+
+                padministration = document.getElementById("padministration");
+                padministrationSel = padministration.selectedOptions[0].label;
+
+                if (padministration.selectedOptions[0].index == 0) {
+                    padministrationSel = "";
+                }
+
+                domain = document.getElementById("domain");
+                domainSel = domain.selectedOptions[0].label;
+
+
+                if (domain.selectedOptions[0].index == 0) {
+                    domainSel = "";
+                }
+
+
+                $('#paginador').empty();
+                for (var j = 1; j < numeroPaginas + 1; j++) {
+                    //$('#paginador').append(" <li class='page-item'><a class='page-link' href='?page="+j+"&textoABuscar="+texto+"&padministration="+padministrationSel+"&domain="+domainSel+"'>"+j+"</a></li>");
+                    $('#paginador').append(
+                        " <li class='page-item'><a class='page-link' onclick='searchText(event);' page='" + j +
+                        "'  >" + j + "</a></li>");
+                }
+
+
+
+            }
+
+
+
+            $.ajax({
+                method: 'POST',
+                url: '{{ url_for("store.descriptionsIndex")|tojson }}',
+                contentType: 'application/json;charset=UTF-8',
+                data: JSON.stringify({
+                    "textoABuscar": texto,
+                    "padministration": padministrationSel,
+                    "domain": domainSel,
+                    "page": page
+                })
+            }).done(addShow);
+
+        }
+    }
+
+
+
+    function createNew(event) {
+        if (event.type == 'click') {
+
+            window.location = '/annotateIt';
+
+        }
+    }
+</script>
+
+<hr />
+<div class="container">
+    <div class="row">
+        <div class="col" style="align-content: center; justify-content: center; display: flex">
+            <h4>You are the moderator of:</h4>
+        </div>
+    </div>
+    <hr />
+
+    <div id="result"></div>
+
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table" style="height: auto">
+                <thead>
+                    <tr>
+                        <th scope="col-3">Domain</th>
+                        <th scope="col-3">Page</th>
+                        <th scope="col-3">Creation Date</th>
+                        <th scope="col-2">Expiration Date</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaDescriptions">
+                    {% for description in descriptions %}
+
+                    <tr>
+                        <td>{{ description.padministration }}</td>
+                        <td>{{ description.title }}</td>
+                        <td>{{ description.created|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+                        <td>
+                            <i class="bi bi-box-arrow-in-right" style="width: 100px"></i>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <hr />
+
+        <div class="container">
+            <div class="row">
+                <div class="col" style="align-content: center; justify-content: center; display: flex">
+                    <h4>Edit information of a registered public service description:</h4>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">Description Url:</label>
+                <select class="form-select" id="inputGroupSelect01">
+                    <option selected>Choose...</option>
+                    <option value="1">domain1</option>
+                    <option value="2">domain2</option>
+                    <option value="3">domain3</option>
+                </select>
+                <input type="text" class="form-control" placeholder="Url Page" aria-label="Url Page">
+            </div>
+        </div>
+
+        <hr />
+    </div>
+</div>
+<hr />
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col" style="align-content: center; justify-content: center; display: flex">
+            <h4>Claim the moderation of a public service domain:</h4>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+
+        <form class="form-inline my-2 my-lg-0" action="/website/registrar" method="POST">
+
+
+
+
+            <div class="grid-container">
+
+                <div class="row" style="padding: 10px;">
+                    <h4> Moderator Information</h4>
+                </div>
+                <div class="row">
+                    <div class="form-floating">
+                        <input class="form-control" id="firstName" name="firstName" placeholder="firstName">
+                        <label for="floatingInput">First Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-floating">
+                        <input class="form-control" id="lastName" name="lastName" placeholder="lastName">
+                        <label for="floatingInput">Last Name</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-floating">
+                        <input class="form-control" id="userPosition" name="userPosition" placeholder="userPosition">
+                        <label for="floatingInput">Position</label>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="userMotivations" name="userMotivations"
+                            id="userMotivations" style="min-height: 150px;"></textarea>
+                        <label for="floatingTextarea">User Motivations:</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" id="inputGroupFile02">
+                        <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="inputGroupDomain">Domain/Pages:</label>
+                        <input type="text" class="form-control" id="inputGroupDomain" placeholder="Url Page"
+                            aria-label="Url Page">
+                        <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Add</button>
+
+                    </div>
+                </div>
+                <div class="row" style="padding-left: 30px;">
+                    <ol class="list-group list-group-numbered ">
+                        <li class="list-group-item">Url1</li>
+                        <li class="list-group-item">Url2</li>
+                        <li class="list-group-item">Url3</li>
+                    </ol>
+                </div>
+
+                <hr />
+                <div class="row" style="align-content: center; justify-content: center;">
+                    <div class="col" style="align-content: center; justify-content: center;">
+                        <button type="button" class="btn btn-secondary">Claim Moderation Privilages</button>
+
+                    </div>
+                </div>
+
+        </form>
+
+        <hr />
+
+
+
+    </div>
+
+</div>
+
+
+
+{% endblock %}

@@ -119,6 +119,9 @@
 
     }
   }
+
+
+  
   
 </script>
 
@@ -250,11 +253,8 @@
               <td>{{ description.title }}</td>
               <td>{{ description.created|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
               <td>
-
-
-                <i class="bi bi-box-arrow-in-right " style="width:100px;"></i>
-
-                
+                <a  
+                href="/description/{{ description.id }}" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
               </td>
             </tr>
 

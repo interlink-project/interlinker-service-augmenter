@@ -123,6 +123,13 @@ def saveDescription():
     keywords = request.form["createKeywords"]
     userNombre=request.form["usr"]
     publicAdmin=request.form["createPA"]
+
+    newPA=request.form["addNewPA"]
+
+    if newPA!="":
+        publicAdmin=newPA
+
+
     todayDateTime=datetime.datetime.now().replace(microsecond=0).isoformat()
 
 

@@ -109,6 +109,64 @@ def dashboard():
     return render_template("dashboard.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion)
 
 
+@authInterlink.route("/moderate")
+@login_required
+def moderate():
+
+     #Cargo los combos:
+
+    vectorUrls=Description._get_uniqueValues(campo="url")
+    urlList=[]
+    for urls in vectorUrls:
+        key=urls["key"]
+        if(key!=""):
+            domain = urlparse(key).netloc
+            if not (domain in urlList):
+                urlList.append(domain)
+    print(urlList)
+
+
+
+
+
+    vectorPAs=Description._get_uniqueValues(campo="padministration")
+    paList=[]
+    for pas in vectorPAs:
+        key=pas["key"]
+
+        if key=="":
+            key='Unassigned'
+
+        paList.append(key)
+    print(paList)
+
+
+    textoABuscar=request.args.get("searchText")
+    padministration=request.args.get("padministration")
+    domain=request.args.get("domain")
+
+    page=request.args.get("page",1)
+    registroInicial=(int(page)-1)*10
+    
+    
+
+    totalRegistros=0
+    if(textoABuscar==None or textoABuscar==''):
+        res= Description.search(offset=registroInicial)
+        totalRegistros= Description.count()
+    else:
+        res= Description._get_Descriptions(textoABuscar=textoABuscar,padministration=padministration,url=domain,offset=registroInicial)
+        totalRegistros= Description._get_DescriptionsCounts(textoABuscar=textoABuscar,padministration=padministration,url=domain)
+        
+
+    pagesNumbers=math.ceil(totalRegistros/10)
+    
+    paginacion={'page':page,'pagesNumbers':pagesNumbers,'totalRegisters':totalRegistros,'searchBox':textoABuscar,'padministration':padministration,'url':domain}
+
+
+    return render_template("moderate.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion)
+
+
 
 @authInterlink.route('/advanceSearch',)
 def advanceSearch():
@@ -120,20 +178,31 @@ def advanceSearch():
 
     return render_template("advanceSearch.html", user=current_user, anotations=res)
 
-@authInterlink.route('/description/<string:category>/<path:uri>',)
-def description(category=None,uri=None):
+@authInterlink.route('/description/<string:descriptionId>',)
+def description(descriptionId=None):
 
-    res = Annotation.search(query={'user': current_user.email, 'uri': uri   })
+    description = Description._get_Descriptions_byId(id=descriptionId)
+
+    categoria=request.args.get('category')
+
+    if(categoria == None or categoria=='all' ):
+        categoria='all'
+        res = Annotation.search(query={ 'uri': description[0]['url']   })
+    else:
+        res = Annotation.search(query={ 'uri': description[0]['url'] ,'category':categoria  })
+
+
+  
     
-    return render_template("description.html", user=current_user, anotations=res, uri=uri, categoryLabel=category)
+    return render_template("description.html", user=current_user, description=description[0],anotations=res,categoryLabel=categoria)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 @authInterlink.route('/subjectPage/<string:annotatorId>',)
 def subjectPage(annotatorId=None):
 
-    res = Annotation.search(query={'user': current_user.email, 'id': annotatorId   })
+    res = Annotation._get_Annotation_byId(id=annotatorId)
     
-    return render_template("subjectPage.html", user=current_user, anotations=res)
+    return render_template("subjectPage.html", user=current_user, anotation=res[0])
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 

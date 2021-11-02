@@ -1,5 +1,5 @@
 {
-    "took": 7,
+    "took": 1,
     "timed_out": false,
     "_shards": {
         "total": 5,
@@ -7,349 +7,50 @@
         "failed": 0
     },
     "hits": {
-        "total": 11,
-        "max_score": null,
+        "total": 1,
+        "max_score": 1,
         "hits": [
             {
-                "_index": "description",
-                "_type": "description",
-                "_id": "4",
-                "_score": null,
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1635863824727",
+                "_score": 1,
                 "_source": {
-                    "id": "4",
-                    "title": "la descripcion titulada4",
-                    "description": "es el texto de la descripcion",
-                    "keywords": "ads fads fa ds",
-                    "moderators": [
+                    "section_title": null,
+                    "ranges": [
                         {
-                            "email": "danyc@hotmail.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        },
-                        {
-                            "email": "d.silvad@hotmasil.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
+                            "endOffset": 41,
+                            "startOffset": 224,
+                            "start": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[3]",
+                            "end": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[4]/strong[1]"
                         }
                     ],
-                    "padministration": "Zaragoza",
-                    "url": "http://interior.es",
-                    "created": 1635334650,
-                    "updated": 1635334650
-                },
-                "sort": [
-                    1635334650
-                ]
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "9",
-                "_score": null,
-                "_source": {
-                    "id": "9",
-                    "title": "la descripcion titulada9",
-                    "description": "es el texto de la descripcion",
-                    "keywords": "ads fads fa ds",
-                    "moderators": [
-                        {
-                            "email": "danyc@hotmail.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        },
-                        {
-                            "email": "d.silvad@hotmasil.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        }
-                    ],
-                    "padministration": "Zaragoza",
-                    "url": "http://interior.es",
-                    "created": 1635334650,
-                    "updated": 1635334650
-                },
-                "sort": [
-                    1635334650
-                ]
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "11",
-                "_score": null,
-                "_source": {
-                    "id": "11",
-                    "title": "la demanda",
-                    "description": "es el texto de la 11",
-                    "keywords": "palabra, esta ,mostrando",
-                    "moderators": [
-                        {
-                            "email": "danyc@hotmail.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        },
-                        {
-                            "email": "d.silvad@hotmasil.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        }
-                    ],
-                    "padministration": "MEF",
-                    "url": "http://mef.vl/x1.html",
-                    "created": 1635334650,
-                    "updated": 1635334650
-                },
-                "sort": [
-                    1635334650
-                ]
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "5",
-                "_score": null,
-                "_source": {
-                    "id": "5",
-                    "title": "la descripcion titulada5",
-                    "description": "es el texto de la descripcion",
-                    "keywords": "ads fads fa ds",
-                    "moderators": [
-                        {
-                            "email": "danyc@hotmail.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        },
-                        {
-                            "email": "d.silvad@hotmasil.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        }
-                    ],
-                    "padministration": "Zaragoza",
-                    "url": "http://interior.es",
-                    "created": 1635334650,
-                    "updated": 1635334650
-                },
-                "sort": [
-                    1635334650
-                ]
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "1",
-                "_score": null,
-                "_source": {
-                    "id": "1",
-                    "title": "la descripcion titulada1",
-                    "description": "es el texto de la descripcion",
-                    "keywords": "ads fads fa ds",
-                    "moderators": [
-                        {
-                            "email": "danyc@hotmail.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        },
-                        {
-                            "email": "d.silvad@hotmasil.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        }
-                    ],
-                    "padministration": "",
-                    "url": "http://interior.es",
-                    "created": 1635334650,
-                    "updated": 1635334650
-                },
-                "sort": [
-                    1635334650
-                ]
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "6",
-                "_score": null,
-                "_source": {
-                    "id": "6",
-                    "title": "la demanda",
-                    "description": "es el texto de la 6",
-                    "keywords": "palabra, esta ,mostrando",
-                    "moderators": [
-                        {
-                            "email": "danyc@hotmail.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        },
-                        {
-                            "email": "d.silvad@hotmasil.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        }
-                    ],
-                    "padministration": "Latvia",
-                    "url": "http://latvia.vl/x1.html",
-                    "created": 1635334650,
-                    "updated": 1635334650
-                },
-                "sort": [
-                    1635334650
-                ]
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "2",
-                "_score": null,
-                "_source": {
-                    "id": "2",
-                    "title": "la descripcion titulada2",
-                    "description": "es el texto de la descripcion",
-                    "keywords": "ads fads fa ds",
-                    "moderators": [
-                        {
-                            "email": "danyc@hotmail.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        },
-                        {
-                            "email": "d.silvad@hotmasil.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        }
-                    ],
-                    "padministration": "",
-                    "url": "http://interior.es",
-                    "created": 1635334650,
-                    "updated": 1635334650
-                },
-                "sort": [
-                    1635334650
-                ]
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "7",
-                "_score": null,
-                "_source": {
-                    "id": "7",
-                    "title": "la demanda",
-                    "description": "es el texto de la 7",
-                    "keywords": "palabra, esta ,mostrando",
-                    "moderators": [
-                        {
-                            "email": "danyc@hotmail.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        },
-                        {
-                            "email": "d.silvad@hotmasil.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        }
-                    ],
-                    "padministration": "Latvia",
-                    "url": "http://latvia.vl/x1.html",
-                    "created": 1635334650,
-                    "updated": 1635334650
-                },
-                "sort": [
-                    1635334650
-                ]
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "3",
-                "_score": null,
-                "_source": {
-                    "id": "3",
-                    "title": "la descripcion titulada3",
-                    "description": "es el texto de la descripcion",
-                    "keywords": "ads fads fa ds",
-                    "moderators": [
-                        {
-                            "email": "danyc@hotmail.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        },
-                        {
-                            "email": "d.silvad@hotmasil.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        }
-                    ],
-                    "padministration": "",
-                    "url": "http://interior.es",
-                    "created": 1635334650,
-                    "updated": 1635334650
-                },
-                "sort": [
-                    1635334650
-                ]
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "8",
-                "_score": null,
-                "_source": {
-                    "id": "8",
-                    "title": "la demanda",
-                    "description": "es el texto de la 8",
-                    "keywords": "palabra, esta ,mostrando",
-                    "moderators": [
-                        {
-                            "email": "danyc@hotmail.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        },
-                        {
-                            "email": "d.silvad@hotmasil.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        }
-                    ],
-                    "padministration": "MEF",
-                    "url": "http://mef.vl/x1.html",
-                    "created": 1635334650,
-                    "updated": 1635334650
-                },
-                "sort": [
-                    1635334650
-                ]
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "10",
-                "_score": null,
-                "_source": {
-                    "id": "10",
-                    "title": "la demanda",
-                    "description": "es el texto de la 10",
-                    "keywords": "palabra, esta ,mostrando",
-                    "moderators": [
-                        {
-                            "email": "danyc@hotmail.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        },
-                        {
-                            "email": "d.silvad@hotmasil.com",
-                            "created": 1635334650,
-                            "expire": 1635334650
-                        }
-                    ],
-                    "padministration": "MEF",
-                    "url": "http://mef.vl/x1.html",
-                    "created": 1635334650,
-                    "updated": 1635334650
-                },
-                "sort": [
-                    1635334650
-                ]
+                    "created": "2021-11-02T14:37:04.675128+00:00",
+                    "section": null,
+                    "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
+                    "quote": "en situación de permanencia legal en España, a cuyo fin los destinatarios del mismo deberán cumplimentar las actuaciones que se establezcan para su entrega.\n                  \n                  \n                   Dicha Tarjeta\n                   \n                    acredita la permanen",
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1635863824666,
+                    "text": "<p>Is this a question</p>",
+                    "category": "question",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2021-11-02T14:37:04.675128+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "p_p_id_101_INSTANCE_lprzHzvsA9km_"
+                }
             }
         ]
     }

@@ -1,154 +1,114 @@
 {% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {%
 block content %}
 
-
 <script>
   function showAnnotationsCat(event) {
-
-    if(event.type=='click'){
-    event.preventDefault();
-    var href = event.currentTarget.href;
-    var category= event.currentTarget.textContent;
-    window.location = "/description/"+category+"/"+ href;
+    if (event.type == "click") {
+      event.preventDefault();
+      var href = event.currentTarget.href;
+      var category = event.currentTarget.textContent;
+      window.location = "/description/" + category + "/" + href;
     }
   }
 
   function showAnnotationsDet(event) {
-
-        if(event.type=='click'){
-        event.preventDefault();
-        var annotationId = event.currentTarget.getAttribute("value");
-        window.location = "/subjectPage/"+annotationId;
-        }
+    if (event.type == "click") {
+      event.preventDefault();
+      var annotationId = event.currentTarget.getAttribute("value");
+      window.location = "/subjectPage/" + annotationId;
+    }
   }
 </script>
 
-
-<div class="container container-fluid">
-  <div class="row" style="align-items: center;word-break:break-all">
-    <div class="col-6">
-      {{uri|striptags}}
-
+<div class="container container-fluid" style="padding:10px;">
+  <div class="row" style="align-items: center; word-break: break-all">
+    <div class="col-10">
+      <h4>{{description['title']|striptags}}</h4>
     </div>
 
-    <div class="col">PREVIEW</div>
-
-    <div class="col text-center">
-      <h3>{{categoryLabel}}s</h3>
-    </div>
+    <div class="col-2"><a href="/website/modifica/{{ current_user.email }}/{{ description['url']}}"   class="btn bg-light border"  >PREVIEW</a></div>
+    
+    
   </div>
 </div>
-<br />
-<div
-  style="
-    margin: 10px;
-    width: 95%;
-    font-size: 1px;
-    color: #435d6b;
-    line-height: 1px;
-    background-color: grey;
-    margin-top: -6px;
-    margin-bottom: 10px;
-  "
->
-  .
-</div>
+<hr />
 
 <div class="container">
   <div class="row">
-    <div class="col-8"></div>
-    <div class="col align-content-end">
-      <div class="btn-group align-content-end">
-        <button
-          class="btn btn-secondary btn-lg dropdown-toggle"
-          type="button"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          Category
-        </button>
-        <ul class="dropdown-menu">
-          <li>
-            <a
-                class="dropdown-item"
-                onclick="showAnnotationsCat(event)"
-                href="{{ uri}}"
-                >Feedback</a>
-          </li>
-          <li>
-            <a
-                class="dropdown-item"
-                onclick="showAnnotationsCat(event)"
-                href="{{ uri}}"
-                >Problem</a>
-          </li>
-          <li>
-            <a
-                class="dropdown-item"
-                onclick="showAnnotationsCat(event)"
-                href="{{ uri}}"
-                >Question</a>
-          </li>
-          <li>
-            <a
-                class="dropdown-item"
-                onclick="showAnnotationsCat(event)"
-                href="{{ uri}}"
-                >Term</a>
-          </li>  
-          
-        </ul>
-      </div>
+    <div class="hstack gap-3">
+
+      {% if categoryLabel != 'feedback'%}
+        <a class="bg-light border ms-auto" href="/description/{{description.id}}?category=feedback" >Feedback</a>
+      {% else %}
+        <a class="btn-secondary ms-auto active" href="/description/{{description.id}}?category=feedback" >Feedback</a>
+      {% endif %}
+      
+      {% if categoryLabel != 'problem'%}
+        <a class="bg-light border" href="/description/{{description.id}}?category=problem" >Problem</a>
+      {% else %}
+        <a class="btn-secondary active " href="/description/{{description.id}}?category=problem" >Problem</a>
+      {% endif %}
+
+      {% if categoryLabel != 'term'%}
+        <a class="bg-light border " href="/description/{{description.id}}?category=term" >Term</a>
+      {% else %}
+        <a class="btn-secondary active " href="/description/{{description.id}}?category=term" >Term</a>
+      {% endif %}
+
+
+      {% if categoryLabel != 'question'%}
+        <a class="bg-light border " href="/description/{{description.id}}?category=question" >Question</a>
+      {% else %}
+        <a class="btn-secondary active " href="/description/{{description.id}}?category=question" >Question</a>
+      {% endif %}
+      
+      
+      <div class="vr"></div>
+
+
+      {% if categoryLabel != 'all'%}
+        <a class="bg-light border " href="/description/{{description.id}}?category=all" >All</a>
+      {% else %}
+        <a class="btn-secondary active " href="/description/{{description.id}}?category=all" >All</a>
+      {% endif %}
+
+
     </div>
   </div>
+
+  
 </div>
 
-<br />
-<div
-  style="
-    margin: 10px;
-    width: 95%;
-    font-size: 1px;
-    color: #435d6b;
-    line-height: 1px;
-    background-color: grey;
-    margin-top: -6px;
-    margin-bottom: 10px;
-  "
->
-  .
-</div>
-
-
+<hr />
 
 <table class="table">
   <thead>
     <tr>
-      <th scope="col-6">Description</th>
+      {% if categoryLabel == 'all'%}
+      <th scope="col-3">Category</th>
+      {% endif %}
+      <th scope="col-3">Description</th>
       <th scope="col-3">Creation Date</th>
       <th scope="col-3">Options</th>
     </tr>
   </thead>
   <tbody>
-    {% for anotation in anotations %}
-    {% if anotation.category != 'reply' and anotation.category==categoryLabel|lower %}
+    {% for anotation in anotations %} {% if anotation.category != 'reply' %}
     <tr>
-        <td>{{ anotation.text|striptags}} {{anotation.category}}</td>
-        <td>21/10/2021</td>
-        <td>
-            <a
-            class="dropdown-item"
-            onclick="showAnnotationsDet(event)"
-            value="{{ anotation.id }}"
-            href="#"
-            >...</a>
-        
-        </td>
-      </tr>
+      {% if categoryLabel == 'all'%}
+      <td>{{ anotation.category[0]|upper }}{{ anotation.category[1:] }}</td>
       {% endif %}
-      {% endfor %}
+      <td>{{ anotation.text|striptags}} </td>
+      <td>21/10/2021</td>
+      <td>
+        <a
+          href="/subjectPage/{{ anotation.id }}"
+          >...</a
+        >
+      </td>
+    </tr>
+    {% endif %} {% endfor %}
   </tbody>
 </table>
-
 
 {% endblock %}

@@ -88,6 +88,9 @@ class Annotation(es.Model):
                 filtered_query['filtered']['query'] = query['query']
             # Use the filtered query instead of the original
             query['query'] = filtered_query
+        
+        print(query)
+
 
         res = super(Annotation, cls).search_raw(query=query, params=params,
                                                 raw_result=raw_result)
@@ -141,6 +144,28 @@ class Annotation(es.Model):
                         }
 
         return q
+
+
+    @classmethod
+    def _get_Annotation_byId(cls,**kwargs):
+        
+        q= {
+            
+            "query": {
+            "terms": {
+            "_id":[kwargs.pop("id")]
+            }
+        }
+        }
+
+        print(q)
+
+
+        res = cls.es.conn.search(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
 
 
 def _add_default_permissions(ann):

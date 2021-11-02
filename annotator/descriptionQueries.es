@@ -13,7 +13,7 @@ POST description
                 },
                 "title": {
                     "type": "string",
-                    "index": "not_analyzed"
+                    "analyzer": "simple"
                 },
                 "description": {
                     "type": "string",
@@ -122,8 +122,8 @@ POST description/description/9
 
 POST description/description/
 {
-    "title":"la demanda",
-    "description":"es el texto de la 11",
+    "title":"la demanda12 mucho demas gusto",
+    "description":"es el texto de la 12",
     "keywords":"palabra, esta ,mostrando",
     "moderators": [
         {
@@ -138,8 +138,8 @@ POST description/description/
         }
     ],
     "permissions":[{"read": ["group:__world__"]}],
-    "padministration":"MEF",
-    "url":"http://mef.vl/x1.html",
+    "padministration":"Latvia",
+    "url":"http://latvia.vl/x1.html",
     "created":1635334650,
     "updated":1635334650
 }
@@ -467,3 +467,28 @@ GET description/description/_search
         }
     }
 }
+
+
+POST description/description/_search
+{
+  "query": {
+    "terms": {
+      "_id": [ "AXzf9asNW2WuxQVN8aJo" ] 
+    }
+  }
+}
+
+
+POST annotator/annotation/_search
+{
+    "query": {
+        "terms": {
+            "_id": [
+                "1635863824727"
+            ]
+        }
+    }
+}
+
+
+POST annotator/annotation/_search
