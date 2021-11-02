@@ -168,6 +168,29 @@ class Annotation(es.Model):
         return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
 
 
+
+    @classmethod
+    def _get_Annotation_byCategory(cls,**kwargs):
+        
+        q= {
+            
+            "query": {
+            "terms": {
+            "category":[kwargs.pop("category")]
+            }
+        }
+        }
+
+        print(q)
+
+
+        res = cls.es.conn.search(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+
 def _add_default_permissions(ann):
     if 'permissions' not in ann:
         ann['permissions'] = {'read': [authz.GROUP_CONSUMER]}

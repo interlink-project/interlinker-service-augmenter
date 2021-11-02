@@ -1,11 +1,127 @@
-{% extends "template.html" %} {% block title %} Servicepedia {% endblock %} 
 
-{%block content %}
+{% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {%
+block content %}
+
+
+
+
+
+<div class="container container-fluid" style="padding:10px;">
+  <div class="row" style="align-items: center; word-break: break-all">
+    <div class="col-10">
+      <h4>{{description['title']|striptags}}</h4>
+    </div>
+
+    <div class="col-2"><a href="/website/modifica/{{ current_user.email }}/{{ description['url']}}"   class="btn bg-light border"  >PREVIEW</a></div>
+    
+    
+  </div>
+</div>
+<hr />
+
+<div class="container">
+  <div class="row">
+    <div class="hstack gap-3">
+
+      {% if categoryLabel != 'feedback'%}
+        <a class="bg-light border ms-auto" href="/description/{{description.id}}?category=feedback" >Feedback</a>
+      {% else %}
+        <a class="btn-secondary ms-auto active" href="/description/{{description.id}}?category=feedback" >Feedback</a>
+      {% endif %}
+      
+      {% if categoryLabel != 'problem'%}
+        <a class="bg-light border" href="/description/{{description.id}}?category=problem" >Problem</a>
+      {% else %}
+        <a class="btn-secondary active " href="/description/{{description.id}}?category=problem" >Problem</a>
+      {% endif %}
+
+      {% if categoryLabel != 'term'%}
+        <a class="bg-light border " href="/description/{{description.id}}?category=term" >Term</a>
+      {% else %}
+        <a class="btn-secondary active " href="/description/{{description.id}}?category=term" >Term</a>
+      {% endif %}
+
+
+      {% if categoryLabel != 'question'%}
+        <a class="bg-light border " href="/description/{{description.id}}?category=question" >Question</a>
+      {% else %}
+        <a class="btn-secondary active " href="/description/{{description.id}}?category=question" >Question</a>
+      {% endif %}
+      
+      
+      <div class="vr"></div>
+
+
+      {% if categoryLabel != 'all'%}
+        <a class="bg-light border " href="/description/{{description.id}}?category=all" >All</a>
+      {% else %}
+        <a class="btn-secondary active " href="/description/{{description.id}}?category=all" >All</a>
+      {% endif %}
+
+
+    </div>
+  </div>
+
+  
+</div>
+
+<hr />
 
 
 {{ anotation['id'] }}
 {{ anotation['text']|striptags }}
 {{ anotation['category'] }}
+{{ description['padministration'] }}
+
+
+
+<hr />
+
+{% macro muestaReplies(annotation,separador) -%}
+  {% set separador = '. '+separador + '_' %}
+  {% for annotationRep in anotations |sort( attribute="data_creacio") %}
+
+  {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+
+  <dd>{{separador}} At {{ annotationRep.created|datetimeformat() }} : {{ annotationRep.text|striptags }}</dd>
+
+  {{ muestaReplies(annotationRep,separador)}}
+
+  {% endif %}
+  {% endfor %}
+
+  {%- endmacro -%}
+
+
+  {% for annotation in replies %}
+            {% if annotation.category == 'term' %}
+            <dt>* Quote: " {{ annotation.quote }} "</dt>
+            <dt>* Term: {{ annotation.text|striptags }} </dt>
+
+            {% for annotationRep in anotations |sort( attribute="data_creacio")|selectattr("uri", "equalto",
+            annotation.uri) %}
+            {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+            <dd>- At
+              {{ annotationRep.created|datetimeformat() }}
+              : {{ annotationRep.text|striptags }} </dd>
+            {% set separador = '|_' %}
+            {{ muestaReplies(annotationRep,separador)}}
+            {% endif %}
+            {% endfor %}
+
+            {% endif %}
+            {% endfor %}
+
+
+
+
+<hr />
+
+
+
+
+
 
 
 {% endblock %}
+

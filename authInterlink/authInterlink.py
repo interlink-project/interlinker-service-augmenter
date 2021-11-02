@@ -197,12 +197,16 @@ def description(descriptionId=None):
     return render_template("description.html", user=current_user, description=description[0],anotations=res,categoryLabel=categoria)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
-@authInterlink.route('/subjectPage/<string:annotatorId>',)
-def subjectPage(annotatorId=None):
+@authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>',)
+def subjectPage(descriptionId=None,annotatorId=None):
 
-    res = Annotation._get_Annotation_byId(id=annotatorId)
+    description = Description._get_Descriptions_byId(id=descriptionId)[0]
+
+    anotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
+
+    replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  })
     
-    return render_template("subjectPage.html", user=current_user, anotation=res[0])
+    return render_template("subjectPage.html", user=current_user, anotation=anotation,description=description,categoryLabel=anotation['category'],replies=replies)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 

@@ -1,24 +1,7 @@
 {% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {%
 block content %}
 
-<script>
-  function showAnnotationsCat(event) {
-    if (event.type == "click") {
-      event.preventDefault();
-      var href = event.currentTarget.href;
-      var category = event.currentTarget.textContent;
-      window.location = "/description/" + category + "/" + href;
-    }
-  }
 
-  function showAnnotationsDet(event) {
-    if (event.type == "click") {
-      event.preventDefault();
-      var annotationId = event.currentTarget.getAttribute("value");
-      window.location = "/subjectPage/" + annotationId;
-    }
-  }
-</script>
 
 <div class="container container-fluid" style="padding:10px;">
   <div class="row" style="align-items: center; word-break: break-all">
@@ -102,7 +85,7 @@ block content %}
       <td>21/10/2021</td>
       <td>
         <a
-          href="/subjectPage/{{ anotation.id }}"
+          href="/subjectPage/{{ description.id }}/{{ anotation.id }}"
           >...</a
         >
       </td>
