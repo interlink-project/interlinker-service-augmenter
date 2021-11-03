@@ -1,6 +1,23 @@
 {% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {%
 block content %}
 
+<script>
+
+//Falta cargar de nuevo cuando se tenga una consulta en memoria
+
+
+function mostrarQuote(event) {  
+    if(event.type=='click'){
+
+        $("#quoteTexto").toggle('slow');
+        
+   
+    }
+  }
+
+</script>
+
+
 <div class="container container-fluid" style="padding: 10px; align-content: center;">
     <div class="row" style="display: flex;flex-direction: row;justify-content: center;">
         <div class="col-10">
@@ -23,11 +40,11 @@ block content %}
             {% else %}
             <a class="btn-secondary ms-auto active"
                 href="/description/{{description.id}}?category=feedback">Feedback</a>
-            {% endif %} {% if categoryLabel != 'problem'%}
-            <a class="bg-light border" href="/description/{{description.id}}?category=problem">Problem</a>
-            {% else %}
-            <a class="btn-secondary active" href="/description/{{description.id}}?category=problem">Problem</a>
-            {% endif %} {% if categoryLabel != 'term'%}
+            {% endif %} 
+            
+           
+            
+            {% if categoryLabel != 'term'%}
             <a class="bg-light border" href="/description/{{description.id}}?category=term">Term</a>
             {% else %}
             <a class="btn-secondary active" href="/description/{{description.id}}?category=term">Term</a>
@@ -58,15 +75,15 @@ block content %}
         </h3>
     </div>
     <div class="col-6">
-        <div class="container" style="display: flex; flex-direction: row; justify-content: flex-end">
-            <div style="min-width: 50px;max-width: 50px; text-align: center; padding-right: 10px">
+        <div class="container" style="display: flex; flex-direction: row; justify-content: flex-end;gap:10px;">
+            <div style="min-width: 50px;max-width: 50px; text-align: center; justify-content: center;border-radius: 5px;border:1px solid rgb(94, 94, 94,20%);" >
                 5 <br />
                 REPLY
             </div>
-            <div style="min-width: 50px;max-width: 50px; text-align: center; padding-right: 10px">
+            <div style="min-width: 50px;max-width: 50px; text-align: center; justify-content: center;border-radius: 5px;border:1px solid rgb(94, 94, 94,20%);">
                 15 VIEWS
             </div>
-            <div style="min-width: 50px;max-width: 50px; text-align: center; padding-right: 10px">
+            <div style="min-width: 50px;max-width: 50px; text-align: center; justify-content: center;border-radius: 5px;border:1px solid rgb(94, 94, 94,20%);">
                 5 VOTES
             </div>
         </div>
@@ -99,13 +116,13 @@ block content %}
 
         <div style="display: flex; justify-content: flex-end; gap: 10px;padding-bottom: 10px;">
 
-            <button type="button" class="btn btn-secondary">
+            <button type="button" onclick="mostrarQuote(event)" class="btn btn-secondary">
                 Quote
             </button>
 
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="quoteTexto" >
         <div style="display: flex; justify-content: flex-end;">
             <p><cite>" {{ annotation['quote']|striptags }} "</cite>
 

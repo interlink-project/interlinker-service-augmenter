@@ -1,4 +1,6 @@
 # Para correr estas queries es necesario habilitar ElasticSearch entorno.
+DELETE annotator
+
 
 
 DELETE description

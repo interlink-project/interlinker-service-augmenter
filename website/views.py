@@ -336,7 +336,6 @@ def modifica(rutaPagina,userId):
 
             $('body').annotator().annotator('addPlugin', 'RichEditor');
             $('body').annotator().annotator('addPlugin', 'Categories', {
-                        problem: 'annotator-hl-errata',
                         feedback: 'annotator-hl-destacat',
                         question: 'annotator-hl-subratllat',
                         term: 'annotator-hl-term'

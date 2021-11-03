@@ -26,11 +26,6 @@ block content %}
         <a class="btn-secondary ms-auto active" href="/description/{{description.id}}?category=feedback" >Feedback</a>
       {% endif %}
       
-      {% if categoryLabel != 'problem'%}
-        <a class="bg-light border" href="/description/{{description.id}}?category=problem" >Problem</a>
-      {% else %}
-        <a class="btn-secondary active " href="/description/{{description.id}}?category=problem" >Problem</a>
-      {% endif %}
 
       {% if categoryLabel != 'term'%}
         <a class="bg-light border " href="/description/{{description.id}}?category=term" >Term</a>
@@ -70,6 +65,7 @@ block content %}
       {% if categoryLabel == 'all'%}
       <th scope="col-3">Category</th>
       {% endif %}
+      <th scope="col-3">Id</th>
       <th scope="col-3">Description</th>
       <th scope="col-3">Creation Date</th>
       <th scope="col-3">Options</th>
@@ -81,6 +77,7 @@ block content %}
       {% if categoryLabel == 'all'%}
       <td>{{ anotation.category[0]|upper }}{{ anotation.category[1:] }}</td>
       {% endif %}
+      <td>{{ anotation.id}} </td>
       <td>{{ anotation.text|striptags}} </td>
       <td>21/10/2021</td>
       <td>

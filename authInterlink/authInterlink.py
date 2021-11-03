@@ -179,6 +179,7 @@ def advanceSearch():
     return render_template("advanceSearch.html", user=current_user, anotations=res)
 
 @authInterlink.route('/description/<string:descriptionId>',)
+@login_required
 def description(descriptionId=None):
 
     description = Description._get_Descriptions_byId(id=descriptionId)
@@ -187,9 +188,13 @@ def description(descriptionId=None):
 
     if(categoria == None or categoria=='all' ):
         categoria='all'
-        res = Annotation.search(query={ 'uri': description[0]['url']   })
+        numRes = Annotation.count(query={ 'uri': description[0]['url']})
+
+        res = Annotation.search(query={ 'uri': description[0]['url']},limit=numRes)
     else:
-        res = Annotation.search(query={ 'uri': description[0]['url'] ,'category':categoria  })
+        numRes = Annotation.count(query={ 'uri': description[0]['url'] ,'category':categoria})
+
+        res = Annotation.search(query={ 'uri': description[0]['url'] ,'category':categoria},limit=numRes)
 
 
   
@@ -198,13 +203,15 @@ def description(descriptionId=None):
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 @authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>',)
+@login_required
 def subjectPage(descriptionId=None,annotatorId=None):
 
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
 
     annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
 
-    replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  })
+    nroReplies = Annotation.count(query={ 'uri': description['url'] ,'category':'reply'  })
+    replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  },limit=nroReplies)
     
     return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies)
    # return 'la desc: '+category+'lauri is'+str(uri) 

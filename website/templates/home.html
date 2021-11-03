@@ -46,7 +46,7 @@
         $('#tablaDescriptions').empty();
        
         for (let dataItem of descripcionesList) {
-          $('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td> '+dataItem.created+' </td> <td> <i class="bi bi-box-arrow-in-right " style="width:100px;"></i> </td></tr>')
+          $('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td> '+dataItem.created+' </td> <td> <a href="/description/'+dataItem.id+'" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> </td></tr>')
         }
       
         $('#totalRegisters').text(numeroReg);
@@ -249,9 +249,7 @@
               <td>
 
 
-                <i class="bi bi-box-arrow-in-right " style="width:100px;"></i>
-
-                
+              <a  href="/description/{{ description.id }}" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
               </td>
             </tr>
 
