@@ -7,14 +7,14 @@
         "failed": 0
     },
     "hits": {
-        "total": 1,
-        "max_score": 1,
+        "total": 16,
+        "max_score": null,
         "hits": [
             {
                 "_index": "annotator",
                 "_type": "annotation",
-                "_id": "1635863824727",
-                "_score": 1,
+                "_id": "1635863863763",
+                "_score": null,
                 "_source": {
                     "section_title": null,
                     "ranges": [
@@ -25,7 +25,7 @@
                             "end": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[4]/strong[1]"
                         }
                     ],
-                    "created": "2021-11-02T14:37:04.675128+00:00",
+                    "created": "2021-11-02T14:37:43.700531+00:00",
                     "section": null,
                     "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
                     "quote": "en situación de permanencia legal en España, a cuyo fin los destinatarios del mismo deberán cumplimentar las actuaciones que se establezcan para su entrega.\n                  \n                  \n                   Dicha Tarjeta\n                   \n                    acredita la permanen",
@@ -44,13 +44,427 @@
                         ]
                     },
                     "data_creacio": 1635863824666,
-                    "text": "<p>Is this a question</p>",
-                    "category": "question",
+                    "idAnotationReply": "annotation-1635863824727",
+                    "text": "<p>Esta pregunta no tiene mucho sentido</p>",
+                    "category": "reply",
                     "user": "d.silva@deusto.es",
-                    "updated": "2021-11-02T14:37:04.675128+00:00",
+                    "updated": "2021-11-02T14:37:43.700531+00:00",
                     "consumer": "***REMOVED***",
                     "order": "p_p_id_101_INSTANCE_lprzHzvsA9km_"
-                }
+                },
+                "sort": [
+                    1635863863700
+                ]
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1635863839506",
+                "_score": null,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 333,
+                            "startOffset": 51,
+                            "start": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[5]",
+                            "end": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[5]"
+                        }
+                    ],
+                    "created": "2021-11-02T14:37:19.498077+00:00",
+                    "section": null,
+                    "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
+                    "quote": "anjero es\n                   \n                    personal e intransferible\n                   \n                   , correspondiendo a su titular la custodia y conservación del documento. No obstante, los hijos o representados menores de edad no emancipados o incapacitados podrán f",
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1635863808390,
+                    "idAnotationReply": "annotation-1635863808440",
+                    "text": "<p>Este problema esta bien gordo</p>",
+                    "category": "reply",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2021-11-02T14:37:19.498077+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "p_p_id_101_INSTANCE_lprzHzvsA9km_"
+                },
+                "sort": [
+                    1635863839498
+                ]
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1635164509769",
+                "_score": null,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 90,
+                            "startOffset": 84,
+                            "start": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[9]/strong[1]",
+                            "end": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[9]/strong[1]"
+                        }
+                    ],
+                    "created": "2021-10-25T12:21:49.726232+00:00",
+                    "section": null,
+                    "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
+                    "quote": "España",
+                    "permissions": {
+                        "read": [],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1635164389243,
+                    "idAnotationReply": "annotation-1635164492795",
+                    "text": "<p>This is my second reply</p>",
+                    "category": "reply",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2021-10-25T12:21:49.726232+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "p_p_id_101_INSTANCE_lprzHzvsA9km_"
+                },
+                "sort": [
+                    1635164509726
+                ]
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1635164492795",
+                "_score": null,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 90,
+                            "startOffset": 84,
+                            "start": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[9]/strong[1]",
+                            "end": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[9]/strong[1]"
+                        }
+                    ],
+                    "created": "2021-10-25T12:21:32.773905+00:00",
+                    "section": null,
+                    "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
+                    "quote": "España",
+                    "permissions": {
+                        "read": [],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1635164389243,
+                    "idAnotationReply": "annotation-1635164389319",
+                    "text": "<p>this is my first reply</p>",
+                    "category": "reply",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2021-10-25T12:21:32.773905+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "p_p_id_101_INSTANCE_lprzHzvsA9km_"
+                },
+                "sort": [
+                    1635164492773
+                ]
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1634645527066",
+                "_score": null,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 98,
+                            "startOffset": 62,
+                            "start": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[6]",
+                            "end": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[6]/strong[1]"
+                        }
+                    ],
+                    "created": "2021-10-19T12:12:06.998627+00:00",
+                    "section": null,
+                    "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
+                    "quote": "io español tiene el\n                   \n                    derecho y la obligación de conservar, en vigor, la documentación que acredite",
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1634628084466,
+                    "idAnotationReply": "annotation-1634637661240",
+                    "text": "<p>Este es el reply del 4to</p>",
+                    "category": "reply",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2021-10-19T12:12:06.998627+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "p_p_id_101_INSTANCE_lprzHzvsA9km_"
+                },
+                "sort": [
+                    1634645526998
+                ]
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1634645481215",
+                "_score": null,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 98,
+                            "startOffset": 62,
+                            "start": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[6]",
+                            "end": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[6]/strong[1]"
+                        }
+                    ],
+                    "created": "2021-10-19T12:11:21.134513+00:00",
+                    "section": null,
+                    "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
+                    "quote": "io español tiene el\n                   \n                    derecho y la obligación de conservar, en vigor, la documentación que acredite",
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1634628084466,
+                    "idAnotationReply": "annotation-1634629717199",
+                    "text": "<p>Para nada todo muy bonito</p>",
+                    "category": "reply",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2021-10-19T12:11:21.134513+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "p_p_id_101_INSTANCE_lprzHzvsA9km_"
+                },
+                "sort": [
+                    1634645481134
+                ]
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1634637679876",
+                "_score": null,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 98,
+                            "startOffset": 62,
+                            "start": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[6]",
+                            "end": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[6]/strong[1]"
+                        }
+                    ],
+                    "created": "2021-10-19T10:01:19.800580+00:00",
+                    "section": null,
+                    "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
+                    "quote": "io español tiene el\n                   \n                    derecho y la obligación de conservar, en vigor, la documentación que acredite",
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1634628084466,
+                    "idAnotationReply": "annotation-1634628099338",
+                    "text": "<p>Este es otro del no te creo</p>",
+                    "category": "reply",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2021-10-19T10:01:19.800580+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "p_p_id_101_INSTANCE_lprzHzvsA9km_"
+                },
+                "sort": [
+                    1634637679800
+                ]
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1634637661240",
+                "_score": null,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 98,
+                            "startOffset": 62,
+                            "start": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[6]",
+                            "end": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[6]/strong[1]"
+                        }
+                    ],
+                    "created": "2021-10-19T10:01:01.212434+00:00",
+                    "section": null,
+                    "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
+                    "quote": "io español tiene el\n                   \n                    derecho y la obligación de conservar, en vigor, la documentación que acredite",
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1634628084466,
+                    "idAnotationReply": "annotation-1634629717199",
+                    "text": "<p>Este es el cuarto reply</p>",
+                    "category": "reply",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2021-10-19T10:01:01.212434+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "p_p_id_101_INSTANCE_lprzHzvsA9km_"
+                },
+                "sort": [
+                    1634637661212
+                ]
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1634629717199",
+                "_score": null,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 98,
+                            "startOffset": 62,
+                            "start": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[6]",
+                            "end": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[6]/strong[1]"
+                        }
+                    ],
+                    "created": "2021-10-19T07:48:37.111677+00:00",
+                    "section": null,
+                    "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
+                    "quote": "io español tiene el\n                   \n                    derecho y la obligación de conservar, en vigor, la documentación que acredite",
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1634628084466,
+                    "idAnotationReply": "annotation-1634629701047",
+                    "text": "<p>Este es el tercer reply</p>",
+                    "category": "reply",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2021-10-19T07:48:37.111677+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "p_p_id_101_INSTANCE_lprzHzvsA9km_"
+                },
+                "sort": [
+                    1634629717111
+                ]
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1634629701047",
+                "_score": null,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 98,
+                            "startOffset": 62,
+                            "start": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[6]",
+                            "end": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[6]/strong[1]"
+                        }
+                    ],
+                    "created": "2021-10-19T07:48:20.983139+00:00",
+                    "section": null,
+                    "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
+                    "quote": "io español tiene el\n                   \n                    derecho y la obligación de conservar, en vigor, la documentación que acredite",
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1634628084466,
+                    "idAnotationReply": "annotation-1634628099338",
+                    "text": "<p>Este es el reply del reply</p>",
+                    "category": "reply",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2021-10-19T07:48:20.983139+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "p_p_id_101_INSTANCE_lprzHzvsA9km_"
+                },
+                "sort": [
+                    1634629700983
+                ]
             }
         ]
     }

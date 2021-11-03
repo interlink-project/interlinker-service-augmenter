@@ -202,11 +202,11 @@ def subjectPage(descriptionId=None,annotatorId=None):
 
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
 
-    anotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
+    annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
 
     replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  })
     
-    return render_template("subjectPage.html", user=current_user, anotation=anotation,description=description,categoryLabel=anotation['category'],replies=replies)
+    return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 

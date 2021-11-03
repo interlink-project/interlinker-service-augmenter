@@ -1,127 +1,233 @@
-
 {% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {%
 block content %}
 
+<div class="container container-fluid" style="padding: 10px; align-content: center;">
+    <div class="row" style="display: flex;flex-direction: row;justify-content: center;">
+        <div class="col-10">
+            <h3>{{description['title']|striptags}}</h3>
+        </div>
 
-
-
-
-<div class="container container-fluid" style="padding:10px;">
-  <div class="row" style="align-items: center; word-break: break-all">
-    <div class="col-10">
-      <h4>{{description['title']|striptags}}</h4>
+        <div class="col-2" style="min-width: 200px;">
+            <a href="/website/modifica/{{ current_user.email }}/{{ description['url']}}"
+                class="btn bg-light border">PREVIEW</a>
+        </div>
     </div>
-
-    <div class="col-2"><a href="/website/modifica/{{ current_user.email }}/{{ description['url']}}"   class="btn bg-light border"  >PREVIEW</a></div>
-    
-    
-  </div>
 </div>
 <hr />
 
 <div class="container">
-  <div class="row">
-    <div class="hstack gap-3">
+    <div class="row">
+        <div class="hstack gap-3">
+            {% if categoryLabel != 'feedback'%}
+            <a class="bg-light border ms-auto" href="/description/{{description.id}}?category=feedback">Feedback</a>
+            {% else %}
+            <a class="btn-secondary ms-auto active"
+                href="/description/{{description.id}}?category=feedback">Feedback</a>
+            {% endif %} {% if categoryLabel != 'problem'%}
+            <a class="bg-light border" href="/description/{{description.id}}?category=problem">Problem</a>
+            {% else %}
+            <a class="btn-secondary active" href="/description/{{description.id}}?category=problem">Problem</a>
+            {% endif %} {% if categoryLabel != 'term'%}
+            <a class="bg-light border" href="/description/{{description.id}}?category=term">Term</a>
+            {% else %}
+            <a class="btn-secondary active" href="/description/{{description.id}}?category=term">Term</a>
+            {% endif %} {% if categoryLabel != 'question'%}
+            <a class="bg-light border" href="/description/{{description.id}}?category=question">Question</a>
+            {% else %}
+            <a class="btn-secondary active" href="/description/{{description.id}}?category=question">Question</a>
+            {% endif %}
 
-      {% if categoryLabel != 'feedback'%}
-        <a class="bg-light border ms-auto" href="/description/{{description.id}}?category=feedback" >Feedback</a>
-      {% else %}
-        <a class="btn-secondary ms-auto active" href="/description/{{description.id}}?category=feedback" >Feedback</a>
-      {% endif %}
-      
-      {% if categoryLabel != 'problem'%}
-        <a class="bg-light border" href="/description/{{description.id}}?category=problem" >Problem</a>
-      {% else %}
-        <a class="btn-secondary active " href="/description/{{description.id}}?category=problem" >Problem</a>
-      {% endif %}
+            <div class="vr"></div>
 
-      {% if categoryLabel != 'term'%}
-        <a class="bg-light border " href="/description/{{description.id}}?category=term" >Term</a>
-      {% else %}
-        <a class="btn-secondary active " href="/description/{{description.id}}?category=term" >Term</a>
-      {% endif %}
-
-
-      {% if categoryLabel != 'question'%}
-        <a class="bg-light border " href="/description/{{description.id}}?category=question" >Question</a>
-      {% else %}
-        <a class="btn-secondary active " href="/description/{{description.id}}?category=question" >Question</a>
-      {% endif %}
-      
-      
-      <div class="vr"></div>
-
-
-      {% if categoryLabel != 'all'%}
-        <a class="bg-light border " href="/description/{{description.id}}?category=all" >All</a>
-      {% else %}
-        <a class="btn-secondary active " href="/description/{{description.id}}?category=all" >All</a>
-      {% endif %}
-
-
+            {% if categoryLabel != 'all'%}
+            <a class="bg-light border" href="/description/{{description.id}}?category=all">All</a>
+            {% else %}
+            <a class="btn-secondary active" href="/description/{{description.id}}?category=all">All</a>
+            {% endif %}
+        </div>
     </div>
-  </div>
-
-  
 </div>
 
 <hr />
 
+<div class="row">
+    <div class="col-6">
+        <h3>
+            {{ annotation['category'][0]|upper }}{{ annotation['category'][1:] }}/{{
+      annotation['id'] }}
+        </h3>
+    </div>
+    <div class="col-6">
+        <div class="container" style="display: flex; flex-direction: row; justify-content: flex-end">
+            <div style="min-width: 50px;max-width: 50px; text-align: center; padding-right: 10px">
+                5 <br />
+                REPLY
+            </div>
+            <div style="min-width: 50px;max-width: 50px; text-align: center; padding-right: 10px">
+                15 VIEWS
+            </div>
+            <div style="min-width: 50px;max-width: 50px; text-align: center; padding-right: 10px">
+                5 VOTES
+            </div>
+        </div>
+    </div>
+</div>
 
-{{ anotation['id'] }}
-{{ anotation['text']|striptags }}
-{{ anotation['category'] }}
-{{ description['padministration'] }}
+<div class="row" style="padding-left: 10px">
+    <h4>Content:</h4>
 
+    <div class="row" style="
+      position: relative;
+      background-color: #fff1f1;
+      border-radius: 10px;
+      margin: 10px;
+    ">
+        <div style="position: relative; top: -10px">
+            <div style="top: -10px; display: flex; justify-content: flex-end; gap: 10px">
+                <button type="button" class="btn btn-success">
+                    <i class="bi bi-hand-thumbs-up"></i> 99+
+                </button>
+                <button type="button" class="btn btn-danger">
+                    <i class="bi bi-hand-thumbs-down"></i> 99+
+                </button>
+            </div>
+        </div>
+
+        <p style="padding: 10px; padding-top: 0px">
+            {{ annotation['text']|striptags }}
+        </p>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;padding-bottom: 10px;">
+
+            <button type="button" class="btn btn-secondary">
+                Quote
+            </button>
+
+        </div>
+    </div>
+    <div class="row">
+        <div style="display: flex; justify-content: flex-end;">
+            <p><cite>" {{ annotation['quote']|striptags }} "</cite>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+<div class="row" style="padding-left: 10px;padding-bottom: 10px;">
+
+    <div class="row" style="gap: 10px;">
+        <div class="col-3">
+            <h4>Keywords:</h3>
+        </div>
+
+        <div class="col-5">
+            {{description['keywords'][0]|upper}}{{description['keywords'][1:]| replace(" ", ", ")}}
+        </div>
+
+    </div>
+
+    <div class="row" style="gap: 10px;">
+        <div class="col-3">
+            <h4>Public Administration:</h3>
+        </div>
+
+        <div class="col-5">
+            {{description['padministration']}}
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="row" style="padding: 15px;">
+    <div style="display: flex;flex-direction: row;gap: 10px;">
+        <button type="button" class="btn bi-archive border btn-outline-dark" style="color: red;">
+            Archive
+        </button>
+        <button type="button" class="btn bi-check-circle border  btn-outline-success" >
+            Approved
+        </button>
+
+    </div>
+
+
+</div>
 
 
 <hr />
 
-{% macro muestaReplies(annotation,separador) -%}
-  {% set separador = '. '+separador + '_' %}
-  {% for annotationRep in anotations |sort( attribute="data_creacio") %}
+{% macro muestraReplies(reply,separador) -%} 
+{% set separador = '. '+separador +'. ' %} 
+    {% for replyRep in replies |sort( attribute="data_creacio") %} 
+        {% if replyRep.category == 'reply' and replyRep.idAnotationReply=='annotation-'+reply.id %}
 
-  {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
+        <div class="row" style="background-color: #e7fff1;border-radius: 10px;margin: 10px;align-items:center;">
+            <div class="col-10">
+                {{separador}} <i class="bi bi-arrow-return-right" style="font-weight: bold;width: fit-content;"></i> 
+                {% set userName = replyRep.user.split('@')[0] %}
 
-  <dd>{{separador}} At {{ annotationRep.created|datetimeformat() }} : {{ annotationRep.text|striptags }}</dd>
+                <span style="font-weight: bold;width: fit-content;" > {{ userName[0] |upper}}{{ userName[1:]}} </span> at {{ replyRep.created|datetimeformat() }}. 
+                
+                <span style="font-weight:lighter;width: fit-content;" >{{ replyRep.text|striptags}}</span>
+            
+            </div>
 
-  {{ muestaReplies(annotationRep,separador)}}
+            <div class="col-2" style="display:flex;justify-content: flex-end; ">
+                <div class="input-group mb-3">
+                    <button class="btn btn-outline-secondary bi-trash" type="button"></button>
+                    <button class="btn btn-outline-secondary bi-hand-thumbs-up" type="button"></button>
+                    <button class="btn btn-outline-secondary bi-hand-thumbs-down" type="button"></button>
+                </div>
+            </div>
 
-  {% endif %}
-  {% endfor %}
-
-  {%- endmacro -%}
-
-
-  {% for annotation in replies %}
-            {% if annotation.category == 'term' %}
-            <dt>* Quote: " {{ annotation.quote }} "</dt>
-            <dt>* Term: {{ annotation.text|striptags }} </dt>
-
-            {% for annotationRep in anotations |sort( attribute="data_creacio")|selectattr("uri", "equalto",
-            annotation.uri) %}
-            {% if annotationRep.category == 'reply' and annotationRep.idAnotationReply== 'annotation-'+annotation.id %}
-            <dd>- At
-              {{ annotationRep.created|datetimeformat() }}
-              : {{ annotationRep.text|striptags }} </dd>
-            {% set separador = '|_' %}
-            {{ muestaReplies(annotationRep,separador)}}
-            {% endif %}
-            {% endfor %}
-
-            {% endif %}
-            {% endfor %}
+        </div>
 
 
 
+        
+        {{ muestraReplies(replyRep,separador)}} 
+        {% endif %} 
+    {% endfor %} 
+{%- endmacro -%}
+
+<div class="container">
+    
+        {% for replyRep in replies |sort(
+    attribute="data_creacio")|selectattr("uri", "equalto", annotation.uri) %} {%
+    if replyRep.category == 'reply' and replyRep.idAnotationReply==
+    'annotation-'+annotation.id %}
+        <div class="row" style="background-color: #e7fff1;border-radius: 10px;margin: 10px;">
+            <div class="col-10">
+                {% set userName = replyRep.user.split('@')[0] %}
+
+                <span style="font-weight: bold;width: fit-content;" > {{ userName[0] |upper}}{{ userName[1:]}} </span> at {{ replyRep.created|datetimeformat() }}. 
+                
+                <span style="font-weight:lighter;width: fit-content;" >{{ replyRep.text|striptags}}</span>
+            
+            </div>
+
+            <div class="col-2" style="position: relative; padding-top: 5px;padding-bottom: 0px; ">
+                <div class="input-group mb-3">
+                    <button class="btn btn-outline-secondary bi-trash" type="button"></button>
+                    <button class="btn btn-outline-secondary bi-hand-thumbs-up" type="button"></button>
+                    <button class="btn btn-outline-secondary bi-hand-thumbs-down" type="button"></button>
+                </div>
+            </div>
+
+        
+
+        </div>
+        {% set separador = '' %} {{ muestraReplies(replyRep,separador)}} {% endif
+    %} {% endfor %}
+    
+</div>
 
 <hr />
-
-
-
-
-
-
 
 {% endblock %}
-

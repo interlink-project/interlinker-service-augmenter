@@ -492,3 +492,33 @@ POST annotator/annotation/_search
 
 
 POST annotator/annotation/_search
+
+
+POST annotator/annotation/_search
+{
+    "sort": [
+        {
+            "updated": {
+                "order": "desc"
+            }
+        }
+    ],
+    "from": 0,
+    "size": 10,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero"
+                    }
+                },
+                {
+                    "match": {
+                        "category": "reply"
+                    }
+                }
+            ]
+        }
+    }
+}
