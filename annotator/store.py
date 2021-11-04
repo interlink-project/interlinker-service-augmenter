@@ -322,14 +322,14 @@ def search_annotations():
         kwargs['sort'] = params.pop('sort')
     if 'order' in params:
         kwargs['order'] = params.pop('order')
-
+    kwargs['limit'] = 100000
     # All remaining parameters are considered searched fields.
     kwargs['query'] = params
 
     if current_app.config.get('AUTHZ_ON'):
         # Pass the current user to do permission filtering on results
         kwargs['user'] = g.user
-
+    print(f' Kwargs: {kwargs}' )
     results = g.annotation_class.search(**kwargs)
     total = g.annotation_class.count(**kwargs)
 

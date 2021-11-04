@@ -506,7 +506,7 @@ POST annotator/annotation/_search
         }
     ],
     "from": 0,
-    "size": 10,
+    "size": 10000,
     "query": {
         "bool": {
             "must": [
@@ -514,11 +514,60 @@ POST annotator/annotation/_search
                     "match": {
                         "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero"
                     }
+                }
+            ]
+        }
+    }
+}
+
+GET annotator/annotation/_search 
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "prefix": {
+                        "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero"
+                    }
                 },
                 {
                     "match": {
-                        "category": "reply"
+                        "_id": "1636002050378"
                     }
+                }
+            ]
+        }
+    }
+}
+
+
+
+GET annotator/annotation/_search 
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "prefix": {
+                        "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero"
+                    }
+                }
+            ]
+        }
+    }
+}
+
+/search?uri=http%3A%2F%2Fwww.interior.gob.es%2Fweb%2Fservicios-al-ciudadano%2Fextranjeria%2Fregime
+
+
+GET description/description/_search
+{
+
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match_all": {}
                 }
             ]
         }
