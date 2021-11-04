@@ -175,7 +175,104 @@ class Description(es.Model):
                                  body=q)
 
         return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+    
+    @classmethod
+    def _get_Descriptions_byURI(cls,**kwargs):
+        
 
+        q= {
+            "query": {
+                "match": {
+                "url":kwargs.pop("url")
+                }
+            }
+        }
+
+        print(q)
+
+
+        res = cls.es.conn.search(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+   
+
+
+    @classmethod
+    def _get_Descript_byModerEmail(cls,**kwargs):
+       
+
+        q= {
+                
+                "query": {
+                    "nested": {
+                        "path": "moderators",
+                        "query": {
+                            "bool": {
+                                "must": [
+                                    {
+                                        "match": {
+                                            
+                                            "moderators.email": kwargs.pop("email") 
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+
+        #Parametros de busqueda:
+
+       
+        print(q)
+
+    
+        res = cls.es.conn.search(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+       
+    @classmethod
+    def _get_Descript_byModerEmailCounts(cls,**kwargs):
+       
+
+        q= {
+                
+                "query": {
+                    "nested": {
+                        "path": "moderators",
+                        "query": {
+                            "bool": {
+                                "must": [
+                                    {
+                                        "match": {
+                                            
+                                            "moderators.email": kwargs.pop("email") 
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+
+        #Parametros de busqueda:
+
+       
+        print(q)
+
+    
+        res = cls.es.conn.count(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+    
+        return res['count']
 
     @classmethod
     def _get_DescriptionsCounts(cls,**kwargs):
@@ -484,6 +581,17 @@ class Description(es.Model):
         
 
         super(Description, self).save(*args, **kwargs)
+
+    def update(self, *args, **kwargs):
+        #_add_default_permissions(self)
+
+        # If the annotation includes document metadata look to see if we have
+        # the document modeled already. If we don't we'll create a new one
+        # If we do then we'll merge the supplied links into it.
+
+        
+
+        super(Description, self).update(*args, **kwargs)
 
     @classmethod
     def search_raw(cls, query=None, params=None, raw_result=False,

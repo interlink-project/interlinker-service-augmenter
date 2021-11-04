@@ -129,7 +129,7 @@ POST description/description/
     "keywords":"palabra, esta ,mostrando",
     "moderators": [
         {
-           "email":"danyc@hotmail.com",
+           "email":"d.silva@deusto.es",
            "created":1635334650,
            "expire":1635334650
         },
@@ -145,6 +145,99 @@ POST description/description/
     "created":1635334650,
     "updated":1635334650
 }
+
+PUT description/description/
+{
+    "title":"la demanda12 mucho demas gusto",
+    "description":"es el texto de la 12",
+    "keywords":"palabra, esta ,mostrando",
+    "moderators": [
+        {
+           "email":"d.silva@deusto.es",
+           "created":1635334650,
+           "expire":1635334650
+        },
+        {
+           "email":"d.silvad@hotmasil.com",
+           "created":1635334650,
+           "expire":1635334650 
+        }
+    ],
+    "permissions":[{"read": ["group:__world__"]}],
+    "padministration":"Latvia",
+    "url":"http://latvia.vl/x1.html",
+    "created":1635334650,
+    "updated":1635334650
+}
+
+PUT description/description/AXzf7Pl9W2WuxQVN8aJl
+{
+  "title" : "la demanda12 mucho demas gusto1",
+  "description": "es el texto de la 12345"
+}
+
+
+
+
+POST description/description/_search
+{
+ 
+    "query": {
+        "nested": {
+            "path": "moderators",
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "moderators.email": "d.silvad@hotmasil.com"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
+
+
+POST description/description/_search
+{
+    "_source": "moderators.*",
+    "query": {
+        "nested": {
+            "path": "moderators",
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "moderators.email": "d.silva@deusto.es"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
+
+
+POST description/description/_search?search_type=count
+,
+                "inner_hits": {
+                    "_source": {
+                        "includes": [
+                            "moderators.created",
+                            "moderators.expire"
+                        ]
+                    },
+                    "highlight": {
+                        "fields": {
+                            "timedTextLines.textLine": {}
+                        }
+                    }
+                }
 
 POST description/description/_search?search_type=count
 
@@ -175,6 +268,42 @@ POST description/description/_search
     "query": {
         "prefix":{
             "title": "titula"
+            }
+            
+        }
+    }
+}
+
+POST description/description/_search
+
+POST description/description/_search
+{
+    "query": {
+        "match":{
+            "url": "http://latvia.vl/x1.html"
+            }
+            
+        }
+    }
+}
+
+POST description/description/_search
+{
+    "query": {
+        "match": {
+            "url": [
+                "http://latvia.vl/x1.html"
+            ]
+        }
+    }
+}
+
+
+POST description/description/_search
+{
+    "query": {
+        "prefix":{
+            "_id": "AXzqK2S3W2WuxQVN8aJ8"
             }
             
         }

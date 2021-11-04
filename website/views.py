@@ -1,3 +1,4 @@
+from re import I
 from flask import Blueprint, render_template, request, flash, jsonify, g,session
 import json, requests, math
 
@@ -117,7 +118,7 @@ def buscar():
 @views.route("/registrar",methods=["POST"])
 def saveDescription():
     
-    site = request.form["nm"]
+    site = request.form["createUrl"]
     title = request.form["createTitle"]
     description = request.form["createDescription"]
     keywords = request.form["createKeywords"]
@@ -139,14 +140,41 @@ def saveDescription():
     perms = {'read': ['group:__world__']}
   
     moderat = {}
-    newdescription=Description(title=title,description=description,
+
+    #Busco si esta la descripcion funciona:
+
+    editDescripcion =Description._get_Descriptions_byURI(url=site)[0]
+    if editDescripcion==None:
+        #Create:
+
+        newdescription=Description(title=title,description=description,
                                 keywords=keywords,moderators=moderat,
                                 padministration=publicAdmin,url=site,
                                 permissions=perms
                                 )
-    newdescription.save(index="description")
     
-    return jsonify(newdescription)
+    
+    
+        newdescription.save(index="description")
+        description=newdescription
+
+    else:
+        #Update: 
+
+        editDescripcion.title=title
+        editDescripcion.description=description
+        editDescripcion.keywords=keywords
+        editDescripcion.padministration=publicAdmin
+
+        editDescripcion.update(index="description")   
+
+        description=editDescripcion 
+
+
+    
+    
+    return redirect('/description/'+description['id']+'/edit')
+
 """ 
     
     "title": {"type": "string","analyzer": "standard"},

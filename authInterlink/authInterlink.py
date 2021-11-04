@@ -158,6 +158,9 @@ def moderate():
         res= Description._get_Descriptions(textoABuscar=textoABuscar,padministration=padministration,url=domain,offset=registroInicial)
         totalRegistros= Description._get_DescriptionsCounts(textoABuscar=textoABuscar,padministration=padministration,url=domain)
         
+    res=Description._get_Descript_byModerEmail(email=current_user.email)
+    totalRegistros= Description._get_Descript_byModerEmailCounts(email=current_user.email)
+
 
     pagesNumbers=math.ceil(totalRegistros/10)
     
@@ -202,6 +205,28 @@ def description(descriptionId=None):
     return render_template("description.html", user=current_user, description=description[0],anotations=res,categoryLabel=categoria)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
+@authInterlink.route('/description/<string:descriptionId>/<string:option>',)
+@login_required
+def editDescription(descriptionId=None,option='Edit'):
+
+    vectorPAs=Description._get_uniqueValues(campo="padministration")
+    paList=[]
+    for pas in vectorPAs:
+        key=pas["key"]
+
+        if key=="":
+            key='Unassigned'
+
+        paList.append(key)
+    print(paList)
+
+    description = Description._get_Descriptions_byId(id=descriptionId)[0]
+    
+
+    return render_template("descriptionDetail.html", user=current_user, description=description,option=option,publicsa=paList)
+
+
+
 @authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>',)
 @login_required
 def subjectPage(descriptionId=None,annotatorId=None):
@@ -217,9 +242,9 @@ def subjectPage(descriptionId=None,annotatorId=None):
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 
-@authInterlink.route("/annotateIt")
+@authInterlink.route("/descriptionDetail")
 @login_required
-def annotateIt():
+def descriptionDetail():
 
     vectorPAs=Description._get_uniqueValues(campo="padministration")
     paList=[]
@@ -235,7 +260,7 @@ def annotateIt():
     res = Annotation.search(query={'user': current_user.email})
     
 
-    return render_template("annotateIt.html", user=current_user, anotations=res,publicsa=paList)
+    return render_template("descriptionDetail.html", user=current_user, anotations=res,publicsa=paList)
 
 
 @authInterlink.route("/profile")

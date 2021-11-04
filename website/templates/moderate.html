@@ -49,7 +49,7 @@ block head %} {{ super() }}
                 for (let dataItem of descripcionesList) {
                     $('#tablaDescriptions').append(' <tr> <td> ' + dataItem.padministration + ' </td> <td> ' + dataItem
                         .title + ' </td>  <td> ' + dataItem.created +
-                        ' </td> <td> <i class="bi bi-box-arrow-in-right " style="width:100px;"></i> </td></tr>')
+                        ' </td> <td> <i class="bi bi-tools " style="width:100px;"></i> </td></tr>')
                 }
 
                 $('#totalRegisters').text(numeroReg);
@@ -116,7 +116,7 @@ block head %} {{ super() }}
     function createNew(event) {
         if (event.type == 'click') {
 
-            window.location = '/annotateIt';
+            window.location = '/descriptionDetail';
 
         }
     }
@@ -135,12 +135,15 @@ block head %} {{ super() }}
 
     <div class="row">
         <div class="table-responsive">
+            <h6 id="searchStats">Total found : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span id='page'>{{paginacion.page}}</span> of <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> Pages).</h6>
+    
             <table class="table" style="height: auto">
                 <thead>
                     <tr>
-                        <th scope="col-3">Domain</th>
-                        <th scope="col-3">Page</th>
-                        <th scope="col-3">Creation Date</th>
+                        <th scope="col-2">Domain</th>
+                        <th scope="col-2">Page</th>
+                        <th scope="col-3">Title</th>
+                        <th scope="col-2">Creation Date</th>
                         <th scope="col-2">Expiration Date</th>
                     </tr>
                 </thead>
@@ -148,17 +151,56 @@ block head %} {{ super() }}
                     {% for description in descriptions %}
 
                     <tr>
-                        <td>{{ description.padministration }}</td>
-                        <td>{{ description.title }}</td>
-                        <td>{{ description.created|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+
+                        {% set completeAdress = description.url.split('/') %}
+
+                        <td>{{ completeAdress[2] }}</td>
+
+                        {% set specificPage = description.url.split(completeAdress[0:2]|join("/")) %}
+
+                        <td>{{ specificPage[1] }}</td>
+
+                        <td>{{ description.title}}</td>
+
+                        {% for moderator in description.moderators %}
+                            {% if moderator.email == current_user.email %}
+                            <td>{{ moderator.created|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+                            <td>{{ moderator.expire|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+                            {% endif %}
+                        {% endfor %}
+
                         <td>
-                            <i class="bi bi-box-arrow-in-right" style="width: 100px"></i>
+                           
+                            <a  href="/description/{{ description.id }}/edit" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-tools " style="width:100px;"></i></a>
+             
                         </td>
                     </tr>
 
                     {% endfor %}
                 </tbody>
             </table>
+
+            <div
+            class="container"
+            style="align-content: center; justify-content: center; display: flex"
+          >
+            <div class="row">
+              <div class="col">
+                <nav aria-label="...">
+                  <ul class="pagination" id="paginador">
+      
+      
+                  {% for i in range(paginacion.pagesNumbers|int) %}
+                    <li class="page-item"><a class="page-link" href='?page={{ i+1 }}'>{{i+1}}</a></li>
+                  {% endfor %}
+      
+      
+      
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
         </div>
         <hr />
 
@@ -179,6 +221,7 @@ block head %} {{ super() }}
                     <option value="3">domain3</option>
                 </select>
                 <input type="text" class="form-control" placeholder="Url Page" aria-label="Url Page">
+                <button class="btn btn-outline-secondary" type="button" id="button-addon2">Edit</button>
             </div>
         </div>
 

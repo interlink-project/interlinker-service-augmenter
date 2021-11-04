@@ -216,6 +216,29 @@ class _Model(dict):
                                  body=self,
                                  op_type=op_type,
                                  refresh=refresh)
+        
+
+        self['id'] = res['_id']
+
+        
+    def update(self, refresh=True, index=""):
+
+        if(index ==""):
+            index=self.es.index
+
+        _add_updated(self)
+
+       
+        op_type = 'index'
+
+        res = self.es.conn.update(index=index,
+                                 doc_type=self.__type__,
+                                 body=self,
+                                 id=self.id,
+                                 op_type=op_type,
+                                 refresh=refresh)
+        
+
         self['id'] = res['_id']
 
     def delete(self, index=""):

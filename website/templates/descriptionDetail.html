@@ -1,0 +1,161 @@
+{% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {% block
+    content %}
+
+
+
+
+
+<div>
+    <form class="form-inline my-2 my-lg-0" action="/website/registrar" method="POST">
+
+
+
+
+        <div class="grid-container">
+
+            <div class="row" style="padding: 10px;">
+                <h4> Register a new description</h4>
+            </div>
+            <div class="row">
+                <div class="form-floating">
+
+                    {% if description is defined %}
+                    <input class="form-control" id="title" name="createTitle" value="{{description.title}}"
+                        placeholder="createTitle">
+                    {% else %}
+                    <input class="form-control" id="title" name="createTitle" placeholder="createTitle">
+                    {% endif %}
+
+                    <label for="floatingInput">Title</label>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="form-floating mb-3">
+
+                    {% if description is defined %}
+                    <textarea class="form-control" placeholder="Description" name="createDescription"
+                        id="createDescription" style="min-height: 150px;">{{description.description}}</textarea>
+                    {% else %}
+                    <textarea class="form-control" placeholder="Description" name="createDescription"
+                        id="createDescription" style="min-height: 150px;"></textarea>
+                    {% endif %}
+
+                    <label for="floatingTextarea">Description</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-floating mb-3">
+
+                        {% if description is defined %}
+                        <input class="form-control" name="createKeywords" value="{{description.keywords}}"
+                            id="createKeywords" placeholder="Keywords">
+                        {% else %}
+                        <input class="form-control" name="createKeywords" id="createKeywords" placeholder="Keywords">
+                        {% endif %}
+
+
+
+
+
+                        <label for="floatingInput">Keywords</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-8">
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="inputGroupSelect02">Public Administration</label>
+                        </div>
+
+                        {% if description is defined %}
+                        <select class="custom-select" name="createPA" id="createPA" style="min-width: 30vw;">
+                            <option>Choose...</option>
+                            {% for itemPA in publicsa %}
+                            <option {% if description.padministration == itemPA %}selected{% endif %}
+                                value='{{ itemPA }}'>{{ itemPA }}</option>
+                            {% endfor %}
+                        </select>
+                        {% else %}
+                        <select class="custom-select" name="createPA" id="createPA" style="min-width: 30vw;">
+                            <option selected>Choose...</option>
+                            {% for itemPA in publicsa %}
+                            <option value='{{ itemPA }}'>{{ itemPA }}</option>
+                            {% endfor %}
+                        </select>
+                        {% endif %}
+
+
+
+
+
+
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2" style="align-content: center;justify-content: center;">
+                    Add New Public Administration:
+                </div>
+                <div class="col-4">
+                    <div class="form-floating mb-3">
+                        <input class="form-control" name="addNewPA" id="addNewPA" placeholder="AddNew">
+                        <label for="floatingInput">Public Administration Name</label>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="form-floating mb-3">
+
+            {% if description is defined %}
+            <input type="url" class="form-control" name="createUrl" value="{{description.url}}" id="createUrl"
+                placeholder="url">
+            {% else %}
+            <input type="url" class="form-control" name="createUrl" id="createUrl" placeholder="url">
+            {% endif %}
+
+
+            <label for="floatingInput">Public service website address.</label>
+        </div>
+
+
+
+
+
+        <div class="item2"><input type="hidden" name="usr" id="userId" value="{{ user.email }}"
+                style="width: 200px;margin:0px 10px 10px 0px;" class="form-control mr-sm-4" placeholder="User."
+                readonly />
+        </div>
+
+        {% if description is defined %}
+        <div class="item2"><button class="btn btn-secondary my-2 my-sm-0" type="submit">
+                Edit
+            </button></div>
+
+        {% else %}
+        <div class="item2"><button class="btn btn-secondary my-2 my-sm-0" type="submit">
+                Create
+            </button></div>
+
+        {% endif %}
+</div>
+
+
+</form>
+</div>
+
+
+
+
+
+{% endblock %}

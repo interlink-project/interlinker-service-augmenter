@@ -101,6 +101,6 @@ function searchText(event) {
 
 function createNew(event) {
   if (event.type == "click") {
-    window.location = "/annotateIt";
+    window.location = "/descriptionDetail";
   }
 }
