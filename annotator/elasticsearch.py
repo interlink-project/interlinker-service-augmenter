@@ -221,25 +221,25 @@ class _Model(dict):
         self['id'] = res['_id']
 
         
-    def update(self, refresh=True, index=""):
+    def updateFields(self, refresh=True, index="",body=""):
 
         if(index ==""):
             index=self.es.index
 
         _add_updated(self)
 
+        print(body)
+
        
         op_type = 'index'
 
         res = self.es.conn.update(index=index,
-                                 doc_type=self.__type__,
-                                 body=self,
-                                 id=self.id,
-                                 op_type=op_type,
-                                 refresh=refresh)
-        
+                                    doc_type=self.__type__,
+                                    body=body,
+                                    id=self['id'],
+                                    refresh=refresh)
 
-        self['id'] = res['_id']
+
 
     def delete(self, index=""):
         if(index ==""):

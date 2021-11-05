@@ -42,6 +42,16 @@ def login():
     return redirect(request_uri)
 
 
+@authInterlink.route("/about")
+def about():
+
+    
+
+
+    return render_template("about.html")
+    
+
+
 
 """ @authInterlink.route("/dashboard")
 @login_required

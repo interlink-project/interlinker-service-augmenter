@@ -57,11 +57,6 @@
 
                 <div  style="display: flex;align-items:stretch;" >
 
-
-                    
-
-            
-
                     <a   href="{{ url_for('authInterlink.dashboard') }}">Dashboard</a>
 
                     <a   href="{{ url_for('authInterlink.moderate') }}">Moderate</a>
@@ -78,8 +73,15 @@
 
                 {% else %}
 
+
+                <div  style="display: flex;align-items:stretch;" >
+
+                    <a   href="{{ url_for('authInterlink.about') }}">About</a>
+
+                </div>
+
                 <form class="d-flex" method="get" action="/login" style="text-align: right; padding-right: 10%;">
-                    <button type="submit" class="btn btn-primary btn-lg  ">Login</button>
+                    <button type="submit" class="btn btn-primary btn-lg bi-person-circle "> Login</button>
                 </form>
 
                 {% endif %}
@@ -103,7 +105,24 @@
 
 
 
-
+<!-- Modal -->
+<div class="modal fade" id="notificationBox" tabindex="-1" aria-labelledby="notificationBoxLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="notificationBoxLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="notificationBody">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="notificationAcceptBtn">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 

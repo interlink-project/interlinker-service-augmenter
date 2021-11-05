@@ -1,4 +1,5 @@
 from annotator import es,authz
+import datetime
 
 TYPE = 'description'
 MAPPING = {
@@ -582,7 +583,13 @@ class Description(es.Model):
 
         super(Description, self).save(*args, **kwargs)
 
-    def update(self, *args, **kwargs):
+
+
+
+ 
+
+
+    def updateFields(self, *args, **kwargs):
         #_add_default_permissions(self)
 
         # If the annotation includes document metadata look to see if we have
@@ -590,8 +597,18 @@ class Description(es.Model):
         # If we do then we'll merge the supplied links into it.
 
         
+        q = {
+                "doc" : {
+                "title":self.title,
+                "description":self.description,
+                "keywords":self.keywords,
+                "padministration":self.padministration,
+                "url":self['url'],
+                "updated":datetime.datetime.now().replace(microsecond=0).isoformat()
+                }
+            } 
 
-        super(Description, self).update(*args, **kwargs)
+        super(Description, self).updateFields(body=q,*args, **kwargs)
 
     @classmethod
     def search_raw(cls, query=None, params=None, raw_result=False,

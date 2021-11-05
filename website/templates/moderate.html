@@ -141,7 +141,7 @@ block head %} {{ super() }}
                 <thead>
                     <tr>
                         <th scope="col-2">Domain</th>
-                        <th scope="col-2">Page</th>
+                        <th scope="col-2" >Page</th>
                         <th scope="col-3">Title</th>
                         <th scope="col-2">Creation Date</th>
                         <th scope="col-2">Expiration Date</th>
@@ -158,7 +158,12 @@ block head %} {{ super() }}
 
                         {% set specificPage = description.url.split(completeAdress[0:2]|join("/")) %}
 
-                        <td>{{ specificPage[1] }}</td>
+                        {% if specificPage[1]|length >  30 %}
+                            <td >{{ specificPage[1][0:30] }}...</td>
+
+                        {% else %}
+                            <td >{{ specificPage[1] }}</td>
+                        {% endif %}
 
                         <td>{{ description.title}}</td>
 
@@ -204,7 +209,7 @@ block head %} {{ super() }}
         </div>
         <hr />
 
-        <div class="container">
+       <!--  <div class="container">
             <div class="row">
                 <div class="col" style="align-content: center; justify-content: center; display: flex">
                     <h4>Edit information of a registered public service description:</h4>
@@ -225,21 +230,31 @@ block head %} {{ super() }}
             </div>
         </div>
 
-        <hr />
+        <hr /> -->
     </div>
 </div>
-<hr />
+
 
 
 
 <div class="container">
     <div class="row">
-        <div class="col" style="align-content: center; justify-content: center; display: flex">
-            <h4>Claim the moderation of a public service domain:</h4>
+        <div class="col" style="align-content: left; justify-content: left; display: flex">
+            <h5>Claim the moderation of a public service description:</h5>
+            <button
+                class="btn bi-plus-circle"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#advanseSearchTools"
+                aria-expanded="false"
+                aria-controls="collapseExample"
+            >
+        
+      </button>
         </div>
     </div>
 
-
+    <div class="collapse" id="advanseSearchTools">
     <div class="row">
 
 
@@ -320,11 +335,11 @@ block head %} {{ super() }}
         <hr />
 
 
-
+    </div>
     </div>
 
 </div>
-
+</div>
 
 
 {% endblock %}

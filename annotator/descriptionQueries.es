@@ -177,6 +177,33 @@ PUT description/description/AXzf7Pl9W2WuxQVN8aJl
 }
 
 
+POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
+{
+ "doc" : {
+ "url" : "http://extranjeros.inclusion.gob.es/es/informacioninteres/informacionprocedimientos/ciudadanosnocomunitarios/hoja001/index.html"
+ }
+}
+
+POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
+{
+    "doc": {
+        "moderators": [
+            {
+                "email": "d.silva@deusto.es",
+                "created": "2021-11-05T08:14:20.359310+00:00",
+                "expire": "2021-11-05T08:14:20.359310+00:00"
+              
+            }
+        ]
+    }
+}
+
+
+DELETE description/description/AXzvKf1iW2WuxQVN8aKY
+
+GET description/description/AXzvKf1iW2WuxQVN8aKY
+
+POST description/description/_search
 
 
 POST description/description/_search

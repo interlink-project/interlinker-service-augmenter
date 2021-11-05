@@ -123,9 +123,16 @@ def saveDescription():
     description = request.form["createDescription"]
     keywords = request.form["createKeywords"]
     userNombre=request.form["usr"]
-    publicAdmin=request.form["createPA"]
 
-    newPA=request.form["addNewPA"]
+    try:
+        publicAdmin=request.form["createPA"]
+    except:
+        publicAdmin=""
+
+    try:
+        newPA=request.form["addNewPA"]
+    except:
+        newPA=""
 
     if newPA!="":
         publicAdmin=newPA
@@ -143,8 +150,10 @@ def saveDescription():
 
     #Busco si esta la descripcion funciona:
 
-    editDescripcion =Description._get_Descriptions_byURI(url=site)[0]
-    if editDescripcion==None:
+    editDescripcion =Description._get_Descriptions_byURI(url=site)
+    
+    
+    if len(editDescripcion)==0:
         #Create:
 
         newdescription=Description(title=title,description=description,
@@ -160,13 +169,15 @@ def saveDescription():
 
     else:
         #Update: 
+        editDescripcion=editDescripcion[0]
 
         editDescripcion.title=title
         editDescripcion.description=description
         editDescripcion.keywords=keywords
         editDescripcion.padministration=publicAdmin
+        editDescripcion.updated=todayDateTime
 
-        editDescripcion.update(index="description")   
+        editDescripcion.updateFields(index="description")   
 
         description=editDescripcion 
 
@@ -272,20 +283,40 @@ def modifica(rutaPagina,userId):
     fontAwesome3 = soup.new_tag('link', href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",rel="stylesheet")
 
  
+    try:
+        headTag.append(anotationcss1)
+    except:
+        print("Excepcion en ccs1")
+
+    try:
+        headTag.append(anotationcss2)
+    except:
+        print("Excepcion en ccs1")
     
-    headTag.append(anotationcss1)
-    headTag.append(anotationcss2)
-    headTag.append(anotationcss3)
-    headTag.append(fontAwesome3)
 
-    soup.html.head=headTag
+    try:
+        headTag.append(anotationcss3)
+    except:
+        print("Excepcion en ccs1")
+    
+    try:
+        headTag.append(fontAwesome3)
+    except:
+        print("Excepcion en ccs1")
+    
 
+    try:
+        soup.html.head=headTag
+    except:
+        print("Excepcion en ccs1")
 
     soup = obtenerReemplazarImagenes(rutaPagina,soup)
 
     #Ingreso el script para iniciar Aplicacion Annotation
-    bodyTag=soup.html.body
-
+    try:
+        bodyTag=soup.html.body
+    except:
+        print("Excepcion en ccs1")
     
     jqueryScript1 = soup.new_tag('script', src="/website/static/lib/jquery-1.9.1.js")
     jqueryScript2 = soup.new_tag('script', src="/website/static/lib/annotator-full.1.2.9/annotator-full.min.js")
@@ -306,23 +337,24 @@ def modifica(rutaPagina,userId):
     jqueryScript10 = soup.new_tag('script', src="/website/static/src/categories.js")
     jqueryScript11 = soup.new_tag('script', src="/website/static/src/search.js")
 
+    try:
+        bodyTag.append(jqueryScript1)
+        bodyTag.append(jqueryScript2)
+        bodyTag.append(jqueryScript3)
+        bodyTag.append(jqueryScript4)
+        bodyTag.append(jqueryScript5)
+        bodyTag.append(jqueryScript6)
+        bodyTag.append(jqueryScript7)
+        bodyTag.append(jqueryScript8)
+        bodyTag.append(jqueryScript9)
+        bodyTag.append(jqueryScript10)
+        bodyTag.append(jqueryScript11)
 
-    bodyTag.append(jqueryScript1)
-    bodyTag.append(jqueryScript2)
-    bodyTag.append(jqueryScript3)
-    bodyTag.append(jqueryScript4)
-    bodyTag.append(jqueryScript5)
-    bodyTag.append(jqueryScript6)
-    bodyTag.append(jqueryScript7)
-    bodyTag.append(jqueryScript8)
-    bodyTag.append(jqueryScript9)
-    bodyTag.append(jqueryScript10)
-    bodyTag.append(jqueryScript11)
-
-    bodyTag.append(jqueryScript12)
-    bodyTag.append(jqueryScript13)
-    bodyTag.append(jqueryScript14)
-
+        bodyTag.append(jqueryScript12)
+        bodyTag.append(jqueryScript13)
+        bodyTag.append(jqueryScript14)
+    except:
+        print("Excepcion en ccs1")
     
 
     #Anotation Init Version Anterior
@@ -404,14 +436,18 @@ def modifica(rutaPagina,userId):
     anotationIniScript.string =anotationInitScriptTemp
 
     #anotationIniScript.string.replace('demoUser',str(current_user.id))
-       
-    bodyTag.append(anotationIniScript)
-    soup.html.body=bodyTag
+    try:   
+        bodyTag.append(anotationIniScript)
 
-    #Inserto
-    # Es como poner una emvoltura sobre un Tag
-    bodyTag.wrap(soup.new_tag("div",id="contenidoAnotar"))
-    soup.html.body=bodyTag
+        #Inserto
+        # Es como poner una emvoltura sobre un Tag
+        bodyTag.wrap(soup.new_tag("div",id="contenidoAnotar"))
+        soup.html.body=bodyTag
+    except:
+        print("Excepcion en ccs1")
+      
+
+    
 
     headers = {'Content-Type': 'text/html',
                 'x-annotator-auth-token':generate_token()}
