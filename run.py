@@ -19,6 +19,8 @@ import sys
 import time
 
 from flask import Flask, g, current_app, redirect, url_for, session, flash
+from flask_mail import Mail, Message
+
 import elasticsearch
 from flask import request
 from annotator import es, annotation, auth, authz, document, store
@@ -105,6 +107,20 @@ def main(argv):
         'SECRET_KEY': secrets.token_urlsafe(16)
     })
 
+
+    #Configure server parameters
+    app.config['MAIL_SERVER']='smtp.gmail.com'
+    app.config['MAIL_PORT'] = 465
+    app.config['MAIL_USERNAME'] = 'danyche2014@gmail.com'
+    app.config['MAIL_PASSWORD'] = 'yxes1984'
+    app.config['MAIL_USE_TLS'] = False
+    app.config['MAIL_USE_SSL'] = True
+
+    mail = Mail(app)
+
+
+
+
     login_manager = LoginManager()
     login_manager.init_app(app)
 
@@ -127,7 +143,8 @@ def main(argv):
             return local.humanize(locale=localeZone)
 
 
-        
+    def get_mail():
+        return mail
      
 
     @login_manager.user_loader

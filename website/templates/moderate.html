@@ -120,6 +120,33 @@ block head %} {{ super() }}
 
         }
     }
+
+    function agregarUrl(event){
+        
+        if (event.type == 'click') {
+            event.preventDefault();
+            event.stopPropagation();
+            var urltext =$('#inputGroupDomain').val();
+
+            if(urltext!=''){
+                var contador=$('#urlList').children().length+1;
+            
+
+                var liUrl = '<div class="input-group"><input type="url" class="form-control" value='+urltext+' name="url_'+contador+'" id="url_'+contador+'" placeholder="Link"></div>';
+                
+                $('#inputGroupDomain').val('');
+
+                $('#urlList').append(liUrl);
+
+            }
+            
+        }
+
+    }
+
+
+
+
 </script>
 
 <hr />
@@ -258,7 +285,7 @@ block head %} {{ super() }}
     <div class="row">
 
 
-        <form class="form-inline my-2 my-lg-0" action="/website/registrar" method="POST">
+        <form class="form-inline my-2 my-lg-0" action="/website/claimModeration" method="POST">
 
 
 
@@ -270,20 +297,20 @@ block head %} {{ super() }}
                 </div>
                 <div class="row">
                     <div class="form-floating">
-                        <input class="form-control" id="firstName" name="firstName" placeholder="firstName">
+                        <input class="form-control" id="firstName" name="firstName" placeholder="firstName" required>
                         <label for="floatingInput">First Name</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-floating">
-                        <input class="form-control" id="lastName" name="lastName" placeholder="lastName">
+                        <input class="form-control" id="lastName" name="lastName" placeholder="lastName" required>
                         <label for="floatingInput">Last Name</label>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-floating">
-                        <input class="form-control" id="userPosition" name="userPosition" placeholder="userPosition">
+                        <input class="form-control" id="userPosition" name="userPosition" placeholder="userPosition" required>
                         <label for="floatingInput">Position</label>
                     </div>
                 </div>
@@ -292,15 +319,15 @@ block head %} {{ super() }}
 
                     <div class="form-floating mb-3">
                         <textarea class="form-control" placeholder="userMotivations" name="userMotivations"
-                            id="userMotivations" style="min-height: 150px;"></textarea>
+                            id="userMotivations" style="min-height: 150px;" required></textarea>
                         <label for="floatingTextarea">User Motivations:</label>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="input-group mb-3">
-                        <input type="file" class="form-control" id="inputGroupFile02">
-                        <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                        <input type="file" class="form-control" name="archivoIdentificacion" id="archivoIdentificacion">
+                        <label class="input-group-text" for="archivoIdentificacion">Documentation that proves your identity</label>
                     </div>
 
                 </div>
@@ -310,22 +337,20 @@ block head %} {{ super() }}
                         <label class="input-group-text" for="inputGroupDomain">Domain/Pages:</label>
                         <input type="text" class="form-control" id="inputGroupDomain" placeholder="Url Page"
                             aria-label="Url Page">
-                        <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Add</button>
+                        <button class="btn btn-outline-secondary" id="inputGroupFileAddon04"  onclick="agregarUrl(event)">Add</button>
 
                     </div>
                 </div>
                 <div class="row" style="padding-left: 30px;">
-                    <ol class="list-group list-group-numbered ">
-                        <li class="list-group-item">Url1</li>
-                        <li class="list-group-item">Url2</li>
-                        <li class="list-group-item">Url3</li>
-                    </ol>
+                    <div class="vertical-input-group"  id="urlList">
+                       
+                    </div>
                 </div>
 
                 <hr />
                 <div class="row" style="align-content: center; justify-content: center;">
                     <div class="col" style="align-content: center; justify-content: center;">
-                        <button type="button" class="btn btn-secondary">Claim Moderation Privilages</button>
+                        <button type="submit" class="btn btn-secondary">Claim Moderation Privilages</button>
 
                     </div>
                 </div>

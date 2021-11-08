@@ -5,6 +5,7 @@ import json, requests, math
 
 from flask import redirect
 from flask.helpers import url_for,make_response
+from flask_mail import Mail, Message
 from annotator import description
 from tests.helpers import MockUser
 
@@ -15,6 +16,9 @@ from werkzeug.utils import redirect
 from annotator.annotation import Annotation
 from annotator.document import Document
 from annotator.description import Description
+
+
+
 
 
 from flask_login import (
@@ -112,6 +116,11 @@ def buscar():
     sitio = request.form["nm"]
     userNombre=request.form["usr"]
     return redirect(url_for("views.modifica",rutaPagina=sitio,userId=userNombre))
+
+
+
+
+
 
 
 #Formulatio de carga de Pagina
@@ -232,6 +241,32 @@ def saveDescription():
 
     
     #return redirect(url_for("views.modifica",rutaPagina=sitio,userId=userNombre))
+
+
+@views.route("/claimModeration",methods=["POST"])
+def claimModeration():
+    
+    itemsDict  = request.form.to_dict()
+
+    firstName=itemsDict.pop("firstName")
+    lastName=itemsDict.pop("lastName")
+    userPosition=itemsDict.pop("userPosition")
+    userMotivations=itemsDict.pop("userMotivations")
+
+    #This is the file
+    archivoIdentificacion=itemsDict.pop("archivoIdentificacion")
+
+
+    #This are the URI's
+    urlList=[]
+    for key in itemsDict:
+        urlList.append(itemsDict[key])
+
+    #Now will send the email:
+    msg = Message('Hello', sender = 'yourId@gmail.com', recipients = ['someone1@gmail.com'])
+    msg.body = "This is the email body"
+    mail.send(msg)
+    return "Sent"
 
 
 
