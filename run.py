@@ -18,7 +18,7 @@ import logging
 import sys
 import time
 
-from flask import Flask, g, current_app, redirect, url_for, session
+from flask import Flask, g, current_app, redirect, url_for, session, flash
 import elasticsearch
 from flask import request
 from annotator import es, annotation, auth, authz, document, store

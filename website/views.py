@@ -144,9 +144,7 @@ def saveDescription():
     #Example of vector register:
     #perms = {'read': ['group:__world__']}
 
-    perms = {'read': ['group:__world__']}
-  
-    moderat = {}
+    
 
     #Busco si esta la descripcion funciona:
 
@@ -156,6 +154,10 @@ def saveDescription():
     if len(editDescripcion)==0:
         #Create:
 
+        perms = {'read': ['group:__world__']}
+  
+        moderat = {}
+
         newdescription=Description(title=title,description=description,
                                 keywords=keywords,moderators=moderat,
                                 padministration=publicAdmin,url=site,
@@ -163,9 +165,15 @@ def saveDescription():
                                 )
     
     
-    
-        newdescription.save(index="description")
-        description=newdescription
+        if(title=="" or description==""  or publicAdmin=="" or site=="" ):
+            description=editDescripcion 
+            flash("Algunos campos de la descripción no son correctos.","info")
+            return redirect('/descriptionDetail')
+
+        else:
+            newdescription.save(index="description")
+            description=newdescription
+            flash("Registro creado correctamente.","info")
 
     else:
         #Update: 
@@ -177,9 +185,23 @@ def saveDescription():
         editDescripcion.padministration=publicAdmin
         editDescripcion.updated=todayDateTime
 
-        editDescripcion.updateFields(index="description")   
 
-        description=editDescripcion 
+        #Comprobar los permisos de edicion del usuario:
+        nroEnc=editDescripcion._get_checkPermisos_byURI(email=userNombre,url=site)
+
+        if(nroEnc!=0):
+            editDescripcion.updateFields(index="description")   
+            description=editDescripcion 
+            flash("Registro editado correctamente.","info")
+
+            
+
+        else:
+            description=editDescripcion 
+            flash("No tienes permisos de moderador para editar esta descripción.","info")
+
+
+        
 
 
     

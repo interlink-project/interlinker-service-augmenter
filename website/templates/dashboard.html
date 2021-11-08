@@ -241,7 +241,7 @@
       
           <th scope="col-3">Public Service Administration</th>
           <th scope="col-3">Title</th>
-          <th scope="col-3">Creation Date</th>
+          <th scope="col-3">Updated Date</th>
           <th scope="col-2">Options</th>
         </tr>
       </thead>
@@ -251,9 +251,9 @@
   
             <tr>
     
-              <td>{{ description.padministration }}</td>
+              <td>{{ description.url }}</td>
               <td>{{ description.title }}</td>
-              <td>{{ description.created|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+              <td>{{ description.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
               <td>
                 <a  
                 href="/description/{{ description.id }}" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>

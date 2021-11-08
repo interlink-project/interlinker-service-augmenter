@@ -185,6 +185,23 @@ def descriptionsIndex():
 
 
 
+@store.route('/description/<path:urlDescription>', methods=["POST"])
+def descriptionByUrl(urlDescription):
+
+    params = json.loads(request.data.decode('utf-8'))
+    url=params['url']
+    description = Description._get_Descriptions_byURI(url=url)
+
+
+    if len(description)==0:
+        return jsonify('Description not found!', status=404)
+
+    return jsonify(description[0])
+
+    
+
+
+
 # CREATE
 @store.route('/annotations', methods=['POST'])
 def create_annotation():

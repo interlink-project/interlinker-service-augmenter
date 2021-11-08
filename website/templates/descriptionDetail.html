@@ -6,23 +6,61 @@
 
 
         //Configuro el modal para esta pagina:
-        function registrarDescription(event) {  
-          if(event.type=='click'){
-            event.preventDefault();
-            var myModal = new bootstrap.Modal(document.getElementById('notificationBox'),{});
-            $('#notificationBoxLabel').text("Question")
-            $('#notificationBody').text("Are you sure to register this description?")
-            $('#notificationAcceptBtn').text("Accept")
+        function validarURL(event) {  
+   
+            btnSubmit = document.getElementById("btnSubmitDescription");
+            OpcionRegistro=btnSubmit.innerText
 
-            myModal.show();
+            if(OpcionRegistro=='Create'){
+            
+
+            var code = event.keyCode || event.which;
+
+            if ( code == 13 || code == 9 ) {
+                event.preventDefault();
+
+                textocreateUrlBox = document.getElementById("createUrl");
+                urlDescripcion=textocreateUrlBox.value
+            
+                function successSearch(data){
+                    entries=Object.entries(data)  
+                    descripcionesList=entries['0'][1] 
+                    numeroReg=entries[1][1]  
+
+
+                    var myModal = new bootstrap.Modal(document.getElementById('notificationBox'),{});
+                    $('#notificationBoxLabel').text("Information")
+                    $('#notificationBody').text("Una descripcion con este URI ya existe.")
+                    $('#notificationAcceptBtn').text("Accept")
+                    $('#notificationAcceptBtn').hide();
+
+                    
+                    $('#createUrl').val("");
+                    myModal.show();
+
+                }
+
+                $.ajax({
+                    method: 'POST',
+                    url: '/description'+'/'+textocreateUrlBox,
+                    contentType: 'application/json;charset=UTF-8',
+                    data: JSON.stringify({"url":urlDescripcion})
+                }).done(successSearch);
+
+
+
+            
           }
+
         
         }
+    }
 
         //Defino el evento de accept del modal: (En este caso submit a form)
         $( "#notificationAcceptBtn" ).click(function() {
             var form=$( "#FormDescription" )
             form.submit();
+            
             
           });
 
@@ -40,7 +78,7 @@
             }
 
         }
-
+        
     </script>
 
 
@@ -152,7 +190,7 @@
             <div class="collapse" id="addPublicAdministration">
                 <div class="input-group mb-3">
                     <div class="input-group-append">
-                        <label class="input-group-text" for="inputGroupSelect02">Add New</label>
+                        <label class="input-group-text" for="inputGroupSelect02" >Add New</label>
                     </div>
                     <input class="form-control" name="addNewPA" id="addNewPA" placeholder="Public Administration Name" disabled=true required>      
                     
@@ -166,9 +204,9 @@
 
             {% if description is defined %}
             <input type="url" class="form-control" name="createUrl" value="{{description.url}}" id="createUrl"
-                placeholder="url" required>
+                placeholder="url" onkeydown="validarURL(event)" readonly=true required>
             {% else %}
-            <input type="url" class="form-control" name="createUrl" id="createUrl" placeholder="url" required>
+            <input type="url" class="form-control" name="createUrl" id="createUrl"  onkeydown="validarURL(event)"  placeholder="url" required>
             {% endif %}
 
 
@@ -188,7 +226,7 @@
         <div class="row">
                 
             <div class="col-1" style="text-align: right;">
-                <button class="btn btn-secondary my-2 my-sm-0" style="height: 40px;width: 100px;" type="submit" >
+                <button class="btn btn-secondary my-2 my-sm-0" id="btnSubmitDescription" style="height: 40px;width: 100px;" type="submit" >
 
                     {% if description is defined %}
                     Edit

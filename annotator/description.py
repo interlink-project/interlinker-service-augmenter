@@ -198,6 +198,48 @@ class Description(es.Model):
 
         return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
 
+
+    def _get_checkPermisos_byURI(cls,**kwargs):
+
+        q= {
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "url":kwargs.pop("url")
+                            }
+                        },
+                        {
+                            "nested": {
+                                "path": "moderators",
+                                "query": {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "match": {
+                                                    "moderators.email": kwargs.pop("email")
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+
+        print(q)
+
+    
+        res = cls.es.conn.count(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+    
+        return res['count']
+
    
 
 

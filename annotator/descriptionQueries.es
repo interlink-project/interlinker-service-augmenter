@@ -199,7 +199,7 @@ POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
 }
 
 
-DELETE description/description/AXzvKf1iW2WuxQVN8aKY
+DELETE description/description/AXzvOdrBW2WuxQVN8aKb
 
 GET description/description/AXzvKf1iW2WuxQVN8aKY
 
@@ -230,7 +230,7 @@ POST description/description/_search
 
 POST description/description/_search
 {
-    "_source": "moderators.*",
+
     "query": {
         "nested": {
             "path": "moderators",
@@ -245,6 +245,41 @@ POST description/description/_search
                     ]
                 }
             }
+        }
+    }
+}
+
+
+POST description/description/_search
+
+
+POST description/description/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "url": "http://extranjeros.inclusion.gob.es/es/informacioninteres/informacionprocedimientos/ciudadanosnocomunitarios/hoja001/index.html"
+                    }
+                },
+                {
+                    "nested": {
+                        "path": "moderators",
+                        "query": {
+                            "bool": {
+                                "must": [
+                                    {
+                                        "match": {
+                                            "moderators.email": "d.silva@deusto.es"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
         }
     }
 }
