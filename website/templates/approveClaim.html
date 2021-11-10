@@ -1,0 +1,114 @@
+{% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {% block
+    content %}
+
+
+<script>
+
+
+</script>
+
+
+<hr />
+
+<div class="container" style="align-items: center;justify-content: center;max-width: 80vh;">
+
+    <div class="row" style="padding: 10px;text-align: center;">
+        <div class="col">
+            <h4> Approve Moderation Claims</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col" style="padding: 10px;text-align: center;">
+            <H5>User: {{ email }}</H5>
+        </div>
+
+    </div>
+</div>
+
+
+<hr />
+
+<div>
+    <form class="form-inline my-2 my-lg-0" id="FormDescription" action="/website/aprovarClaimsList" method="POST">
+
+        <div class="grid-container">
+
+
+
+            <div class="row">
+                <h6>Sites:</h6>
+
+                {% for argumento in argumentos %}
+                <div class="row" style="align-items: center; justify-content: center;background-color: rgb(252, 201, 201); border-radius: 5px;padding: 10px;margin: 5px;">
+                    <div class="col">
+                        <div class="form-check" style="padding-left: 50px;">
+
+                            <input class="form-check-input" type="checkbox" name="urlCheck_{{ loop.index}}"
+                                id="urlCheck_{{ loop.index}}" checked>
+                            <label class="form-check-label" for="urlCheck_{{ loop.index}}">
+                                {{ argumento }}
+                            </label>
+                            <input type="hidden" id="url_{{ loop.index}}" name="url_{{ loop.index}}"
+                                value="{{ argumento }}">
+                        </div>
+                    </div>
+                    <div class="col">
+                        
+                        <label class="form-check-label" for="ini_date_{{ loop.index}}">
+                            Start date: 
+                        </label>
+                        <input type="date" name="ini_date_{{ loop.index}}" id="ini_date_{{ loop.index}}"
+                            placeholder="select Birth date" value="{{ now }}" min="{{ now }}" max="{{ endDate }}">
+                            
+                    </div>
+                    <div class="col">
+                        
+                        <label class="form-check-label" for="end_date_{{ loop.index}}">
+                            Expire date: 
+                        </label>
+                        <input type="date" name="end_date_{{ loop.index}}" id="end_date_{{ loop.index}}"
+                            placeholder="select expiration date" value="{{ endDate }}" min="{{ now }}" max="{{ endDate }}">
+                    </div>
+
+                </div>
+
+
+
+                {% endfor %}
+
+            </div>
+
+
+            <div class="row">
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Comments:</label>
+                    <textarea class="form-control" id="commentBox" name="commentBox" rows="3"></textarea>
+                    <input type="hidden" id="email" name="email" value="{{ email }}">
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col" style="align-items: center;text-align: center;">
+                    <button class="btn btn-secondary my-2 my-sm-0" id="btnSubmitDescription"
+                        style="height: 40px;width: 100px;" type="submit">
+                        Approve!
+                    </button>
+
+                </div>
+
+
+
+            </div>
+
+        </div>
+
+
+    </form>
+</div>
+
+
+<hr />
+
+
+{% endblock %}

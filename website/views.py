@@ -17,8 +17,12 @@ from annotator.annotation import Annotation
 from annotator.document import Document
 from annotator.description import Description
 
+from datetime import date
 
+from flask import current_app
 
+import urllib.parse
+import math
 
 
 from flask_login import (
@@ -243,15 +247,19 @@ def saveDescription():
     #return redirect(url_for("views.modifica",rutaPagina=sitio,userId=userNombre))
 
 
+
 @views.route("/claimModeration",methods=["POST"])
 def claimModeration():
     
     itemsDict  = request.form.to_dict()
 
-    firstName=itemsDict.pop("firstName")
-    lastName=itemsDict.pop("lastName")
-    userPosition=itemsDict.pop("userPosition")
+    firstName=itemsDict.pop("firstName").title()
+    lastName=itemsDict.pop("lastName").title()
+    userPosition=itemsDict.pop("userPosition").title()
     userMotivations=itemsDict.pop("userMotivations")
+
+    userMotivations=userMotivations[0].upper()+userMotivations[1:]
+ 
 
     #This is the file
     archivoIdentificacion=itemsDict.pop("archivoIdentificacion")
@@ -262,12 +270,121 @@ def claimModeration():
     for key in itemsDict:
         urlList.append(itemsDict[key])
 
+    itemsDict['email'] = current_user.email
+
+    dataClaimEncoded=urllib.parse.urlencode(itemsDict)
+
     #Now will send the email:
-    msg = Message('Hello', sender = 'yourId@gmail.com', recipients = ['someone1@gmail.com'])
-    msg.body = "This is the email body"
+    msg = Message('The user '+firstName+' '+lastName+' ha realizado un claim to be a moderator.', sender = 'interlinkdeusto@gmail.com', recipients = [current_user.email])
+
+    sites =" ".join(str(x) for x in urlList)
+    claimInfo= "The user {} {} who is a {} ".format(firstName,lastName,userPosition)+"send a request to be a moderator of the following sites: "
+    
+
+    textHref='http://127.0.0.1:5000/website/aproveModerator?'+dataClaimEncoded
+
+    msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
+    <table cellpadding='0' cellspacing='0' width='100%' style='background-color: #515151; border-radius: 30px 36
+    333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
+    30px 30px 30px; border-collapse: separate;' bgcolor='#515151'>
+        <tbody>
+            <tr>
+                <td align='center' class='esd-block-text es-p20t'>
+                    <h1 style='color: #ffffff;'>Description moderation request</h1>
+                </td>
+            </tr>
+            <tr>
+                <td align='center' style='padding-right: 140px; padding-left: 140px;' class='esd-block-text es-m-p20l es-m-p20r es-p30t'>
+                    <p style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>"""+claimInfo+"""</p>
+                    <p style='font-size: 16px; letter-spacing: 1px; color: #ffffff; color: white;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;'>"""+sites+"""</p>
+                </td>
+            </tr>
+            <tr>
+                <td align='center' style='padding-right: 110px; padding-left: 110px;' class='esd-block-text es-m-p20l es-m-p20r es-p30t es-p40b'>
+                    <p style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>The motivations are:</p>
+                    <p  style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>"""+userMotivations+"""</p>
+                </td>
+            </tr>
+            <tr>
+                <td align='center'  style='padding-bottom: 50px; font-size: 20px; color: #ffffff;'><a target='_blank' style='background-color: #f44336;
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;  border-radius: 5px;' href='"""+textHref+ """'>Aproved the request.</a></td>
+            </tr>
+        </tbody>
+    </table>
+</td>"""
+    
+    
+    mail = Mail(current_app)
     mail.send(msg)
+
+
+
+
     return "Sent"
 
+
+@views.route("/aproveModerator",methods=["GET","POST"])
+def aproveModerator():
+
+    argumentos=request.args.to_dict()
+
+    email=argumentos.pop('email')
+
+    urlList=[]
+    for key in argumentos:
+        urlList.append(argumentos[key])
+    
+    today = date.today()
+    endDate = today.replace(today.year + 1)
+
+    return render_template("approveClaim.html",email=email,argumentos=urlList, now=today.strftime("%Y-%m-%d"),endDate=endDate.strftime("%Y-%m/%d"))
+
+@views.route("/aprovarClaimsList",methods=["POST"])
+def aprovarClaimsList():
+
+    argumentos=request.form.to_dict()
+    usuarioModerator=argumentos.pop('email')
+    adminComment=argumentos.pop('commentBox')
+
+    argumentosList=list(argumentos.values())
+    
+    contador=0
+    for i in range(math.ceil(len(argumentosList)/4)):
+        if(i!=0):
+            contador=i*4
+        estado=argumentosList[contador]
+        url=argumentosList[contador+1]
+        initDate=argumentosList[contador+2]
+        endDate=argumentosList[contador+3]
+        
+
+        #Agrego como moderador en la descripcion:
+        descriptions=Description._get_Descriptions_byURI(url=url)
+        if len(descriptions)==1:
+            if estado=="on":
+                descripcionAct=descriptions[0]
+                descripcionAct['moderators'].append({
+                                "created": initDate,
+                                "expire": endDate,
+                                "email": usuarioModerator
+                            })
+                Description.save(descripcionAct,index="description")
+
+
+           
+
+    
+   
+
+
+    return urlList
 
 
 #Formulatio de carga de Pagina

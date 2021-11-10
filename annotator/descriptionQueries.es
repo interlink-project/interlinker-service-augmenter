@@ -189,7 +189,7 @@ POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
     "doc": {
         "moderators": [
             {
-                "email": "d.silva@deusto.es",
+                "email": "danyche2005@deusto.es",
                 "created": "2021-11-05T08:14:20.359310+00:00",
                 "expire": "2021-11-05T08:14:20.359310+00:00"
               
@@ -199,9 +199,28 @@ POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
 }
 
 
-DELETE description/description/AXzvOdrBW2WuxQVN8aKb
+POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
+{
+  "script": {
+    "source": "ctx._source.moderators.add(params.moderator)",
+    "params": {
+      "moderator": {
+        "email": "danyche2014@gmail.com",
+        "created": "2021-11-05T08:14:20.359310+00:00",
+        "expire": "2021-11-05T08:14:20.359310+00:00"
+      }
+    }
+  }
+}
+
+
+DELETE description/description/AX0Kef7hCEacbMWTC_E1
 
 GET description/description/AXzvKf1iW2WuxQVN8aKY
+
+
+GET description/description/_search
+
 
 POST description/description/_search
 
@@ -342,7 +361,7 @@ POST description/description/_search
 {
     "query": {
         "match":{
-            "url": "http://latvia.vl/x1.html"
+            "url": "http://extranjeros.inclusion.gob.es/es/informacioninteres/informacionprocedimientos/ciudadanosnocomunitarios/hoja001/index.html"
             }
             
         }

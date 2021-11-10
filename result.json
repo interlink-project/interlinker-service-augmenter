@@ -1,5 +1,5 @@
 {
-    "took": 1,
+    "took": 2,
     "timed_out": false,
     "_shards": {
         "total": 5,
@@ -7,35 +7,14 @@
         "failed": 0
     },
     "hits": {
-        "total": 7,
-        "max_score": 1,
+        "total": 1,
+        "max_score": 1.987628,
         "hits": [
             {
                 "_index": "description",
                 "_type": "description",
-                "_id": "AXzwdYUYW2WuxQVN8aKi",
-                "_score": 1,
-                "_source": {
-                    "title": "titulo de la descripcion",
-                    "description": "descripcion de la descriptcion",
-                    "keywords": "autorizacion ",
-                    "moderators": {},
-                    "padministration": "Choose...",
-                    "url": "http://www.exteriores.gob.es/Consulados/MUNICH/es/ServiciosConsulares/Paginas/Registro%20Civil/Matrimonio-en-Espa%C3%B1a.aspx",
-                    "permissions": {
-                        "read": [
-                            "group:__world__"
-                        ]
-                    },
-                    "created": "2021-11-05T14:16:26.458368+00:00",
-                    "updated": "2021-11-05T14:16:26.458368+00:00"
-                }
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "AXzvKf1iW2WuxQVN8aKY",
-                "_score": 1,
+                "_id": "AX0Kg2vFCEacbMWTC_E2",
+                "_score": 1.987628,
                 "_source": {
                     "title": "Autorización de Regreso1234",
                     "description": "Se trata de autorizar la salida y el posterior retorno al territorio nacional al extranjero cuya autorización de residencia o estancia se encuentre en periodo de renovación o prórroga.",
@@ -44,6 +23,11 @@
                         {
                             "created": "2021-11-05T08:14:20.359310+00:00",
                             "expire": "2021-11-05T08:14:20.359310+00:00",
+                            "email": "danyche2005@deusto.es"
+                        },
+                        {
+                            "created": "2021-11-10",
+                            "expire": "2021-11-30",
                             "email": "d.silva@deusto.es"
                         }
                     ],
@@ -55,119 +39,8 @@
                         ]
                     },
                     "created": "2021-11-05T08:14:20.359310+00:00",
-                    "updated": "2021-11-08T11:03:30"
-                }
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "AXzwouDWW2WuxQVN8aKs",
-                "_score": 1,
-                "_source": {
-                    "title": "Burial in Riga municipal cemeteries 7",
-                    "description": "sgsdfgsdfg sdfg",
-                    "keywords": " sdfg sdfg sdfg sdfg sd",
-                    "moderators": [
-                        {
-                            "created": "2021-11-05T08:14:20.359310+00:00",
-                            "expire": "2021-11-05T08:14:20.359310+00:00",
-                            "email": "d.silva@deusto.es"
-                        }
-                    ],
-                    "padministration": "Latvija Goverment",
-                    "url": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
-                    "permissions": {
-                        "read": [
-                            "group:__world__"
-                        ]
-                    },
-                    "created": "2021-11-05T08:31:40.070279+00:00",
-                    "updated": "2021-11-08T11:40:43",
-                    "id": "AXzvOdrBW2WuxQVN8aKb"
-                }
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "AXz_JPMnGNXfaonjlUvT",
-                "_score": 1,
-                "_source": {
-                    "title": "Estancia y Residencia",
-                    "description": "En los supuestos en los que la permanencia en España de un ciudadano de un Estado miembro de la Unión Europea o de otro Estado parte en el Acuerdo sobre el Espacio Económico Europeo, cualquiera que sea su finalidad, tenga una duración inferior a tres meses, será suficiente la posesión de pasaporte o documento de identidad en vigor, en virtud del cual se haya efectuado la entrada en territorio español, no computándose dicha permanencia a los efectos derivados de la situación de residencia.",
-                    "keywords": "residencia temporal ciudadano",
-                    "moderators": {},
-                    "padministration": "Ministerio del Interior de España",
-                    "url": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/ciudadanos-de-la-union-europea/estancia-y-residencia",
-                    "permissions": {
-                        "read": [
-                            "group:__world__"
-                        ]
-                    },
-                    "created": "2021-11-08T10:43:04.096024+00:00",
-                    "updated": "2021-11-08T11:43:23"
-                }
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "AXzwlJ1MW2WuxQVN8aKj",
-                "_score": 1,
-                "_source": {
-                    "title": " dfaksd flakds jflakdf",
-                    "description": "d fadsfa dsfa dsfa dsf",
-                    "keywords": "dfsadfa sdfa dsfads ",
-                    "moderators": {},
-                    "padministration": "Deusto2",
-                    "url": "http://www.exterfdsfdiores.gob.es/Consulados/MUNICH/es/ServiciosConsulares/Paginas/Registro%20Civil/Matrimonio-en-Espa%C3%B1a.aspx",
-                    "permissions": {
-                        "read": [
-                            "group:__world__"
-                        ]
-                    },
-                    "created": "2021-11-05T14:50:24.269859+00:00",
-                    "updated": "2021-11-05T14:50:24.269859+00:00"
-                }
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "AXzwmkqdW2WuxQVN8aKm",
-                "_score": 1,
-                "_source": {
-                    "title": "dsfg sdfgs dfgsdf gsdfg",
-                    "description": "sf gdfg sdfg sdfgs dfg sdfg sd",
-                    "keywords": "g sdfg sdfgsdf gsdf  ",
-                    "moderators": {},
-                    "padministration": "Gobierno de Zaragoza",
-                    "url": "https://latvsdfsdfdsfija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
-                    "permissions": {
-                        "read": [
-                            "group:__world__"
-                        ]
-                    },
-                    "created": "2021-11-05T14:56:36.319157+00:00",
-                    "updated": "2021-11-05T14:56:36.319157+00:00"
-                }
-            },
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "AXzwlyqkW2WuxQVN8aKk",
-                "_score": 1,
-                "_source": {
-                    "title": "xdfg gfgc xfgfxb ",
-                    "description": "xfchgghxgedr gdfghsdfgdfhdgf hdgf",
-                    "keywords": "sfdsgdfgsfd gfsd gsdf gdfgsdfgsdf",
-                    "moderators": {},
-                    "padministration": "Deusto2",
-                    "url": "http://www.interior112342.gob.es/web/servicios-al-ciudadano/extranjeria/ciudadanos-de-la-union-europea/numero-de-identidad-de-extranjero-nie-",
-                    "permissions": {
-                        "read": [
-                            "group:__world__"
-                        ]
-                    },
-                    "created": "2021-11-05T14:53:11.526232+00:00",
-                    "updated": "2021-11-05T14:53:11.526232+00:00"
+                    "updated": "2021-11-10T15:42:00.717906+00:00",
+                    "id": "AXzvKf1iW2WuxQVN8aKY"
                 }
             }
         ]

@@ -110,13 +110,17 @@ def main(argv):
 
     #Configure server parameters
     app.config['MAIL_SERVER']='smtp.gmail.com'
-    app.config['MAIL_PORT'] = 465
-    app.config['MAIL_USERNAME'] = 'danyche2014@gmail.com'
-    app.config['MAIL_PASSWORD'] = 'yxes1984'
-    app.config['MAIL_USE_TLS'] = False
-    app.config['MAIL_USE_SSL'] = True
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USERNAME'] = 'interlinkdeusto@gmail.com'
+    app.config['MAIL_PASSWORD'] = '***REMOVED***'
+    app.config['MAIL_DEFAULT_SENDER'] = 'interlinkdeusto@gmail.com'
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
+    app.config['MAIL_MAX_EMAILS'] = None
+    app.config['MAIL_ASCII_ATTACHMENTS'] = False
 
-    mail = Mail(app)
+
+ 
 
 
 
@@ -143,8 +147,6 @@ def main(argv):
             return local.humanize(locale=localeZone)
 
 
-    def get_mail():
-        return mail
      
 
     @login_manager.user_loader
