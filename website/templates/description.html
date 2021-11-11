@@ -56,7 +56,7 @@ block content %}
 </div>
 
 <hr />
-
+{% block annotations %}
 <table class="table">
   <thead>
     <tr>
@@ -88,5 +88,6 @@ block content %}
     {% endif %} {% endfor %}
   </tbody>
 </table>
+{% endblock %}
 
 {% endblock %}

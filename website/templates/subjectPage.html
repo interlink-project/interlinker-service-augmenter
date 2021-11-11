@@ -1,69 +1,7 @@
-{% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {%
-block content %}
+{% extends "description.html" %} 
 
-<script>
-
-//Falta cargar de nuevo cuando se tenga una consulta en memoria
-
-
-function mostrarQuote(event) {  
-    if(event.type=='click'){
-
-        $("#quoteTexto").toggle('slow');
-        
-   
-    }
-  }
-
-</script>
-
-<div class="container container-fluid">
-    <div class="row" style="padding-top: 10px;">
-      <div class="col-10"  style="text-align: center;margin-top: 1em;">
-        <h4>{{description['title']|striptags}}</h4>
-      </div>
-  
-      <div class="col-2"><a  href="/website/modifica/{{ current_user.email }}/{{ description['url']}}"   class="bi bi-eye" style="zoom: 3;-moz-transform: scale(3);padding: 0rem;margin-top: 0.2em;" alt="Preview"  ></a></div>
-    </div>
-  </div>
-  <hr />
-
-
-
-<div class="container">
-    <div class="row">
-        <div class="hstack gap-3">
-            {% if categoryLabel != 'feedback'%}
-            <a class="bg-light border ms-auto" href="/description/{{description.id}}?category=feedback">Feedback</a>
-            {% else %}
-            <a class="btn-secondary ms-auto active"
-                href="/description/{{description.id}}?category=feedback">Feedback</a>
-            {% endif %} 
-            
-           
-            
-            {% if categoryLabel != 'term'%}
-            <a class="bg-light border" href="/description/{{description.id}}?category=term">Term</a>
-            {% else %}
-            <a class="btn-secondary active" href="/description/{{description.id}}?category=term">Term</a>
-            {% endif %} {% if categoryLabel != 'question'%}
-            <a class="bg-light border" href="/description/{{description.id}}?category=question">Question</a>
-            {% else %}
-            <a class="btn-secondary active" href="/description/{{description.id}}?category=question">Question</a>
-            {% endif %}
-
-            <div class="vr"></div>
-
-            {% if categoryLabel != 'all'%}
-            <a class="bg-light border" href="/description/{{description.id}}?category=all">All</a>
-            {% else %}
-            <a class="btn-secondary active" href="/description/{{description.id}}?category=all">All</a>
-            {% endif %}
-        </div>
-    </div>
-</div>
-
-<hr />
+{%
+    block annotations %}
 
 <div class="row">
     <div class="col-6">
@@ -158,14 +96,14 @@ function mostrarQuote(event) {
 </div>
 
 
-
+<hr />
 
 <div class="row" style="padding: 15px;">
-    <div style="display: flex;flex-direction: row;gap: 10px;">
-        <button type="button" class="btn bi-archive border btn-outline-dark" style="color: red;">
+    <div style="display: flex;flex-direction: row;gap: 10px; align-items: center;text-align: center;justify-content: center;  ">
+        <button type="button" class="btn bi-archive border btn-primary" >
             Archive
         </button>
-        <button type="button" class="btn bi-check-circle border  btn-outline-success" >
+        <button type="button" class="btn bi-check-circle border  btn-secondary" >
             Approve
         </button>
 
@@ -246,5 +184,4 @@ function mostrarQuote(event) {
 </div>
 
 <hr />
-
 {% endblock %}

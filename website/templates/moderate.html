@@ -179,11 +179,7 @@ block head %} {{ super() }}
                     {% for description in descriptions %}
                     <tr>
                         {% set rowloop = loop %}
-                        <td>
-                           
-                            <a  href="/description/{{ description.id }}/edit" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-tools " style="width:100px;"></i></a>
-             
-                        </td>
+                        
 
                         {% set completeAdress = description.url.split('/') %}
 
@@ -215,6 +211,11 @@ block head %} {{ super() }}
                                 </div>
                             </div>
 
+                        </td>
+                        <td>
+                           
+                            <a  href="/description/{{ description.id }}/edit" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-tools " style="width:100px;"></i></a>
+             
                         </td>
 
                         
