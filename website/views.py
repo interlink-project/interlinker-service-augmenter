@@ -356,6 +356,7 @@ def aprovarClaimsList():
     argumentosList=list(argumentos.values())
     
     contador=0
+    nroActualizaciones=0
     for i in range(math.ceil(len(argumentosList)/4)):
         if(i!=0):
             contador=i*4
@@ -367,6 +368,7 @@ def aprovarClaimsList():
 
         #Agrego como moderador en la descripcion:
         descriptions=Description._get_Descriptions_byURI(url=url)
+        
         if len(descriptions)==1:
             if estado=="on":
                 descripcionAct=descriptions[0]
@@ -375,7 +377,41 @@ def aprovarClaimsList():
                                 "expire": endDate,
                                 "email": usuarioModerator
                             })
-                Description.save(descripcionAct,index="description")
+                descripcionAct.updateModerators(index="description")
+                nroActualizaciones=nroActualizaciones+1
+    
+
+    msg = Message('Your claim has been resolved.', sender = 'interlinkdeusto@gmail.com', recipients = [usuarioModerator])
+
+    msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
+    <table cellpadding='0' cellspacing='0' width='100%' style='background-color: #515151; border-radius: 30px 36
+    333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
+    30px 30px 30px; border-collapse: separate;' bgcolor='#515151'>
+        <tbody>
+            <tr>
+                <td align='center' class='esd-block-text es-p20t'>
+                    <h2 style='color: #ffffff;'>Your claim to be a moderator     has been resolved.</h2>
+                    
+                </td>
+            </tr>
+
+             <tr>
+                <td align='center' style='padding-right: 110px; padding-left: 110px;' class='esd-block-text es-m-p20l es-m-p20r es-p30t es-p40b'>
+                    <p style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>The admin comments are:</p>
+                    <p  style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>"""+adminComment+"""</p>
+                </td>
+            </tr>
+
+           
+            
+        </tbody>
+    </table>
+    </td>"""
+    
+    
+    mail = Mail(current_app)
+    mail.send(msg)
+
 
 
            
@@ -384,7 +420,7 @@ def aprovarClaimsList():
    
 
 
-    return urlList
+    return jsonify(nroActualizaciones)
 
 
 #Formulatio de carga de Pagina

@@ -167,17 +167,23 @@ block head %} {{ super() }}
             <table class="table" style="height: auto">
                 <thead>
                     <tr>
-                        <th scope="col-2">Domain</th>
+                        <th scope="col-1">Option</th>
+                        <th scope="col-1">Domain</th>
                         <th scope="col-2" >Page</th>
                         <th scope="col-3">Title</th>
-                        <th scope="col-2">Creation Date</th>
-                        <th scope="col-2">Expiration Date</th>
+                        <th scope="col-2">Period</th>
+                       
                     </tr>
                 </thead>
                 <tbody id="tablaDescriptions">
                     {% for description in descriptions %}
-
                     <tr>
+                        {% set rowloop = loop %}
+                        <td>
+                           
+                            <a  href="/description/{{ description.id }}/edit" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-tools " style="width:100px;"></i></a>
+             
+                        </td>
 
                         {% set completeAdress = description.url.split('/') %}
 
@@ -194,18 +200,24 @@ block head %} {{ super() }}
 
                         <td>{{ description.title}}</td>
 
-                        {% for moderator in description.moderators %}
-                            {% if moderator.email == current_user.email %}
-                            <td>{{ moderator.created|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
-                            <td>{{ moderator.expire|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
-                            {% endif %}
-                        {% endfor %}
-
                         <td>
-                           
-                            <a  href="/description/{{ description.id }}/edit" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-tools " style="width:100px;"></i></a>
-             
+                            <div class="container">
+                                <div class="col">
+                                    {% for moderator in description.moderators %}
+                                     {% if moderator.email == current_user.email %}
+                                    <div class="row">
+                                        {{ moderator.created|datetimeformat('DD-MM-YYYY')}} -> {{ moderator.expire|datetimeformat('DD-MM-YYYY')}}
+                                    </div>
+                                     {% endif %}
+                                    {% endfor %}
+
+
+                                </div>
+                            </div>
+
                         </td>
+
+                        
                     </tr>
 
                     {% endfor %}

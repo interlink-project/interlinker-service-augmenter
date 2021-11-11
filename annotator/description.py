@@ -652,6 +652,24 @@ class Description(es.Model):
 
         super(Description, self).updateFields(body=q,*args, **kwargs)
 
+
+    def updateModerators(self, *args, **kwargs):
+        #_add_default_permissions(self)
+
+        # If the annotation includes document metadata look to see if we have
+        # the document modeled already. If we don't we'll create a new one
+        # If we do then we'll merge the supplied links into it.
+
+        
+        q = {
+                "doc" : {
+                "moderators":self['moderators'],
+                "updated":datetime.datetime.now().replace(microsecond=0).isoformat()
+                }
+            } 
+
+        super(Description, self).updateFields(body=q,*args, **kwargs)
+
     @classmethod
     def search_raw(cls, query=None, params=None, raw_result=False,
                    user=None, authorization_enabled=None,index='description'):

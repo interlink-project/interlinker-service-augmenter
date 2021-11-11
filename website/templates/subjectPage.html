@@ -17,20 +17,18 @@ function mostrarQuote(event) {
 
 </script>
 
-
-<div class="container container-fluid" style="padding: 10px; align-content: center;">
-    <div class="row" style="display: flex;flex-direction: row;justify-content: center;">
-        <div class="col-10">
-            <h3>{{description['title']|striptags}}</h3>
-        </div>
-
-        <div class="col-2" style="min-width: 200px;">
-            <a href="/website/modifica/{{ current_user.email }}/{{ description['url']}}"
-                class="btn bg-light border">PREVIEW</a>
-        </div>
+<div class="container container-fluid">
+    <div class="row" style="padding-top: 10px;">
+      <div class="col-10"  style="text-align: center;margin-top: 1em;">
+        <h4>{{description['title']|striptags}}</h4>
+      </div>
+  
+      <div class="col-2"><a  href="/website/modifica/{{ current_user.email }}/{{ description['url']}}"   class="bi bi-eye" style="zoom: 3;-moz-transform: scale(3);padding: 0rem;margin-top: 0.2em;" alt="Preview"  ></a></div>
     </div>
-</div>
-<hr />
+  </div>
+  <hr />
+
+
 
 <div class="container">
     <div class="row">
@@ -168,7 +166,7 @@ function mostrarQuote(event) {
             Archive
         </button>
         <button type="button" class="btn bi-check-circle border  btn-outline-success" >
-            Approved
+            Approve
         </button>
 
     </div>
