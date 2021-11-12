@@ -1,6 +1,7 @@
 from flask import Blueprint
 import requests, math
 from urllib.parse import urljoin, urlparse
+import datetime
 
 from flask import Flask, render_template, redirect, request, url_for, session
 from flask_login import (
@@ -209,9 +210,6 @@ def description(descriptionId=None):
 
         res = Annotation.search(query={ 'uri': description[0]['url'] ,'category':categoria},limit=numRes)
 
-
-  
-    
     return render_template("description.html", user=current_user, description=description[0],anotations=res,categoryLabel=categoria)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
@@ -245,11 +243,53 @@ def subjectPage(descriptionId=None,annotatorId=None):
 
     annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
 
-    nroReplies = Annotation.count(query={ 'uri': description['url'] ,'category':'reply'  })
+    nroReplies = Annotation.count(query={ 'uri': description['url'] ,'category':'reply' })
     replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  },limit=nroReplies)
+
+    nroRepliesOfAnnotation = Annotation.count(query={ 'uri': description['url'] ,'category':'reply','idAnotationReply':'annotation-'+annotatorId  })
     
-    return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies)
+    return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
    # return 'la desc: '+category+'lauri is'+str(uri) 
+
+@authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>/<string:option>',)
+@login_required
+def changeAnnotation(descriptionId=None,annotatorId=None,option=None):
+
+    
+    if option == 'state':
+        
+        argumentos=request.args.to_dict()
+        newstate=argumentos.pop('state')
+        
+
+        annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
+        
+
+        #Registro el cambio y quien lo hizo
+        if(len(annotation['statechanges'])==0):
+            annotation['statechanges']=[]  
+
+        annotation['statechanges'].append({
+                        "initstate": annotation['state'],
+                        "endstate": newstate,
+                        "text": "Comentario vacio",
+                        "date": datetime.datetime.now().replace(microsecond=0).isoformat(),
+                        "user": current_user.email
+                    })
+
+        annotation['state']=int(newstate)
+        annotation.updateState()
+
+    
+        description = Description._get_Descriptions_byId(id=descriptionId)[0]
+        annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
+   
+        nroReplies = Annotation.count(query={ 'uri': description['url'] ,'category':'reply'  })
+        replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  },limit=nroReplies)
+        
+        return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies)
+    # return 'la desc: '+category+'lauri is'+str(uri) 
+
 
 
 @authInterlink.route("/descriptionDetail")

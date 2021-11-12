@@ -1,4 +1,5 @@
 from annotator import authz, document, es
+import datetime
 
 TYPE = 'annotation'
 MAPPING = {
@@ -31,6 +32,43 @@ MAPPING = {
             'admin': {'type': 'string'}
         }
     },
+
+    "statechanges": {
+        "type": "nested",
+        "properties": {
+            "initstate": {"type": "byte"},
+            "endstate": {"type": "byte"},
+            "text": {"type": "string"},
+            "date": {"type": "date","format": "dateOptionalTime"},
+            "user": {"type": "string"}
+        }
+    },
+
+    
+
+    "state": {
+        "type": "byte",
+        "index": "not_analyzed"
+    },
+
+
+
+    "likes": {
+        "type": "integer",
+        "index": "not_analyzed"
+    },
+
+    "dislikes": {
+        "type": "integer",
+        "index": "not_analyzed"
+    },
+
+    "replies": {
+        "type": "integer",
+        "index": "not_analyzed"
+    },
+
+
     'document': {
         'properties': document.MAPPING
     },
@@ -45,6 +83,16 @@ class Annotation(es.Model):
 
     def save(self, *args, **kwargs):
         _add_default_permissions(self)
+        
+        #The initial state of the annotation is 0.
+        #the 0 state: on discussion.
+        #the 1 state: archived
+        #the 2 state: approved
+        #the 3 state: banned
+        #en statechages register the states changes.
+        self['state']=0
+        self['statechanges']={}
+
 
         # If the annotation includes document metadata look to see if we have
         # the document modeled already. If we don't we'll create a new one
@@ -55,6 +103,26 @@ class Annotation(es.Model):
             d.save()
 
         super(Annotation, self).save(*args, **kwargs)
+
+
+
+    def updateState(self, *args, **kwargs):
+        #_add_default_permissions(self)
+
+        # If the annotation includes document metadata look to see if we have
+        # the document modeled already. If we don't we'll create a new one
+        # If we do then we'll merge the supplied links into it.
+
+        
+        q = {
+                "doc" : {
+                "state": self['state'],   
+                "statechanges":self['statechanges'],
+                "updated":datetime.datetime.now().replace(microsecond=0).isoformat()
+                }
+            } 
+
+        super(Annotation, self).updateFields(body=q,*args, **kwargs)
 
     @classmethod
     def search_raw(cls, query=None, params=None, raw_result=False,

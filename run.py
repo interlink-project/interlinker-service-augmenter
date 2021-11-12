@@ -23,7 +23,7 @@ from flask_mail import Mail, Message
 
 import elasticsearch
 from flask import request
-from annotator import es, annotation, auth, authz, document, store
+from annotator import es, annotation, auth, authz, document, store,description
 from authInterlink import authInterlink
 import secrets
 from tests.helpers import MockUser, MockConsumer, MockAuthenticator
@@ -90,6 +90,7 @@ def main(argv):
     with app.test_request_context():
         try:
             annotation.Annotation.create_all()
+            #description.Description.create_all(index="description")
             document.Document.create_all()
         except elasticsearch.exceptions.RequestError as e:
             if e.error.startswith('MergeMappingException'):

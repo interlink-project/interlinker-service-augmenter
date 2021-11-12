@@ -4,6 +4,7 @@ DELETE annotator
 
 
 DELETE description
+
 POST description
 {
     "mappings": {
@@ -84,6 +85,9 @@ POST description
         }
     }
 }
+
+
+
 
 POST description/description/_search
 {
@@ -214,7 +218,7 @@ POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
 }
 
 
-DELETE description/description/AX0Kef7hCEacbMWTC_E1
+DELETE description/description/AX0Kg2vFCEacbMWTC_E2
 
 GET description/description/AXzvKf1iW2WuxQVN8aKY
 
@@ -270,6 +274,18 @@ POST description/description/_search
 
 
 POST description/description/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "url": "http://extranjeros.inclusion.gob.es/es/informacioninteres/informacionprocedimientos/ciudadanosnocomunitarios/hoja001/index.html"
+                    }
+                }]
+        }
+    }
+}
 
 
 POST description/description/_search

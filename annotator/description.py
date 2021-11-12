@@ -35,10 +35,11 @@ MAPPING = {
             "expire": {
                     "type": "date",
                     "format": "dateOptionalTime"
-                },
+                }
         }
     },
 
+    
     "padministration": {
         "type": "string",
         "analyzer": "standard"
@@ -50,9 +51,8 @@ MAPPING = {
     },
 
     'created': {'type': 'date'},
-    'updated': {'type': 'date'}
-
-    ,
+    'updated': {'type': 'date'},
+    
     'permissions': {
         'index_name': 'permission',
         'properties': {

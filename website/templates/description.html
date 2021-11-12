@@ -3,25 +3,26 @@ block content %}
 
 
 
-<div class="container container-fluid">
-  <div class="row" style="padding-top: 10px;">
-    <div class="col-10"  style="text-align: center;margin-top: 1em;">
-      <h4>{{description['title']|striptags}}</h4>
-    </div>
 
-    <div class="col-2"><a  href="/website/modifica/{{ current_user.email }}/{{ description['url']}}"   class="bi bi-eye" style="zoom: 3;-moz-transform: scale(3);padding: 0rem;margin-top: 0.2em;" data-bs-toggle="tooltip" data-bs-placement="right" title="Preview"  ></a></div>
-  </div>
-</div>
 <hr />
 
-<div class="container">
+<div  style="display: block">
   <div class="row">
-    <div class="hstack gap-3">
+  <div class="col-8"  style="text-align: center;margin-top: 4px;display: inline-flex;">
+    <a  href="/website/modifica/{{ current_user.email }}/{{ description['url']}}"   class="bi bi-eye" style="zoom: 2;-moz-transform: scale(2);padding: 0rem;margin-right: 0.2em;color: rgb(0, 72, 100);" data-bs-toggle="tooltip" data-bs-placement="right" title="Preview"  ></a>
+
+    <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
+
+  </div>
+  <div class="col-4" >
+
+ 
+    <div class="hstack gap-0" >
 
       {% if categoryLabel != 'feedback'%}
-        <a class="bg-light border ms-auto" href="/description/{{description.id}}?category=feedback" >Feedback</a>
+        <a class="bg-light border ms-auto" style="border-radius: 5px 0px 0px 5px;" href="/description/{{description.id}}?category=feedback" >Feedback</a>
       {% else %}
-        <a class="btn-secondary ms-auto active" href="/description/{{description.id}}?category=feedback" >Feedback</a>
+        <a class="btn-secondary ms-auto active"  style="border-radius: 5px 0px 0px 5px;" href="/description/{{description.id}}?category=feedback" >Feedback</a>
       {% endif %}
       
 
@@ -39,19 +40,21 @@ block content %}
       {% endif %}
       
       
-      <div class="vr"></div>
+      <div class="vr" style="padding-right: 3px;"></div>
 
 
       {% if categoryLabel != 'all'%}
-        <a class="bg-light border " href="/description/{{description.id}}?category=all" >All</a>
+        <a class="bg-light border "  style="border-radius: 0px 5px 5px 0px;" href="/description/{{description.id}}?category=all" >All</a>
       {% else %}
-        <a class="btn-secondary active " href="/description/{{description.id}}?category=all" >All</a>
+        <a class="btn-secondary active "  style="border-radius: 0px 5px 5px 0px;" href="/description/{{description.id}}?category=all" >All</a>
       {% endif %}
 
+     
 
     </div>
+ 
   </div>
-
+</div>
   
 </div>
 
@@ -79,10 +82,14 @@ block content %}
       <td>{{ anotation.text|striptags}} </td>
       <td>21/10/2021</td>
       <td>
-        <a
-          href="/subjectPage/{{ description.id }}/{{ anotation.id }}"
-          >...</a
-        >
+       
+
+
+        <a  
+        href="/subjectPage/{{ description.id }}/{{ anotation.id }}" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
+
+
+
       </td>
     </tr>
     {% endif %} {% endfor %}

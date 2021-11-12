@@ -372,6 +372,10 @@ def aprovarClaimsList():
         if len(descriptions)==1:
             if estado=="on":
                 descripcionAct=descriptions[0]
+
+                if(len(descripcionAct['moderators'])==0):
+                    descripcionAct['moderators']=[]    
+
                 descripcionAct['moderators'].append({
                                 "created": initDate,
                                 "expire": endDate,

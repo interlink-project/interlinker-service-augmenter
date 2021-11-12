@@ -1,5 +1,5 @@
 {
-    "took": 2,
+    "took": 1,
     "timed_out": false,
     "_shards": {
         "total": 5,
@@ -8,39 +8,51 @@
     },
     "hits": {
         "total": 1,
-        "max_score": 1.987628,
+        "max_score": 2.4865634,
         "hits": [
             {
-                "_index": "description",
-                "_type": "description",
-                "_id": "AX0Kg2vFCEacbMWTC_E2",
-                "_score": 1.987628,
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1636726307772",
+                "_score": 2.4865634,
                 "_source": {
-                    "title": "Autorización de Regreso1234",
-                    "description": "Se trata de autorizar la salida y el posterior retorno al territorio nacional al extranjero cuya autorización de residencia o estancia se encuentre en periodo de renovación o prórroga.",
-                    "keywords": "autorizacion regreso extranjeria",
-                    "moderators": [
+                    "section_title": null,
+                    "ranges": [
                         {
-                            "created": "2021-11-05T08:14:20.359310+00:00",
-                            "expire": "2021-11-05T08:14:20.359310+00:00",
-                            "email": "danyche2005@deusto.es"
-                        },
-                        {
-                            "created": "2021-11-10",
-                            "expire": "2021-11-30",
-                            "email": "d.silva@deusto.es"
+                            "endOffset": 529,
+                            "startOffset": 512,
+                            "start": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]",
+                            "end": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]"
                         }
                     ],
-                    "padministration": "Ministerio del Interior de España",
-                    "url": "http://extranjeros.inclusion.gob.es/es/informacioninteres/informacionprocedimientos/ciudadanosnocomunitarios/hoja001/index.html",
+                    "created": "2021-11-12T14:11:47.695670+00:00",
+                    "section": null,
+                    "uri": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
+                    "quote": "šana, ceļa noklāš",
+                    "statechanges": {},
                     "permissions": {
                         "read": [
-                            "group:__world__"
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
                         ]
                     },
-                    "created": "2021-11-05T08:14:20.359310+00:00",
-                    "updated": "2021-11-10T15:42:00.717906+00:00",
-                    "id": "AXzvKf1iW2WuxQVN8aKY"
+                    "data_creacio": 1636726292543,
+                    "idAnotationReply": "annotation-1636726292600",
+                    "text": "<p>this is the reply of the quesition</p>",
+                    "state": 0,
+                    "category": "reply",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2021-11-12T14:11:47.695670+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "uxDescriptionLongPanel"
                 }
             }
         ]

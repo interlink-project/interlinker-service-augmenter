@@ -9,6 +9,7 @@ import elasticsearch
 from six import iteritems
 from six.moves.urllib.parse import urlparse
 
+
 log = logging.getLogger(__name__)
 
 RESULTS_MAX_SIZE = 200
