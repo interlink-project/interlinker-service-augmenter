@@ -1,188 +1,269 @@
-{% extends "description.html" %} 
-
-{% block annotations %}
-
-
-
+{% extends "description.html" %} {% block annotations %}
 
 <div class="row">
-    <div class="col-6">
-        <h5>
-            {{ annotation['category'][0]|upper }}{{ annotation['category'][1:] }}/{{
+  <div class="col-6">
+    <h5>
+      {{ annotation['category'][0]|upper }}{{ annotation['category'][1:] }}/{{
       annotation['id'] }} (State={{annotation['state']}})
-        </h5>
+    </h5>
+  </div>
+  <div class="col-6">
+    <div
+      class="container"
+      style="
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 10px;
+      "
+    >
+      <div
+        style="
+          min-width: 50px;
+          max-width: 50px;
+          text-align: center;
+          justify-content: center;
+          border-radius: 5px;
+          border: 1px solid rgb(94, 94, 94, 20%);
+        "
+      >
+        {{ nroReplies }} <br />
+        REPLY
+      </div>
+      <div
+        style="
+          min-width: 50px;
+          max-width: 50px;
+          text-align: center;
+          justify-content: center;
+          border-radius: 5px;
+          border: 1px solid rgb(94, 94, 94, 20%);
+        "
+      >
+        15 VIEWS
+      </div>
+      <div
+        style="
+          min-width: 50px;
+          max-width: 50px;
+          text-align: center;
+          justify-content: center;
+          border-radius: 5px;
+          border: 1px solid rgb(94, 94, 94, 20%);
+        "
+      >
+        5 VOTES
+      </div>
     </div>
-    <div class="col-6">
-        <div class="container" style="display: flex; flex-direction: row; justify-content: flex-end;gap:10px;">
-            <div style="min-width: 50px;max-width: 50px; text-align: center; justify-content: center;border-radius: 5px;border:1px solid rgb(94, 94, 94,20%);" >
-                {{ nroReplies }} <br />
-                REPLY
-            </div>
-            <div style="min-width: 50px;max-width: 50px; text-align: center; justify-content: center;border-radius: 5px;border:1px solid rgb(94, 94, 94,20%);">
-                15 VIEWS
-            </div>
-            <div style="min-width: 50px;max-width: 50px; text-align: center; justify-content: center;border-radius: 5px;border:1px solid rgb(94, 94, 94,20%);">
-                5 VOTES
-            </div>
-        </div>
-    </div>
+  </div>
 </div>
 
 <div class="row" style="padding-left: 10px">
-    <h6>Content:</h6>
+  <h6>Content:</h6>
 
-    <div class="row" style="
+  <div
+    class="row"
+    style="
       position: relative;
       background-color: #fff1f1;
       border-radius: 10px;
       margin: 10px;
-    ">
-        <div style="position: relative; top: -10px">
-            <div style="top: -10px; display: flex; justify-content: flex-end; gap: 10px">
-                <button type="button" class="btn btn-success">
-                    <i class="bi bi-hand-thumbs-up"></i> 99+
-                </button>
-                <button type="button" class="btn btn-danger">
-                    <i class="bi bi-hand-thumbs-down"></i> 99+
-                </button>
-            </div>
-        </div>
-
-        <p style="padding: 10px; padding-top: 0px">
-            {{ annotation['text']|striptags }}
-        </p>
-
-       
-    </div>
-    <div class="row" id="quoteTexto" >
-        <div style="display: flex; justify-content: flex-end;">
-            <p><cite>" {{ annotation['quote']|striptags }} "</cite>
-
-        </div>
-
+    "
+  >
+    <div style="position: relative; top: -10px">
+      <div
+        style="top: -10px; display: flex; justify-content: flex-end; gap: 10px"
+      >
+        <button type="button" class="btn btn-success">
+          <i class="bi bi-hand-thumbs-up"></i> 99+
+        </button>
+        <button type="button" class="btn btn-danger">
+          <i class="bi bi-hand-thumbs-down"></i> 99+
+        </button>
+      </div>
     </div>
 
-
+    <p style="padding: 10px; padding-top: 0px">
+      {{ annotation['text']|striptags }}
+    </p>
+  </div>
+  <div class="row" id="quoteTexto">
+    <div style="display: flex; justify-content: flex-end">
+      <p><cite>" {{ annotation['quote']|striptags }} "</cite></p>
+    </div>
+  </div>
 </div>
 
-<div class="col" style="padding-left: 20px;padding-bottom: 10px;">
-
-    <div class="row" style="gap: 10px;background: rgba(201, 229, 255, 0.658); border-radius: 5px;margin-bottom: 10px;padding-top: 3px;">
-        <div class="col-3" >
-            <h6>Keywords:</h6>
-        </div>
-
-        <div class="col-8">
-            {{description['keywords'][0]|upper}}{{description['keywords'][1:]| replace(" ", ", ")}}
-        </div>
-
+<div class="col" style="padding-left: 20px; padding-bottom: 10px">
+  <div
+    class="row"
+    style="
+      gap: 10px;
+      background: rgba(201, 229, 255, 0.658);
+      border-radius: 5px;
+      margin-bottom: 10px;
+      padding-top: 3px;
+    "
+  >
+    <div class="col-3">
+      <h6>Keywords:</h6>
     </div>
 
-    <div class="row" style="gap: 10px;background: rgba(201, 229, 255, 0.658); border-radius: 5px;padding-top: 3px;">
-        <div class="col-3">
-            <h6>Public Administration:</h6>
-        </div>
+    <div class="col-8">
+      {{description['keywords'][0]|upper}}{{description['keywords'][1:]|
+      replace(" ", ", ")}}
+    </div>
+  </div>
 
-        <div class="col-8">
-            {{description['padministration']}}
-        </div>
-
+  <div
+    class="row"
+    style="
+      gap: 10px;
+      background: rgba(201, 229, 255, 0.658);
+      border-radius: 5px;
+      padding-top: 3px;
+    "
+  >
+    <div class="col-3">
+      <h6>Public Administration:</h6>
     </div>
 
+    <div class="col-8">{{description['padministration']}}</div>
+  </div>
 </div>
-
-
 
 <hr />
 
-{% macro muestraReplies(reply,separador) -%} 
-{% set separador = '. '+separador +'. ' %} 
-    {% for replyRep in replies |sort( attribute="data_creacio") %} 
-        {% if replyRep.category == 'reply' and replyRep.idAnotationReply=='annotation-'+reply.id %}
+{% macro muestraReplies(reply,separador) -%} {% set separador = '. '+separador
++'. ' %} {% for replyRep in replies |sort( attribute="data_creacio") %} {% if
+replyRep.category == 'reply' and
+replyRep.idAnotationReply=='annotation-'+reply.id %}
 
-        <div class="row" style="background-color: #e7fff1;border-radius: 10px;margin: 10px;align-items:center;">
-            <div class="col-10">
-                {{separador}} <i class="bi bi-arrow-return-right" style="font-weight: bold;width: fit-content;"></i> 
-                {% set userName = replyRep.user.split('@')[0] %}
+<div
+  class="row"
+  style="
+    background-color: #e7fff1;
+    border-radius: 10px;
+    margin: 10px;
+    align-items: center;
+  "
+>
+  <div class="col-10">
+    {{separador}}
+    <i
+      class="bi bi-arrow-return-right"
+      style="font-weight: bold; width: fit-content"
+    ></i>
+    {% set userName = replyRep.user.split('@')[0] %}
 
-                <span style="font-weight: bold;width: fit-content;" > ({{replyRep.state}}){{ userName[0] |upper}}{{ userName[1:]}} </span> at {{ replyRep.created|datetimeformat() }}. 
-                
-                <span style="font-weight:lighter;width: fit-content;" > {{ replyRep.text|striptags}}</span>
-            
-            </div>
+    <span style="font-weight: bold; width: fit-content">
+      ({{replyRep.state}}){{ userName[0] |upper}}{{ userName[1:]}}
+    </span>
+    at {{ replyRep.created|datetimeformat() }}.
 
-            <div class="col-2" style="display:flex;justify-content: flex-end; ">
-                <div class="input-group mb-3">
-                    
-                    <button class="btn btn-outline-secondary bi-hand-thumbs-up" type="button"></button>
-                    <button class="btn btn-outline-secondary bi-hand-thumbs-down" type="button"></button>
-                    <button class="btn btn-outline-secondary bi-trash" onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/state?state=4'" type="button"></button>
-                   
-                </div>
-            </div>
+    <span style="font-weight: lighter; width: fit-content">
+      {{ replyRep.text|striptags}}</span
+    >
+  </div>
 
-        </div>
+  <div class="col-2" style="display: flex; justify-content: flex-end">
+    <div class="input-group mb-3">
+      <button
+        class="btn btn-outline-secondary bi-hand-thumbs-up"
+        type="button"
+      ></button>
+      <button
+        class="btn btn-outline-secondary bi-hand-thumbs-down"
+        type="button"
+      ></button>
+      <button
+        class="btn btn-outline-secondary bi-trash"
+        onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/state?state=4&annotationRootId={{ annotation['id'] }}'"
+        type="button"
+      ></button>
+    </div>
+  </div>
+</div>
 
-
-
-        
-        {{ muestraReplies(replyRep,separador)}} 
-        {% endif %} 
-    {% endfor %} 
-{%- endmacro -%}
+{{ muestraReplies(replyRep,separador)}} {% endif %} {% endfor %} {%- endmacro
+-%}
 
 <div class="container">
-    
-        {% for replyRep in replies |sort(
-    attribute="data_creacio")|selectattr("uri", "equalto", annotation.uri) %} {%
-    if replyRep.category == 'reply' and replyRep.idAnotationReply==
-    'annotation-'+annotation.id %}
-        <div class="row" style="background-color: #e7fff1;border-radius: 10px;margin: 10px;">
-            <div class="col-10">
-                {% set userName = replyRep.user.split('@')[0] %}
+  {% for replyRep in replies |sort( attribute="data_creacio")|selectattr("uri",
+  "equalto", annotation.uri) %} {% if replyRep.category == 'reply' and
+  replyRep.idAnotationReply== 'annotation-'+annotation.id %}
+  <div
+    class="row"
+    style="background-color: #e7fff1; border-radius: 10px; margin: 10px"
+  >
+    <div class="col-10">
+      {% set userName = replyRep.user.split('@')[0] %}
 
-                <span style="font-weight: bold;width: fit-content;" > ({{replyRep.state}}) {{ userName[0] |upper}}{{ userName[1:]}} </span> at {{ replyRep.created|datetimeformat() }}. 
-                
-                <span style="font-weight:lighter;width: fit-content;" >{{ replyRep.text|striptags}}</span>
-            
-            </div>
+      <span style="font-weight: bold; width: fit-content">
+        ({{replyRep.state}}) {{ userName[0] |upper}}{{ userName[1:]}}
+      </span>
+      at {{ replyRep.created|datetimeformat() }}.
 
-            <div class="col-2" style="position: relative; padding-top: 5px;padding-bottom: 0px; ">
-                <div class="input-group mb-3">
-                    <button class="btn btn-outline-secondary bi-hand-thumbs-up" onclick="" type="button"></button>
-                    <button class="btn btn-outline-secondary bi-hand-thumbs-down" onclick="" type="button"></button>
-                    <button class="btn btn-outline-secondary bi-trash" onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/state?state=4'" type="button"></button>
-                   
-                </div>
-            </div>
+      <span style="font-weight: lighter; width: fit-content"
+        >{{ replyRep.text|striptags}}</span
+      >
+    </div>
 
-        
-
-        </div>
-        {% set separador = '' %} {{ muestraReplies(replyRep,separador)}} {% endif
-    %} {% endfor %}
-    
+    <div
+      class="col-2"
+      style="position: relative; padding-top: 5px; padding-bottom: 0px"
+    >
+      <div class="input-group mb-3">
+        <button
+          class="btn btn-outline-secondary bi-hand-thumbs-up"
+          onclick=""
+          type="button"
+        ></button>
+        <button
+          class="btn btn-outline-secondary bi-hand-thumbs-down"
+          onclick=""
+          type="button"
+        ></button>
+        <button
+          class="btn btn-outline-secondary bi-trash"
+          onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/state?state=4&annotationRootId={{ annotation['id'] }}'"
+          type="button"
+        ></button>
+      </div>
+    </div>
+  </div>
+  {% set separador = '' %} {{ muestraReplies(replyRep,separador)}} {% endif %}
+  {% endfor %}
 </div>
 
 <hr />
 
-
-
-
-
-
-<div class="row" style="padding: 15px;">
-    <div style="display: flex;flex-direction: row;gap: 10px; align-items: center;text-align: center;justify-content: center;  ">
-        <button type="button" class="btn bi-archive border btn-danger" onclick="window.location='/subjectPage/{{ description.id}}/{{ annotation.id}}/state?state=1'" >
-            Archive
-        </button>
-        <button type="button" class="btn bi-check-circle border  btn-primary" onclick="window.location='/subjectPage/{{ description.id}}/{{ annotation.id}}/state?state=2'" >
-            Approve
-        </button>
-
-    </div>
-
-
+<div class="row" style="padding: 15px">
+  <div
+    style="
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+    "
+  >
+    <button
+      type="button"
+      class="btn bi-archive border btn-danger"
+      onclick="window.location='/subjectPage/{{ description.id}}/{{ annotation.id}}/state?state=1'"
+    >
+      Archive
+    </button>
+    <button
+      type="button"
+      class="btn bi-check-circle border btn-primary"
+      onclick="window.location='/subjectPage/{{ description.id}}/{{ annotation.id}}/state?state=2'"
+    >
+      Approve
+    </button>
+  </div>
 </div>
 
 <hr />

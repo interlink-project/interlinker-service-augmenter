@@ -1,7 +1,9 @@
 /annotator.egg-info
 /annotator.cfg
 /.coverage
+/build
 /cover
 /dist
 /.tox
 *.pyc
+.vscode/settings.json
