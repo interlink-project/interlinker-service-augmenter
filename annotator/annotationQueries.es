@@ -1,4 +1,6 @@
 
+DELETE annotator
+
 POST annotator/annotation/_search
 {
     "query": {

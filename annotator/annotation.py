@@ -93,6 +93,9 @@ class Annotation(es.Model):
         self['state']=0
         self['statechanges']={}
 
+        self['like']=0
+        self['dislike']=0
+
 
         # If the annotation includes document metadata look to see if we have
         # the document modeled already. If we don't we'll create a new one
@@ -117,12 +120,28 @@ class Annotation(es.Model):
         q = {
                 "doc" : {
                 "state": self['state'],   
-                "statechanges":self['statechanges'],
-                "updated":datetime.datetime.now().replace(microsecond=0).isoformat()
+                "statechanges":self['statechanges']
                 }
             } 
 
         super(Annotation, self).updateFields(body=q,*args, **kwargs)
+
+    def updateLike(self, *args, **kwargs):
+        #_add_default_permissions(self)
+
+        # If the annotation includes document metadata look to see if we have
+        # the document modeled already. If we don't we'll create a new one
+        # If we do then we'll merge the supplied links into it.
+
+        
+        q = {
+                "doc" : {
+                "like": self['like'],   
+                "dislike":self['dislike']
+                }
+            } 
+
+        super(Annotation, self).updateFields(body=q,*args, **kwargs)    
 
     @classmethod
     def search_raw(cls, query=None, params=None, raw_result=False,

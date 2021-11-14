@@ -74,11 +74,19 @@
       <div
         style="top: -10px; display: flex; justify-content: flex-end; gap: 10px"
       >
-        <button type="button" class="btn btn-success">
-          <i class="bi bi-hand-thumbs-up"></i> 99+
+        <button
+          type="button"
+          class="btn btn-success"
+          onclick="window.location='/subjectPage/{{ description.id}}/{{ annotation.id }}/like?like=1&annotationRootId={{ annotation['id'] }}'"
+        >
+          <i class="bi bi-hand-thumbs-up"></i> {{ annotation['like']}}
         </button>
-        <button type="button" class="btn btn-danger">
-          <i class="bi bi-hand-thumbs-down"></i> 99+
+        <button
+          type="button"
+          class="btn btn-danger"
+          onclick="window.location='/subjectPage/{{ description.id}}/{{ annotation.id }}/like?like=-1&annotationRootId={{ annotation['id'] }}'"
+        >
+          <i class="bi bi-hand-thumbs-down"></i> {{ annotation['dislike']}}
         </button>
       </div>
     </div>
@@ -171,14 +179,20 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
       <button
         class="btn btn-outline-secondary bi-hand-thumbs-up"
         type="button"
-      ></button>
+        onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/like?like=1&annotationRootId={{ annotation['id'] }}'"
+      >
+        {{ replyRep['like']}}
+      </button>
       <button
         class="btn btn-outline-secondary bi-hand-thumbs-down"
         type="button"
-      ></button>
+        onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/like?like=-1&annotationRootId={{ annotation['id'] }}'"
+      >
+        {{ replyRep['dislike']}}
+      </button>
       <button
         class="btn btn-outline-secondary bi-trash"
-        onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/state?state=4&annotationRootId={{ annotation['id'] }}'"
+        onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/state?state=3&annotationRootId={{ annotation['id'] }}'"
         type="button"
       ></button>
     </div>
@@ -216,17 +230,21 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
       <div class="input-group mb-3">
         <button
           class="btn btn-outline-secondary bi-hand-thumbs-up"
-          onclick=""
           type="button"
-        ></button>
+          onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/like?like=1&annotationRootId={{ annotation['id'] }}'"
+        >
+          {{ replyRep['like']}}
+        </button>
         <button
           class="btn btn-outline-secondary bi-hand-thumbs-down"
-          onclick=""
           type="button"
-        ></button>
+          onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/like?like=-1&annotationRootId={{ annotation['id'] }}'"
+        >
+          {{ replyRep['dislike']}}
+        </button>
         <button
           class="btn btn-outline-secondary bi-trash"
-          onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/state?state=4&annotationRootId={{ annotation['id'] }}'"
+          onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/state?state=3&annotationRootId={{ annotation['id'] }}'"
           type="button"
         ></button>
       </div>

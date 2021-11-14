@@ -311,6 +311,58 @@ def changeAnnotation(descriptionId=None,annotatorId=None,option=None):
             nroRepliesOfAnnotation = Annotation.count(query={ 'uri': description['url'] ,'category':'reply','idAnotationReply':'annotation-'+annotatorId  })
             
             return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
+
+    elif option=='like':
+
+        argumentos=request.args.to_dict()
+        vote=int(argumentos.pop('like'))
+
+        annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
+        
+        #Registro el cambio y quien lo hizo
+
+        if(vote==1):
+            nroLikes=int(annotation['like'])
+            annotation['like']=nroLikes+1
+                
+        elif vote==-1:
+            nroDisLikes=int(annotation['dislike'])
+            annotation['dislike']=nroDisLikes+1
+
+
+        annotation.updateLike()
+
+
+        annotationRootId=''
+        losvalores=argumentos.keys()
+        if "annotationRootId" in losvalores:
+            annotationRootId=argumentos.pop('annotationRootId')
+
+
+        if annotationRootId != "":
+
+            description = Description._get_Descriptions_byId(id=descriptionId)[0]
+            annotation = Annotation._get_Annotation_byId(id=annotationRootId)[0]
+    
+            nroReplies = Annotation.count(query={ 'uri': description['url'] ,'category':'reply'  })
+            replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  },limit=nroReplies)
+
+            nroRepliesOfAnnotation = Annotation.count(query={ 'uri': description['url'] ,'category':'reply','idAnotationReply':'annotation-'+annotationRootId  })
+
+            return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
+        else:
+
+            description = Description._get_Descriptions_byId(id=descriptionId)[0]
+            annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
+    
+            nroReplies = Annotation.count(query={ 'uri': description['url'] ,'category':'reply'  })
+            replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  },limit=nroReplies)
+
+            nroRepliesOfAnnotation = Annotation.count(query={ 'uri': description['url'] ,'category':'reply','idAnotationReply':'annotation-'+annotatorId  })
+            
+            return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
+
+
     # return 'la desc: '+category+'lauri is'+str(uri) 
 
 
