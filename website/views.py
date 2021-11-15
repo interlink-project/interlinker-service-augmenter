@@ -607,6 +607,7 @@ def modifica(rutaPagina,userId):
                 showEditPermissionsCheckbox: false
             });
 
+            sessionStorage.setItem('user', '"""+userId+"""');
 
             $('body').annotator().annotator('addPlugin', 'RichEditor');
             $('body').annotator().annotator('addPlugin', 'Categories', {

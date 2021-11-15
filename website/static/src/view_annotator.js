@@ -160,90 +160,78 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       var item;
       //item contains all the annotation information, this information is stored in an attribute called data-annotation.
       item = $(event.target).parents(".annotator-marginviewer-element");
-      if (type == "delete"){
+      if (type == "delete") {
         return this.annotator.deleteAnnotation(item.data("annotation"));
       }
-      if (type == "reply"){
-
-        console.log("Ha entrado en la accion de reply")
+      if (type == "reply") {
+        console.log("Ha entrado en la accion de reply");
 
         var annotator_textArea = item.find("div.annotator-marginviewer-reply");
-        annotator_textArea=annotator_textArea.find("div.anotador_text")
+        annotator_textArea = annotator_textArea.find("div.anotador_text");
 
         //Obtengo los valores:
-        idReferencia=annotator_textArea.prevObject.prevObject[0].id;
-        item.id=idReferencia.split("-")[1];
+        idReferencia = annotator_textArea.prevObject.prevObject[0].id;
+        item.id = idReferencia.split("-")[1];
 
         var localInstance = this;
 
         async function doAjax(item) {
           const result = await $.ajax({
-              url: "http://127.0.0.1:5000/annotations/"+item.id,
-              dataType: "json",
-              type: "get",
-              contentType: "application/json",
-              processData: false
+            url: "http://127.0.0.1:5000/annotations/" + item.id,
+            dataType: "json",
+            type: "get",
+            contentType: "application/json",
+            processData: false,
           });
-      
+
           return result;
         }
 
-
-        doAjax(item).then( (item) => {
-          $("#annotation-"+item.id).data(item); 
+        doAjax(item).then((item) => {
+          $("#annotation-" + item.id).data(item);
           this.textareaEditorReply(annotator_textArea, item);
-        })
-
-       
+        });
       }
 
-        /*let annotator_textArea=item.find("div.anotador_text");
+      /*let annotator_textArea=item.find("div.anotador_text");
         this.textareaEditor(annotator_textArea,item.data("annotation"))*/
-        //this.annotator.replyAnnotation(item.data("annotation"));
-
+      //this.annotator.replyAnnotation(item.data("annotation"));
 
       if (type == "edit") {
-
-        console.log("Ha entrado en la accion de edit")
+        console.log("Ha entrado en la accion de edit");
 
         var annotator_textArea = item.find("div.annotator-marginviewer-text");
-        annotator_textArea=annotator_textArea.find("div.anotador_text")
+        annotator_textArea = annotator_textArea.find("div.anotador_text");
 
         //Obtengo los valores:
-        idReferencia=annotator_textArea.prevObject.prevObject[0].id;
-        item.id=idReferencia.split("-")[1];
+        idReferencia = annotator_textArea.prevObject.prevObject[0].id;
+        item.id = idReferencia.split("-")[1];
 
         var localInstance = this;
 
         async function doAjax(item) {
           const result = await $.ajax({
-              url: "http://127.0.0.1:5000/annotations/"+item.id,
-              dataType: "json",
-              type: "get",
-              contentType: "application/json",
-              processData: false
+            url: "http://127.0.0.1:5000/annotations/" + item.id,
+            dataType: "json",
+            type: "get",
+            contentType: "application/json",
+            processData: false,
           });
-      
+
           return result;
         }
 
-
-        doAjax(item).then( (item) => {
-          $("#annotation-"+item.id).data(item); 
+        doAjax(item).then((item) => {
+          $("#annotation-" + item.id).data(item);
           this.textareaEditor(annotator_textArea, item);
-        })
-
+        });
 
         //We want to transform de div to a textarea
         //Find the text field
         //var annotator_divText = item.find("div.annotator-marginviewer-text")
-       // var annotator_textArea = annotator_divText.find("div.anotador_text");
-       // this.textareaEditor(annotator_textArea, item.data("annotation"));
+        // var annotator_textArea = annotator_divText.find("div.anotador_text");
+        // this.textareaEditor(annotator_textArea, item.data("annotation"));
       }
-
-
-
-
     };
 
     //Textarea editor controller
@@ -251,11 +239,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       annotator_textArea,
       item
     ) {
-
-      //Cambio el id del campo 
-      idReferencia=item.id
-      $("li#annotation-"+idReferencia).attr("id", "annotation-"+item.id);
-
+      //Cambio el id del campo
+      idReferencia = item.id;
+      $("li#annotation-" + idReferencia).attr("id", "annotation-" + item.id);
 
       //First we have to get the text, if no, we will have an empty text area after replace the div
       if (
@@ -295,30 +281,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       }
     };
 
-
-
-
-
-
     //Textarea editor controller
-    AnnotatorViewer.prototype.textareaEditorReply =function (
+    AnnotatorViewer.prototype.textareaEditorReply = function (
       annotator_textArea,
       item
     ) {
+      idReferencia = annotator_textArea.prevObject.prevObject[0].id;
+      item.id = idReferencia.split("-")[1];
 
-      
-
-      idReferencia=annotator_textArea.prevObject.prevObject[0].id;
-      item.id=idReferencia.split("-")[1];
-
-      //Cambio el id del campo 
+      //Cambio el id del campo
       //idReferencia=item.highlights[0].id
-      $("li#annotation-"+idReferencia).attr("id", "annotation-"+item.id);
-
+      $("li#annotation-" + idReferencia).attr("id", "annotation-" + item.id);
 
       //First we have to get the text, if no, we will have an empty text area after replace the div
       if (
-        $("li#annotation-" + item.id).find("textarea.panelTextAreaReply").length == 0
+        $("li#annotation-" + item.id).find("textarea.panelTextAreaReply")
+          .length == 0
       ) {
         var editableTextAreaReply = $(
           "<textarea id='textareaReply-" +
@@ -328,17 +306,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
             "</textarea>"
         );
 
-        
-        if(item.category=="reply"){
-        var annotationCSSReference =
-          "li#annotation-" + item.id + "> div.flex-replyContainer > div.annotator-marginviewer-reply";
-        }else{
-        var annotationCSSReference =
-          "li#annotation-" + item.id + " > div.annotator-marginviewer-reply";
+        if (item.category == "reply") {
+          var annotationCSSReference =
+            "li#annotation-" +
+            item.id +
+            "> div.flex-replyContainer > div.annotator-marginviewer-reply";
+        } else {
+          var annotationCSSReference =
+            "li#annotation-" + item.id + " > div.annotator-marginviewer-reply";
         }
 
         annotator_textArea.replaceWith(editableTextAreaReply);
-        editableTextAreaReply.css("height", editableTextAreaReply[0].scrollHeight + "px");
+        editableTextAreaReply.css(
+          "height",
+          editableTextAreaReply[0].scrollHeight + "px"
+        );
         editableTextAreaReply.blur(); //Textarea blur
         if (typeof this.annotator.plugins.RichEditor != "undefined") {
           this.tinymceActivation(
@@ -359,10 +341,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           .bind("click", { annotation: item }, this.onCancelPanelReply);
       }
     };
-
-
-
-
 
     AnnotatorViewer.prototype.tinymceActivation = function (selector) {
       tinymce.init({
@@ -396,18 +374,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       console.log(this.annotations);
       this.annotator.updateAnnotation(current_annotation);
 
-
       //Actualizo los datos que tienen los highliths.
-      $("span#"+current_annotation.id).data("annotation",current_annotation);
-
+      $("span#" + current_annotation.id).data("annotation", current_annotation);
     };
 
-
-
-
- //Event triggered when save the content of the annotation
- AnnotatorViewer.prototype.onSavePanelReply = function (event) {
-  var current_annotation = event.data.annotation;
+    //Event triggered when save the content of the annotation
+    AnnotatorViewer.prototype.onSavePanelReply = function (event) {
+      var current_annotation = event.data.annotation;
       var textarea = $("li#annotation-" + current_annotation.id).find(
         "#textareaReply-" + current_annotation.id
       );
@@ -423,20 +396,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       $("#" + anotation_reference).data("annotation", current_annotation);
 
       //Arreglo el URL
-      current_annotation.uri
+      current_annotation.uri;
 
       //Hago una copia de la anotación de referencia:
       let anotacionReply = JSON.parse(JSON.stringify(current_annotation));
 
       let str = current_annotation.uri;
-      const myArr = str.split("http",);
-      anotacionReply.uri = "http"+myArr[myArr.length-1]; 
+      const myArr = str.split("http");
+      anotacionReply.uri = "http" + myArr[myArr.length - 1];
 
-      anotacionReply.id=this.uniqId();
-      anotacionReply.text=textReply;
-      anotacionReply.idAnotationReply=anotation_reference
-      anotacionReply.user="Me"
-      anotacionReply.category="reply"
+      anotacionReply.id = this.uniqId();
+      anotacionReply.text = textReply;
+      anotacionReply.idAnotationReply = anotation_reference;
+      anotacionReply.user = "Me";
+      anotacionReply.category = "reply";
 
       /*
 
@@ -473,26 +446,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
       function removeAllChildNodes(parent) {
         while (parent.firstChild) {
-            parent.removeChild(parent.firstChild);
+          parent.removeChild(parent.firstChild);
         }
 
-        let divAText = document.createElement('div');
-        divAText.classList.add("anotador_text")
+        let divAText = document.createElement("div");
+        divAText.classList.add("anotador_text");
         parent.appendChild(divAText);
       }
-      
 
       removeAllChildNodes(event.currentTarget.parentNode.parentNode);
-
-      
 
       this.publish("annotationCreated", [anotacionReply]);
       //this.publish("beforeAnnotationCreated", [anotacionReply]);
       //this.annotation.createAnnotation()
       //this.annotator.updateAnnotation(current_annotation);
-};
-
-
+    };
 
     //Event triggered when save the content of the annotation
     AnnotatorViewer.prototype.onCancelPanel = function (event) {
@@ -510,17 +478,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           current_annotation.text +
           "</div>";
 
-
         var anotacio_capa =
-          '<div class="annotator-marginviewer-text">'+
-          
+          '<div class="annotator-marginviewer-text">' +
           '<div class="' +
           current_annotation.category +
           ' anotator_color_box"></div>' +
           textAnnotation +
           "</div>";
-
-
 
         var textAreaEditor = $(
           "li#annotation-" +
@@ -537,7 +501,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       }
     };
 
-
     //Event triggered when save the content of the annotation
     AnnotatorViewer.prototype.onCancelPanelReply = function (event) {
       var current_annotation = event.data.annotation;
@@ -548,32 +511,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         tinymce.remove("#textareaReply-" + current_annotation.id);
 
         var textAnnotation =
-          '<div class="anotador_text" ' +
-          styleHeight +
-          ">" +
-          "" +
-          "</div>";
-       
+          '<div class="anotador_text" ' + styleHeight + ">" + "" + "</div>";
+
         var anotacio_capa =
           '<div class="annotator-marginviewer-reply">' +
           textAnnotation +
           "</div>";
 
-
-          if(current_annotation.category=="reply"){
-            var textAreaEditorReply = $(
-              "li#annotation-" +
-                current_annotation.id +
-                " > .flex-replyContainer > .annotator-marginviewer-reply"
-            );
-          }else{
-              var textAreaEditorReply = $(
-              "li#annotation-" +
-                current_annotation.id +
-                " > .annotator-marginviewer-reply"
-            );
-            }
-        
+        if (current_annotation.category == "reply") {
+          var textAreaEditorReply = $(
+            "li#annotation-" +
+              current_annotation.id +
+              " > .flex-replyContainer > .annotator-marginviewer-reply"
+          );
+        } else {
+          var textAreaEditorReply = $(
+            "li#annotation-" +
+              current_annotation.id +
+              " > .annotator-marginviewer-reply"
+          );
+        }
 
         textAreaEditorReply.replaceWith(anotacio_capa);
       } else {
@@ -623,100 +580,101 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       );
     };
     function htmlEntities(str) {
-      return String(str).replace('&ntilde;', 'ñ')
-                        .replace('&Ntilde;', 'Ñ')
-                        .replace('&amp;', '&')
-                        .replace('&Ntilde;', 'Ñ')
-                        .replace('&ntilde;', 'ñ')
-                        .replace('&Ntilde;', 'Ñ')
-                        .replace('&Agrave;', 'À')
-                        .replace('&Aacute;', 'Á')  
-                        .replace('&Acirc;','Â')
-                        .replace('&Atilde;','Ã')   
-                        .replace('&Auml;','Ä')
-                        .replace('&Aring;','Å')
-                        .replace('&AElig;','Æ')
-                        .replace('&Ccedil;','Ç')
-                        .replace('&Egrave;','È')
-                        .replace('&Eacute;','É')
-                        .replace('&Ecirc;', 'Ê')
-                        .replace('&Euml;','Ë')
-                        .replace(   '&Igrave;', 'Ì')
-                        .replace('&Iacute;', 'Í'    )
-                        .replace('&Icirc;', 'Î' )
-                        .replace(   '&Iuml;', 'Ï')
-                        .replace(   '&ETH;', 'Ð')
-                        .replace(   '&Ntilde;', 'Ñ')
-                        .replace(   '&Ograve;', 'Ò')
-                        .replace(   '&Oacute;', 'Ó')
-                        .replace('&Ocirc;', 'Ô' )
-                        .replace(   '&Otilde;', 'Õ')
-                        .replace('&Ouml;', 'Ö'  )
-                        .replace('&Oslash;', 'Ø'    )
-                        .replace(   '&Ugrave;' ,'Ù')
-                        .replace(   '&Uacute;', 'Ú')
-                        .replace(   '&Ucirc;', 'Û')
-                        .replace(   '&Uuml;', 'Ü')
-                        .replace(   '&Yacute;', 'Ý')
-                        .replace('&THORN;', 'Þ' )
-                        .replace(   '&szlig;', 'ß')
-                        .replace(   '&agrave;', 'à')
-                        .replace(   '&aacute;', 'á')
-                        .replace(   '&acirc;', 'â')
-                        .replace(   '&atilde;', 'ã')
-                        .replace('&auml;', 'ä'  )
-                        .replace(   '&aring;', 'å')
-                        .replace(   '&aelig;', 'æ')
-                        .replace(   '&ccedil;', 'ç')
-                        .replace('&egrave;', 'è'    )
-                        .replace('&eacute;', 'é'    )
-                        .replace('&ecirc;', 'ê' )
-                        .replace('&euml;', 'ë'  )
-                        .replace(   '&igrave;', 'ì')
-                        .replace('&iacute;', 'í'    )
-                        .replace('&icirc;', 'î' )
-                        .replace('&iuml;', 'ï'  )
-                        .replace('&eth;', 'ð'   )
-                        .replace(   '&ntilde;', 'ñ')
-                        .replace('&ograve;','ò')
-                        .replace('&oacute;','ó')
-                        .replace('&ocirc;','ô')
-                        .replace('&otilde;','õ')
-                        .replace('&ouml;','ö')
-                        .replace('&oslash;','ø')
-                        .replace('&ugrave;','ù')
-                        .replace('&uacute;','ú')
-                        .replace('&ucirc;','û')
-                        .replace('&uuml;' , 'ü')   
-                        .replace('&yacute;', 'ý')  
-                        .replace('&thorn;', 'þ')
-                        .replace('&yuml;', 'ÿ');
+      return String(str)
+        .replace("&ntilde;", "ñ")
+        .replace("&Ntilde;", "Ñ")
+        .replace("&amp;", "&")
+        .replace("&Ntilde;", "Ñ")
+        .replace("&ntilde;", "ñ")
+        .replace("&Ntilde;", "Ñ")
+        .replace("&Agrave;", "À")
+        .replace("&Aacute;", "Á")
+        .replace("&Acirc;", "Â")
+        .replace("&Atilde;", "Ã")
+        .replace("&Auml;", "Ä")
+        .replace("&Aring;", "Å")
+        .replace("&AElig;", "Æ")
+        .replace("&Ccedil;", "Ç")
+        .replace("&Egrave;", "È")
+        .replace("&Eacute;", "É")
+        .replace("&Ecirc;", "Ê")
+        .replace("&Euml;", "Ë")
+        .replace("&Igrave;", "Ì")
+        .replace("&Iacute;", "Í")
+        .replace("&Icirc;", "Î")
+        .replace("&Iuml;", "Ï")
+        .replace("&ETH;", "Ð")
+        .replace("&Ntilde;", "Ñ")
+        .replace("&Ograve;", "Ò")
+        .replace("&Oacute;", "Ó")
+        .replace("&Ocirc;", "Ô")
+        .replace("&Otilde;", "Õ")
+        .replace("&Ouml;", "Ö")
+        .replace("&Oslash;", "Ø")
+        .replace("&Ugrave;", "Ù")
+        .replace("&Uacute;", "Ú")
+        .replace("&Ucirc;", "Û")
+        .replace("&Uuml;", "Ü")
+        .replace("&Yacute;", "Ý")
+        .replace("&THORN;", "Þ")
+        .replace("&szlig;", "ß")
+        .replace("&agrave;", "à")
+        .replace("&aacute;", "á")
+        .replace("&acirc;", "â")
+        .replace("&atilde;", "ã")
+        .replace("&auml;", "ä")
+        .replace("&aring;", "å")
+        .replace("&aelig;", "æ")
+        .replace("&ccedil;", "ç")
+        .replace("&egrave;", "è")
+        .replace("&eacute;", "é")
+        .replace("&ecirc;", "ê")
+        .replace("&euml;", "ë")
+        .replace("&igrave;", "ì")
+        .replace("&iacute;", "í")
+        .replace("&icirc;", "î")
+        .replace("&iuml;", "ï")
+        .replace("&eth;", "ð")
+        .replace("&ntilde;", "ñ")
+        .replace("&ograve;", "ò")
+        .replace("&oacute;", "ó")
+        .replace("&ocirc;", "ô")
+        .replace("&otilde;", "õ")
+        .replace("&ouml;", "ö")
+        .replace("&oslash;", "ø")
+        .replace("&ugrave;", "ù")
+        .replace("&uacute;", "ú")
+        .replace("&ucirc;", "û")
+        .replace("&uuml;", "ü")
+        .replace("&yacute;", "ý")
+        .replace("&thorn;", "þ")
+        .replace("&yuml;", "ÿ");
     }
 
-
     AnnotatorViewer.prototype.onAnnotationUpdated = function (annotation) {
-      idAnotacionReferencia=annotation.id;
+      idAnotacionReferencia = annotation.id;
 
       $("#annotation-" + idAnotacionReferencia).html(
         this.mascaraAnnotation(annotation)
       );
 
-
       $("#annotation-" + annotation.id).html(
         this.mascaraAnnotation(annotation)
       );
 
+      idAnotacion = annotation.id;
 
-      idAnotacion=annotation.id;
+      let strippedHtmlText = annotation.text.replace(/<[^>]+>/g, "");
+      strippedHtmlText = htmlEntities(strippedHtmlText);
 
-
-      let strippedHtmlText = annotation.text.replace(/<[^>]+>/g, '');
-      strippedHtmlText=htmlEntities(strippedHtmlText)
-
-      $("#annotation-"+idAnotacion+" .annotator-marginviewer-text .anotador_text").text(strippedHtmlText);
+      $(
+        "#annotation-" +
+          idAnotacion +
+          " .annotator-marginviewer-text .anotador_text"
+      ).text(strippedHtmlText);
 
       request = $.ajax({
-        url: "http://127.0.0.1:5000/annotations/"+annotation.id,
+        url: "http://127.0.0.1:5000/annotations/" + annotation.id,
         dataType: "json",
         type: "put",
         contentType: "application/json",
@@ -727,39 +685,60 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           console.log(errorThrown);
         },
       });
-  
-
     };
 
     AnnotatorViewer.prototype.onAnnotationsLoaded = function (annotations) {
       var annotation;
 
-      function showOrder(annotationIn=null,anotationList=[],categoria='',referenciaThis,level=0){
-        if(annotationIn==null){
-          var listAnnotationsNoReply =  anotationList.filter(annotation => annotation.category != "reply");
-          listAnnotationsNoReply.forEach(element=> showOrder(element,anotationList,categoria='reply',referenciaThis,level=0));
-        }else{
-          annotationIn['level']=level;
+      function showOrder(
+        annotationIn = null,
+        anotationList = [],
+        categoria = "",
+        referenciaThis,
+        level = 0
+      ) {
+        if (annotationIn == null) {
+          var listAnnotationsNoReply = anotationList.filter(
+            (annotation) => annotation.category != "reply"
+          );
+          listAnnotationsNoReply.forEach((element) =>
+            showOrder(
+              element,
+              anotationList,
+              (categoria = "reply"),
+              referenciaThis,
+              (level = 0)
+            )
+          );
+        } else {
+          annotationIn["level"] = level;
           referenciaThis.createReferenceAnnotation(annotationIn);
-          level=level+1;
-          var listAnnotations =  anotationList.filter(annotation => annotation.idAnotationReply=="annotation-"+annotationIn.id);
-          listAnnotations.forEach(element=> showOrder(element,anotationList,categoria='reply',referenciaThis,level=level));
+          level = level + 1;
+          var listAnnotations = anotationList.filter(
+            (annotation) =>
+              annotation.idAnotationReply == "annotation-" + annotationIn.id
+          );
+          listAnnotations.forEach((element) =>
+            showOrder(
+              element,
+              anotationList,
+              (categoria = "reply"),
+              referenciaThis,
+              (level = level)
+            )
+          );
         }
-
       }
 
-      function arrayRemove(arr, value) { 
-        return arr.filter(function(ele){ 
-            return ele != value; 
+      function arrayRemove(arr, value) {
+        return arr.filter(function (ele) {
+          return ele != value;
         });
-    }
+      }
 
-      
-      showOrder(null,annotations,'',referenciaThis=this);
+      showOrder(null, annotations, "", (referenciaThis = this));
 
-    
-
-/*
+      /*
       if (annotations.length > 0) {
         for (i = 0, len = annotations.length; i < len; i++) {
           annotation = annotations[i];
@@ -785,9 +764,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         }
       }*/
 
-
-
-     /* if (annotations.length > 0) {
+      /* if (annotations.length > 0) {
         for (i = 0, len = annotations.length; i < len; i++) {
           annotation = annotations[i];
           //console.log(annotation.uri)
@@ -802,17 +779,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     };
 
     AnnotatorViewer.prototype.onAnnotationDeleted = function (annotation) {
-      idAnotacionReferencia=annotation.id;
+      idAnotacionReferencia = annotation.id;
 
-      //Miro si es posible eliminar la anotacion buscando por el texto 
-      $(".annotator-marginviewer-element").each(function (index,valor){
-        let anotacionId= valor.id
+      //Miro si es posible eliminar la anotacion buscando por el texto
+      $(".annotator-marginviewer-element").each(function (index, valor) {
+        let anotacionId = valor.id;
 
-        if("annotation-"+idAnotacionReferencia==valor.id){
+        if ("annotation-" + idAnotacionReferencia == valor.id) {
           $("li").remove("#" + anotacionId);
         }
 
-        let textoAnotacion=valor.children[0].text
+        let textoAnotacion = valor.children[0].text;
         /*let textoAnotacion=valor.children[0].children[1].innerHTML
         let textoCortado=textoAnotacion.substring(0, textoAnotacion.length-4)
         let strippedCortadoText = textoCortado.replace(/<[^>]+>/g, '');
@@ -824,16 +801,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           $("li").remove("#" + anotacionId);
 
         }*/
-
-      })
-      if(annotation.id!=null){
-      $("li").remove("#annotation-" + annotation.id);
+      });
+      if (annotation.id != null) {
+        $("li").remove("#annotation-" + annotation.id);
       }
       $("#count-anotations").text(
         $(".container-anotacions").find(".annotator-marginviewer-element")
           .length
       );
-      
     };
 
     AnnotatorViewer.prototype.onAnnotationReply = function (annotation) {
@@ -847,57 +822,54 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     AnnotatorViewer.prototype.mascaraAnnotation = function (annotation) {
       if (!annotation.data_creacio) annotation.data_creacio = $.now();
 
-       //Obtener el usuario:
+      //Obtener el usuario:
       //console.log($("#usuarioConectado").text());
-  
+
       //Verifico los permisos:
 
-      updatePermission=annotation.permissions.update.includes($("#usuarioConectado").text());
-      deletePermission=annotation.permissions.delete.includes($("#usuarioConectado").text());
+      var currentUser = sessionStorage.getItem("user");
+      //alert(currentUser);
 
-      console.log(annotation.permissions);
-      console.log($("#usuarioConectado").text());
+      updatePermission = annotation.permissions.update.includes(currentUser);
+      deletePermission = annotation.permissions.delete.includes(currentUser);
+
+      console.log(updatePermission);
+      console.log(deletePermission);
 
       var shared_annotation = "";
       var class_label = "label";
 
+      var delete_icon = "";
 
-      var delete_icon ="";
-
-     
-
-        if(annotation.category!="reply"){
-
-          if(deletePermission){
-            delete_icon =
+      if (annotation.category != "reply") {
+        if (deletePermission) {
+          delete_icon =
             '<img src="' +
             IMAGE_DELETE +
             '" class="annotator-viewer-delete" title="' +
             i18n_dict.Delete +
             '" style=" float:right;margin-top:3px;;margin-left:3px"/>';
-          }
-
-          var edit_icon='';
-          if(updatePermission){
-            edit_icon = '<img src="/website/static/src/img/edit-icon.png"  '+
-                        'class="annotator-viewer-edit" title="Edit" style="float:right;margin-top:3px"/>';
-          }
-          
-
-          delete_icon=delete_icon+edit_icon;
-
-        }else{
-          if(deletePermission){
-          var delete_icon =
-          '<img src="' +
-          IMAGE_DELETE +
-          '" class="annotator-viewer-delete" title="' +
-          i18n_dict.Delete +
-          '" style=" float:right;margin-top:3px;;margin-left:3px"/>';
-          }
         }
-      
-      
+
+        var edit_icon = "";
+        if (updatePermission) {
+          edit_icon =
+            '<img src="/website/static/src/img/edit-icon.png"  ' +
+            'class="annotator-viewer-edit" title="Edit" style="float:right;margin-top:3px"/>';
+        }
+
+        delete_icon = delete_icon + edit_icon;
+      } else {
+        if (deletePermission) {
+          var delete_icon =
+            '<img src="' +
+            IMAGE_DELETE +
+            '" class="annotator-viewer-delete" title="' +
+            i18n_dict.Delete +
+            '" style=" float:right;margin-top:3px;;margin-left:3px"/>';
+        }
+      }
+
       var reply_icon =
         '<img src="' +
         IMAGE_REPLY +
@@ -928,71 +900,58 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
       var textAnnotation = annotation.text;
 
-      if(annotation.category=="reply"){
+      if (annotation.category == "reply") {
         //Format the box if is a reply:
 
         var annotation_text2 =
-        '<div class="replyDetail">'+
-
-          '<div style="">'+
-
-            '<span style="font-weight: 700;">' +
-                  annotation.user.split("@", 1) +
-              "</span>" +
-
-            '   ('+
-            $.format.date(annotation.data_creacio, "MM/yyyy HH:mm") +')'+
-            '</br>IdRef:'+annotation.idAnotationReply.split('-')[1]+
-            '</br>Id:'+annotation.id+
-            '<div style="width: 160px;height: 2px;border-bottom: 1px solid #d4d4d4;position: relative;" class="line"></div>'+
-          '</div>'+
-
-
-
-          '<div style="">'+
-           textAnnotation+ //'Me parece que este comentario esta fuera de su lugar. No solamente no toma en cuenta el estandar si no que ademas esta dentro de otro problema de investigacion.'+
-          '</div>'+
-          
-        '</div>'
-        ;
-
+          '<div class="replyDetail">' +
+          '<div style="">' +
+          '<span style="font-weight: 700;">' +
+          annotation.user.split("@", 1) +
+          "</span>" +
+          "   (" +
+          $.format.date(annotation.data_creacio, "MM/yyyy HH:mm") +
+          ")" +
+          "</br>IdRef:" +
+          annotation.idAnotationReply.split("-")[1] +
+          "</br>Id:" +
+          annotation.id +
+          '<div style="width: 160px;height: 2px;border-bottom: 1px solid #d4d4d4;position: relative;" class="line"></div>' +
+          "</div>" +
+          '<div style="">' +
+          textAnnotation + //'Me parece que este comentario esta fuera de su lugar. No solamente no toma en cuenta el estandar si no que ademas esta dentro de otro problema de investigacion.'+
+          "</div>" +
+          "</div>";
         //Inserto tantas lineas como niveles de profundidad
 
-        textoLineasNiveles='<div style="border-radius: 3px;flex-basis:3px;background-color:#d4d4d4;width:3.58px;"puch ></div>'.repeat(annotation.level);
-
-        
-     
+        textoLineasNiveles =
+          '<div style="border-radius: 3px;flex-basis:3px;background-color:#d4d4d4;width:3.58px;"puch ></div>'.repeat(
+            annotation.level
+          );
 
         var annotation_layer1 =
-        '<div class="flex-replyBox">'+
-
+          '<div class="flex-replyBox">' +
           //'<div style="border-radius: 3px;flex-basis:3px;background-color:#d4d4d4;width:3.58px;" ></div>'+
-          textoLineasNiveles+
-
-          '<div style="border:0px;flex-grow:4;">'+annotation_text2+'</div>'+
-
-        '</div>'
-        ;
-
-
+          textoLineasNiveles +
+          '<div style="border:0px;flex-grow:4;">' +
+          annotation_text2 +
+          "</div>" +
+          "</div>";
         var annotation_layer =
-        '<div class="flex-replyContainer">'+
-          annotation_layer1+
-          
-          '<div class="annotator-marginviewer-footer">'+
-            shared_annotation +
-            delete_icon +
-            reply_icon +
-          '</div>'+
+          '<div class="flex-replyContainer">' +
+          annotation_layer1 +
+          '<div class="annotator-marginviewer-footer">' +
+          shared_annotation +
+          delete_icon +
+          reply_icon +
+          "</div>" +
           '<div class="annotator-marginviewer-reply">' +
-            '<div class="anotador_text">' +
-            "" +
-            '</div>'+
-          '</div>'+
-        '</div>'
-        ;
+          '<div class="anotador_text">' +
+          "" +
+          "</div>" +
+          "</div>" +
+          "</div>";
 
-        
         /*var annotation_layer =
         '<div class="annotator-marginviewer-text">'+
         '<div class="' +
@@ -1021,42 +980,39 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
             '</div>'+
         '</div>'
         ;*/
-
-
-      }else{
-
-      var annotation_layer =
-        '<div class="annotator-marginviewer-text">'+
-        '<div class="' +
-        anotation_color +
-        ' anotator_color_box"></div>';
+      } else {
+        var annotation_layer =
+          '<div class="annotator-marginviewer-text">' +
+          '<div class="' +
+          anotation_color +
+          ' anotator_color_box"></div>';
         annotation_layer +=
-        '<div class="anotador_ident">' +
-        'Id:'+annotation.id +
-        '</div>'+
-        '<div style="width: 160px;height: 2px;border-bottom: 1px solid #d4d4d4;position: relative;" class="line"></div>'+
-        '<div class="anotador_text">' +
-        textAnnotation +
-        '</div>'+'</div><div class="annotator-marginviewer-date">' +
-        $.format.date(annotation.data_creacio, "dd/MM/yyyy HH:mm:ss") +
-        '</div><div class="annotator-marginviewer-quote">' +
-        annotation.quote +
-        '</div><div class="annotator-marginviewer-footer"><span class="' +
-        class_label +
-        '">' +
-        annotation.user.split("@", 1) +
-        "</span>" +
-        shared_annotation +
-        delete_icon +
-        reply_icon 
-        +
-        "</div>"+
-        '<div class="annotator-marginviewer-reply">' +
-            '<div class="anotador_text">' +
-            "" +
-            '</div>'+
-        '</div>'
-        ;
+          '<div class="anotador_ident">' +
+          "Id:" +
+          annotation.id +
+          "</div>" +
+          '<div style="width: 160px;height: 2px;border-bottom: 1px solid #d4d4d4;position: relative;" class="line"></div>' +
+          '<div class="anotador_text">' +
+          textAnnotation +
+          "</div>" +
+          '</div><div class="annotator-marginviewer-date">' +
+          $.format.date(annotation.data_creacio, "dd/MM/yyyy HH:mm:ss") +
+          '</div><div class="annotator-marginviewer-quote">' +
+          annotation.quote +
+          '</div><div class="annotator-marginviewer-footer"><span class="' +
+          class_label +
+          '">' +
+          annotation.user.split("@", 1) +
+          "</span>" +
+          shared_annotation +
+          delete_icon +
+          reply_icon +
+          "</div>" +
+          '<div class="annotator-marginviewer-reply">' +
+          '<div class="anotador_text">' +
+          "" +
+          "</div>" +
+          "</div>";
       }
 
       return annotation_layer;
@@ -1109,13 +1065,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         myAnnotation = true;
       }
 
+      var currentUser = sessionStorage.getItem("user");
 
-      if(annotation.user==$("#usuarioConectado").text()){
-        data_owner="me";
-      }else{
-        data_owner="";
+      if (annotation.user == currentUser) {
+        data_owner = "me";
+      } else {
+        data_owner = "";
       }
-
 
       var annotation_layer =
         '<li class="annotator-marginviewer-element ' +
@@ -1129,102 +1085,98 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         "</li>";
       var malert = i18n_dict.anotacio_lost;
 
-
-      if(annotation.idAnotationReply!=null){
+      if (annotation.idAnotationReply != null) {
         //Aqui busco si es un reply y lo inserto debajo de su referencia.
 
         anotacioObject = $(annotation_layer)
-        .insertAfter("#"+annotation.idAnotationReply)
-        .click(function (event) {
-          var viewPanelHeight = jQuery(window).height();
-          var annotation_reference = annotation.id;
+          .insertAfter("#" + annotation.idAnotationReply)
+          .click(function (event) {
+            var viewPanelHeight = jQuery(window).height();
+            var annotation_reference = annotation.id;
 
-          $element = jQuery("#" + annotation.id);
-          if (!$element.length) {
-            $element = jQuery("#" + annotation.order);
-            annotation_reference = annotation.order; //If exists a sorted annotations we put it in the right order, using order attribute
-          }
+            $element = jQuery("#" + annotation.id);
+            if (!$element.length) {
+              $element = jQuery("#" + annotation.order);
+              annotation_reference = annotation.order; //If exists a sorted annotations we put it in the right order, using order attribute
+            }
 
-          if ($element.length) {
-            elOffset = $element.offset();
-            $(this).children(".annotator-marginviewer-quote").toggle();
-            $("html, body").animate(
-              {
-                scrollTop:
-                  $("#" + annotation_reference).offset().top -
-                  viewPanelHeight / 2,
-              },
-              2000
-            );
-          }
-        })
-        .mouseover(function () {
-          $element = jQuery("span[id=" + annotation.id + "]");
-          if ($element.length) {
-            $element.css({
-              "border-color": "#000000",
-              "border-width": "1px",
-              "border-style": "solid",
-            });
-          }
-        })
-        .mouseout(function () {
-          $element = jQuery("span[id=" + annotation.id + "]");
-          if ($element.length) {
-            $element.css({
-              "border-width": "0px",
-            });
-          }
-        });
+            if ($element.length) {
+              elOffset = $element.offset();
+              $(this).children(".annotator-marginviewer-quote").toggle();
+              $("html, body").animate(
+                {
+                  scrollTop:
+                    $("#" + annotation_reference).offset().top -
+                    viewPanelHeight / 2,
+                },
+                2000
+              );
+            }
+          })
+          .mouseover(function () {
+            $element = jQuery("span[id=" + annotation.id + "]");
+            if ($element.length) {
+              $element.css({
+                "border-color": "#000000",
+                "border-width": "1px",
+                "border-style": "solid",
+              });
+            }
+          })
+          .mouseout(function () {
+            $element = jQuery("span[id=" + annotation.id + "]");
+            if ($element.length) {
+              $element.css({
+                "border-width": "0px",
+              });
+            }
+          });
+      } else {
+        //Caso contrario inserto al final de la lista.
 
-      }else{
-        
-      //Caso contrario inserto al final de la lista.
+        anotacioObject = $(annotation_layer)
+          .appendTo(".container-anotacions")
+          .click(function (event) {
+            var viewPanelHeight = jQuery(window).height();
+            var annotation_reference = annotation.id;
 
-      anotacioObject = $(annotation_layer)
-        .appendTo(".container-anotacions")
-        .click(function (event) {
-          var viewPanelHeight = jQuery(window).height();
-          var annotation_reference = annotation.id;
+            $element = jQuery("#" + annotation.id);
+            if (!$element.length) {
+              $element = jQuery("#" + annotation.order);
+              annotation_reference = annotation.order; //If exists a sorted annotations we put it in the right order, using order attribute
+            }
 
-          $element = jQuery("#" + annotation.id);
-          if (!$element.length) {
-            $element = jQuery("#" + annotation.order);
-            annotation_reference = annotation.order; //If exists a sorted annotations we put it in the right order, using order attribute
-          }
-
-          if ($element.length) {
-            elOffset = $element.offset();
-            $(this).children(".annotator-marginviewer-quote").toggle();
-            $("html, body").animate(
-              {
-                scrollTop:
-                  $("#" + annotation_reference).offset().top -
-                  viewPanelHeight / 2,
-              },
-              2000
-            );
-          }
-        })
-        .mouseover(function () {
-          $element = jQuery("span[id=" + annotation.id + "]");
-          if ($element.length) {
-            $element.css({
-              "border-color": "#000000",
-              "border-width": "1px",
-              "border-style": "solid",
-            });
-          }
-        })
-        .mouseout(function () {
-          $element = jQuery("span[id=" + annotation.id + "]");
-          if ($element.length) {
-            $element.css({
-              "border-width": "0px",
-            });
-          }
-        });
-
+            if ($element.length) {
+              elOffset = $element.offset();
+              $(this).children(".annotator-marginviewer-quote").toggle();
+              $("html, body").animate(
+                {
+                  scrollTop:
+                    $("#" + annotation_reference).offset().top -
+                    viewPanelHeight / 2,
+                },
+                2000
+              );
+            }
+          })
+          .mouseover(function () {
+            $element = jQuery("span[id=" + annotation.id + "]");
+            if ($element.length) {
+              $element.css({
+                "border-color": "#000000",
+                "border-width": "1px",
+                "border-style": "solid",
+              });
+            }
+          })
+          .mouseout(function () {
+            $element = jQuery("span[id=" + annotation.id + "]");
+            if ($element.length) {
+              $element.css({
+                "border-width": "0px",
+              });
+            }
+          });
       }
 
       //Adding annotation to data element for delete and link

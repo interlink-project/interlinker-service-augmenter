@@ -65,7 +65,7 @@ Annotator.Plugin.Search = (function (_super) {
     if (!Annotator.supported()) {
       return;
     }
-    
+
     this.annotator.subscribe("annotationCreated", this.addDocument);
 
     this.annotator.subscribe("annotationDeleted", this.removeDocument);
@@ -81,7 +81,6 @@ Annotator.Plugin.Search = (function (_super) {
       $("li.filter-panel").before(
         '<a class="btn annotator-panel-reset" href = "http://127.0.0.1:5000/dashboard"><i class="fa fa-home"></i> Servicepedia</a> <div style="font-weight: 700;"><span id="usuarioConectado"></span> is connected.</div>   <input class="search" id="search" type="text" results /><a class="annotator-panel-reset" href="#clear">Reset</a>'
       );
-   
 
       //Pongo el Usuario Logueado
       request = $.ajax({
@@ -89,8 +88,8 @@ Annotator.Plugin.Search = (function (_super) {
         dataType: "json",
         type: "get",
         contentType: "application/json",
-        success: function(data) {
-         // alert('El usuario esta en la casa.'+data);
+        success: function (data) {
+          // alert("El usuario esta en la casa." + data);
           $("#usuarioConectado").html(data);
         },
         error: function (jqXhr, textStatus, errorThrown) {

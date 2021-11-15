@@ -174,17 +174,16 @@ PUT description/description/
     "updated":1635334650
 }
 
-PUT description/description/AXzf7Pl9W2WuxQVN8aJl
+PUT description/description/AX0ljS0D8dyVuOp-TDl4
 {
-  "title" : "la demanda12 mucho demas gusto1",
-  "description": "es el texto de la 12345"
+  "url" : "la demanda12 mucho demas gusto1"
 }
 
 
 POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
 {
  "doc" : {
- "url" : "http://extranjeros.inclusion.gob.es/es/informacioninteres/informacionprocedimientos/ciudadanosnocomunitarios/hoja001/index.html"
+ "url" : "http://www.riga.lv/en/services/burial-riga-municipal-cemeteries"
  }
 }
 

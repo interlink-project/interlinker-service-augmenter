@@ -453,6 +453,8 @@ def callback():
 def logout():
 
     logout_user()
+
+    
     
     
     #response = redirect(config["end_session_endpoint"])
@@ -471,8 +473,8 @@ def logout():
 
     r.text
 
-    
-
+  
+    session.clear()
 
     #return response
     #return render_template("home.html")
