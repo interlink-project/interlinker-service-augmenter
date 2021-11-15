@@ -847,30 +847,56 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     AnnotatorViewer.prototype.mascaraAnnotation = function (annotation) {
       if (!annotation.data_creacio) annotation.data_creacio = $.now();
 
+       //Obtener el usuario:
+      //console.log($("#usuarioConectado").text());
+  
+      //Verifico los permisos:
+
+      updatePermission=annotation.permissions.update.includes($("#usuarioConectado").text());
+      deletePermission=annotation.permissions.delete.includes($("#usuarioConectado").text());
+
+      console.log(annotation.permissions);
+      console.log($("#usuarioConectado").text());
+
       var shared_annotation = "";
       var class_label = "label";
 
-      if(annotation.category!="reply"){
 
-        var delete_icon =
-        '<img src="' +
-        IMAGE_DELETE +
-        '" class="annotator-viewer-delete" title="' +
-        i18n_dict.Delete +
-        '" style=" float:right;margin-top:3px;;margin-left:3px"/><img src="/website/static/src/img/edit-icon.png"   class="annotator-viewer-edit" title="Edit" style="float:right;margin-top:3px"/>';
+      var delete_icon ="";
 
-      }else{
-        var delete_icon =
-        '<img src="' +
-        IMAGE_DELETE +
-        '" class="annotator-viewer-delete" title="' +
-        i18n_dict.Delete +
-        '" style=" float:right;margin-top:3px;;margin-left:3px"/>';
+     
 
+        if(annotation.category!="reply"){
 
+          if(deletePermission){
+            delete_icon =
+            '<img src="' +
+            IMAGE_DELETE +
+            '" class="annotator-viewer-delete" title="' +
+            i18n_dict.Delete +
+            '" style=" float:right;margin-top:3px;;margin-left:3px"/>';
+          }
 
-      }
+          var edit_icon='';
+          if(updatePermission){
+            edit_icon = '<img src="/website/static/src/img/edit-icon.png"  '+
+                        'class="annotator-viewer-edit" title="Edit" style="float:right;margin-top:3px"/>';
+          }
+          
 
+          delete_icon=delete_icon+edit_icon;
+
+        }else{
+          if(deletePermission){
+          var delete_icon =
+          '<img src="' +
+          IMAGE_DELETE +
+          '" class="annotator-viewer-delete" title="' +
+          i18n_dict.Delete +
+          '" style=" float:right;margin-top:3px;;margin-left:3px"/>';
+          }
+        }
+      
       
       var reply_icon =
         '<img src="' +
@@ -911,7 +937,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           '<div style="">'+
 
             '<span style="font-weight: 700;">' +
-                  annotation.user +
+                  annotation.user.split("@", 1) +
               "</span>" +
 
             '   ('+
@@ -1018,7 +1044,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         '</div><div class="annotator-marginviewer-footer"><span class="' +
         class_label +
         '">' +
-        annotation.user +
+        annotation.user.split("@", 1) +
         "</span>" +
         shared_annotation +
         delete_icon +
@@ -1082,6 +1108,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       } else {
         myAnnotation = true;
       }
+
+
+      if(annotation.user==$("#usuarioConectado").text()){
+        data_owner="me";
+      }else{
+        data_owner="";
+      }
+
 
       var annotation_layer =
         '<li class="annotator-marginviewer-element ' +
