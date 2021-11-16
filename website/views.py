@@ -455,6 +455,24 @@ def modifica(rutaPagina,userId):
     #print(resp_Contenido.decode())
     soup = BeautifulSoup(resp_Contenido,'html.parser')
 
+
+    #Codigo para Latvia:
+    if rutaPagina.startswith("https://latvija.lv/ppk/"):
+        arrayUrl=['DokumentiUnVeidlapas','PakalpojumaMaksajumi','CitaInformacija']
+        #Obtengo seccion doc
+        contador=0
+        for newUrl in arrayUrl:
+            contador=contador+1
+            rutaPagina.replace("procesaapraksts", newUrl)
+            responseAdd=requests.get(rutaPagina,headers=headersUserAgent)
+            resp_ContenidoAdd=response.content
+            #print(resp_Contenido.decode())
+            soupAdd = BeautifulSoup(resp_Contenido,'html.parser')
+
+            contenidoAdd= soupAdd.find_all(id='content_0_contentsimplecontentph_1_uxTabPage')
+            contenidoOriginal=soup.find_all(id='content_0_contentsimplecontentph_1_uxTabPage')
+            contenidoOriginal.append(contenidoAdd)
+
     #Quitamos los scripts:
     for data in soup(['script','pre','noscript']):
         # Remove tags

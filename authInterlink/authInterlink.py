@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify
 import requests, math
 from urllib.parse import urljoin, urlparse
 import datetime
@@ -251,15 +251,16 @@ def subjectPage(descriptionId=None,annotatorId=None):
     return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
-@authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>/<string:option>',)
+@authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>/<string:option>', methods=["GET", "POST"])
 @login_required
 def changeAnnotation(descriptionId=None,annotatorId=None,option=None):
 
     
     if option == 'state':
         
-        argumentos=request.args.to_dict()
-        newstate=argumentos.pop('state')
+        argumentos=request.json
+        newstate=argumentos.pop('stateToChange')
+        commentsChangeState=argumentos.pop('commentsChangeState')
 
         annotationRootId=''
         losvalores=argumentos.keys()
@@ -274,10 +275,16 @@ def changeAnnotation(descriptionId=None,annotatorId=None,option=None):
         if(len(annotation['statechanges'])==0):
             annotation['statechanges']=[]  
 
+        #Si el estado inicial es prohibido y el estado final es prohibido
+        #Se resetea el estado a in progress.
+        if(annotation['state']==3 & int(newstate)==3):
+            newstate=0
+        
+
         annotation['statechanges'].append({
                         "initstate": annotation['state'],
-                        "endstate": newstate,
-                        "text": "Comentario vacio",
+                        "endstate": int(newstate),
+                        "text": commentsChangeState,
                         "date": datetime.datetime.now().replace(microsecond=0).isoformat(),
                         "user": current_user.email
                     })
@@ -285,32 +292,9 @@ def changeAnnotation(descriptionId=None,annotatorId=None,option=None):
         annotation['state']=int(newstate)
         annotation.updateState()
 
-    
+        return jsonify(annotation)
         
         
-
-        if annotationRootId != "":
-
-            description = Description._get_Descriptions_byId(id=descriptionId)[0]
-            annotation = Annotation._get_Annotation_byId(id=annotationRootId)[0]
-    
-            nroReplies = Annotation.count(query={ 'uri': description['url'] ,'category':'reply'  })
-            replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  },limit=nroReplies)
-
-            nroRepliesOfAnnotation = Annotation.count(query={ 'uri': description['url'] ,'category':'reply','idAnotationReply':'annotation-'+annotationRootId  })
-
-            return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
-        else:
-
-            description = Description._get_Descriptions_byId(id=descriptionId)[0]
-            annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
-    
-            nroReplies = Annotation.count(query={ 'uri': description['url'] ,'category':'reply'  })
-            replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  },limit=nroReplies)
-
-            nroRepliesOfAnnotation = Annotation.count(query={ 'uri': description['url'] ,'category':'reply','idAnotationReply':'annotation-'+annotatorId  })
-            
-            return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
 
     elif option=='like':
 

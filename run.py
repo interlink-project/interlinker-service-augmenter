@@ -147,7 +147,19 @@ def main(argv):
             
             return local.humanize(locale=localeZone)
 
+    @app.template_filter('estadosAnnotation')
+    def estadosAnnotation(value):
+        tabla_switch = {
+            0: 'In Progress',
+            1: 'Archived',
+            2: 'Approved',
+            3: 'Banned',
+        }
 
+        return tabla_switch.get(value, "NA")
+       
+            
+       
      
 
     @login_manager.user_loader

@@ -79,7 +79,7 @@ Annotator.Plugin.Search = (function (_super) {
     if (typeof this.annotator.plugins.AnnotatorViewer != "undefined") {
       //Adding a input box for search
       $("li.filter-panel").before(
-        '<a class="btn annotator-panel-reset" href = "http://127.0.0.1:5000/dashboard"><i class="fa fa-home"></i> Servicepedia</a> <div style="font-weight: 700;"><span id="usuarioConectado"></span> is connected.</div>   <input class="search" id="search" type="text" results /><a class="annotator-panel-reset" href="#clear">Reset</a>'
+        '<a class="btn annotator-panel-reset" href = "http://127.0.0.1:5000/login"><i class="fa fa-home"></i> Servicepedia</a> <div style="font-weight: 700;"><span id="usuarioConectado"></span> is connected.</div>   <input class="search" id="search" type="text" results /><a class="annotator-panel-reset" href="#clear">Reset</a>'
       );
 
       //Pongo el Usuario Logueado

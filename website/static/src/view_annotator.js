@@ -832,6 +832,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
       updatePermission = annotation.permissions.update.includes(currentUser);
       deletePermission = annotation.permissions.delete.includes(currentUser);
+      replyPermission = true;
+
+      if(currentUser== "Anonymous"){
+        replyPermission=false;
+      }
 
       console.log(updatePermission);
       console.log(deletePermission);
@@ -876,6 +881,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         '" class="annotator-viewer-reply" title="' +
         i18n_dict.Reply +
         '" style=" float:right;margin-top:3px;;margin-left:3px"/>';
+      
+      if(!replyPermission){
+        reply_icon="";
+      }
 
       if (annotation.estat == 1 || annotation.permissions.read.length === 0) {
         shared_annotation =

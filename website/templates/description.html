@@ -67,8 +67,9 @@ block content %}
       <th scope="col-3">Category</th>
       {% endif %}
       <th scope="col-3">Id</th>
+      <th scope="col-3">State</th>      
       <th scope="col-3">Description</th>
-      <th scope="col-3">Creation Date</th>
+      <th scope="col-3">Update Date</th>
       <th scope="col-3">Options</th>
     </tr>
   </thead>
@@ -79,8 +80,9 @@ block content %}
       <td>{{ anotation.category[0]|upper }}{{ anotation.category[1:] }}</td>
       {% endif %}
       <td>{{ anotation.id}} </td>
+      <td>{{ anotation.state|estadosAnnotation}} </td>
       <td>{{ anotation.text|striptags}} </td>
-      <td>21/10/2021</td>
+      <td>{{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
       <td>
        
 
