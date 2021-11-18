@@ -163,11 +163,34 @@ block head %} {{ super() }}
             if(inputUrl.value=="" && listrl.childElementCount==0){
                 $("#oneUrlVal").text("* At least one Url most be added.")
             }else{
-                $("#oneUrlVal").text("")
+                $("#oneUrlVal").text("");
             }
 
         }
     }
+
+    $(function() {
+        $(".collapse").on('show.bs.collapse', function(e) {
+            if ($(this).is(e.target)) {
+        
+            $("#expFormModeration").removeClass("bi-plus-circle");
+            $("#expFormModeration").addClass("bi-dash-circle");
+            }
+        })
+        });
+
+        $(function() {
+        $(".collapse").on('hide.bs.collapse', function(e) {
+            if ($(this).is(e.target)) {
+        
+            $("#expFormModeration").removeClass("bi-dash-circle");
+            $("#expFormModeration").addClass("bi-plus-circle");
+            }
+        })
+        });
+
+
+   
 
     
    
@@ -312,6 +335,7 @@ block head %} {{ super() }}
             <button
                 class="btn bi-plus-circle"
                 type="button"
+                id="expFormModeration"
                 data-bs-toggle="collapse"
                 data-bs-target="#advanseSearchTools"
                 aria-expanded="false"
