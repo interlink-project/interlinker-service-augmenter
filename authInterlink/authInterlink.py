@@ -261,6 +261,7 @@ def changeAnnotation(descriptionId=None,annotatorId=None,option=None):
         argumentos=request.json
         newstate=argumentos.pop('stateToChange')
         commentsChangeState=argumentos.pop('commentsChangeState')
+        objtype=argumentos.pop('objtype')
 
         annotationRootId=''
         losvalores=argumentos.keys()
@@ -285,6 +286,7 @@ def changeAnnotation(descriptionId=None,annotatorId=None,option=None):
                         "initstate": annotation['state'],
                         "endstate": int(newstate),
                         "text": commentsChangeState,
+                        "objtype" : objtype,
                         "date": datetime.datetime.now().replace(microsecond=0).isoformat(),
                         "user": current_user.email
                     })
@@ -298,26 +300,55 @@ def changeAnnotation(descriptionId=None,annotatorId=None,option=None):
 
     elif option=='like':
 
-        argumentos=request.args.to_dict()
-        vote=int(argumentos.pop('like'))
+        argumentos=request.json
+
+
+        vote=int(argumentos.pop('stateToChange'))
+
+        newstate=vote
+        commentsChangeState=argumentos.pop('commentsChangeState')
+        objtype=argumentos.pop('objtype')
+
+        annotationRootId=''
+        losvalores=argumentos.keys()
+        if "annotationRootId" in losvalores:
+            annotationRootId=argumentos.pop('annotationRootId')
 
         annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
+
+         #Registro el cambio y quien lo hizo
+        if(len(annotation['statechanges'])==0):
+            annotation['statechanges']=[] 
         
         #Registro el cambio y quien lo hizo
-
+        initState=0
         if(vote==1):
-            nroLikes=int(annotation['like'])
-            annotation['like']=nroLikes+1
+            initState=int(annotation['like'])
+            annotation['like']=initState+1
+            objtype='annotation_like'
                 
         elif vote==-1:
-            nroDisLikes=int(annotation['dislike'])
-            annotation['dislike']=nroDisLikes+1
+            initState=int(annotation['dislike'])
+            annotation['dislike']=initState+1
+            objtype='annotation_dislike'
+
+        #Registro el cambio de estado
+        annotation['statechanges'].append({
+                        "initstate": initState,
+                        "endstate": initState+1,
+                        "text": commentsChangeState,
+                        "objtype" : objtype,
+                        "date": datetime.datetime.now().replace(microsecond=0).isoformat(),
+                        "user": current_user.email
+                    })
 
 
         annotation.updateLike()
+        annotation.updateState()
 
+        return jsonify(annotation)
 
-        annotationRootId=''
+        """ annotationRootId=''
         losvalores=argumentos.keys()
         if "annotationRootId" in losvalores:
             annotationRootId=argumentos.pop('annotationRootId')
@@ -345,7 +376,7 @@ def changeAnnotation(descriptionId=None,annotatorId=None,option=None):
             nroRepliesOfAnnotation = Annotation.count(query={ 'uri': description['url'] ,'category':'reply','idAnotationReply':'annotation-'+annotatorId  })
             
             return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
-
+ """
 
     # return 'la desc: '+category+'lauri is'+str(uri) 
 

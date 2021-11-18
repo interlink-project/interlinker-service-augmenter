@@ -38,6 +38,7 @@ MAPPING = {
         "properties": {
             "initstate": {"type": "byte"},
             "endstate": {"type": "byte"},
+            "objtype": {"type":"string"},
             "text": {"type": "string"},
             "date": {"type": "date","format": "dateOptionalTime"},
             "user": {"type": "string"}

@@ -3,7 +3,71 @@
 
 <script>
 
-  function registrarEstadoAnnotation(event,annotationState='0',annotationId=''){
+  function registrarLike(event,like='1',annotationId='',objtype='annotation.like' ){
+
+    if (event.type == 'click') {
+
+      stateToChange=like;
+      commentsChangeState="";
+  
+  
+        if(annotationId!=""){
+          urlPost='/subjectPage/{{ description.id}}/'+annotationId+'/like'
+          
+          //Para el caso que sea un reply
+          function successSearch(data){
+
+            let nroLikes=data['like']
+            let nroDislikes=data['dislike']
+
+            $('#repLike-'+annotationId).text(nroLikes)
+            $('#repDislike-'+annotationId).text(nroDislikes)
+  
+            $('#notificationAcceptBtn').hide();
+            $('#notificationBox').modal('hide');
+      
+          }
+  
+        }else{
+          urlPost='/subjectPage/{{ description.id}}/{{ annotation.id}}/like'
+  
+          //Para el caso que es una anotacion base
+          function successSearch(data){
+            let nroLikes=data['like']
+            let nroDislikes=data['dislike'] 
+            
+            $('#currentAnnotationLikes').text(nroLikes);
+            $('#currentAnnotationDislikes').text(nroDislikes);
+            
+            $('#notificationAcceptBtn').hide();
+            $('#notificationBox').modal('hide');
+  
+      
+          }
+        }
+        
+      
+      $.ajax({
+          method: 'POST',
+          url: urlPost,
+          contentType: 'application/json;charset=UTF-8',
+          data: JSON.stringify({"stateToChange":stateToChange,"commentsChangeState":commentsChangeState,"objtype":objtype})
+      }).done(successSearch);
+  
+    
+  
+
+
+
+
+
+
+    }
+
+
+  }
+
+  function registrarEstadoAnnotation(event,annotationState='0',annotationId='',objtype='annotation_state'){
 
     if (event.type == 'click') {
 
@@ -17,6 +81,9 @@
     $('#notificationBody').append("<input type='hidden' name='stateToChange' id='stateToChange' value='"+annotationState+"'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>")
     
     $('#notificationBody').append("<input type='hidden' name='annotationId' id='annotationId' value='"+annotationId+"'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>")
+    
+    $('#notificationBody').append("<input type='hidden' name='objtype' id='objtype' value='"+objtype+"'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>")
+
 
     $('#notificationAcceptBtn').text("Accept")
     $('#notificationAcceptBtn').show();
@@ -58,6 +125,7 @@
     
     annotationId=$('#annotationId').val();
     stateToChange=$('#stateToChange').val();
+    objtype=$('#objtype').val();
     commentsChangeState=$('#commentsChangeState').val();
 
     //window.location='/subjectPage/{{ description.id}}/{{ annotation.id}}/state?state='+stateToChange
@@ -66,6 +134,7 @@
       if(annotationId!=""){
         urlPost='/subjectPage/{{ description.id}}/'+annotationId+'/state'
         
+        //Para el caso que sea un reply
         function successSearch(data){
           let nuevoEstado=data['state'] 
           $('#repState-'+annotationId).text(nuevoEstado)
@@ -85,7 +154,7 @@
       }else{
         urlPost='/subjectPage/{{ description.id}}/{{ annotation.id}}/state'
 
-
+        //Para el caso que es una anotacion base
         function successSearch(data){
           let nuevoEstado=data['state'] 
           $('#currentStateAnnotation').text(nuevoEstado);
@@ -102,7 +171,7 @@
         method: 'POST',
         url: urlPost,
         contentType: 'application/json;charset=UTF-8',
-        data: JSON.stringify({"stateToChange":stateToChange,"commentsChangeState":commentsChangeState})
+        data: JSON.stringify({"stateToChange":stateToChange,"commentsChangeState":commentsChangeState,"objtype":objtype})
     }).done(successSearch);
 
   }else{
@@ -201,16 +270,16 @@
         <button
           type="button"
           class="btn btn-success"
-          onclick="window.location='/subjectPage/{{ description.id}}/{{ annotation.id }}/like?like=1&annotationRootId={{ annotation['id'] }}'"
+          onclick="registrarLike(event,like='1',annotationId='{{ annotation.id }}',objtype='annotation_like' )"
         >
-          <i class="bi bi-hand-thumbs-up"></i> {{ annotation['like']}}
+          <i class="bi bi-hand-thumbs-up"></i> <span id="currentAnnotationLikes">{{ annotation['like']}}</span> 
         </button>
         <button
           type="button"
           class="btn btn-danger"
-          onclick="window.location='/subjectPage/{{ description.id}}/{{ annotation.id }}/like?like=-1&annotationRootId={{ annotation['id'] }}'"
+          onclick="registrarLike(event,like='-1',annotationId='{{ annotation.id }}',objtype='annotation_like' ) "
         >
-          <i class="bi bi-hand-thumbs-down"></i> {{ annotation['dislike']}}
+          <i class="bi bi-hand-thumbs-down"></i> <span id="currentAnnotationDislikes">{{ annotation['dislike']}}</span>  
         </button>
       </div>
     </div>
@@ -308,21 +377,23 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
       <button
         class="btn btn-outline-secondary bi-hand-thumbs-up"
         type="button"
-        onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/like?like=1&annotationRootId={{ annotation['id'] }}'"
+        onclick="registrarLike(event,like='1',annotationId='{{ replyRep.id }}',objtype='annotation.like' ) "
       >
-        {{ replyRep['like']}}
+      <span class="repLike-{{ replyRep.id }}">{{ replyRep['like']}}</span>
+
       </button>
       <button
         class="btn btn-outline-secondary bi-hand-thumbs-down"
         type="button"
-        onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/like?like=-1&annotationRootId={{ annotation['id'] }}'"
+        onclick="registrarLike(event,like='-1',annotationId='{{ replyRep.id }}',objtype='annotation.like' ) "
       >
-        {{ replyRep['dislike']}}
+      <span class="repDislike-{{ replyRep.id }}">{{ replyRep['dislike']}}</span>
+        
       </button>
       {% if ns.ismoderator is true %} 
       <button
         class="btn btn-outline-secondary bi-trash"
-        onclick="registrarEstadoAnnotation(event,annotationState=3, annotationId='{{ replyRep.id }}')"
+        onclick="registrarEstadoAnnotation(event,annotationState=3, annotationId='{{ replyRep.id }}',objtype='annotation_state')"
         type="button"
       ></button>
       {% endif%}
@@ -367,21 +438,21 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
         <button
           class="btn btn-outline-secondary bi-hand-thumbs-up"
           type="button"
-          onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/like?like=1&annotationRootId={{ annotation['id'] }}'"
+          onclick="registrarLike(event,like='1',annotationId='{{ replyRep.id }}',objtype='annotation_like' )"
         >
           {{ replyRep['like']}}
         </button>
         <button
           class="btn btn-outline-secondary bi-hand-thumbs-down"
           type="button"
-          onclick="window.location='/subjectPage/{{ description.id}}/{{ replyRep.id }}/like?like=-1&annotationRootId={{ annotation['id'] }}'"
+          onclick="registrarLike(event,like='-1',annotationId='{{ replyRep.id }}',objtype='annotation_like' )"
         >
           {{ replyRep['dislike']}}
         </button>
         {% if ns.ismoderator is true %} 
         <button
           class="btn btn-outline-secondary bi-trash"
-          onclick="registrarEstadoAnnotation(event,annotationState=3, annotationId='{{ replyRep.id }}')"
+          onclick="registrarEstadoAnnotation(event,annotationState=3, annotationId='{{ replyRep.id }}',objtype='annotation_state')"
           type="button"
         ></button>
         {% endif%}
@@ -411,21 +482,21 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
         <button
           type="button"
           class="btn bi-archive border btn-danger"
-          onclick="registrarEstadoAnnotation(event,annotationState=1)"
+          onclick="registrarEstadoAnnotation(event,annotationState=1,annotationId='',objtype='annotation_state')"
         >
           Archive
         </button>
         <button
           type="button"
           class="btn bi-clock border btn-success"
-          onclick="registrarEstadoAnnotation(event,annotationState=0)"
+          onclick="registrarEstadoAnnotation(event,annotationState=0,annotationId='',objtype='annotation_state')"
         >
           In Progress
         </button>
         <button
           type="button"
           class="btn bi-check-circle border btn-primary"
-          onclick="registrarEstadoAnnotation(event,annotationState=2)"
+          onclick="registrarEstadoAnnotation(event,annotationState=2,annotationId='',objtype='annotation_state')"
         >
           Approve
         </button>

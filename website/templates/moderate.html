@@ -162,8 +162,7 @@ block head %} {{ super() }}
 
     <div class="row">
         <div class="table-responsive">
-            <h6 id="searchStats">Total found : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span id='page'>{{paginacion.page}}</span> of <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> Pages).</h6>
-    
+           
             <table class="table" style="height: auto">
                 <thead>
                     <tr>
@@ -225,6 +224,8 @@ block head %} {{ super() }}
                     {% endfor %}
                 </tbody>
             </table>
+            <h6 id="searchStats">Total found : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span id='page'>{{paginacion.page}}</span> of <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> Pages).</h6>
+    
 
             <div
             class="container"

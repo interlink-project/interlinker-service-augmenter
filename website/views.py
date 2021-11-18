@@ -463,14 +463,24 @@ def modifica(rutaPagina,userId):
         contador=0
         for newUrl in arrayUrl:
             contador=contador+1
-            rutaPagina.replace("procesaapraksts", newUrl)
-            responseAdd=requests.get(rutaPagina,headers=headersUserAgent)
-            resp_ContenidoAdd=response.content
-            #print(resp_Contenido.decode())
-            soupAdd = BeautifulSoup(resp_Contenido,'html.parser')
 
-            contenidoAdd= soupAdd.find_all(id='content_0_contentsimplecontentph_1_uxTabPage')
-            contenidoOriginal=soup.find_all(id='content_0_contentsimplecontentph_1_uxTabPage')
+            rutaTemp=rutaPagina.split("/")
+            rutaTemp[7]=newUrl
+            newUrl="/".join(rutaTemp)
+
+            responseAdd=requests.get(newUrl,headers=headersUserAgent)
+            resp_ContenidoAdd=responseAdd.content
+            #print(resp_Contenido.decode())
+            soupAdd = BeautifulSoup(resp_ContenidoAdd,'html.parser')
+
+            contenidoAdd= soupAdd.find(id='content_0_contentsimplecontentph_1_uxTabPage')
+           
+            contenidoHeader= soupAdd.find("table",class_="dxtcControl_LatvijaLv service-tab-control")
+           
+
+         
+            contenidoOriginal=soup.find(id='content_0_contentsimplecontentph_1_uxTabPage')
+            contenidoOriginal.append(contenidoHeader)
             contenidoOriginal.append(contenidoAdd)
 
     #Quitamos los scripts:
