@@ -2,6 +2,8 @@ from re import I
 from flask import Blueprint, render_template, request, flash, jsonify, g,session
 import json, requests, math
 
+from authInterlink import authInterlink
+
 
 from flask import redirect
 from flask.helpers import url_for,make_response
@@ -256,6 +258,7 @@ def claimModeration():
     firstName=itemsDict.pop("firstName").title()
     lastName=itemsDict.pop("lastName").title()
     userPosition=itemsDict.pop("userPosition").title()
+    oneUrl=itemsDict.pop("oneUrl")
     userMotivations=itemsDict.pop("userMotivations")
 
     userMotivations=userMotivations[0].upper()+userMotivations[1:]
@@ -269,6 +272,15 @@ def claimModeration():
     urlList=[]
     for key in itemsDict:
         urlList.append(itemsDict[key])
+
+    if(len(urlList)==0):
+        #Si el campo de lista esta vacio miro el campo url
+        if oneUrl != "":
+            urlList.append(oneUrl)
+        else:
+            flash("It is needed to add at least one URL of description.","info")
+            return authInterlink.moderate()
+        
 
     itemsDict['email'] = current_user.email
 
@@ -325,22 +337,28 @@ def claimModeration():
     mail.send(msg)
 
 
+    flash("The moderation request has been send.","info")
 
+    return authInterlink.moderate()
 
-    return "Sent"
+    #return render_template("moderate.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion)
 
 
 @views.route("/aproveModerator",methods=["GET","POST"])
 def aproveModerator():
 
     argumentos=request.args.to_dict()
-
+    argKeys=argumentos.keys()
     email=argumentos.pop('email')
 
+
+    existUrl=any(list(map(lambda x: x.startswith('url_'), argKeys))) 
+
     urlList=[]
-    for key in argumentos:
-        urlList.append(argumentos[key])
-    
+    if existUrl:
+        for key in argumentos:
+            urlList.append(argumentos[key])
+        
     today = date.today()
     endDate = today.replace(today.year + 1)
 
@@ -357,6 +375,7 @@ def aprovarClaimsList():
     
     contador=0
     nroActualizaciones=0
+    listMsg=[]
     for i in range(math.ceil(len(argumentosList)/4)):
         if(i!=0):
             contador=i*4
@@ -383,6 +402,13 @@ def aprovarClaimsList():
                             })
                 descripcionAct.updateModerators(index="description")
                 nroActualizaciones=nroActualizaciones+1
+            listMsg.append("The moderation of "+url+" has been assigned.")
+        elif len(descriptions)==0:
+            listMsg.append("The description of "+url+" could not be found (Most be created first) !.")
+
+    listActionsBody=""
+    for msnItem in listMsg:
+        listActionsBody=listActionsBody+"""<p style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>"""+msnItem+"""</p>""" 
     
 
     msg = Message('Your claim has been resolved.', sender = 'interlinkdeusto@gmail.com', recipients = [usuarioModerator])
@@ -396,6 +422,12 @@ def aprovarClaimsList():
                 <td align='center' class='esd-block-text es-p20t'>
                     <h2 style='color: #ffffff;'>Your claim to be a moderator     has been resolved.</h2>
                     
+                </td>
+            </tr>
+
+            <tr>
+                <td align='center' style='padding-right: 110px; padding-left: 110px;' class='esd-block-text es-m-p20l es-m-p20r es-p30t es-p40b'>
+                    """+listActionsBody+"""
                 </td>
             </tr>
 
@@ -416,15 +448,12 @@ def aprovarClaimsList():
     mail = Mail(current_app)
     mail.send(msg)
 
+    for msnItem in listMsg:
+        flash(msnItem,"info")
 
 
-           
-
-    
-   
-
-
-    return jsonify(nroActualizaciones)
+    return redirect(url_for("views.aproveModerator",email=usuarioModerator,argumentos=argumentosList))
+ 
 
 
 #Formulatio de carga de Pagina

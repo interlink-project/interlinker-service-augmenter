@@ -180,7 +180,7 @@ PUT description/description/AX0ljS0D8dyVuOp-TDl4
 }
 
 
-POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
+POST description/description/AX0ljS0D8dyVuOp-TDl4/_update
 {
  "doc" : {
  "url" : "http://www.riga.lv/en/services/burial-riga-municipal-cemeteries"

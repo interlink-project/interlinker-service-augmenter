@@ -1,203 +1,187 @@
 {% extends "description.html" %} {% block annotations %}
 
-
 <script>
+  function registrarLike(
+    event,
+    like = "1",
+    annotationId = "",
+    objtype = "annotation.like"
+  ) {
+    if (event.type == "click") {
+      stateToChange = like;
+      commentsChangeState = "";
 
-  function registrarLike(event,like='1',annotationId='',objtype='annotation.like' ){
+      if (annotationId != "") {
+        urlPost = "/subjectPage/{{ description.id}}/" + annotationId + "/like";
 
-    if (event.type == 'click') {
-
-      stateToChange=like;
-      commentsChangeState="";
-  
-  
-        if(annotationId!=""){
-          urlPost='/subjectPage/{{ description.id}}/'+annotationId+'/like'
-          
-          //Para el caso que sea un reply
-          function successSearch(data){
-
-            let nroLikes=data['like']
-            let nroDislikes=data['dislike']
-
-            $('#repLike-'+annotationId).text(nroLikes)
-            $('#repDislike-'+annotationId).text(nroDislikes)
-  
-            $('#notificationAcceptBtn').hide();
-            $('#notificationBox').modal('hide');
-      
-          }
-  
-        }else{
-          urlPost='/subjectPage/{{ description.id}}/{{ annotation.id}}/like'
-  
-          //Para el caso que es una anotacion base
-          function successSearch(data){
-            let nroLikes=data['like']
-            let nroDislikes=data['dislike'] 
-            
-            $('#currentAnnotationLikes').text(nroLikes);
-            $('#currentAnnotationDislikes').text(nroDislikes);
-            
-            $('#notificationAcceptBtn').hide();
-            $('#notificationBox').modal('hide');
-  
-      
-          }
-        }
-        
-      
-      $.ajax({
-          method: 'POST',
-          url: urlPost,
-          contentType: 'application/json;charset=UTF-8',
-          data: JSON.stringify({"stateToChange":stateToChange,"commentsChangeState":commentsChangeState,"objtype":objtype})
-      }).done(successSearch);
-  
-    
-  
-
-
-
-
-
-
-    }
-
-
-  }
-
-  function registrarEstadoAnnotation(event,annotationState='0',annotationId='',objtype='annotation_state'){
-
-    if (event.type == 'click') {
-
-    
-    //  Muestro el panel de ingreso de razon:
-    var myModal = new bootstrap.Modal(document.getElementById('notificationBox'),{});
-    $('#notificationBoxLabel').text("Information")
-    $('#notificationBody').text("")
-    $('#notificationBody').append("<div class='mb-3'> <label for='commentsChangeState' class='form-label'> Please enter comments on your decision. </label>      <textarea class='form-control' id='commentsChangeState' rows='3'></textarea>    </div>")
-    
-    $('#notificationBody').append("<input type='hidden' name='stateToChange' id='stateToChange' value='"+annotationState+"'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>")
-    
-    $('#notificationBody').append("<input type='hidden' name='annotationId' id='annotationId' value='"+annotationId+"'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>")
-    
-    $('#notificationBody').append("<input type='hidden' name='objtype' id='objtype' value='"+objtype+"'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>")
-
-
-    $('#notificationAcceptBtn').text("Accept")
-    $('#notificationAcceptBtn').show();
-    //$('#notificationAcceptBtn').hide();
-    
-    $('#createUrl').val("");
-    myModal.show();
-    
-  
-    }
-
-  }
-
-  function getStateText(val){
-    res=''
-    switch (val) {
-      case 0:
-        res='In Progress';
-        break;
-      case 1:
-        res='Archived';
-        break;
-      case 2:
-        res='Approved';
-        break;
-      case 3:
-        res='Banned';
-        break;
-      default:
-        res='Nan';
-    }
-    return res;
-
-  }
-
-
-  //Defino el evento de accept del modal: (En este caso submit a form)
-  $( "#notificationAcceptBtn" ).click(function() {
-    
-    annotationId=$('#annotationId').val();
-    stateToChange=$('#stateToChange').val();
-    objtype=$('#objtype').val();
-    commentsChangeState=$('#commentsChangeState').val();
-
-    //window.location='/subjectPage/{{ description.id}}/{{ annotation.id}}/state?state='+stateToChange
-    if (commentsChangeState!=""){
-
-      if(annotationId!=""){
-        urlPost='/subjectPage/{{ description.id}}/'+annotationId+'/state'
-        
         //Para el caso que sea un reply
-        function successSearch(data){
-          let nuevoEstado=data['state'] 
-          $('#repState-'+annotationId).text(nuevoEstado)
+        function successSearch(data) {
+          let nroLikes = data["like"];
+          let nroDislikes = data["dislike"];
 
-          //Muestro solamente cuando esta prohibido
-          if (nuevoEstado == 3){
-            $('#repStateText-'+annotationId).text(getStateText(nuevoEstado))
-          }else{
-            $('#repStateText-'+annotationId).text('')
+          if (data["category"] == "reply") {
+            $("#repLike-" + annotationId).text(nroLikes);
+            $("#repDislike-" + annotationId).text(nroDislikes);
+          } else {
+            $("#currentAnnotationLikes").text(nroLikes);
+            $("#currentAnnotationDislikes").text(nroDislikes);
           }
-
-          $('#notificationAcceptBtn').hide();
-          $('#notificationBox').modal('hide');
-    
-        }
-
-      }else{
-        urlPost='/subjectPage/{{ description.id}}/{{ annotation.id}}/state'
-
-        //Para el caso que es una anotacion base
-        function successSearch(data){
-          let nuevoEstado=data['state'] 
-          $('#currentStateAnnotation').text(nuevoEstado);
-          $('#currentStateAnnotationText').text(getStateText(nuevoEstado));
-          $('#notificationAcceptBtn').hide();
-          $('#notificationBox').modal('hide');
-
-    
+          $("#notificationAcceptBtn").hide();
+          $("#notificationBox").modal("hide");
         }
       }
-      
-    
-    $.ajax({
-        method: 'POST',
-        url: urlPost,
-        contentType: 'application/json;charset=UTF-8',
-        data: JSON.stringify({"stateToChange":stateToChange,"commentsChangeState":commentsChangeState,"objtype":objtype})
-    }).done(successSearch);
 
-  }else{
-      $('#notificationBody').append("<p style='color:red;'>* A comment is required</p>")   
+      $.ajax({
+        method: "POST",
+        url: urlPost,
+        contentType: "application/json;charset=UTF-8",
+        data: JSON.stringify({
+          stateToChange: stateToChange,
+          commentsChangeState: commentsChangeState,
+          objtype: objtype,
+        }),
+      }).done(successSearch);
+    }
   }
 
-  });
+  function registrarEstadoAnnotation(
+    event,
+    annotationState = "0",
+    annotationId = "",
+    objtype = "annotation_state"
+  ) {
+    if (event.type == "click") {
+      //  Muestro el panel de ingreso de razon:
+      var myModal = new bootstrap.Modal(
+        document.getElementById("notificationBox"),
+        {}
+      );
+      $("#notificationBoxLabel").text("Information");
+      $("#notificationBody").text("");
+      $("#notificationBody").append(
+        "<div class='mb-3'> <label for='commentsChangeState' class='form-label'> Please enter comments on your decision. </label>      <textarea class='form-control' id='commentsChangeState' rows='3'></textarea>    </div>"
+      );
 
+      $("#notificationBody").append(
+        "<input type='hidden' name='stateToChange' id='stateToChange' value='" +
+          annotationState +
+          "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
+      );
+
+      $("#notificationBody").append(
+        "<input type='hidden' name='annotationId' id='annotationId' value='" +
+          annotationId +
+          "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
+      );
+
+      $("#notificationBody").append(
+        "<input type='hidden' name='objtype' id='objtype' value='" +
+          objtype +
+          "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
+      );
+
+      $("#notificationAcceptBtn").text("Accept");
+      $("#notificationAcceptBtn").show();
+      //$('#notificationAcceptBtn').hide();
+
+      $("#createUrl").val("");
+      myModal.show();
+    }
+  }
+
+  function getStateText(val) {
+    res = "";
+    switch (val) {
+      case 0:
+        res = "In Progress";
+        break;
+      case 1:
+        res = "Archived";
+        break;
+      case 2:
+        res = "Approved";
+        break;
+      case 3:
+        res = "Banned";
+        break;
+      default:
+        res = "Nan";
+    }
+    return res;
+  }
+
+  //Defino el evento de accept del modal: (En este caso submit a form)
+  $("#notificationAcceptBtn").click(function () {
+    annotationId = $("#annotationId").val();
+    stateToChange = $("#stateToChange").val();
+    objtype = $("#objtype").val();
+    commentsChangeState = $("#commentsChangeState").val();
+
+    //window.location='/subjectPage/{{ description.id}}/{{ annotation.id}}/state?state='+stateToChange
+    if (commentsChangeState != "") {
+      if (annotationId != "") {
+        urlPost = "/subjectPage/{{ description.id}}/" + annotationId + "/state";
+
+        //Para el caso que sea un reply
+        function successSearch(data) {
+          let nuevoEstado = data["state"];
+          $("#repState-" + annotationId).text(nuevoEstado);
+
+          //Muestro solamente cuando esta prohibido
+          if (nuevoEstado == 3) {
+            $("#repStateText-" + annotationId).text(getStateText(nuevoEstado));
+          } else {
+            $("#repStateText-" + annotationId).text("");
+          }
+
+          $("#notificationAcceptBtn").hide();
+          $("#notificationBox").modal("hide");
+        }
+      } else {
+        urlPost = "/subjectPage/{{ description.id}}/{{ annotation.id}}/state";
+
+        //Para el caso que es una anotacion base
+        function successSearch(data) {
+          let nuevoEstado = data["state"];
+          $("#currentStateAnnotation").text(nuevoEstado);
+          $("#currentStateAnnotationText").text(getStateText(nuevoEstado));
+          $("#notificationAcceptBtn").hide();
+          $("#notificationBox").modal("hide");
+        }
+      }
+
+      $.ajax({
+        method: "POST",
+        url: urlPost,
+        contentType: "application/json;charset=UTF-8",
+        data: JSON.stringify({
+          stateToChange: stateToChange,
+          commentsChangeState: commentsChangeState,
+          objtype: objtype,
+        }),
+      }).done(successSearch);
+    } else {
+      $("#notificationBody").append(
+        "<p style='color:red;'>* A comment is required</p>"
+      );
+    }
+  });
 </script>
 
-
-{% set ns = namespace(ismoderator=false) %}
-{% for moderator in description.moderators %}
-  {% if user.email == moderator.email %}  
-    {% set ns.ismoderator = true %}
-  {% endif %}
-{% endfor %}
-
+{% set ns = namespace(ismoderator=false) %} {% for moderator in
+description.moderators %} {% if user.email == moderator.email %} {% set
+ns.ismoderator = true %} {% endif %} {% endfor %}
 
 <div class="row">
   <div class="col-6">
     <h5>
       {{ annotation['category'][0]|upper }}{{ annotation['category'][1:] }}/{{
       annotation['id'] }} (
-        <span hidden  id='currentStateAnnotation' >{{annotation['state']}}</span> 
-        <span id='currentStateAnnotationText'>{{annotation['state']|estadosAnnotation}}</span> )
+      <span hidden id="currentStateAnnotation">{{annotation['state']}}</span>
+      <span id="currentStateAnnotationText"
+        >{{annotation['state']|estadosAnnotation}}</span
+      >
+      )
     </h5>
   </div>
   <div class="col-6">
@@ -223,7 +207,7 @@
         {{ nroReplies }} <br />
         REPLY
       </div>
-<!--       <div
+      <!--       <div
         style="
           min-width: 50px;
           max-width: 50px;
@@ -272,14 +256,16 @@
           class="btn btn-success"
           onclick="registrarLike(event,like='1',annotationId='{{ annotation.id }}',objtype='annotation_like' )"
         >
-          <i class="bi bi-hand-thumbs-up"></i> <span id="currentAnnotationLikes">{{ annotation['like']}}</span> 
+          <i class="bi bi-hand-thumbs-up"></i>
+          <span id="currentAnnotationLikes">{{ annotation['like']}}</span>
         </button>
         <button
           type="button"
           class="btn btn-danger"
           onclick="registrarLike(event,like='-1',annotationId='{{ annotation.id }}',objtype='annotation_like' ) "
         >
-          <i class="bi bi-hand-thumbs-down"></i> <span id="currentAnnotationDislikes">{{ annotation['dislike']}}</span>  
+          <i class="bi bi-hand-thumbs-down"></i>
+          <span id="currentAnnotationDislikes">{{ annotation['dislike']}}</span>
         </button>
       </div>
     </div>
@@ -358,12 +344,12 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
     {% set userName = replyRep.user.split('@')[0] %}
 
     <span style="font-weight: bold; width: fit-content">
-      
-        <span  id="repState-{{ replyRep.id }}" hidden>{{replyRep.state}}</span>
-        {% if replyRep.state==3 %}
-        <span id="repStateText-{{ replyRep.id }}">({{replyRep.state|estadosAnnotation}})</span>
-        {% endif %}
-      {{ userName[0] |upper}}{{ userName[1:]}}
+      <span id="repState-{{ replyRep.id }}" hidden>{{replyRep.state}}</span>
+      {% if replyRep.state==3 %}
+      <span id="repStateText-{{ replyRep.id }}"
+        >({{replyRep.state|estadosAnnotation}})</span
+      >
+      {% endif %} {{ userName[0] |upper}}{{ userName[1:]}}
     </span>
     at {{ replyRep.created|datetimeformat() }}.
 
@@ -379,18 +365,16 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
         type="button"
         onclick="registrarLike(event,like='1',annotationId='{{ replyRep.id }}',objtype='annotation.like' ) "
       >
-      <span class="repLike-{{ replyRep.id }}">{{ replyRep['like']}}</span>
-
+        <span id="repLike-{{ replyRep.id }}">{{ replyRep['like']}}</span>
       </button>
       <button
         class="btn btn-outline-secondary bi-hand-thumbs-down"
         type="button"
         onclick="registrarLike(event,like='-1',annotationId='{{ replyRep.id }}',objtype='annotation.like' ) "
       >
-      <span class="repDislike-{{ replyRep.id }}">{{ replyRep['dislike']}}</span>
-        
+        <span id="repDislike-{{ replyRep.id }}">{{ replyRep['dislike']}}</span>
       </button>
-      {% if ns.ismoderator is true %} 
+      {% if ns.ismoderator is true %}
       <button
         class="btn btn-outline-secondary bi-trash"
         onclick="registrarEstadoAnnotation(event,annotationState=3, annotationId='{{ replyRep.id }}',objtype='annotation_state')"
@@ -416,12 +400,12 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
       {% set userName = replyRep.user.split('@')[0] %}
 
       <span style="font-weight: bold; width: fit-content">
-        
-          <span id="repState-{{ replyRep.id }}" hidden>{{replyRep.state}}</span>
-          {% if replyRep.state==3 %}
-          <span id="repStateText-{{ replyRep.id }}">({{replyRep.state|estadosAnnotation}})</span>
-          {% endif %}
-         {{ userName[0] |upper}}{{ userName[1:]}}
+        <span id="repState-{{ replyRep.id }}" hidden>{{replyRep.state}}</span>
+        {% if replyRep.state==3 %}
+        <span id="repStateText-{{ replyRep.id }}"
+          >({{replyRep.state|estadosAnnotation}})</span
+        >
+        {% endif %} {{ userName[0] |upper}}{{ userName[1:]}}
       </span>
       at {{ replyRep.created|datetimeformat() }}.
 
@@ -440,23 +424,24 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
           type="button"
           onclick="registrarLike(event,like='1',annotationId='{{ replyRep.id }}',objtype='annotation_like' )"
         >
-          {{ replyRep['like']}}
+          <span id="repLike-{{ replyRep.id }}">{{ replyRep['like']}}</span>
         </button>
         <button
           class="btn btn-outline-secondary bi-hand-thumbs-down"
           type="button"
           onclick="registrarLike(event,like='-1',annotationId='{{ replyRep.id }}',objtype='annotation_like' )"
         >
-          {{ replyRep['dislike']}}
+          <span id="repDislike-{{ replyRep.id }}"
+            >{{ replyRep['dislike']}}</span
+          >
         </button>
-        {% if ns.ismoderator is true %} 
+        {% if ns.ismoderator is true %}
         <button
           class="btn btn-outline-secondary bi-trash"
           onclick="registrarEstadoAnnotation(event,annotationState=3, annotationId='{{ replyRep.id }}',objtype='annotation_state')"
           type="button"
         ></button>
         {% endif%}
-
       </div>
     </div>
   </div>
@@ -477,32 +462,29 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
       justify-content: center;
     "
   >
-
-      {% if ns.ismoderator is true %}  
-        <button
-          type="button"
-          class="btn bi-archive border btn-danger"
-          onclick="registrarEstadoAnnotation(event,annotationState=1,annotationId='',objtype='annotation_state')"
-        >
-          Archive
-        </button>
-        <button
-          type="button"
-          class="btn bi-clock border btn-success"
-          onclick="registrarEstadoAnnotation(event,annotationState=0,annotationId='',objtype='annotation_state')"
-        >
-          In Progress
-        </button>
-        <button
-          type="button"
-          class="btn bi-check-circle border btn-primary"
-          onclick="registrarEstadoAnnotation(event,annotationState=2,annotationId='',objtype='annotation_state')"
-        >
-          Approve
-        </button>
-      {% endif %}
-
-
+    {% if ns.ismoderator is true %}
+    <button
+      type="button"
+      class="btn bi-archive border btn-danger"
+      onclick="registrarEstadoAnnotation(event,annotationState=1,annotationId='',objtype='annotation_state')"
+    >
+      Archive
+    </button>
+    <button
+      type="button"
+      class="btn bi-clock border btn-success"
+      onclick="registrarEstadoAnnotation(event,annotationState=0,annotationId='',objtype='annotation_state')"
+    >
+      In Progress
+    </button>
+    <button
+      type="button"
+      class="btn bi-check-circle border btn-primary"
+      onclick="registrarEstadoAnnotation(event,annotationState=2,annotationId='',objtype='annotation_state')"
+    >
+      Approve
+    </button>
+    {% endif %}
   </div>
 </div>
 

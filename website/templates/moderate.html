@@ -121,22 +121,30 @@ block head %} {{ super() }}
         }
     }
 
+    function removerUrl(event){
+        if (event.type == 'click') {
+            event.target.parentNode.remove();
+        }
+
+    }
+
     function agregarUrl(event){
         
         if (event.type == 'click') {
             event.preventDefault();
             event.stopPropagation();
-            var urltext =$('#inputGroupDomain').val();
+            var urltext =$('#oneUrl').val();
 
             if(urltext!=''){
                 var contador=$('#urlList').children().length+1;
             
-
-                var liUrl = '<div class="input-group"><input type="url" class="form-control" value='+urltext+' name="url_'+contador+'" id="url_'+contador+'" placeholder="Link"></div>';
+                var liUrl = '<div class="input-group"> <button class="bi-x" onclick="removerUrl(event)" ></button> <input type="url" class="form-control" value='+urltext+' name="url_'+contador+'" id="url_'+contador+'" placeholder="Link"></div>';
                 
-                $('#inputGroupDomain').val('');
+                $('#oneUrl').val('');
 
                 $('#urlList').append(liUrl);
+
+                $("#oneUrlVal").text("");
 
             }
             
@@ -144,7 +152,25 @@ block head %} {{ super() }}
 
     }
 
+    function validarURL(event) { 
+        var code = event.keyCode || event.which;
+        if ( code == 13 || code == 9 ) {
+            event.preventDefault();
+            inputUrl= document.getElementById("oneUrl");
 
+            listrl= document.getElementById("urlList");
+
+            if(inputUrl.value=="" && listrl.childElementCount==0){
+                $("#oneUrlVal").text("* At least one Url most be added.")
+            }else{
+                $("#oneUrlVal").text("")
+            }
+
+        }
+    }
+
+    
+   
 
 
 </script>
@@ -349,13 +375,15 @@ block head %} {{ super() }}
 
                 <div class="row">
                     <div class="input-group mb-3">
-                        <label class="input-group-text" for="inputGroupDomain">Domain/Pages:</label>
-                        <input type="text" class="form-control" id="inputGroupDomain" placeholder="Url Page"
-                            aria-label="Url Page">
+                        <label class="input-group-text" for="oneUrl">Domain/Pages:</label>
+                
+                        <input type="text" class="form-control" id="oneUrl" name="oneUrl" placeholder="Url Page"
+                            aria-label="Url Page" onkeydown="validarURL(event)" onfocusout="validarURL(event)" >
                         <button class="btn btn-outline-secondary" id="inputGroupFileAddon04"  onclick="agregarUrl(event)">Add</button>
 
                     </div>
                 </div>
+                <span id="oneUrlVal" style="color:red;"></span>
                 <div class="row" style="padding-left: 30px;">
                     <div class="vertical-input-group"  id="urlList">
                        
