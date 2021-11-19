@@ -125,6 +125,11 @@ def buscar():
 
 
 
+#Formulatio de carga de Pagina
+@views.route("/dashboard1")
+def dashboard1():
+    return render_template("dashboard1.html")
+
 
 
 

@@ -1,4 +1,4 @@
-{% extends "template.html" %} {% block title %} Servicepedia {% endblock %} {% block
+{% extends "templateV2.html" %} {% block title %} Servicepedia {% endblock %} {% block
     content %}
 
 
@@ -85,7 +85,7 @@
    
 
 
-<div>
+<div class="col">
     <form class="form-inline my-2 my-lg-0" id="FormDescription" action="/website/registrar" method="POST" >
 
 
@@ -216,36 +216,29 @@
 
 
 
-
-        <div class="item2"><input type="hidden" name="usr" id="userId" value="{{ user.email }}"
-                style="width: 200px;margin:0px 10px 10px 0px;" class="form-control mr-sm-4" placeholder="User."
-                readonly />
+        <div class="row">
+            <div class="item2"><input type="hidden" name="usr" id="userId" value="{{ user.email }}"
+                    style="width: 200px;margin:0px 10px 10px 0px;" class="form-control mr-sm-4" placeholder="User."
+                    readonly />
+            </div>
         </div>
 
         
-        <div class="row">
-                
-            <div class="col-1" style="text-align: right;">
-                <button class="btn btn-secondary my-2 my-sm-0" id="btnSubmitDescription" style="height: 40px;width: 100px;" type="submit" >
+        <div class="row" style=" display: inline-flexbox;">
 
+                <button class="btn btn-secondary" id="btnSubmitDescription" style="width: 200px;"  type="submit" >
                     {% if description is defined %}
                     Edit
                     {% else %}
                     Create
                     {% endif %}
                 </button>
-            </div>
-
-
-
-            <div class="col-1">
-                <a  href="/dashboard"  style="height: 40px;"
-                    class="btn btn-secondary active "  >
+            
+                <a  href="/dashboard"   style="width: 200px;padding-left: 10px;margin-left: 10px;" 
+                    class="btn btn-secondary active"  >
                     Cancel
                 </a>   
-            </div>
-
-            
+    
               
         </div>
   

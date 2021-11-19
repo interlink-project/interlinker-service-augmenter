@@ -1,4 +1,4 @@
-{% extends "template.html" %} {% block title %} Servicepedia {% endblock %}
+{% extends "templateV2.html" %} {% block title %} Servicepedia {% endblock %}
 
 {% block head %}
 {{ super() }}
@@ -219,10 +219,12 @@
   <div class="row">
     <div
       class="col"
-      style="align-content: center; justify-content: center; display: flex"
+      style="align-content: center; justify-content: center; display: flex;align-items: center;"
     >
-      <h4>
+      <img src="{{url_for('static', filename='activityDesc.png')}}" style="width:60px ;" alt="Activities">
+      <h4 style="padding-left: 20px;">
         Your recent activity</h4>
+
     </div>
   </div>
   <hr />
