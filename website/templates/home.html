@@ -201,10 +201,10 @@
   <div class="row">
     <div class="table-responsive">
 
-    <table class="table table-striped table-bordered  table-condensed" style="height: auto">
+    <table class="table  table table-striped table-bordered  table-condensed" style="height: auto;text-align: center;">
       <thead>
         <tr>
-      
+          <th scope="row">#</th>
           <th scope="col-3">Public Service Administration</th>
           <th scope="col-3">Title</th>
           <th scope="col-3">Creation Date</th>
@@ -216,7 +216,7 @@
         {% for description in descriptions %} 
   
             <tr>
-    
+              <td style="font-weight:bold;">{{ loop.index }}</td>
               <td>{{ description.padministration }}</td>
               <td>{{ description.title }}</td>
               <td>{{ description.created|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
