@@ -408,6 +408,11 @@ def descriptionDetail():
 def profile():
     return render_template("profile.html", user=current_user)
 
+@authInterlink.route("/settings")
+@login_required
+def settings():
+    return render_template("settings.html", user=current_user)
+
 
 @authInterlink.route("/oidc_callback")
 def callback():

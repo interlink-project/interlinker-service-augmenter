@@ -1,0 +1,33 @@
+{% extends "templateV2.html" %} {% block content %}
+<div>
+  <h2>My Settings</h2>
+  <p>General Settings.</p>
+</div>
+
+<hr />
+
+<form>
+  <div class="mb-3">
+    <label for="inputLanguage" class="form-label">Language</label>
+
+    <select
+      id="inputLanguage"
+      class="form-select form-select-sm"
+      aria-label=".form-select-sm example"
+      aria-describedby="languageHelp"
+    >
+      <option selected>Open this select menu</option>
+      <option value="EN">English</option>
+      <option value="SP">Spanish</option>
+      <option value="LV">Latvian</option>
+    </select>
+
+    <div id="emailHelp" class="form-text">
+      This is your current selected language.
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+{% endblock content %}
