@@ -35,6 +35,8 @@ import arrow
 
 from flask_swagger_ui import get_swaggerui_blueprint
 
+from flask_babel import Babel 
+
 from flask_login import (
     LoginManager,
     current_user,
@@ -128,6 +130,41 @@ def main(argv):
 
     login_manager = LoginManager()
     login_manager.init_app(app)
+
+    app.config['BABEL_DEFAULT_LOCALE'] = 'en'
+
+    babel = Babel(app)
+
+    @babel.localeselector
+    def get_locale():
+        # if a user is logged in, use the locale from the user settings
+        
+        user = getattr(g, 'user', None)
+        user = current_user
+
+
+        if request.args.get('lang'):
+            session['lang'] = request.args.get('lang')
+            return session.get('lang', 'en')
+        
+        #if user is not None:
+        #    return user.locale
+        
+        # otherwise try to guess the language from the user accept
+        # header the browser transmits.  We support de/fr/en in this
+        # example.  The best match wins.
+        
+        return request.accept_languages.best_match(['es','en','lv'])
+        
+        #return 'en'
+
+    @babel.timezoneselector
+    def get_timezone():
+        user = getattr(g, 'user', None)
+        if user is not None:
+            return user.timezone
+
+
 
     @app.template_filter('datetimeformat')
     def datetimeformat(value, formatText='',localeZone='en'):

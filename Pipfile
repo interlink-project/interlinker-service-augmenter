@@ -17,6 +17,8 @@ arrow = "*"
 six = "*"
 simplejson = "*"
 flask-mail = "*"
+babel = "*"
+flask-babel = "*"
 
 [dev-packages]
 

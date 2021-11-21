@@ -1,12 +1,12 @@
 {% extends "templateV2.html" %} {% block content %}
 <div>
-  <h2>My Settings</h2>
-  <p>General Settings.</p>
+  <h2>{{ _('My Settings')}}</h2>
+  <p>{{ _('Your preferences.')}}</p>
 </div>
 
 <hr />
 
-<form>
+<form action="/settings.html?lang=es">
   <div class="mb-3">
     <label for="inputLanguage" class="form-label">Language</label>
 
@@ -16,10 +16,10 @@
       aria-label=".form-select-sm example"
       aria-describedby="languageHelp"
     >
-      <option selected>Open this select menu</option>
-      <option value="EN">English</option>
-      <option value="SP">Spanish</option>
-      <option value="LV">Latvian</option>
+      <option selected>-</option>
+      <option value="en">English</option>
+      <option value="es">Spanish</option>
+      <option value="lv">Latvian</option>
     </select>
 
     <div id="emailHelp" class="form-text">
@@ -27,6 +27,14 @@
     </div>
   </div>
 
+  <hr />
+  <!--
+  {% for item in results %}
+  <h1>{{ item }}</h1>
+  {% endfor%}
+  <h1>Computer: {{ _('Computer')}}</h1>
+  <h1>Anthony: {{ anthony }}</h1>
+   -->
   <button type="submit" class="btn btn-primary">Save</button>
 </form>
 

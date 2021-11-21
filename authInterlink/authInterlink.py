@@ -3,6 +3,9 @@ import requests, math
 from urllib.parse import urljoin, urlparse
 import datetime
 
+from flask_babel import format_number,gettext,format_decimal, format_currency, format_percent
+
+
 from flask import Flask, render_template, redirect, request, url_for, session
 from flask_login import (
     LoginManager,
@@ -410,8 +413,26 @@ def profile():
 
 @authInterlink.route("/settings")
 @login_required
-def settings():
-    return render_template("settings.html", user=current_user)
+def settings():    
+
+    results=[]
+    
+    anthony =gettext('Anthony')
+
+    us_num=format_number(1099)
+    results.append(us_num)
+  
+    us_num=format_currency(1099.98, 'USD')
+    results.append(us_num)
+  
+    us_num=format_decimal(1.2346)
+    results.append(us_num)
+    
+
+  
+
+
+    return render_template("settings.html", user=current_user,results=results,anthony=anthony)
 
 
 @authInterlink.route("/oidc_callback")
