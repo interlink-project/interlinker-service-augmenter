@@ -2,6 +2,7 @@
 
 DELETE annotator
 
+POST annotator/annotation/_search
 
 POST annotator/annotation/_search
 {

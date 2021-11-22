@@ -45,8 +45,25 @@
 
         $('#tablaDescriptions').empty();
        
+        let contador=0;
         for (let dataItem of descripcionesList) {
-          $('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td> '+dataItem.created+' </td> <td> <a href="/description/'+dataItem.id+'" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> </td></tr>')
+          contador=contador+1
+
+
+          function ISODateString(d) {
+            function pad(n) {return n<10 ? '0'+n : n}
+            return pad(d.getUTCDate())+'-'
+            + pad(d.getUTCMonth()+1)+'-'
+            + d.getUTCFullYear()+' '
+                 + pad(d.getUTCHours()+1)+':'
+                 + pad(d.getUTCMinutes())
+          }
+
+
+          dateUpdated = new Date(dataItem.created);
+
+          
+          $('#tablaDescriptions').append(' <tr> <td style="font-weight:bold;"> '+contador+' </td> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td> '+ISODateString(dateUpdated)+' </td> <td> {% if current_user.is_authenticated %} <a href="/description/'+dataItem.id+'" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% else %} <a href="/website/modifica/Anonymous/'+dataItem.url+'"  class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% endif %} </td></tr>')
         }
       
         $('#totalRegisters').text(numeroReg);

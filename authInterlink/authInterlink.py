@@ -440,6 +440,12 @@ def callback():
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     
     code = request.args.get("code")
+
+    #la pagina que se pretende ingresar es:
+    paginaNext=''
+    if 'next' in session.keys():
+        paginaNext=session['next']
+
     if not code:
         return "The code was not returned or is not accessible", 403
     query_params = {'grant_type': 'authorization_code',
@@ -486,7 +492,12 @@ def callback():
     login_user(user)
    # g.user =user
 
-    return redirect(url_for("authInterlink.dashboard"))
+    session.pop('_flashes', None)
+
+    if paginaNext!="":
+        return redirect(paginaNext)
+    else:
+        return redirect(url_for("authInterlink.dashboard"))
 
 
 @authInterlink.route("/logout", methods=["GET", "POST"])

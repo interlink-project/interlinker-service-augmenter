@@ -55,7 +55,23 @@
         $('#tablaDescriptions').empty();
        
         for (let dataItem of descripcionesList) {
-          $('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td>  '+dataItem.created+' </td> <td> <a href="/description/'+dataItem.id+'" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> </td></tr>')
+
+          function ISODateString(d) {
+            function pad(n) {return n<10 ? '0'+n : n}
+            return pad(d.getUTCDate())+'-'
+            + pad(d.getUTCMonth()+1)+'-'
+            + d.getUTCFullYear()+' '
+                 + pad(d.getUTCHours()+1)+':'
+                 + pad(d.getUTCMinutes())
+          }
+
+
+          dateUpdated = new Date(dataItem.updated);
+
+          
+          $('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td> '+ISODateString(dateUpdated)+' </td> <td> {% if current_user.is_authenticated %} <a href="/description/'+dataItem.id+'" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% else %} <a href="/website/modifica/Anonymous/'+dataItem.url+'"  class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% endif %} </td></tr>')
+      
+          //$('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td>  '+dataItem.created+' </td> <td> <a href="/description/'+dataItem.id+'" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> </td></tr>')
                                                           
         }
       

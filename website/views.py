@@ -252,8 +252,18 @@ def saveDescription():
 
 
     
-    #return redirect(url_for("views.modifica",rutaPagina=sitio,userId=userNombre))
+#return redirect(url_for("views.modifica",rutaPagina=sitio,userId=userNombre))
+from cryptography.fernet import Fernet
+def generar_clave():
+    clave= Fernet.generate_key()
+    with open("clave.key","wb") as archivo_clave:
+        archivo_clave.write(clave)
 
+def cargar_clave():
+    try:
+        return open("clave.key","rb").read()
+    except:
+        return None
 
 
 @views.route("/claimModeration",methods=["POST"])
@@ -313,7 +323,24 @@ def claimModeration():
         claimInfo= "The user {} {} who is a {} ".format(firstName,lastName,userPosition)+"send a request to be a moderator of the following sites: "
         
 
-        textHref='http://127.0.0.1:5000/website/aproveModerator?'+dataClaimEncoded
+
+        #Encripto los datos del Claim:
+
+        
+        message = dataClaimEncoded
+
+        key = cargar_clave() 
+        if key ==None:
+            generar_clave()
+            key =cargar_clave()
+        fernet = Fernet(key) 
+        encMessage = fernet.encrypt(message.encode())
+        print("original string: ", message) 
+        print("encrypted string: ", encMessage) 
+
+
+
+        textHref='http://127.0.0.1:5000/website/aproveModerator?datos='+encMessage.decode('ascii')
 
         msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
         <table cellpadding='0' cellspacing='0' width='100%' style='background-color: #515151; border-radius: 30px 36
@@ -385,9 +412,25 @@ def claimModeration():
 
 
 @views.route("/aproveModerator",methods=["GET","POST"])
+@login_required
 def aproveModerator():
 
     argumentos=request.args.to_dict()
+
+    #Obtain Datos datos
+    datosBin=argumentos.pop('datos').encode('ascii')
+
+    key = cargar_clave() 
+    if key ==None:
+        generar_clave()
+        key =cargar_clave()
+
+    fernet = Fernet(key) 
+    
+    argumentos = fernet.decrypt(datosBin).decode() 
+        
+    argumentos=urllib.parse.urldecode(argumentos)
+
     argKeys=argumentos.keys()
     email=argumentos.pop('email')
 

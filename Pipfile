@@ -19,6 +19,7 @@ simplejson = "*"
 flask-mail = "*"
 babel = "*"
 flask-babel = "*"
+cryptography = "*"
 
 [dev-packages]
 

@@ -127,10 +127,13 @@ def main(argv):
     app.config['UPLOAD_PATH'] = 'uploads'
  
 
-
+    app.config['USE_SESSION_FOR_NEXT']=True
 
 
     login_manager = LoginManager()
+
+    login_manager.login_view = "authInterlink.login"
+
     login_manager.init_app(app)
 
     app.config['BABEL_DEFAULT_LOCALE'] = 'en'
