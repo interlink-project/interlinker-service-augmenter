@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-11-21 14:13+0100\n"
+"POT-Creation-Date: 2021-11-22 08:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,13 +23,21 @@ msgstr ""
 
 #: website/templates/settings.html:3
 msgid "My Settings"
-msgstr ""
+msgstr "Mi configuración"
 
 #: website/templates/settings.html:4
 msgid "Your preferences."
-msgstr ""
+msgstr "Mis preferencias."
 
-#: website/templates/settings.html:34
-msgid "Computer"
-msgstr ""
+#: website/templates/settings.html:21
+msgid "Language"
+msgstr "Lenguaje"
+
+#: website/templates/settings.html:36
+msgid "This is your current selected language."
+msgstr "Este es el idioma seleccionado."
+
+#: website/templates/settings.html:42
+msgid "Save"
+msgstr "Guardar"
 

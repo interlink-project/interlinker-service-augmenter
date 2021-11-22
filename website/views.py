@@ -1,7 +1,8 @@
 from re import I
-from flask import Blueprint, render_template, request, flash, jsonify, g,session
-import json, requests, math
+from flask import Blueprint, render_template, request, flash, jsonify, g,session,abort
+import json, requests, math, os
 
+from werkzeug.utils import secure_filename
 from authInterlink import authInterlink
 
 
@@ -266,11 +267,8 @@ def claimModeration():
     oneUrl=itemsDict.pop("oneUrl")
     userMotivations=itemsDict.pop("userMotivations")
 
-    userMotivations=userMotivations[0].upper()+userMotivations[1:]
- 
+    userMotivations=userMotivations[0].upper()+userMotivations[1:]        
 
-    #This is the file
-    archivoIdentificacion=itemsDict.pop("archivoIdentificacion")
 
 
     #This are the URI's
@@ -282,69 +280,106 @@ def claimModeration():
         #Si el campo de lista esta vacio miro el campo url
         if oneUrl != "":
             urlList.append(oneUrl)
+            itemsDict['url_0']=oneUrl
         else:
             flash("It is needed to add at least one URL of description.","info")
             return authInterlink.moderate()
+
+
+    #Check if the urls of descriptions are valid:
+    allUrlValid=True
+    listMsgError=[]
+    for key in itemsDict:
+        encontrado=Description._get_Descriptions_byURI(url=itemsDict[key])
+        if (len(encontrado)==0):
+            allUrlValid=False
+            listMsgError.append('The description for '+itemsDict[key]+' do not exist.')
+
+    if(not allUrlValid):
+        for itemError in listMsgError:
+            flash(itemError)
+        flash('Before requesting moderation privileges the descriptions must be created.')
+        return authInterlink.moderate()
+    else:
+
+        itemsDict['email'] = current_user.email
+
+        dataClaimEncoded=urllib.parse.urlencode(itemsDict)
+
+        #Now will send the email:
+        msg = Message('The user '+firstName+' '+lastName+' ha realizado un claim to be a moderator.', sender = 'interlinkdeusto@gmail.com', recipients = [current_user.email])
+
+        sites =" ".join(str(x) for x in urlList)
+        claimInfo= "The user {} {} who is a {} ".format(firstName,lastName,userPosition)+"send a request to be a moderator of the following sites: "
         
 
-    itemsDict['email'] = current_user.email
+        textHref='http://127.0.0.1:5000/website/aproveModerator?'+dataClaimEncoded
 
-    dataClaimEncoded=urllib.parse.urlencode(itemsDict)
+        msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
+        <table cellpadding='0' cellspacing='0' width='100%' style='background-color: #515151; border-radius: 30px 36
+        333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
+        30px 30px 30px; border-collapse: separate;' bgcolor='#515151'>
+            <tbody>
+                <tr>
+                    <td align='center' class='esd-block-text es-p20t'>
+                        <h1 style='color: #ffffff;'>Description moderation request</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td align='center' style='padding-right: 140px; padding-left: 140px;' class='esd-block-text es-m-p20l es-m-p20r es-p30t'>
+                        <p style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>"""+claimInfo+"""</p>
+                        <p style='font-size: 16px; letter-spacing: 1px; color: #ffffff; color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;'>"""+sites+"""</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td align='center' style='padding-right: 110px; padding-left: 110px;' class='esd-block-text es-m-p20l es-m-p20r es-p30t es-p40b'>
+                        <p style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>The motivations are:</p>
+                        <p  style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>"""+userMotivations+"""</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td align='center'  style='padding-bottom: 50px; font-size: 20px; color: #ffffff;'><a target='_blank' style='background-color: #f44336;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;  border-radius: 5px;' href='"""+textHref+ """'>Aproved the request.</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </td>"""
+        
 
-    #Now will send the email:
-    msg = Message('The user '+firstName+' '+lastName+' ha realizado un claim to be a moderator.', sender = 'interlinkdeusto@gmail.com', recipients = [current_user.email])
+        #Agrego los archivos 
 
-    sites =" ".join(str(x) for x in urlList)
-    claimInfo= "The user {} {} who is a {} ".format(firstName,lastName,userPosition)+"send a request to be a moderator of the following sites: "
-    
+        uploaded_file = request.files['archivoIdentificacion']
+        filename = secure_filename(uploaded_file.filename)
+        if filename != '':
 
-    textHref='http://127.0.0.1:5000/website/aproveModerator?'+dataClaimEncoded
+            file_ext = os.path.splitext(filename)[1]
+            if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
+                abort(400)
 
-    msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
-    <table cellpadding='0' cellspacing='0' width='100%' style='background-color: #515151; border-radius: 30px 36
-    333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
-    30px 30px 30px; border-collapse: separate;' bgcolor='#515151'>
-        <tbody>
-            <tr>
-                <td align='center' class='esd-block-text es-p20t'>
-                    <h1 style='color: #ffffff;'>Description moderation request</h1>
-                </td>
-            </tr>
-            <tr>
-                <td align='center' style='padding-right: 140px; padding-left: 140px;' class='esd-block-text es-m-p20l es-m-p20r es-p30t'>
-                    <p style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>"""+claimInfo+"""</p>
-                    <p style='font-size: 16px; letter-spacing: 1px; color: #ffffff; color: white;
-  padding: 14px 25px;
-  text-align: center;
-  text-decoration: none;'>"""+sites+"""</p>
-                </td>
-            </tr>
-            <tr>
-                <td align='center' style='padding-right: 110px; padding-left: 110px;' class='esd-block-text es-m-p20l es-m-p20r es-p30t es-p40b'>
-                    <p style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>The motivations are:</p>
-                    <p  style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>"""+userMotivations+"""</p>
-                </td>
-            </tr>
-            <tr>
-                <td align='center'  style='padding-bottom: 50px; font-size: 20px; color: #ffffff;'><a target='_blank' style='background-color: #f44336;
-  color: white;
-  padding: 14px 25px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;  border-radius: 5px;' href='"""+textHref+ """'>Aproved the request.</a></td>
-            </tr>
-        </tbody>
-    </table>
-</td>"""
-    
-    
-    mail = Mail(current_app)
-    mail.send(msg)
+            #Guardo Archivo
+            uploaded_file.save(filename)
+            # Lo adjunto al email
+            with current_app.open_resource(filename) as fp:
+                msg.attach(filename,'application/pdf', fp.read())
+            #Lo borro del disco
+            os.remove(filename)
+                
+
+        
+        mail = Mail(current_app)
+        mail.send(msg)
 
 
-    flash("The moderation request has been send.","info")
+        flash("The moderation request has been send.","info")
 
-    return authInterlink.moderate()
+        return authInterlink.moderate()
 
     #return render_template("moderate.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion)
 
@@ -360,9 +395,17 @@ def aproveModerator():
     existUrl=any(list(map(lambda x: x.startswith('url_'), argKeys))) 
 
     urlList=[]
+    lisDescriptions={}
     if existUrl:
         for key in argumentos:
-            urlList.append(argumentos[key])
+            #urlList.append(argumentos[key])
+            encontrado=Description._get_Descriptions_byURI(url=argumentos[key])
+            if (len(encontrado)!=0):
+                urlList.append(Description._get_Descriptions_byURI(url=argumentos[key])[0])
+                #lisDescriptions[argumentos[key]]=Description._get_Descriptions_byURI(url=argumentos[key])[0]
+            
+            
+    
         
     today = date.today()
     endDate = today.replace(today.year + 1)
@@ -407,9 +450,9 @@ def aprovarClaimsList():
                             })
                 descripcionAct.updateModerators(index="description")
                 nroActualizaciones=nroActualizaciones+1
-            listMsg.append("The moderation of "+url+" has been assigned.")
+            listMsg.append("The moderation of "+descriptions.title+" has been assigned.")
         elif len(descriptions)==0:
-            listMsg.append("The description of "+url+" could not be found (Most be created first) !.")
+            listMsg.append("The description of "+descriptions.title+" could not be found (Most be created first) !.")
 
     listActionsBody=""
     for msnItem in listMsg:

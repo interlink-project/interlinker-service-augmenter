@@ -1,4 +1,4 @@
-# Spanish translations for PROJECT.
+# Latvian translations for PROJECT.
 # Copyright (C) 2021 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
@@ -8,11 +8,12 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2021-11-22 08:54+0100\n"
-"PO-Revision-Date: 2021-11-22 08:54+0100\n"
+"PO-Revision-Date: 2021-11-22 08:55+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language: es\n"
-"Language-Team: es <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Language: lv\n"
+"Language-Team: lv <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 :"
+" 2)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,21 +25,21 @@ msgstr ""
 
 #: website/templates/settings.html:3
 msgid "My Settings"
-msgstr "Mi configuración"
+msgstr "Mani iestatījumi"
 
 #: website/templates/settings.html:4
 msgid "Your preferences."
-msgstr "Tus preferencias."
+msgstr "Manas preferences."
 
 #: website/templates/settings.html:21
 msgid "Language"
-msgstr "Lenguaje"
+msgstr "Valoda"
 
 #: website/templates/settings.html:36
 msgid "This is your current selected language."
-msgstr "Este es el lenguaje seleccionado."
+msgstr "Šī ir jūsu pašreiz atlasītā valoda."
 
 #: website/templates/settings.html:42
 msgid "Save"
-msgstr "Guardar"
+msgstr "Saglabāt"
 

@@ -18,7 +18,7 @@ import logging
 import sys
 import time
 
-from flask import Flask, g, current_app, redirect, url_for, session, flash
+from flask import Flask, g, current_app, redirect, url_for, session, flash, abort
 from flask_mail import Mail, Message
 
 import elasticsearch
@@ -122,7 +122,9 @@ def main(argv):
     app.config['MAIL_MAX_EMAILS'] = None
     app.config['MAIL_ASCII_ATTACHMENTS'] = False
 
-
+    app.config['MAX_CONTENT_LENGTH'] = 3*(1024 * 1024)
+    app.config['UPLOAD_EXTENSIONS'] = ['.pdf']
+    app.config['UPLOAD_PATH'] = 'uploads'
  
 
 
@@ -145,7 +147,7 @@ def main(argv):
 
         if request.args.get('lang'):
             session['lang'] = request.args.get('lang')
-            return session.get('lang', 'en')
+            return session.get('lang', session['lang'])
         
         #if user is not None:
         #    return user.locale

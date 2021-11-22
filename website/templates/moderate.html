@@ -358,7 +358,7 @@ block head %} {{ super() }}
     <div class="row">
 
 
-        <form class="form-inline my-2 my-lg-0" action="/website/claimModeration" method="POST">
+        <form class="form-inline my-2 my-lg-0" action="/website/claimModeration"  enctype="multipart/form-data" method="POST">
 
 
 
@@ -399,7 +399,7 @@ block head %} {{ super() }}
 
                 <div class="row">
                     <div class="input-group mb-3">
-                        <input type="file" class="form-control" name="archivoIdentificacion" id="archivoIdentificacion">
+                        <input type="file" class="form-control" name="archivoIdentificacion"  accept=".pdf" id="archivoIdentificacion" multiple>
                         <label class="input-group-text" for="archivoIdentificacion">Documentation that proves your identity</label>
                     </div>
 

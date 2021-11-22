@@ -4,11 +4,21 @@
   <p>{{ _('Your preferences.')}}</p>
 </div>
 
+<script>
+  $(function () {
+    $('#inputLanguage').on('change', function() {
+      $(window).attr('location','/settings?lang='+this.value)
+    });
+});
+
+</script>
+
+
 <hr />
 
 <form action="/settings.html?lang=es">
   <div class="mb-3">
-    <label for="inputLanguage" class="form-label">Language</label>
+    <label for="inputLanguage" class="form-label">{{ _('Language') }}</label>
 
     <select
       id="inputLanguage"
@@ -16,26 +26,20 @@
       aria-label=".form-select-sm example"
       aria-describedby="languageHelp"
     >
-      <option selected>-</option>
+      <option selected id="opLanguage"></option>>-</option>
       <option value="en">English</option>
       <option value="es">Spanish</option>
       <option value="lv">Latvian</option>
     </select>
 
     <div id="emailHelp" class="form-text">
-      This is your current selected language.
+      {{ _('This is your current selected language.') }}
     </div>
   </div>
 
   <hr />
-  <!--
-  {% for item in results %}
-  <h1>{{ item }}</h1>
-  {% endfor%}
-  <h1>Computer: {{ _('Computer')}}</h1>
-  <h1>Anthony: {{ anthony }}</h1>
-   -->
-  <button type="submit" class="btn btn-primary">Save</button>
+  
+  <button type="submit" class="btn btn-primary">{{ _('Save') }}</button>
 </form>
 
 {% endblock content %}

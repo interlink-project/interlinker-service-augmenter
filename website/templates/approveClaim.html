@@ -2,10 +2,7 @@
     content %}
 
 
-<script>
 
-
-</script>
 
 
 <hr />
@@ -17,9 +14,10 @@
             <h4> Approve Moderation Claims</h4>
         </div>
     </div>
+    <hr />
     <div class="row">
         <div class="col" style="padding: 10px;text-align: center;">
-            <H5>User: {{ email }}</H5>
+            <H5>For user: {{ email }}</H5>
         </div>
 
     </div>
@@ -38,50 +36,59 @@
             <div class="row">
                 <h6>Sites:</h6>
 
-                {% for argumento in argumentos %}
-                <div class="row" style="align-items: center; justify-content: center;background-color: rgb(252, 201, 201); border-radius: 5px;padding: 10px;margin: 5px;">
-                    <div class="col">
-                        <div class="form-check" style="padding-left: 50px;">
 
-                            <input class="form-check-input" type="checkbox" name="urlCheck_{{ loop.index}}"
+                <div class="row">
+                    <div class="table-responsive">
+                       
+                    <table class="table align-middle"  style="height: auto;text-align: center;align-items: center;align-content: center;">
+                      <thead>
+                        <tr >
+                      
+                          <th scope="col-1" >Approve</th>
+                          <th scope="col-3" >Title</th>
+                          <th scope="col-1">Details</th>
+                          <th scope="col-3">Start-Date</th>
+                          <th scope="col-3">Expire-Date</th>
+                        </tr>
+                      </thead>
+                      <tbody  >
+                        {% for argumento in argumentos %}
+                        <tr>
+    
+                            <td>
+                                <input class="form-check-input" type="checkbox" name="urlCheck_{{ loop.index}}"
                                 id="urlCheck_{{ loop.index}}" checked>
-                            <label class="form-check-label" for="urlCheck_{{ loop.index}}">
-                                {{ argumento }}
-                            </label>
-                            <input type="hidden" id="url_{{ loop.index}}" name="url_{{ loop.index}}"
-                                value="{{ argumento }}">
-                        </div>
-                    </div>
-                    <div class="col">
-                        
-                        <label class="form-check-label" for="ini_date_{{ loop.index}}">
-                            Start date: 
-                        </label>
-                        <input type="date" name="ini_date_{{ loop.index}}" id="ini_date_{{ loop.index}}"
-                            placeholder="select Birth date" value="{{ now }}" min="{{ now }}" max="{{ endDate }}">
-                            
-                    </div>
-                    <div class="col">
-                        
-                        <label class="form-check-label" for="end_date_{{ loop.index}}">
-                            Expire date: 
-                        </label>
-                        <input type="date" name="end_date_{{ loop.index}}" id="end_date_{{ loop.index}}"
-                            placeholder="select expiration date" value="{{ endDate }}" min="{{ now }}" max="{{ endDate }}">
+                            </td>
+                            <td>{{ argumento.title }} <input type="hidden" id="url_{{ loop.index}}" name="url_{{ loop.index}}"
+                                value="{{ argumento.url }}"></td>
+                            <td>
+                                <a tabindex="0" class="btn btn-outline-secondary" role="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="bottom" title="{{ argumento.title }}" data-bs-content="{{ argumento.description }}" >Description</a>
+                            </td>
+                            <td>
+                                <input type="date" name="ini_date_{{ loop.index}}" id="ini_date_{{ loop.index}}"
+                                placeholder="select Birth date" value="{{ now }}" min="{{ now }}" max="{{ endDate }}">
+                            </td>
+                            <td>
+                                <input type="date" name="end_date_{{ loop.index}}" id="end_date_{{ loop.index}}"
+                                placeholder="select expiration date" value="{{ endDate }}" min="{{ now }}" max="{{ endDate }}">
+                            </td>
+                          </tr>
+                          {% endfor %}
+
+                        </tbody>
+                    </table>
+
                     </div>
 
                 </div>
 
-
-
-                {% endfor %}
 
             </div>
 
 
             <div class="row">
                 <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Comments:</label>
+                    <label for="exampleFormControlTextarea1" class="form-label"><h6>Comments:</h6></label>
                     <textarea class="form-control" id="commentBox" name="commentBox" rows="3"></textarea>
                     <input type="hidden" id="email" name="email" value="{{ email }}">
                 </div>
@@ -90,7 +97,7 @@
 
             <div class="row">
                 <div class="col" style="align-items: center;text-align: center;">
-                    <button class="btn btn-secondary my-2 my-sm-0" id="btnSubmitDescription"
+                    <button class="btn btn-success my-2 my-sm-0" id="btnSubmitDescription"
                         style="height: 40px;width: 100px;" type="submit">
                         Approve!
                     </button>
@@ -110,5 +117,10 @@
 
 <hr />
 
+<script>
+    var popover = new bootstrap.Popover(document.querySelector('.popover-dismiss'), {
+        trigger: 'focus'
+      })
+</script>
 
 {% endblock %}
