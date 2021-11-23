@@ -144,6 +144,55 @@ class Annotation(es.Model):
 
         super(Annotation, self).updateFields(body=q,*args, **kwargs)    
 
+
+
+    #Return the number of time a user register a like over an annotation
+    def userAlreadyLike(cls,**kwargs):
+        q= {
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "_id": kwargs.pop("id")
+                            }
+                        },
+                        {
+                            "nested": {
+                                "path": "statechanges",
+                                "query": {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "match": {
+                                                    "statechanges.user": kwargs.pop("email")
+                                                }
+                                            },
+                                            {
+                                                "match": {
+                                                    "objtype": "annotation_like"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+       
+
+        print(q)
+
+    
+        res = cls.es.conn.count(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+    
+        return res['count']
+
     @classmethod
     def search_raw(cls, query=None, params=None, raw_result=False,
                    user=None, authorization_enabled=None):

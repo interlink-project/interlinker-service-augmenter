@@ -113,7 +113,12 @@ def dashboard():
     else:
         res= Description._get_Descriptions(textoABuscar=textoABuscar,padministration=padministration,url=domain,offset=registroInicial)
         totalRegistros= Description._get_DescriptionsCounts(textoABuscar=textoABuscar,padministration=padministration,url=domain)
+
+    for itemDesc in res:
         
+        itemDesc['nroTerms']=1
+        itemDesc['nroQuest']=2
+        itemDesc['nroFeeds']=3    
 
     pagesNumbers=math.ceil(totalRegistros/10)
     
@@ -317,37 +322,44 @@ def changeAnnotation(descriptionId=None,annotatorId=None,option=None):
         if "annotationRootId" in losvalores:
             annotationRootId=argumentos.pop('annotationRootId')
 
+        #Verifico si  anteriormente este usuario ha realizado una anotacion
         annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
+        nroLikes=annotation.userAlreadyLike(email=current_user.email,id=annotatorId)
 
-         #Registro el cambio y quien lo hizo
-        if(len(annotation['statechanges'])==0):
-            annotation['statechanges']=[] 
-        
-        #Registro el cambio y quien lo hizo
-        initState=0
-        if(vote==1):
-            initState=int(annotation['like'])
-            annotation['like']=initState+1
-            objtype='annotation_like'
-                
-        elif vote==-1:
-            initState=int(annotation['dislike'])
-            annotation['dislike']=initState+1
-            objtype='annotation_dislike'
+        #Un usuario solo puede votar una vez
+        if nroLikes==0:
 
-        #Registro el cambio de estado
-        annotation['statechanges'].append({
-                        "initstate": initState,
-                        "endstate": initState+1,
-                        "text": commentsChangeState,
-                        "objtype" : objtype,
-                        "date": datetime.datetime.now().replace(microsecond=0).isoformat(),
-                        "user": current_user.email
-                    })
+            
+
+            #Registro el cambio y quien lo hizo
+            if(len(annotation['statechanges'])==0):
+                annotation['statechanges']=[] 
+            
+            #Registro el cambio y quien lo hizo
+            initState=0
+            if(vote==1):
+                initState=int(annotation['like'])
+                annotation['like']=initState+1
+                objtype='annotation_like'
+                    
+            elif vote==-1:
+                initState=int(annotation['dislike'])
+                annotation['dislike']=initState+1
+                objtype='annotation_dislike'
+
+            #Registro el cambio de estado
+            annotation['statechanges'].append({
+                            "initstate": initState,
+                            "endstate": initState+1,
+                            "text": commentsChangeState,
+                            "objtype" : objtype,
+                            "date": datetime.datetime.now().replace(microsecond=0).isoformat(),
+                            "user": current_user.email
+                        })
 
 
-        annotation.updateLike()
-        annotation.updateState()
+            annotation.updateLike()
+            annotation.updateState()
 
         return jsonify(annotation)
 

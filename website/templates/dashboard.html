@@ -1,21 +1,18 @@
-{% extends "templateV2.html" %} {% block title %} Servicepedia {% endblock %}
-
-{% block head %}
-{{ super() }}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/accordion.css') }}">
-{% endblock %}
-
-{% block content %}
-
-
-
+{% extends "templateV2.html" %} {% block title %} Servicepedia {% endblock %} {%
+block head %} {{ super() }}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{ url_for('static',filename='styles/accordion.css') }}"
+/>
+{% endblock %} {% block content %}
 
 <script>
 
   //Falta cargar de nuevo cuando se tenga una consulta en memoria
-  
 
-  function searchText(event) {  
+
+  function searchText(event) {
     if(event.type=='click'){
       event.preventDefault();
 
@@ -31,7 +28,7 @@
 
       domain = document.getElementById("domain");
       domainSel=domain.selectedOptions[0].label;
-    
+
       let page = event.target.getAttribute('page');
       if(page==null){
         page=1;
@@ -42,18 +39,18 @@
       if(domain.selectedOptions[0].index==0){
         domainSel="";
       }
-  
+
       //window.location = '/website/?searchText=' + texto+'&padministration=' + padministrationSel+'&domain=' + domainSel;
       //recargarTabla();
 
       function addShow(data) {
 
-        entries=Object.entries(data)  
-        descripcionesList=entries['0'][1] 
-        numeroReg=entries[1][1]   
+        entries=Object.entries(data)
+        descripcionesList=entries['0'][1]
+        numeroReg=entries[1][1]
 
         $('#tablaDescriptions').empty();
-       
+
         for (let dataItem of descripcionesList) {
 
           function ISODateString(d) {
@@ -68,13 +65,13 @@
 
           dateUpdated = new Date(dataItem.updated);
 
-          
+
           $('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td> '+ISODateString(dateUpdated)+' </td> <td> {% if current_user.is_authenticated %} <a href="/description/'+dataItem.id+'" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% else %} <a href="/website/modifica/Anonymous/'+dataItem.url+'"  class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% endif %} </td></tr>')
-      
+
           //$('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td>  '+dataItem.created+' </td> <td> <a href="/description/'+dataItem.id+'" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> </td></tr>')
-                                                          
+
         }
-      
+
         $('#totalRegisters').text(numeroReg);
 
         $('#page').text('1');
@@ -82,7 +79,7 @@
         numeroPaginas=Math.ceil(numeroReg/10);
         $('#pagesNumbers').text(numeroPaginas);
 
-       
+
 
 
 
@@ -98,8 +95,8 @@
 
         domain = document.getElementById("domain");
         domainSel=domain.selectedOptions[0].label;
-      
-        
+
+
         if(domain.selectedOptions[0].index==0){
           domainSel="";
         }
@@ -111,7 +108,7 @@
           $('#paginador').append(" <li class='page-item'><a class='page-link' onclick='searchText(event);' page='"+j+"'  >"+j+"</a></li>");
         }
 
-        
+
 
       }
 
@@ -123,23 +120,19 @@
         contentType: 'application/json;charset=UTF-8',
         data: JSON.stringify({"textoABuscar":texto,"padministration":padministrationSel,"domain":domainSel,"page":page})
       }).done(addShow);
-        
+
     }
   }
 
 
 
-  function createNew(event) {  
+  function createNew(event) {
     if(event.type=='click'){
 
       window.location = '/descriptionDetail';
 
     }
   }
-
-
-  
-  
 </script>
 
 <hr />
@@ -154,17 +147,32 @@
   "
 >
   <div class="row">
-  <div class="col-8" >
-    <form class="d-flex">
-      <input
-        id="searchBox"
-        class="form-control me-2"
-        type="search"
-        placeholder="Search"
-        aria-label="Search"
-        onkeydown="searchText(event)"
-      />
-      <button class="btn btn-outline-secondary"  onclick="searchText(event)" >Search</button>
+    <div class="col-8">
+      <form class="d-flex">
+        <input
+          id="searchBox"
+          class="form-control me-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          onkeydown="searchText(event)"
+        />
+        <button class="btn btn-outline-secondary" onclick="searchText(event)">
+          Search
+        </button>
+        <button
+          class="btn btn-outline-dark"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#advanseSearchTools"
+          aria-expanded="false"
+          aria-controls="collapseExample"
+        >
+          +
+        </button>
+      </form>
+    </div>
+    <div class="col">
       <button
         class="btn btn-outline-dark"
         type="button"
@@ -172,25 +180,11 @@
         data-bs-target="#advanseSearchTools"
         aria-expanded="false"
         aria-controls="collapseExample"
-      >
-        +
-      </button>
-    </form>
-  </div>
-  <div class="col">
-    <button
-        class="btn btn-outline-dark"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#advanseSearchTools"
-        aria-expanded="false"
-        aria-controls="collapseExample"
-        onclick="createNew(event)" 
+        onclick="createNew(event)"
       >
         Create New
       </button>
-  </div>
-    
+    </div>
   </div>
 </div>
 
@@ -198,34 +192,33 @@
   <hr />
   <div class="container">
     <div class="row">
-      <div class="col-6" style="display: flex; align-content: center; justify-content: center">
+      <div
+        class="col-6"
+        style="display: flex; align-content: center; justify-content: center"
+      >
+        <select class="form-control" id="padministration">
+          <option selected>Public Administration</option>
+          {% for itemPA in publicsa %}
 
+          <option>{{ itemPA }}</option>
 
-      <select class="form-control" id="padministration">
-        <option selected>Public Administration</option>
-        {% for itemPA in publicsa %} 
-
-        <option >{{ itemPA }}</option>
-  
-        {% endfor %}
-        
-      </select>
-
-       
+          {% endfor %}
+        </select>
       </div>
-      <div class="col-6" style="display: flex; align-content: center; justify-content: center">
+      <div
+        class="col-6"
+        style="display: flex; align-content: center; justify-content: center"
+      >
         <select class="form-control cl-3" id="domain">
           <option selected>Domain</option>
 
-          
-          {% for itemUrl in urls %} 
+          {% for itemUrl in urls %}
 
-          <option >{{ itemUrl }}</option>
-    
+          <option>{{ itemUrl }}</option>
+
           {% endfor %}
         </select>
-     </div>
-
+      </div>
     </div>
   </div>
 </div>
@@ -235,55 +228,147 @@
   <div class="row">
     <div
       class="col"
-      style="align-content: center; justify-content: center; display: flex;align-items: center;"
+      style="
+        align-content: center;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+      "
     >
-      <img src="{{url_for('static', filename='activityDesc.png')}}" style="width:60px ;" alt="Activities">
-      <h4 style="padding-left: 20px;">
-        Your recent activity</h4>
-
+      <img
+        src="{{url_for('static', filename='activityDesc.png')}}"
+        style="width: 60px"
+        alt="Activities"
+      />
+      <h4 style="padding-left: 20px">Your recent activity</h4>
     </div>
   </div>
   <hr />
 
- <div id="result">
- 
- </div>
+  <div id="result"></div>
 
   <div class="row">
     <div class="table-responsive">
+      <table class="table" style="height: auto">
+        <thead>
+          <tr>
+            <th scope="col-2">Public Service Administration</th>
+            <th scope="col-3">Title</th>
+            <th scope="col-2">Updated Date</th>
+            <th scope="col-2">Activity</th>
+            <th scope="col-2">Options</th>
+          </tr>
+        </thead>
+        <tbody id="tablaDescriptions">
+          {% for description in descriptions %}
 
-    <table class="table" style="height: auto">
-      <thead>
-        <tr >
-      
-          <th scope="col-3">Public Service Administration</th>
-          <th scope="col-3" >Title</th>
-          <th scope="col-3">Updated Date</th>
-          <th scope="col-2">Options</th>
-        </tr>
-      </thead>
-      <tbody id="tablaDescriptions" >
-       
-        {% for description in descriptions %} 
-  
-            <tr>
-    
-              <td>{{ description.padministration }}</td>
-              <td>{{ description.title }}</td>
-              <td>{{ description.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
-              <td>
-                <a  
-                href="/description/{{ description.id }}" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
-              </td>
-            </tr>
+          <tr>
+            <td>{{ description.padministration }}</td>
+            <td>{{ description.title }}</td>
+            <td>{{ description.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
 
-        {% endfor %}
-      </tbody>
-    </table>
-    <h6 id="searchStats">Total found : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span id='page'>{{paginacion.page}}</span> of <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> Pages).</h6>
-    
+            <td>
+              <button
+                type="button"
+                class="btn btn-outline-warning position-relative"
+                alt="Question"
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                title="Question"
+              >
+                Q
+                <span
+                  class="
+                    position-absolute
+                    top-0
+                    start-60
+                    translate-middle
+                    badge
+                    rounded-pill
+                    bg-danger
+                  "
+                  style="opacity: 0.8"
+                >
+                  {{description.nroQuest}}
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              </button>
 
-  </div>
+              <button
+                type="button"
+                class="btn btn-outline-success position-relative"
+                alt="Feedback"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                title="Feedback"
+              >
+                F
+                <span
+                  class="
+                    position-absolute
+                    top-0
+                    start-60
+                    translate-middle
+                    badge
+                    rounded-pill
+                    bg-secondary
+                  "
+                  style="opacity: 0.8"
+                >
+                  {{description.nroFeeds}}
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-outline-info position-relative"
+                alt="Term"
+                data-bs-toggle="tooltip"
+                data-bs-placement="right"
+                title="Term"
+              >
+                T
+                <span
+                  class="
+                    position-absolute
+                    top-0
+                    start-60
+                    translate-middle
+                    badge
+                    rounded-pill
+                    bg-primary
+                  "
+                  style="opacity: 0.8"
+                >
+                  {{description.nroTerms}}
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              </button>
+            </td>
+
+            <td>
+              <a
+                href="/description/{{ description.id }}"
+                class="btn btn-outline-secondary"
+                style="max-width: 70px"
+                ><i class="bi bi-box-arrow-in-right" style="width: 100px"></i
+              ></a>
+            </td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+      <h6 id="searchStats">
+        Total found :
+        <span id="totalRegisters">{{paginacion.totalRegisters}}</span>, (<span
+          id="page"
+          >{{paginacion.page}}</span
+        >
+        of <span id="pagesNumbers">{{paginacion.pagesNumbers}}</span> Pages).
+      </h6>
+    </div>
 
     <div
       class="container"
@@ -293,14 +378,11 @@
         <div class="col">
           <nav aria-label="...">
             <ul class="pagination" id="paginador">
-
-
-            {% for i in range(paginacion.pagesNumbers|int) %}
-              <li class="page-item"><a class="page-link" href='?page={{ i+1 }}'>{{i+1}}</a></li>
-            {% endfor %}
-
-
-
+              {% for i in range(paginacion.pagesNumbers|int) %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ i+1 }}">{{i+1}}</a>
+              </li>
+              {% endfor %}
             </ul>
           </nav>
         </div>
@@ -310,7 +392,13 @@
 </div>
 <hr />
 
-
-
+<script>
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+</script>
 
 {% endblock %}

@@ -25,6 +25,8 @@ from datetime import date
 from flask import current_app
 
 import urllib.parse
+from urllib.parse import unquote
+from urllib import parse
 import math
 
 
@@ -427,31 +429,43 @@ def aproveModerator():
 
     fernet = Fernet(key) 
     
-    argumentos = fernet.decrypt(datosBin).decode() 
-        
-    argumentos=urllib.parse.urldecode(argumentos)
+    if unquote(datosBin)!='':
 
-    argKeys=argumentos.keys()
-    email=argumentos.pop('email')
+        argumentos = fernet.decrypt(datosBin).decode() 
+        argumentos =unquote(argumentos)
 
-
-    existUrl=any(list(map(lambda x: x.startswith('url_'), argKeys))) 
-
-    urlList=[]
-    lisDescriptions={}
-    if existUrl:
-        for key in argumentos:
-            #urlList.append(argumentos[key])
-            encontrado=Description._get_Descriptions_byURI(url=argumentos[key])
-            if (len(encontrado)!=0):
-                urlList.append(Description._get_Descriptions_byURI(url=argumentos[key])[0])
-                #lisDescriptions[argumentos[key]]=Description._get_Descriptions_byURI(url=argumentos[key])[0]
-            
-            
     
+        listArgs2=parse.parse_qsl(argumentos)
+        argumentos=dict(listArgs2)
+
+        argKeys=argumentos.keys()
+        email=argumentos.pop('email')
+
+
+        existUrl=any(list(map(lambda x: x.startswith('url_'), argKeys))) 
+
+        urlList=[]
+        lisDescriptions={}
+        if existUrl:
+            for key in argumentos:
+                #urlList.append(argumentos[key])
+                encontrado=Description._get_Descriptions_byURI(url=argumentos[key])
+                if (len(encontrado)!=0):
+                    urlList.append(Description._get_Descriptions_byURI(url=argumentos[key])[0])
+                    #lisDescriptions[argumentos[key]]=Description._get_Descriptions_byURI(url=argumentos[key])[0]
+                
+                
         
-    today = date.today()
-    endDate = today.replace(today.year + 1)
+            
+        today = date.today()
+        endDate = today.replace(today.year + 1)
+    else:
+        email=''
+        urlList=[]
+        today = date.today()
+        endDate = today.replace(today.year + 1)
+        #endDate=today.strftime("%Y-%m-%d")
+
 
     return render_template("approveClaim.html",email=email,argumentos=urlList, now=today.strftime("%Y-%m-%d"),endDate=endDate.strftime("%Y-%m/%d"))
 
@@ -493,9 +507,9 @@ def aprovarClaimsList():
                             })
                 descripcionAct.updateModerators(index="description")
                 nroActualizaciones=nroActualizaciones+1
-            listMsg.append("The moderation of "+descriptions.title+" has been assigned.")
+                listMsg.append("The moderation of "+descriptions[0]['title']+" has been assigned.")
         elif len(descriptions)==0:
-            listMsg.append("The description of "+descriptions.title+" could not be found (Most be created first) !.")
+            listMsg.append("The description could not be found (Most be created first) !.")
 
     listActionsBody=""
     for msnItem in listMsg:
@@ -543,7 +557,7 @@ def aprovarClaimsList():
         flash(msnItem,"info")
 
 
-    return redirect(url_for("views.aproveModerator",email=usuarioModerator,argumentos=argumentosList))
+    return redirect(url_for("views.aproveModerator",datos='',argumentos=argumentosList))
  
 
 
