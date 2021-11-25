@@ -239,6 +239,8 @@ components:
           type: string
         idAnotationReply:
           type: string
+        idReplyRoot:
+          type: string
         quote:
           type: string
         permissions:

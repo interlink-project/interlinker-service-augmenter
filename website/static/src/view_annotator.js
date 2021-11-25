@@ -411,6 +411,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       anotacionReply.user = "Me";
       anotacionReply.category = "reply";
 
+      /* Guardo tambien el valor del annotation-root si existe,
+         caso contrario ingreso le asigno el mismo que el reference 
+      */
+
+      if (current_annotation.idReplyRoot=="" || typeof current_annotation.idReplyRoot == 'undefined' ){
+        anotacionReply.idReplyRoot=current_annotation.id
+        
+      }else{
+        anotacionReply.idReplyRoot=current_annotation.idReplyRoot
+      }
+
       /*
 
       function onSuccess(response) {
@@ -923,7 +934,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           ")" +
           "</br>IdRef:" +
           annotation.idAnotationReply.split("-")[1] +
-          "</br>Id:" +
+          "</br>IdRoot:" +
+          annotation.idReplyRoot +
+          "</br>"+
+          "Id:" +
           annotation.id +
           '<div style="width: 160px;height: 2px;border-bottom: 1px solid #d4d4d4;position: relative;" class="line"></div>' +
           "</div>" +

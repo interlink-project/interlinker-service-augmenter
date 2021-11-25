@@ -73,7 +73,12 @@ MAPPING = {
     'document': {
         'properties': document.MAPPING
     },
-    'idAnotationReply': {'type': 'string',}
+    'idAnotationReply': {
+        'type': 'string'
+    },
+    'idReplyRoot': {
+        'type': 'string'
+    }
 }
 
 
@@ -96,6 +101,8 @@ class Annotation(es.Model):
 
         self['like']=0
         self['dislike']=0
+
+       
 
 
         # If the annotation includes document metadata look to see if we have

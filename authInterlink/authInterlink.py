@@ -114,8 +114,12 @@ def dashboard():
         res= Description._get_Descriptions(textoABuscar=textoABuscar,padministration=padministration,url=domain,offset=registroInicial)
         totalRegistros= Description._get_DescriptionsCounts(textoABuscar=textoABuscar,padministration=padministration,url=domain)
 
+    #Cargo los números de los terminos
     for itemDesc in res:
         
+        resAnnotationTerms = Annotation.search(query={ 'uri': description[0]['url'] ,'category':'Terms'})
+        #Obtengo los reply of terms
+        annotation = Annotation.search(query={ 'uri': description[0]['url'] ,'category':'reply','idReplyRoot':annotation.id})
         itemDesc['nroTerms']=1
         itemDesc['nroQuest']=2
         itemDesc['nroFeeds']=3    
