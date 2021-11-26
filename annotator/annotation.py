@@ -151,6 +151,96 @@ class Annotation(es.Model):
 
         super(Annotation, self).updateFields(body=q,*args, **kwargs)    
 
+    #Return the number of terms, questions and feedbacks
+    def descriptionStats(cls,**kwargs):
+        q = {
+                "query": {
+                    "bool": {
+                        "must": [
+                            {
+                                "match": {
+                                    "uri": kwargs.pop("uri")
+                                }
+                            }
+                        ]
+                    }
+                },
+                "aggs": {
+                    "group_by_uri": {
+                        "terms": {
+                            "field": "uri"
+                        },
+                        "aggs": {
+                            "group_category": {
+                                "terms": {
+                                    "field": "category"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+        print(q)
+
+    
+        res = cls.es.conn.search(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+
+
+        if(len(res['aggregations']['group_by_uri']['buckets'])>0):
+            if(len(res['aggregations']['group_by_uri']['buckets'][0]['group_category']['buckets'])>0):
+                res=res['aggregations']['group_by_uri']['buckets'][0]['group_category']['buckets']
+        else:
+            res=[]
+                                 
+    
+        return res
+
+
+
+    #Return the number of terms, questions and feedbacks
+    def annotationStats(cls,**kwargs):
+        q={
+            "size":0,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "uri": kwargs.pop("uri")
+                            }
+                        }
+                    ]
+                }
+            },
+            "aggs": {
+                "group_by_uri": {
+                    "terms": {
+                        "field": "idReplyRoot"
+                    }
+                }
+            }
+        }
+        
+        print(q)
+
+    
+        res = cls.es.conn.search(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+
+
+        if(len(res['aggregations']['group_by_uri']['buckets'])>0):
+            res=res['aggregations']['group_by_uri']['buckets']
+        else:
+            res=[]
+                                 
+    
+        return res
+
 
 
     #Return the number of time a user register a like over an annotation

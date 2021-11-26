@@ -63,32 +63,62 @@ block content %}
 <table class="table">
   <thead>
     <tr>
-      {% if categoryLabel == 'all'%}
+ 
       <th scope="col-3">Category</th>
-      {% endif %}
-      <th scope="col-3">Id</th>
-      <th scope="col-3">State</th>      
+    
+      <th scope="col-3" style="text-align: center;">Id</th>
+      <th scope="col-3" style="text-align: center;">State</th>      
       <th scope="col-3">Description</th>
-      <th scope="col-3">Update Date</th>
-      <th scope="col-3">Options</th>
+      <th scope="col-2" style="text-align: center;">Update Date</th>
+      <th scope="col-2" style="text-align: center;">Nro Replies</th>
+      <th scope="col-2" style="text-align: center;">Options</th>
     </tr>
   </thead>
   <tbody>
     {% for anotation in anotations %} {% if anotation.category != 'reply' %}
     <tr>
-      {% if categoryLabel == 'all'%}
-      <td>{{ anotation.category[0]|upper }}{{ anotation.category[1:] }}</td>
-      {% endif %}
-      <td>{{ anotation.id}} </td>
-      <td>{{ anotation.state|estadosAnnotation}} </td>
-      <td>{{ anotation.text|striptags}} </td>
-      <td>{{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+   
       <td>
+        {% if anotation.category == 'feedback' %}
+          <div class='annotation-cat annotation-cat-feedback'>
+        {% endif %}
+        {% if anotation.category == 'question' %}
+          <div class='annotation-cat annotation-cat-question'>
+        {% endif %}
+        {% if anotation.category == 'term' %}
+          <div class='annotation-cat annotation-cat-term'>
+        {% endif %}
+
+
+         {{ anotation.category[0]|upper }}{{ anotation.category[1:] }} 
+        </div>
+      </td>
+   
+      <td style="text-align: center;">{{ anotation.id}} </td>
+      <td style="text-align: center;">{{ anotation.state|estadosAnnotation}} </td>
+      <td>{{ anotation.text|striptags}} </td>
+      <td style="text-align: center;">{{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+      <td style="text-align: center;"> 
+      
+        <button
+                type="button"
+                class="btn btn-outline-success position-relative"
+                alt="Replies"
+                data-bs-toggle="tooltip"
+                data-bs-placement="left"
+                title="Replies"
+              >
+              {{ anotation.nroReplies }}
+        
+              </button>
+        
+      
+      </td>
+      
+      <td style="text-align: center;align-items: center;align-content: center;">
        
-
-
         <a  
-        href="/subjectPage/{{ description.id }}/{{ anotation.id }}" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
+        href="/subjectPage/{{ description.id }}/{{ anotation.id }}" class="btn btn-outline-secondary" style="max-width: 70rem" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
 
 
 
@@ -98,5 +128,14 @@ block content %}
   </tbody>
 </table>
 {% endblock %}
+
+<script>
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+</script>
 
 {% endblock %}

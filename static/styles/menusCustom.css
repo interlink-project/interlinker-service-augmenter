@@ -50,3 +50,30 @@
   border-top: 0;
 }
   
+
+.annotation-cat{
+  box-sizing: border-box;
+  border-radius: 5px;
+  align-content: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+  color: #4d4b4b;
+  height: 30px;
+
+  border: 1px solid #B4B4B4;
+  padding-top: 2px;
+
+}
+
+.annotation-cat-feedback {
+  background: #d0ffdc;
+}
+
+.annotation-cat-question {
+  background: #f6ffa8;
+}
+
+.annotation-cat-term {
+  background: #ffa7fb;
+}

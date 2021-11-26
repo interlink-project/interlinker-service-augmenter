@@ -4,6 +4,57 @@ DELETE annotator
 
 POST annotator/annotation/_search
 
+POST annotator/annotation/_search
+{
+  "size": 0,
+  "aggs": {
+    "uri": {
+      "terms": {
+        "field": "uri"
+        
+      }
+    }
+  }
+}
+
+POST annotator/annotation/_search
+{
+    "size":0,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero"
+                    }
+                }
+            ]
+        }
+    },
+    "aggs": {
+        "group_by_uri": {
+            "terms": {
+                "field": "uri"
+            },
+            "aggs": {
+                "group_category": {
+                    "terms": {
+                        "field": "category"
+                    },
+                    "aggs": {
+                        "group_state": {
+                            "terms": {
+                                "field": "state"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 
 POST annotator/annotation/_search
 {

@@ -114,15 +114,33 @@ def dashboard():
         res= Description._get_Descriptions(textoABuscar=textoABuscar,padministration=padministration,url=domain,offset=registroInicial)
         totalRegistros= Description._get_DescriptionsCounts(textoABuscar=textoABuscar,padministration=padministration,url=domain)
 
-    #Cargo los números de los terminos
+    #Cargo los números de anotaciones por categoria
     for itemDesc in res:
         
-        resAnnotationTerms = Annotation.search(query={ 'uri': description[0]['url'] ,'category':'Terms'})
-        #Obtengo los reply of terms
-        annotation = Annotation.search(query={ 'uri': description[0]['url'] ,'category':'reply','idReplyRoot':annotation.id})
-        itemDesc['nroTerms']=1
-        itemDesc['nroQuest']=2
-        itemDesc['nroFeeds']=3    
+        #Cargo datos estadisticos de las descripciones
+        resStats=Annotation.descriptionStats(Annotation,uri=itemDesc['url'])
+        
+        nrtoFeedbacks=0
+        nrtoQuestions=0
+        nrtoTerms=0
+        
+        if(len(resStats)>0):
+            
+            for itemStat in resStats:
+                
+                cateGroup=itemStat['key']
+                nro2terms=itemStat['doc_count']
+                
+                if(cateGroup=='feedback'):
+                    nrtoFeedbacks=itemStat['doc_count']
+                if(cateGroup=='question'):
+                    nrtoQuestions=itemStat['doc_count']
+                if(cateGroup=='term'):
+                    nrtoTerms=itemStat['doc_count']
+
+        itemDesc['nroTerms']=nrtoTerms
+        itemDesc['nroQuest']=nrtoQuestions
+        itemDesc['nroFeeds']=nrtoFeedbacks  
 
     pagesNumbers=math.ceil(totalRegistros/10)
     
@@ -221,6 +239,21 @@ def description(descriptionId=None):
         numRes = Annotation.count(query={ 'uri': description[0]['url'] ,'category':categoria})
 
         res = Annotation.search(query={ 'uri': description[0]['url'] ,'category':categoria},limit=numRes)
+    
+    # Cargo las replies de cada annotacion:
+    stats=Annotation.annotationStats(Annotation,uri=description[0]['url'])
+
+    dictStats={}
+    for itemStat in stats:
+        clave=itemStat['key']
+        val=itemStat['doc_count']
+        dictStats[clave]=val
+    for itemRes in res:
+        if itemRes['id'] in dictStats.keys():
+            itemRes['nroReplies']=dictStats[itemRes['id']]
+        else:
+            itemRes['nroReplies']=0
+    
 
     return render_template("description.html", user=current_user, description=description[0],anotations=res,categoryLabel=categoria)
    # return 'la desc: '+category+'lauri is'+str(uri) 
@@ -258,7 +291,7 @@ def subjectPage(descriptionId=None,annotatorId=None):
     nroReplies = Annotation.count(query={ 'uri': description['url'] ,'category':'reply' })
     replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  },limit=nroReplies)
 
-    nroRepliesOfAnnotation = Annotation.count(query={ 'uri': description['url'] ,'category':'reply','idAnotationReply':'annotation-'+annotatorId  })
+    nroRepliesOfAnnotation = Annotation.count(query={ 'uri': description['url'] ,'category':'reply','idReplyRoot':annotatorId  })
     
     return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
    # return 'la desc: '+category+'lauri is'+str(uri) 
@@ -349,7 +382,7 @@ def changeAnnotation(descriptionId=None,annotatorId=None,option=None):
             elif vote==-1:
                 initState=int(annotation['dislike'])
                 annotation['dislike']=initState+1
-                objtype='annotation_dislike'
+                objtype='annotation_like'
 
             #Registro el cambio de estado
             annotation['statechanges'].append({

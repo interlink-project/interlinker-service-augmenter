@@ -253,9 +253,10 @@ block head %} {{ super() }}
         <thead>
           <tr>
             <th scope="col-2">Public Service Administration</th>
-            <th scope="col-3">Title</th>
-            <th scope="col-2">Updated Date</th>
-            <th scope="col-2">Activity</th>
+            <th scope="col-2">Title</th>
+            <th scope="col-2" style="text-align: center;">Progress</th>
+            <th scope="col-2"  style="text-align: center;">Updated Date</th>
+            <th scope="col-2"  style="text-align: center;">Activity</th>
             <th scope="col-2">Options</th>
           </tr>
         </thead>
@@ -265,9 +266,17 @@ block head %} {{ super() }}
           <tr>
             <td>{{ description.padministration }}</td>
             <td>{{ description.title }}</td>
-            <td>{{ description.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+            <td  style="text-align: center;">
 
-            <td>
+              <div class="progress" style="height: 20px;">
+                <div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+
+              
+            </td>
+            <td  style="text-align: center;">{{ description.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+
+            <td  style="text-align: center;">
               <button
                 type="button"
                 class="btn btn-outline-warning position-relative"
@@ -275,8 +284,9 @@ block head %} {{ super() }}
                 data-bs-toggle="tooltip"
                 data-bs-placement="left"
                 title="Question"
+                
               >
-                Q
+                {{description.nroQuest}}
                 <span
                   class="
                     position-absolute
@@ -289,7 +299,7 @@ block head %} {{ super() }}
                   "
                   style="opacity: 0.8"
                 >
-                  {{description.nroQuest}}
+                Q
                   <span class="visually-hidden">unread messages</span>
                 </span>
               </button>
@@ -302,7 +312,8 @@ block head %} {{ super() }}
                 data-bs-placement="bottom"
                 title="Feedback"
               >
-                F
+                
+                {{description.nroFeeds}}
                 <span
                   class="
                     position-absolute
@@ -315,7 +326,7 @@ block head %} {{ super() }}
                   "
                   style="opacity: 0.8"
                 >
-                  {{description.nroFeeds}}
+                F
                   <span class="visually-hidden">unread messages</span>
                 </span>
               </button>
@@ -328,7 +339,7 @@ block head %} {{ super() }}
                 data-bs-placement="right"
                 title="Term"
               >
-                T
+              {{description.nroTerms}} 
                 <span
                   class="
                     position-absolute
@@ -341,7 +352,8 @@ block head %} {{ super() }}
                   "
                   style="opacity: 0.8"
                 >
-                  {{description.nroTerms}}
+                  
+                  T
                   <span class="visually-hidden">unread messages</span>
                 </span>
               </button>
