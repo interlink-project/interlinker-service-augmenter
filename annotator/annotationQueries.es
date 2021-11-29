@@ -19,7 +19,7 @@ POST annotator/annotation/_search
 
 POST annotator/annotation/_search
 {
-    "size":0,
+    "size": 0,
     "query": {
         "bool": {
             "must": [
@@ -32,21 +32,14 @@ POST annotator/annotation/_search
         }
     },
     "aggs": {
-        "group_by_uri": {
+        "group_category": {
             "terms": {
-                "field": "uri"
+                "field": "category"
             },
             "aggs": {
-                "group_category": {
+                "group_state": {
                     "terms": {
-                        "field": "category"
-                    },
-                    "aggs": {
-                        "group_state": {
-                            "terms": {
-                                "field": "state"
-                            }
-                        }
+                        "field": "state"
                     }
                 }
             }

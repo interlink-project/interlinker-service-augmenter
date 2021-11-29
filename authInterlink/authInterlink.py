@@ -118,29 +118,96 @@ def dashboard():
     for itemDesc in res:
         
         #Cargo datos estadisticos de las descripciones
-        resStats=Annotation.descriptionStats(Annotation,uri=itemDesc['url'])
+        resCategory=Annotation.descriptionStats(Annotation,uri=itemDesc['url'])
         
-        nrtoFeedbacks=0
-        nrtoQuestions=0
-        nrtoTerms=0
+        nroFeedbacks=0
+        nroQuestions=0
+        nroTerms=0
+
+        nroFeedProgress=0
+        nroFeedApproved=0
+        nroQuesProgress=0
+        nroQuesApproved=0
+        nroTermProgress=0
+        nroTermApproved=0
         
-        if(len(resStats)>0):
+        #Obtengo la informacion estadistica:
+        if(len(resCategory)>0):
             
-            for itemStat in resStats:
+            for itemCategory in resCategory:
                 
-                cateGroup=itemStat['key']
-                nro2terms=itemStat['doc_count']
+                cateGroup=itemCategory['key']
+             
                 
                 if(cateGroup=='feedback'):
-                    nrtoFeedbacks=itemStat['doc_count']
-                if(cateGroup=='question'):
-                    nrtoQuestions=itemStat['doc_count']
-                if(cateGroup=='term'):
-                    nrtoTerms=itemStat['doc_count']
+                    nroFeedbacks=itemCategory['doc_count']
+                    listStates=itemCategory['group_state']['buckets']
+                    
+                    for itemState in listStates:
+                        cateState=itemState['key']
+                        nroState=itemState['doc_count']
+                        if(cateState==0):#In Progress
+                            nroFeedProgress=nroState
+                        if(cateState==2):#In Approved
+                            nroFeedApproved=nroState    
 
-        itemDesc['nroTerms']=nrtoTerms
-        itemDesc['nroQuest']=nrtoQuestions
-        itemDesc['nroFeeds']=nrtoFeedbacks  
+                if(cateGroup=='question'):
+                    nroQuestions=itemCategory['doc_count']
+                    listStates=itemCategory['group_state']['buckets']
+                    
+                    for itemState in listStates:
+                        cateState=itemState['key']
+                        nroState=itemState['doc_count']
+                        if(cateState==0):#In Progress
+                            nroQuesProgress=nroState
+                        if(cateState==2):#In Approved
+                            nroQuesApproved=nroState   
+
+                if(cateGroup=='term'):
+                    nroTerms=itemCategory['doc_count']
+                    listStates=itemCategory['group_state']['buckets']
+                    
+                    for itemState in listStates:
+                        cateState=itemState['key']
+                        nroState=itemState['doc_count']
+                        if(cateState==0):#In Progress
+                            nroTermProgress=nroState
+                        if(cateState==2):#In Approved
+                            nroTermApproved=nroState 
+
+        #Cargo los valores totales
+        itemDesc['nroTerms']=nroTerms
+        itemDesc['nroQuest']=nroQuestions
+        itemDesc['nroFeeds']=nroFeedbacks  
+
+        #Cargo los progressBar con valores por estados.
+        # Progreso Total (%) = Approved * 100 / (InProgress + Approved)
+        #Feedback Progress:
+
+        #Incluyo validacion de la division  x / 0 (if statement) 
+       
+        progressFeed= ( (nroFeedApproved * 100) /  ( nroFeedProgress + nroFeedApproved ) )  if ( nroFeedProgress + nroFeedApproved ) != 0 else 0
+        progressTerm= ( (nroTermApproved * 100) /  ( nroTermProgress + nroTermApproved ) )  if ( nroTermProgress + nroTermApproved ) != 0 else 0
+        progressQues= ( (nroQuesApproved * 100) /  ( nroQuesProgress + nroQuesApproved ) )  if ( nroQuesProgress + nroQuesApproved ) != 0 else 0
+
+        itemDesc['progressFeed']=progressFeed
+        itemDesc['progressTerm']=progressTerm
+        itemDesc['progressQues']=progressQues
+
+
+        textoStats=("<b>Feedback ("+str(nroFeedApproved)+"/"+str(nroFeedApproved+nroFeedProgress)+")</b> : "+str(progressFeed)+"% <br>"+
+                   "<b>Terms ("+str(nroTermApproved)+"/"+str(nroTermApproved+nroTermProgress)+")</b>: "+str(progressTerm)+"% <br>"+
+                   "<b>Questions ("+str(nroQuesApproved)+"/"+str(nroQuesApproved+nroQuesProgress)+")</b>: "+str(progressQues)+"% <br>")
+               
+        
+        itemDesc['textoStats']=textoStats
+
+        progressTotalApproved =  nroFeedApproved + nroTermApproved + nroQuesApproved
+        progressTotalInProgress = nroFeedProgress + nroTermProgress + nroQuesProgress
+        progressTotal= ( (progressTotalApproved * 100) /  ( progressTotalInProgress + progressTotalApproved ) ) if ( progressTotalInProgress + progressTotalApproved ) != 0 else 0
+
+        itemDesc['progressTotal']=round(progressTotal)
+
 
     pagesNumbers=math.ceil(totalRegistros/10)
     

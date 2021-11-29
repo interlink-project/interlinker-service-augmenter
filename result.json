@@ -1,5 +1,5 @@
 {
-    "took": 1,
+    "took": 2,
     "timed_out": false,
     "_shards": {
         "total": 5,
@@ -12,76 +12,66 @@
         "hits": []
     },
     "aggregations": {
-        "group_by_uri": {
+        "group_category": {
             "doc_count_error_upper_bound": 0,
             "sum_other_doc_count": 0,
             "buckets": [
                 {
-                    "key": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
-                    "doc_count": 15,
-                    "group_category": {
+                    "key": "reply",
+                    "doc_count": 8,
+                    "group_state": {
                         "doc_count_error_upper_bound": 0,
                         "sum_other_doc_count": 0,
                         "buckets": [
                             {
-                                "key": "reply",
-                                "doc_count": 8,
-                                "group_state": {
-                                    "doc_count_error_upper_bound": 0,
-                                    "sum_other_doc_count": 0,
-                                    "buckets": [
-                                        {
-                                            "key": 0,
-                                            "doc_count": 8
-                                        }
-                                    ]
-                                }
+                                "key": 0,
+                                "doc_count": 8
+                            }
+                        ]
+                    }
+                },
+                {
+                    "key": "feedback",
+                    "doc_count": 3,
+                    "group_state": {
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 0,
+                        "buckets": [
+                            {
+                                "key": 2,
+                                "doc_count": 2
                             },
                             {
-                                "key": "feedback",
-                                "doc_count": 3,
-                                "group_state": {
-                                    "doc_count_error_upper_bound": 0,
-                                    "sum_other_doc_count": 0,
-                                    "buckets": [
-                                        {
-                                            "key": 2,
-                                            "doc_count": 2
-                                        },
-                                        {
-                                            "key": 1,
-                                            "doc_count": 1
-                                        }
-                                    ]
-                                }
-                            },
+                                "key": 1,
+                                "doc_count": 1
+                            }
+                        ]
+                    }
+                },
+                {
+                    "key": "question",
+                    "doc_count": 2,
+                    "group_state": {
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 0,
+                        "buckets": [
                             {
-                                "key": "question",
-                                "doc_count": 2,
-                                "group_state": {
-                                    "doc_count_error_upper_bound": 0,
-                                    "sum_other_doc_count": 0,
-                                    "buckets": [
-                                        {
-                                            "key": 0,
-                                            "doc_count": 2
-                                        }
-                                    ]
-                                }
-                            },
+                                "key": 0,
+                                "doc_count": 2
+                            }
+                        ]
+                    }
+                },
+                {
+                    "key": "term",
+                    "doc_count": 2,
+                    "group_state": {
+                        "doc_count_error_upper_bound": 0,
+                        "sum_other_doc_count": 0,
+                        "buckets": [
                             {
-                                "key": "term",
-                                "doc_count": 2,
-                                "group_state": {
-                                    "doc_count_error_upper_bound": 0,
-                                    "sum_other_doc_count": 0,
-                                    "buckets": [
-                                        {
-                                            "key": 0,
-                                            "doc_count": 2
-                                        }
-                                    ]
-                                }
+                                "key": 0,
+                                "doc_count": 2
                             }
                         ]
                     }

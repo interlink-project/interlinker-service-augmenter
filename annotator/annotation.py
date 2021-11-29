@@ -166,14 +166,14 @@ class Annotation(es.Model):
                     }
                 },
                 "aggs": {
-                    "group_by_uri": {
+                    "group_category": {
                         "terms": {
-                            "field": "uri"
+                            "field": "category"
                         },
                         "aggs": {
-                            "group_category": {
+                            "group_state": {
                                 "terms": {
-                                    "field": "category"
+                                    "field": "state"
                                 }
                             }
                         }
@@ -190,9 +190,8 @@ class Annotation(es.Model):
                                  body=q)
 
 
-        if(len(res['aggregations']['group_by_uri']['buckets'])>0):
-            if(len(res['aggregations']['group_by_uri']['buckets'][0]['group_category']['buckets'])>0):
-                res=res['aggregations']['group_by_uri']['buckets'][0]['group_category']['buckets']
+        if(len(res['aggregations']['group_category']['buckets'])>0):
+            res=res['aggregations']['group_category']['buckets']
         else:
             res=[]
                                  
