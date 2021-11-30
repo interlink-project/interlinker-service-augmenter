@@ -154,6 +154,42 @@ def index():
     annotations = g.annotation_class.search(user=user)
     return jsonify(annotations)
 
+
+# INDEX
+@store.route('/searchannotations', methods=["POST"])
+def annotationsIndex():
+
+    params = json.loads(request.data.decode('utf-8'))
+
+
+    textoABuscar=params.get("textoABuscar")
+    if(textoABuscar==None):
+        textoABuscar=""
+
+    estados=params.get("estados")
+
+    stateInProgress=estados['InProgress']
+    stateArchived=estados['Archived']
+    stateApproved=estados['Approved']
+
+
+    descriptionUri=params.get("descriptionUri")
+   
+
+    page=params.get("page")
+    if(page==None):
+        page="1"
+
+    #Realizo la busqueda:
+    annotations= Annotation._get_by_multiple(Annotation,textoABuscar=textoABuscar,estados=estados,url=descriptionUri,page=page)
+    #nroRegistros= Annotation._get_by_multipleCounts(Annotation,textoABuscar=textoABuscar,estados=estados,url=descriptionUri,page=page)
+    
+    
+    return jsonify({'annotations':annotations,'nroRegistros':len(annotations)})
+
+
+
+
 # INDEX
 @store.route('/descriptions', methods=["POST"])
 def descriptionsIndex():

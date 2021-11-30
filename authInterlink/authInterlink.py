@@ -321,8 +321,14 @@ def description(descriptionId=None):
         else:
             itemRes['nroReplies']=0
     
+    page=request.args.get("page",1)
+    pagesNumbers=math.ceil(numRes/10)
+    
+    paginacion={'page':page,'pagesNumbers':pagesNumbers,'totalRegisters':numRes}
 
-    return render_template("description.html", user=current_user, description=description[0],anotations=res,categoryLabel=categoria)
+
+
+    return render_template("description.html", user=current_user, description=description[0],anotations=res,categoryLabel=categoria,paginacion=paginacion)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 @authInterlink.route('/description/<string:descriptionId>/<string:option>',)

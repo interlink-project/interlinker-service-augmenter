@@ -3,6 +3,21 @@
 DELETE annotator
 
 POST annotator/annotation/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "text": "relevant"
+                    }
+                }
+            ]
+        }
+    }
+    
+}
+
 
 POST annotator/annotation/_search
 {
@@ -19,7 +34,48 @@ POST annotator/annotation/_search
 
 POST annotator/annotation/_search
 {
-    "size": 0,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "text": "relevant"
+                    }
+                },
+                {
+                    "match": {
+                        "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero"
+                    }
+                },
+                {
+                    "bool": {
+                        "should": [
+                            {
+                                "match": {
+                                    "state": 0
+                                }
+                            },
+                            {
+                                "match": {
+                                    "state": 1
+                                }
+                            },
+                            {
+                                "match": {
+                                    "state": 2
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
+
+POST annotator/annotation/_search
+{
+  
     "query": {
         "bool": {
             "must": [
@@ -27,22 +83,34 @@ POST annotator/annotation/_search
                     "match": {
                         "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero"
                     }
-                }
-            ]
-        }
-    },
-    "aggs": {
-        "group_category": {
-            "terms": {
-                "field": "category"
-            },
-            "aggs": {
-                "group_state": {
-                    "terms": {
-                        "field": "state"
+                },
+                {
+                    "prefix": {
+                        "text": "Este es mi termino"
+                    }
+                },
+                {
+                    "bool": {
+                        "should": [
+                            {
+                                "match": {
+                                    "state": 0
+                                }
+                            },
+                            {
+                                "match": {
+                                    "state": 1
+                                }
+                            },
+                            {
+                                "match": {
+                                    "state": 2
+                                }
+                            }
+                        ]
                     }
                 }
-            }
+            ]
         }
     }
 }

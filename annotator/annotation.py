@@ -82,6 +82,9 @@ MAPPING = {
 }
 
 
+MAX_ITERATIONS = 5
+PAGGINATION_SIZE = 10
+
 class Annotation(es.Model):
 
     __type__ = TYPE
@@ -284,6 +287,178 @@ class Annotation(es.Model):
 
     
         res = cls.es.conn.count(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+    
+        return res['count']
+
+
+    def _get_by_multiple(cls,**kwargs):
+        
+        page=kwargs.pop("page")
+        estados=kwargs.pop("estados")
+        url=kwargs.pop("url")
+        textoForSearch=kwargs.pop("textoABuscar")
+
+
+        initReg=(int(page)-1)*10
+        q= {
+            "sort": [
+                {
+                "updated": {
+                    "order": "desc",
+                    "ignore_unmapped": True
+                }
+                }
+            ],
+            "from": initReg,
+            "size": PAGGINATION_SIZE,
+            "query": {
+                "bool": {
+                "must":[
+                    {
+                        "match": {
+                            "uri": url
+                        }
+                    }
+                    ]
+                }
+            }
+        }
+
+        #Parametro de busqueda por texto Box:
+        if textoForSearch != "":
+            sectSearchByText={
+                    "match":{
+                        "text": textoForSearch
+                        }
+                    }
+            q['query']['bool']['must'].append(sectSearchByText)
+
+
+
+        #Parametros de busqueda:
+        #Estados:
+
+        filtroEstadosSection={
+            "bool": {
+                "should": []
+                }
+        }
+
+        existenStates=False
+        
+        for keyItem in estados.keys():
+            if estados[keyItem]:
+                existenStates=True
+                if(keyItem=="Approved"):
+                    
+                    valueState=2   
+                if(keyItem=="Archived"):
+                    valueState=1   
+                if(keyItem=="InProgress"):
+                    valueState=0   
+                
+                seccionState =  {
+                    "match":{
+                        "state": valueState
+                        }
+                    }
+
+                filtroEstadosSection['bool']['should'].append(seccionState)
+        
+        if existenStates:    
+            q['query']['bool']['must'].append(filtroEstadosSection)
+                   
+
+                    
+
+        print('_get_by_multiple')
+        print(q)
+
+        res = cls.es.conn.search(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+        
+    @classmethod
+    def _get_by_multipleCounts(cls,**kwargs):
+        
+    
+      
+        q= {
+            "query": {
+            "bool": {
+            "must":[
+            {
+            "prefix":{
+                "title":kwargs.get("textoABuscar")
+                }
+            }
+            ]
+            }
+        }
+        }
+
+        #Parametros de busqueda:
+
+        i = 0
+      
+        for key, value in kwargs.items():
+            i += 1
+
+            if(key=='url'):
+
+                preUrl={"bool": {
+                "should":[
+                ]
+                }}
+
+                seccion1 =  {
+                    "prefix":{
+                        key: 'http://'+value
+                        }
+
+                    }
+                preUrl['bool']['should'].append(seccion1)
+                seccion2 =  {
+                    "prefix":{
+                        key: 'https://'+value
+                        }
+
+                    }
+                preUrl['bool']['should'].append(seccion2)
+                q['query']['bool']['must'].append(preUrl)
+
+            else:    
+                if value=='Unassigned':
+                    value=''
+
+                    seccion =  {
+                        "match":{
+                            key: value
+                            }
+
+                        }
+
+                    if(key!='textoABuscar' and key!='page'):
+                        q['query']['bool']['must'].append(seccion)
+                else:
+                    seccion =  {
+                        "match":{
+                            key: value
+                            }
+
+                        }
+
+                    if(key!='textoABuscar' and key!='page'and value!=''):
+                        q['query']['bool']['must'].append(seccion)
+
+        print('_get_by_multipleCounts')
+        print(q)
+
+        res = cls.es.conn.count(index="description",
                                  doc_type=cls.__type__,
                                  body=q)
     

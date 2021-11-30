@@ -377,11 +377,11 @@ class Description(es.Model):
         initReg=(int(page)-1)*10
         q= {
             "sort": [
-                {
-                "updated": {
-                    "order": "desc",
-                    "ignore_unmapped": True
-                }
+                    {
+                    "updated": {
+                        "order": "desc",
+                        "ignore_unmapped": True
+                    }
                 }
             ],
             "from": initReg,
@@ -389,11 +389,11 @@ class Description(es.Model):
             "query": {
             "bool": {
             "must":[
-            {
-            "prefix":{
-                "title":kwargs.get("textoABuscar")
+                {
+                "prefix":{
+                    "title":kwargs.get("textoABuscar")
+                    }
                 }
-            }
             ]
             }
         }
