@@ -314,7 +314,7 @@ def claimModeration():
         return authInterlink.moderate()
     else:
 
-        itemsDict['email'] = current_user.email
+        itemsDict['email'] = current_user.id
 
         dataClaimEncoded=urllib.parse.urlencode(itemsDict)
 
@@ -573,10 +573,20 @@ def visor():
 @views.route("/modifica/<userId>/<path:rutaPagina>",methods=["GET","POST"])
 def modifica(rutaPagina,userId):
 
+    #En el caso que se tiene interes en una anotacion en particular
+    argumentos=request.args.to_dict()
+    anotationSel=''
+
+    scriptToFocusParragraph=''
+    if('annotationSel' in argumentos.keys()):
+        anotationSel=argumentos.pop('annotationSel')
+        session['anotationSel']=anotationSel
+
+
     print("La ruta de la Pagina es: "+rutaPagina)
     print("El nombre de usuario es: "+userId)
     
-    session['username'] = userId
+    session['username'] = current_user.email
 
     headersUserAgent={
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'

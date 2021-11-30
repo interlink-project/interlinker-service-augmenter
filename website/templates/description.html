@@ -64,65 +64,137 @@ block content %}
   <thead>
     <tr>
  
-      <th scope="col-3">Category</th>
-    
-      <th scope="col-3" style="text-align: center;">Id</th>
-      <th scope="col-3" style="text-align: center;">State</th>      
-      <th scope="col-3">Description</th>
-      <th scope="col-2" style="text-align: center;">Update Date</th>
+      <th scope="col-2">Category</th>
       <th scope="col-2" style="text-align: center;">Nro Replies</th>
-      <th scope="col-2" style="text-align: center;">Options</th>
+      <th scope="col-4">Description</th>
+      <th scope="col-2" style="text-align: center;">Update Date</th>
+      <th scope="col-2" style="text-align: center;">Option</th>
+      
     </tr>
   </thead>
   <tbody>
     {% for anotation in anotations %} {% if anotation.category != 'reply' %}
-    <tr>
-   
-      <td>
-        {% if anotation.category == 'feedback' %}
-          <div class='annotation-cat annotation-cat-feedback'>
-        {% endif %}
-        {% if anotation.category == 'question' %}
-          <div class='annotation-cat annotation-cat-question'>
-        {% endif %}
-        {% if anotation.category == 'term' %}
-          <div class='annotation-cat annotation-cat-term'>
-        {% endif %}
+    
+          
+        {% if anotation.state == 1 %}
+          <tr style="color: rgba(141, 140, 140, 0.774);" >
+          <td>
+          <button class='btn btn-light' 
+          onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+          style="height: 30px;min-width:100px;"
+          alt="{{ anotation.state|estadosAnnotation}}"
+          title="{{ anotation.state|estadosAnnotation}}"
+          >
+          <i class="bi bi-x-lg" style="position: relative;top: -5px;"></i>
 
+        {% elif anotation.state == 2  %}
+        <tr style="color: rgba(0, 0, 0, 0.774);font-weight: bold;">
+          <td>
+          {% if anotation.category == 'feedback' %}
+          
+          <button class='btn btn-outline-success' 
+          onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+          style="height: 30px;min-width:100px;border: none;font-weight: bold;"
+          alt="{{ anotation.state|estadosAnnotation}}"
+          title="{{ anotation.state|estadosAnnotation}}">
+          <i class="bi bi-check-lg" style="position: relative;top: -5px;"></i>
 
-         {{ anotation.category[0]|upper }}{{ anotation.category[1:] }} 
-        </div>
+          {% elif anotation.category == 'question' %}
+          
+
+          <button class='btn btn-outline-warning' 
+          onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+          style="height: 30px;min-width:100px;border: none;font-weight: bold;"
+          alt="{{ anotation.state|estadosAnnotation}}"
+          title="{{ anotation.state|estadosAnnotation}}">
+          <i class="bi bi-check-lg" style="position: relative;top: -5px;"></i>
+
+          {% elif anotation.category == 'term' %}
+          
+          <button class='btn btn-outline-danger' 
+          onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+          style="height: 30px;min-width:100px;border: none;font-weight: bold;"
+          alt="{{ anotation.state|estadosAnnotation}}"
+          title="{{ anotation.state|estadosAnnotation}}">
+          <i class="bi bi-check-lg" style="position: relative;top: -5px;"></i>
+
+          {% endif %}
+
+         
+
+        {% else %}
+        
+          {% if anotation.category == 'feedback' %}
+          <tr style="background-color: #d0ffdc;" >
+            <td>
+            <button class='btn annotation-cat-feedback' 
+            
+            onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+         
+           style="height: 30px;min-width:100px;"
+           alt="{{ anotation.state|estadosAnnotation}}"
+          title="{{ anotation.state|estadosAnnotation}}">
+
+          {% endif %}
+          {% if anotation.category == 'question' %}
+          <tr style="background-color: #f6ffa8;" >
+            <td>
+            <button class='btn annotation-cat-question' 
+            onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+             style="height: 30px;min-width:100px;"
+             alt="{{ anotation.state|estadosAnnotation}}"
+          title="{{ anotation.state|estadosAnnotation}}">
+
+          {% endif %}
+          {% if anotation.category == 'term' %}
+          <tr style="background-color: #ffa7fb;" >
+            <td>
+
+            <button class='btn annotation-cat-term' 
+            onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+            
+            style="height: 30px;min-width:100px;"
+            alt="{{ anotation.state|estadosAnnotation}}"
+          title="{{ anotation.state|estadosAnnotation}}">
+              
+          {% endif %}
+
+        {% endif%}    
+        
+
+         <span style="position: relative;top: -5px;">
+          {{ anotation.category[0]|upper }}{{ anotation.category[1:] }}
+         </span>     
+         
+        </button>
+
       </td>
    
+       <!-- 
       <td style="text-align: center;">{{ anotation.id}} </td>
-      <td style="text-align: center;">{{ anotation.state|estadosAnnotation}} </td>
-      <td>{{ anotation.text|striptags}} </td>
-      <td style="text-align: center;">{{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+      <td style="text-align: center;"> </td>
+      -->
       <td style="text-align: center;"> 
       
-        <button
-                type="button"
-                class="btn btn-outline-success position-relative"
-                alt="Replies"
-                data-bs-toggle="tooltip"
-                data-bs-placement="left"
-                title="Replies"
+        <a
+               
+                class="btn btn-outline-dark position-relative"
+               
               >
               {{ anotation.nroReplies }}
         
-              </button>
+      </a>
         
       
       </td>
-      
-      <td style="text-align: center;align-items: center;align-content: center;">
-       
-        <a  
-        href="/subjectPage/{{ description.id }}/{{ anotation.id }}" class="btn btn-outline-secondary" style="max-width: 70rem" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
-
-
+      <td>{{ anotation.text|striptags}} </td>
+      <td style="text-align: center;">{{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+      <td>
+        <a href="/subjectPage/{{ description.id }}/{{ anotation.id }}" class="btn btn-outline-secondary" style="max-width: 70px;"><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
 
       </td>
+      
+      
     </tr>
     {% endif %} {% endfor %}
   </tbody>

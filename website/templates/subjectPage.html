@@ -463,6 +463,9 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
     "
   >
     {% if ns.ismoderator is true %}
+    <div class="btn-group" role="group" aria-label="opciones">
+
+    
     <button
       type="button"
       class="btn bi-archive border btn-danger"
@@ -484,7 +487,17 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
     >
       Approve
     </button>
+
+  </div>
     {% endif %}
+  <div class="btn-group" role="group" aria-label="doctext">
+    <button
+    type="button"
+    class="btn bi-blockquote-left border btn-secondary"
+    onclick="window.location.href='/website/modifica/{{ description.url }}?annotationSel={{ annotation.id }} ';"
+    >
+      See in Text
+    </button>
   </div>
 </div>
 
