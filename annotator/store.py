@@ -253,7 +253,7 @@ def descriptionByUrl(urlDescription):
 
 
     if len(description)==0:
-        return jsonify('Description not found!', status=404)
+        return jsonify([])
 
     return jsonify(description[0])
 

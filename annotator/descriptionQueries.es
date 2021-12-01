@@ -71,7 +71,23 @@ POST description
                     "index": "not_analyzed"
                 },
 
-               
+                "urls": {
+                    "type": "nested",
+                    "properties": {
+                        "url": {
+                            "type": "string",
+                            "index": "not_analyzed"
+                        },
+                        "created": {
+                            "type": "date",
+                            "format": "dateOptionalTime"
+                        },
+                        "language": {
+                            "type": "string",
+                            "index": "not_analyzed"
+                        }
+                    }
+                },
 
                 "created": {
                     "type": "date",
