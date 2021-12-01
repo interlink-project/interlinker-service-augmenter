@@ -172,6 +172,8 @@ def annotationsIndex():
     stateArchived=estados['Archived']
     stateApproved=estados['Approved']
 
+    category=params.get("category")
+
 
     descriptionUri=params.get("descriptionUri")
    
@@ -181,11 +183,32 @@ def annotationsIndex():
         page="1"
 
     #Realizo la busqueda:
-    annotations= Annotation._get_by_multiple(Annotation,textoABuscar=textoABuscar,estados=estados,url=descriptionUri,page=page)
+    annotations= Annotation._get_by_multiple(Annotation,textoABuscar=textoABuscar,estados=estados,url=descriptionUri,category=category,notreply=True,page=page)
+      
     #nroRegistros= Annotation._get_by_multipleCounts(Annotation,textoABuscar=textoABuscar,estados=estados,url=descriptionUri,page=page)
-    
-    
-    return jsonify({'annotations':annotations,'nroRegistros':len(annotations)})
+    numRes=annotations['numRes']
+    annotations=annotations['annotations']
+
+
+
+     # Cargo las replies de cada annotacion:
+    stats=Annotation.annotationStats(Annotation,uri=descriptionUri)
+
+    dictStats={}
+    for itemStat in stats:
+        clave=itemStat['key']
+        val=itemStat['doc_count']
+        dictStats[clave]=val
+    for itemRes in annotations:
+        if itemRes['id'] in dictStats.keys():
+            itemRes['nroReplies']=dictStats[itemRes['id']]
+        else:
+            itemRes['nroReplies']=0
+
+
+
+
+    return jsonify({'annotations':annotations,'nroRegistros':numRes})
 
 
 

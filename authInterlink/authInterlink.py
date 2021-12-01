@@ -297,15 +297,23 @@ def description(descriptionId=None):
 
     categoria=request.args.get('category')
 
+    page=request.args.get("page",1)
+    registroInicial=(int(page)-1)*10
+
+    
+
+
     if(categoria == None or categoria=='all' ):
-        categoria='all'
-        numRes = Annotation.count(query={ 'uri': description[0]['url']})
+        categoria=''
+    
+    
+    res= Annotation._get_by_multiple(Annotation,textoABuscar='',estados={'InProgress':True,'Archived':True,'Approved':True},url=description[0]['url'],category=categoria,notreply=True,page=page)
+    numRes=res['numRes']
+    res=res['annotations']
 
-        res = Annotation.search(query={ 'uri': description[0]['url']},limit=numRes)
-    else:
+    """ else:
         numRes = Annotation.count(query={ 'uri': description[0]['url'] ,'category':categoria})
-
-        res = Annotation.search(query={ 'uri': description[0]['url'] ,'category':categoria},limit=numRes)
+        res = Annotation.search(query={ 'uri': description[0]['url'] ,'category':categoria},offset=registroInicial) """
     
     # Cargo las replies de cada annotacion:
     stats=Annotation.annotationStats(Annotation,uri=description[0]['url'])

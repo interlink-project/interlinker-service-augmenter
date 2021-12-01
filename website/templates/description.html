@@ -3,6 +3,15 @@ block content %}
 
 <script>
 
+  function selectCategory(event){
+    if(event.type=='click'){
+      event.preventDefault();
+      category=event.target.name.substring(2);
+      window.location.href = "/description/{{description.id}}?category="+category.toLowerCase() ;
+    }
+
+  }
+
   function filterState(event) {  
     if(event.type=='change'){
       aplicoFiltros(event);
@@ -34,8 +43,13 @@ block content %}
     descriptionSpan = document.getElementById("descriptionUri");
     descriptionUri=descriptionSpan.textContent;
     
+    let category=''
+    if (document.getElementById("rbFeedback").checked) category='feedback';
+    if (document.getElementById("rbTerm").checked) category='term';
+    if (document.getElementById("rbQuestion").checked) category='question';
     
-    
+    category;
+
 
     //Refresco la tabla con los valores filtrados:
     
@@ -71,7 +85,7 @@ block content %}
         dateUpdated = new Date(dataItem.created);
 
         
-        $('#tablaAnnotations').append(' <tr> <td style="font-weight:bold;"> '+dataItem.category+' </td> <td> '+dataItem.state+' </td> <td> '+dataItem.replies+' </td><td>'+dataItem.description+'</td>  <td> '+ISODateString(dateUpdated)+' </td> <td>  <a href="/description/'+dataItem.id+'" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>  </td></tr>')
+        $('#tablaAnnotations').append(' <tr> <td style="font-weight:bold;"> '+dataItem.category+' </td> <td> '+dataItem.state+' </td> <td> '+dataItem.nroReplies+' </td><td>'+dataItem.text+'</td>  <td> '+ISODateString(dateUpdated)+' </td> <td>  <a href="/description/'+dataItem.id+'" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>  </td></tr>')
       }
     
       $('#totalRegisters').text(numeroReg);
@@ -104,7 +118,7 @@ block content %}
       method: 'POST',
       url: {{ url_for('store.annotationsIndex')|tojson }},
       contentType: 'application/json;charset=UTF-8',
-      data: JSON.stringify({"textoABuscar":texto,"estados":estados,"descriptionUri":descriptionUri,"page":page})
+      data: JSON.stringify({"textoABuscar":texto,"estados":estados,"descriptionUri":descriptionUri,"page":page,"category":category})
     }).done(onSearchAnnotations);
         
     
@@ -130,37 +144,41 @@ block content %}
  
     <div class="hstack gap-0" >
 
-      {% if categoryLabel != 'feedback'%}
-        <a class="bg-light border ms-auto" style="border-radius: 5px 0px 0px 5px;" href="/description/{{description.id}}?category=feedback" >Feedback</a>
-      {% else %}
-        <a class="btn-secondary ms-auto active"  style="border-radius: 5px 0px 0px 5px;" href="/description/{{description.id}}?category=feedback" >Feedback</a>
-      {% endif %}
-      
-
-      {% if categoryLabel != 'term'%}
-        <a class="bg-light border " href="/description/{{description.id}}?category=term" >Term</a>
-      {% else %}
-        <a class="btn-secondary active " href="/description/{{description.id}}?category=term" >Term</a>
-      {% endif %}
-
-
-      {% if categoryLabel != 'question'%}
-        <a class="bg-light border " href="/description/{{description.id}}?category=question" >Question</a>
-      {% else %}
-        <a class="btn-secondary active " href="/description/{{description.id}}?category=question" >Question</a>
-      {% endif %}
-      
-      
-      <div class="vr" style="padding-right: 3px;"></div>
-
-
-      {% if categoryLabel != 'all'%}
-        <a class="bg-light border "  style="border-radius: 0px 5px 5px 0px;" href="/description/{{description.id}}?category=all" >All</a>
-      {% else %}
-        <a class="btn-secondary active "  style="border-radius: 0px 5px 5px 0px;" href="/description/{{description.id}}?category=all" >All</a>
-      {% endif %}
+     
 
      
+
+     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+      {% if categoryLabel == 'feedback'%}
+      <input type="radio" class="btn-check" name="rbFeedback" id="rbFeedback" autocomplete="off" onclick="selectCategory(event);" checked>
+      {% else %}
+      <input type="radio" class="btn-check" name="rbFeedback" id="rbFeedback" autocomplete="off" onclick="selectCategory(event);" >
+      {% endif %}
+
+      <label class="btn btn-outline-primary" for="rbFeedback">Feedback</label>
+
+     {% if categoryLabel == 'term'%}
+      <input type="radio" class="btn-check" name="rbTerm" id="rbTerm" onclick="selectCategory(event);" autocomplete="off" checked>
+     {% else %}
+      <input type="radio" class="btn-check" name="rbTerm" id="rbTerm" onclick="selectCategory(event);" autocomplete="off" >
+     {% endif %}
+
+      <label class="btn btn-outline-primary" for="rbTerm">Term</label>
+    {% if categoryLabel == 'question'%}
+      <input type="radio" class="btn-check" name="rbQuestion" id="rbQuestion" onclick="selectCategory(event);" autocomplete="off" checked> 
+       {% else %}
+      <input type="radio" class="btn-check" name="rbQuestion" id="rbQuestion" onclick="selectCategory(event);" autocomplete="off">
+     {% endif %}
+      <label class="btn btn-outline-primary" for="rbQuestion">Question</label>
+      <div class="vr" style="padding-right: 3px;"></div>
+
+      {% if categoryLabel == 'all'%}
+    <input type="radio" class="btn-check" name="rbAll" id="rbAll" onclick="selectCategory(event);" autocomplete="off" checked>
+    {% else %}
+    <input type="radio" class="btn-check" name="rbAll" id="rbAll" onclick="selectCategory(event);" autocomplete="off">
+        {% endif %}
+      <label class="btn btn-outline-primary" for="rbAll">All</label>
+    </div>
 
     </div>
  

@@ -299,7 +299,8 @@ class Annotation(es.Model):
         estados=kwargs.pop("estados")
         url=kwargs.pop("url")
         textoForSearch=kwargs.pop("textoABuscar")
-
+        category=kwargs.pop("category")
+        notreply=kwargs.pop("notreply")
 
         initReg=(int(page)-1)*10
         q= {
@@ -334,6 +335,27 @@ class Annotation(es.Model):
                         }
                     }
             q['query']['bool']['must'].append(sectSearchByText)
+
+        #Parametro de busqueda por category:
+
+        if category != "":
+            sectCategory={
+                    "match":{
+                        "category": category
+                        }
+                    }
+            q['query']['bool']['must'].append(sectCategory)
+
+        #Obtenemos solo los reply
+        if notreply:
+
+            seccionJR=  {
+                        "match":{
+                            "category": "reply"
+                            }
+                        }
+
+            q['query']['bool']['must_not']=[seccionJR]
 
 
 
@@ -379,7 +401,11 @@ class Annotation(es.Model):
         res = cls.es.conn.search(index="annotator",
                                  doc_type=cls.__type__,
                                  body=q)
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        numRes=res['hits']['total']
+
+        resultado={'annotations':annotations,'numRes':numRes}
+        return resultado
 
         
     @classmethod
