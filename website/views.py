@@ -601,7 +601,7 @@ def modifica(rutaPagina,userId):
 
 
     #Codigo para Latvia:
-    if rutaPagina.startswith("https://latvija.lv/ppk/"):
+    """ if rutaPagina.startswith("https://latvija.lv/ppk/"):
         arrayUrl=['DokumentiUnVeidlapas','PakalpojumaMaksajumi','CitaInformacija']
         #Obtengo seccion doc
         contador=0
@@ -625,7 +625,7 @@ def modifica(rutaPagina,userId):
          
             contenidoOriginal=soup.find(id='content_0_contentsimplecontentph_1_uxTabPage')
             contenidoOriginal.append(contenidoHeader)
-            contenidoOriginal.append(contenidoAdd)
+            contenidoOriginal.append(contenidoAdd) """
 
     #Quitamos los scripts:
     for data in soup(['script','pre','noscript']):
@@ -655,6 +655,15 @@ def modifica(rutaPagina,userId):
                 anotationTemp = soup.new_tag('link', href=css_url,rel="stylesheet")
                 headTag.append(anotationTemp)
                 print("Line{}: {}".format(count, css_url))
+
+    for a_Link in soup.find_all("a"):
+        if a_Link.attrs.get("href"):
+            hrefVal=a_Link.attrs.get("href")
+            if hrefVal.startswith('/'):
+                newURLVal = urljoin(rutaPagina, hrefVal)
+                a_Link.attrs['href']="/website/modifica/d.silva@deusto.es/"+newURLVal
+                print(a_Link)
+
 
                 
     print("Total CSS insertados en the page:", len(css_files))

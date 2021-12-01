@@ -195,9 +195,9 @@ def dashboard():
         itemDesc['progressQues']=progressQues
 
 
-        textoStats=("<b>Feedback ("+str(nroFeedApproved)+"/"+str(nroFeedApproved+nroFeedProgress)+")</b> : "+str(progressFeed)+"% <br>"+
-                   "<b>Terms ("+str(nroTermApproved)+"/"+str(nroTermApproved+nroTermProgress)+")</b>: "+str(progressTerm)+"% <br>"+
-                   "<b>Questions ("+str(nroQuesApproved)+"/"+str(nroQuesApproved+nroQuesProgress)+")</b>: "+str(progressQues)+"% <br>")
+        textoStats=("<b>Feedback ("+str(nroFeedApproved)+"/"+str(nroFeedApproved+nroFeedProgress)+")</b> : "+str(round(progressFeed))+"% <br>"+
+                   "<b>Terms ("+str(nroTermApproved)+"/"+str(nroTermApproved+nroTermProgress)+")</b>: "+str(round(progressTerm))+"% <br>"+
+                   "<b>Questions ("+str(nroQuesApproved)+"/"+str(nroQuesApproved+nroQuesProgress)+")</b>: "+str(round(progressQues))+"% <br>")
                
         
         itemDesc['textoStats']=textoStats
