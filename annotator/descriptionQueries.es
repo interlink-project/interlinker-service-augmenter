@@ -70,6 +70,9 @@ POST description
                     "type": "string",
                     "index": "not_analyzed"
                 },
+
+               
+
                 "created": {
                     "type": "date",
                     "format": "dateOptionalTime"
