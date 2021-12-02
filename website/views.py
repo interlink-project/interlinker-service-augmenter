@@ -29,6 +29,8 @@ from urllib.parse import unquote
 from urllib import parse
 import math
 
+from website.languages import getLanguagesList
+
 
 from flask_login import (
     LoginManager,
@@ -140,20 +142,23 @@ def dashboard1():
 #Formulatio de carga de Pagina
 @views.route("/registrar",methods=["POST"])
 def saveDescription():
-    
-    site = request.form["createUrl"]
-    title = request.form["createTitle"]
-    description = request.form["createDescription"]
-    keywords = request.form["createKeywords"]
-    userNombre=request.form["usr"]
+
+    itemsDict  = request.form.to_dict()
+    site = itemsDict.pop("createUrl")
+
+    title = itemsDict.pop("createTitle")
+    description = itemsDict.pop("createDescription")
+    keywords = itemsDict.pop("createKeywords")
+    userNombre = itemsDict.pop("usr")
+
 
     try:
-        publicAdmin=request.form["createPA"]
+        publicAdmin = itemsDict.pop("createPA")
     except:
         publicAdmin=""
 
     try:
-        newPA=request.form["addNewPA"]
+        newPA = itemsDict.pop("addNewPA")
     except:
         newPA=""
 
@@ -167,9 +172,32 @@ def saveDescription():
     #Example of vector register:
     #perms = {'read': ['group:__world__']}
 
-    
+ 
 
-    #Busco si esta la descripcion funciona:
+    #This are the URI's
+    urlList=[]
+    for key in itemsDict:
+        if(key.startswith('url_')):
+            webAdress=itemsDict[key]
+
+            langCode=itemsDict['sel_'+key.split('_')[1]]
+
+            newUrl= {
+                        'createdate': todayDateTime,
+                        'url': itemsDict[key],
+                        'language': langCode,
+                        'email': current_user.email
+                    }
+
+
+            urlList.append(newUrl)
+
+    if(len(urlList)==0):
+        #Si el campo de lista esta vacio miro el campo url
+        flash("It is needed to add at least one URL of description.","info")
+        return jsonify({"error":"It is needed to add at least one URL of description"})
+
+    #Busco si esta la descripcion existe:
 
     editDescripcion =Description._get_Descriptions_byURI(url=site)
     
@@ -184,7 +212,7 @@ def saveDescription():
         newdescription=Description(title=title,description=description,
                                 keywords=keywords,moderators=moderat,
                                 padministration=publicAdmin,url=site,
-                                permissions=perms
+                                permissions=perms,urls=urlList
                                 )
     
     
@@ -207,6 +235,35 @@ def saveDescription():
         editDescripcion.keywords=keywords
         editDescripcion.padministration=publicAdmin
         editDescripcion.updated=todayDateTime
+
+
+        #Actualizo el listado de links:
+        for key in itemsDict:
+            if(key.startswith('url_')):
+                webAdress=itemsDict[key]
+                langCode=itemsDict['sel_'+key.split('_')[1]]
+
+                #Reviso que todos esten y los que no estan los agrego:
+                existe=False
+                for itemUrl in editDescripcion['urls']:
+                    if ( itemUrl['url'] == webAdress ):
+                        #Ya existe
+                        webAdress
+                        existe=True
+                        break
+
+                if existe==False:
+                #Es nuevo y Agrego
+                    newUrl= {
+                    'createdate': todayDateTime,
+                    'url': webAdress,
+                    'language': langCode,
+                    'email': current_user.email
+                    }
+                    editDescripcion['urls'].append(newUrl)
+                        
+
+
 
 
         #Comprobar los permisos de edicion del usuario:
@@ -314,7 +371,7 @@ def claimModeration():
         return authInterlink.moderate()
     else:
 
-        itemsDict['email'] = current_user.id
+        itemsDict['email'] = current_user.email
 
         dataClaimEncoded=urllib.parse.urlencode(itemsDict)
 

@@ -1,6 +1,10 @@
 {% extends "templateV2.html" %} {% block title %} Servicepedia {% endblock %} {% block
     content %}
 
+    <script type="text/javascript"
+         src="{{ url_for('static', filename='utilities.js') }}">
+    </script>
+
 
     <script>
 
@@ -91,12 +95,35 @@
    
                 function successSearch(data){
                     entries=Object.entries(data)  
+
+  
+
                     if(entries.length==0){
                         //Agrego:
                         var contador=$('#urlList').children().length+1;
                         var urltext =$('#oneUrl').val();
-            
-                        var liUrl = '<div class="input-group"> <button class="bi-x" onclick="removerUrl(event)" ></button> <input type="url" class="form-control" value='+urltext+' name="url_'+contador+'" id="url_'+contador+'" placeholder="Link"></div>';
+
+                        
+
+                        var urlItems = urltext .split( '/' );
+
+                        idiomaSel='';
+                        outer_loop://Usado para hacer un break of multiple for.
+                        for(urlItem in urlItems){
+                            if(urlItems[urlItem].length==2){
+                                for(langItem in getLanguagesList()){
+                                    if(langItem==urlItems[urlItem]){
+                                    idiomaSel=langItem;
+                                    break outer_loop;
+                                    }
+                                }
+                            }
+                        }
+
+                        var textLanguages=selectLanguagesList(idiomaSel);
+
+
+                        var liUrl = '<div class="input-group"> <button class="bi-x" onclick="removerUrl(event)" ></button>  <input type="url" class="form-control" value='+urltext+' name="url_'+contador+'" id="url_'+contador+'" placeholder="Link">  <select class="form-select" name="sel_'+contador+'" id="sel_'+contador+'" aria-label="Language" style="max-width:20vw;max-height: 60vh;overflow-y: auto;"> <option selected>Specify a language.</option>  '+textLanguages+'" </select> </div>';
                         
                         $('#oneUrl').val('');
 
@@ -301,8 +328,22 @@
         <div class="row" style="padding-left: 30px;">
             <div class="vertical-input-group"  id="urlList">
                
+                {% if description is defined %}
+                    {% for urlItem in description.urls %}
+                    <div class="input-group"> 
+                        <button class="bi-x" onclick="removerUrl(event)" ></button>  
+                        <input type="url" class="form-control" value='{{urlItem.url}}' name="url_{{loop.index}}" id="url_{{loop.index}}" placeholder="Link">
+                        <label class="input-group-text" for="url_{{loop.index}}">Language:</label>
+                        <input type="text" style="max-width:20vw;text-align: center;" class="form-control" value='{{urlItem.langText}}' code='{{urlItem.language}}' name="sel_{{loop.index}}" id="sel_{{loop.index}}" placeholder="Language">  
+                        
+                    </div>
+                    {% endfor %}
+                {% endif %}
+
+
             </div>
         </div>
+        
 
 
 

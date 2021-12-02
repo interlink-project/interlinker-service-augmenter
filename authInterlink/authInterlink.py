@@ -20,6 +20,7 @@ from authInterlink.user import User
 
 from annotator.annotation import Annotation
 from annotator.description import Description
+from website.languages import getLanguagesList
 
 authInterlink = Blueprint('authInterlink', __name__,template_folder="./website/templates")
 
@@ -354,8 +355,11 @@ def editDescription(descriptionId=None,option='Edit'):
         paList.append(key)
     print(paList)
 
-    description = Description._get_Descriptions_byId(id=descriptionId)[0]
+    description = Description._get_Descriptions_byId(id=descriptionId)[0]   
     
+    for itemUrl in description['urls']:
+        itemUrl['langText']=getLanguagesList()[itemUrl['language']]
+
 
     return render_template("descriptionDetail.html", user=current_user, description=description,option=option,publicsa=paList)
 

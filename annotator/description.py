@@ -49,6 +49,25 @@ MAPPING = {
         "type": "string",
         "index": "not_analyzed"
     },
+    
+     "urls": {
+        "type": "nested",
+        "properties": {
+            "createdate": {
+                    "type": "date",
+                    "format": "dateOptionalTime"
+                },
+            "url": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+            "language": {
+                    "type": "string",
+                    "index": "not_analyzed"
+                },
+            "email": {"type": "string"},
+        }
+    },
 
     'created': {'type': 'date'},
     'updated': {'type': 'date'},
@@ -646,6 +665,7 @@ class Description(es.Model):
                 "keywords":self.keywords,
                 "padministration":self.padministration,
                 "url":self['url'],
+                "urls":self['urls'],
                 "updated":datetime.datetime.now().replace(microsecond=0).isoformat()
                 }
             } 

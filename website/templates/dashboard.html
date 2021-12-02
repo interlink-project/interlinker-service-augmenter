@@ -252,11 +252,12 @@ block head %} {{ super() }}
       <table class="table" style="height: auto">
         <thead>
           <tr>
-            <th scope="col-2">Public Service Administration</th>
-            <th scope="col-2">Title</th>
+            <th scope="col-2">Administration</th>
+            <th scope="col-3">Title</th>
             <th scope="col-2" style="text-align: center;">Progress</th>
             <th scope="col-2"  style="text-align: center;">Updated Date</th>
-            <th scope="col-2"  style="text-align: center;">Access</th>
+            <th scope="col-1"  style="text-align: center;max-width: 5px;">Setting</th>
+            <th scope="col-1"  style="text-align: center;">Access</th>
           </tr>
         </thead>
         <tbody id="tablaDescriptions">
@@ -276,6 +277,11 @@ block head %} {{ super() }}
               
             </td>
             <td  style="text-align: center;">{{ description.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+
+            <td  >
+              <a  href="/description/{{ description.id }}/edit" class="btn btn-outline-secondary bi-tools"  ></a>
+            </td>
+
 
             <td  style="text-align: center;">
               <div class="btn-group" role="group" aria-label="Basic example">
