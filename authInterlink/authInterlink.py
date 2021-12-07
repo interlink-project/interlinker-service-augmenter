@@ -294,7 +294,7 @@ def advanceSearch():
 @login_required
 def description(descriptionId=None):
 
-    description = Description._get_Descriptions_byId(id=descriptionId)
+    description = Description._get_Descriptions_byId(id=descriptionId)[0]
 
     categoria=request.args.get('category')
 
@@ -307,23 +307,28 @@ def description(descriptionId=None):
     if(categoria == None or categoria=='all' ):
         categoria=''
     
-    
-    res= Annotation._get_by_multiple(Annotation,textoABuscar='',estados={'InProgress':True,'Archived':True,'Approved':True},url=description[0]['url'],category=categoria,notreply=True,page=page)
-    numRes=res['numRes']
+    res=[]
+    stats=[]
+    numRes=0
+    listUrlsPages=[]
+    for itemUrl in description['urls']:
+        url=itemUrl['url']
+        listUrlsPages.append(url)
+
+        # Cargo las replies de cada annotacion:
+        stats=stats+Annotation.annotationStats(Annotation,uri=itemUrl['url'])
+
+    res= Annotation._get_by_multiple(Annotation,textoABuscar='',estados={'InProgress':True,'Archived':True,'Approved':True},urls=listUrlsPages,category=categoria,notreply=True,page=page)
+    numRes= res['numRes']
     res=res['annotations']
 
-    """ else:
-        numRes = Annotation.count(query={ 'uri': description[0]['url'] ,'category':categoria})
-        res = Annotation.search(query={ 'uri': description[0]['url'] ,'category':categoria},offset=registroInicial) """
-    
-    # Cargo las replies de cada annotacion:
-    stats=Annotation.annotationStats(Annotation,uri=description[0]['url'])
 
     dictStats={}
     for itemStat in stats:
         clave=itemStat['key']
         val=itemStat['doc_count']
         dictStats[clave]=val
+
     for itemRes in res:
         if itemRes['id'] in dictStats.keys():
             itemRes['nroReplies']=dictStats[itemRes['id']]
@@ -337,7 +342,7 @@ def description(descriptionId=None):
 
 
 
-    return render_template("description.html", user=current_user, description=description[0],anotations=res,categoryLabel=categoria,paginacion=paginacion)
+    return render_template("description.html", user=current_user, description=description,anotations=res,categoryLabel=categoria,paginacion=paginacion)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 @authInterlink.route('/description/<string:descriptionId>/<string:option>',)

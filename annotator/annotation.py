@@ -159,13 +159,7 @@ class Annotation(es.Model):
         q = {
                 "query": {
                     "bool": {
-                        "must": [
-                            {
-                                "match": {
-                                    "uri": kwargs.pop("uri")
-                                }
-                            }
-                        ]
+                        "must": []
                     }
                 },
                 "aggs": {
@@ -184,6 +178,30 @@ class Annotation(es.Model):
                 }
             }
 
+        
+        #Parametros de busqueda URI:
+        urls=kwargs.pop("uri")
+
+        filtroUriSection={
+            "bool": {
+                "should": []
+                }
+        }
+
+        existenUris=False
+        
+        for url in urls:  
+            seccionState =  {
+                "match":{
+                    "uri": url
+                    }
+                }
+
+            filtroUriSection['bool']['should'].append(seccionState)
+        
+        if existenUris:    
+            q['query']['bool']['must'].append(filtroUriSection)
+                   
 
         print(q)
 
@@ -293,7 +311,7 @@ class Annotation(es.Model):
         return res['count']
 
 
-    def _get_by_multiple(cls,**kwargs):
+    def _get_by_multiple0(cls,**kwargs):
         
         page=kwargs.pop("page")
         estados=kwargs.pop("estados")
@@ -406,6 +424,142 @@ class Annotation(es.Model):
 
         resultado={'annotations':annotations,'numRes':numRes}
         return resultado
+
+
+
+    def _get_by_multiple(cls,**kwargs):
+        
+        page=kwargs.pop("page")
+        estados=kwargs.pop("estados")
+        urls=kwargs.pop("urls")
+        textoForSearch=kwargs.pop("textoABuscar")
+        category=kwargs.pop("category")
+        notreply=kwargs.pop("notreply")
+
+        initReg=(int(page)-1)*10
+        q= {
+            "sort": [
+                {
+                "updated": {
+                    "order": "desc",
+                    "ignore_unmapped": True
+                }
+                }
+            ],
+            "from": initReg,
+            "size": PAGGINATION_SIZE,
+            "query": {
+                "bool": {
+                "must":[]
+                }
+            }
+        }
+
+        #Parametros de busqueda URI:
+        filtroUriSection={
+            "bool": {
+                "should": []
+                }
+        }
+
+        existenUris=False
+        
+        for url in urls:  
+                
+                seccionState =  {
+                    "match":{
+                        "uri": url
+                        }
+                    }
+
+                filtroUriSection['bool']['should'].append(seccionState)
+        
+        if existenUris:    
+            q['query']['bool']['must'].append(filtroUriSection)
+                   
+
+
+        #Parametro de busqueda por texto Box:
+        if textoForSearch != "":
+            sectSearchByText={
+                    "match":{
+                        "text": textoForSearch
+                        }
+                    }
+            q['query']['bool']['must'].append(sectSearchByText)
+
+        #Parametro de busqueda por category:
+
+        if category != "":
+            sectCategory={
+                    "match":{
+                        "category": category
+                        }
+                    }
+            q['query']['bool']['must'].append(sectCategory)
+
+        #Obtenemos solo los reply
+        if notreply:
+
+            seccionJR=  {
+                        "match":{
+                            "category": "reply"
+                            }
+                        }
+
+            q['query']['bool']['must_not']=[seccionJR]
+
+
+
+        #Parametros de busqueda:
+        #Estados:
+
+        filtroEstadosSection={
+            "bool": {
+                "should": []
+                }
+        }
+
+        existenStates=False
+        
+        for keyItem in estados.keys():
+            if estados[keyItem]:
+                existenStates=True
+                if(keyItem=="Approved"):
+                    
+                    valueState=2   
+                if(keyItem=="Archived"):
+                    valueState=1   
+                if(keyItem=="InProgress"):
+                    valueState=0   
+                
+                seccionState =  {
+                    "match":{
+                        "state": valueState
+                        }
+                    }
+
+                filtroEstadosSection['bool']['should'].append(seccionState)
+        
+        if existenStates:    
+            q['query']['bool']['must'].append(filtroEstadosSection)
+                   
+
+                    
+
+        print('_get_by_multiple')
+        print(q)
+
+        res = cls.es.conn.search(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        numRes=res['hits']['total']
+
+        resultado={'annotations':annotations,'numRes':numRes}
+        return resultado
+
+
 
         
     @classmethod

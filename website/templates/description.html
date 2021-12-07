@@ -40,8 +40,8 @@ block content %}
     textoBox = document.getElementById("searchBox");
     texto=textoBox.value;
 
-    descriptionSpan = document.getElementById("descriptionUri");
-    descriptionUri=descriptionSpan.textContent;
+    descriptionSpan = document.getElementById("descriptionId");
+    descriptionId=descriptionSpan.textContent;
     
     let category=''
     if (document.getElementById("rbFeedback").checked) category='feedback';
@@ -118,7 +118,7 @@ block content %}
       method: 'POST',
       url: {{ url_for('store.annotationsIndex')|tojson }},
       contentType: 'application/json;charset=UTF-8',
-      data: JSON.stringify({"textoABuscar":texto,"estados":estados,"descriptionUri":descriptionUri,"page":page,"category":category})
+      data: JSON.stringify({"textoABuscar":texto,"estados":estados,"descriptionId":descriptionId,"page":page,"category":category})
     }).done(onSearchAnnotations);
         
     
@@ -137,6 +137,7 @@ block content %}
 
     <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
     <span id="descriptionUri" hidden>{{description['url']}}</span>
+    <span id="descriptionId" hidden>{{description['id']}}</span>
 
   </div>
   <div class="col-4" >
@@ -236,8 +237,8 @@ block content %}
 <table class="table">
   <thead>
     <tr>
- 
-      <th scope="col-2">Category</th>
+      <th scope="col-1">Page</th>
+      <th scope="col-1">Category</th>
       <th scope="col-2" style="text-align: center;">State</th>
       <th scope="col-2" style="text-align: center;">Nro Replies</th>
       <th scope="col-2" style="min-width: 200px;">Description</th>
@@ -353,6 +354,12 @@ block content %}
 
         </button>
 
+      </td>
+
+      <td style="text-align: center;"> 
+      
+        {{ anotation.uri[-20:]}}
+        
       </td>
 
       <td style="text-align: center;"> 

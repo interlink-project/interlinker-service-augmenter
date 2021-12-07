@@ -1,80 +1,60 @@
 {
-    "took": 1,
-    "timed_out": false,
-    "_shards": {
-        "total": 5,
-        "successful": 5,
-        "failed": 0
-    },
-    "hits": {
-        "total": 1,
-        "max_score": 2.117328,
-        "hits": [
+  "took": 17,
+  "timed_out": false,
+  "_shards": {
+    "total": 5,
+    "successful": 5,
+    "failed": 0
+  },
+  "hits": {
+    "total": 1,
+    "max_score": 2.098612,
+    "hits": [
+      {
+        "_index": "description",
+        "_type": "description",
+        "_id": "AX1_SD4qkuq4cRDKUH1C",
+        "_score": 2.098612,
+        "_source": {
+          "title": "Burial in Riga municipal cemeteries",
+          "description": "e on properly handsome returned throwing am no whatever. In without wishing he of picture no exposed talking minutes. Curiosity continual belonging offending so explained it exquisite. Do remember to followed yourself material mr recurred carriage. High drew west we no or at john. About or given on witty event. Or sociable up material bachelor bringing landlord confined. Busy so many in hung easy find well up. So of exquisite my an explained remainder. Dashwood denoting securing be on perceive my laughing so.\r\n\r\nNow eldest new tastes plenty mother called misery get. Longer excuse for county nor except met its things. Narrow enough sex moment desire are. Hold who what come that seen read age its. Contained or estimable earnestly so perceived. Imprudence he in sufficient cultivated. Delighted promotion improving acuteness an newspaper offending he. Misery in am secure theirs giving an. Design on longer thrown oppose am.\r\n",
+          "keywords": "Burial municipal cemeteries",
+          "moderators": {},
+          "padministration": "Latvija Goverment",
+          "url": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
+          "permissions": {
+            "read": ["group:__world__"]
+          },
+          "urls": [
             {
-                "_index": "annotator",
-                "_type": "annotation",
-                "_id": "1637917456157",
-                "_score": 2.117328,
-                "_source": {
-                    "section_title": null,
-                    "ranges": [
-                        {
-                            "endOffset": 36,
-                            "startOffset": 27,
-                            "start": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[14]/strong[1]",
-                            "end": "/div[1]/div[2]/div[1]/section[1]/div[1]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[14]/strong[1]"
-                        }
-                    ],
-                    "idReplyRoot": "1637917421986",
-                    "like": 1,
-                    "dislike": 1,
-                    "created": "2021-11-26T09:04:16.079938+00:00",
-                    "section": null,
-                    "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero",
-                    "quote": "obligados",
-                    "statechanges": [
-                        {
-                            "date": "2021-11-26T13:13:16",
-                            "endstate": 1,
-                            "text": "",
-                            "objtype": "annotation_dislike",
-                            "user": "d.silva@deusto.es",
-                            "initstate": 0
-                        },
-                        {
-                            "date": "2021-11-26T13:13:17",
-                            "endstate": 1,
-                            "text": "",
-                            "objtype": "annotation_like",
-                            "user": "d.silva@deusto.es",
-                            "initstate": 0
-                        }
-                    ],
-                    "permissions": {
-                        "read": [
-                            "d.silva@deusto.es"
-                        ],
-                        "update": [
-                            "d.silva@deusto.es"
-                        ],
-                        "admin": [
-                            "d.silva@deusto.es"
-                        ],
-                        "delete": [
-                            "d.silva@deusto.es"
-                        ]
-                    },
-                    "data_creacio": 1637917421894,
-                    "idAnotationReply": "annotation-1637917421986",
-                    "text": "<p>This is not relevant.</p>",
-                    "state": 0,
-                    "category": "reply",
-                    "user": "d.silva@deusto.es",
-                    "updated": "2021-11-26T09:04:16.079938+00:00",
-                    "consumer": "***REMOVED***",
-                    "order": "p_p_id_101_INSTANCE_lprzHzvsA9km_"
-                }
+              "createdate": "2021-12-03T08:53:01",
+              "url": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
+              "language": "lv",
+              "email": "d.silva@deusto.es"
+            },
+            {
+              "createdate": "2021-12-03T08:53:01",
+              "url": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts51",
+              "language": "en",
+              "email": "d.silva@deusto.es"
+            },
+            {
+              "createdate": "2021-12-03T08:53:01",
+              "url": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts2",
+              "language": "es",
+              "email": "d.silva@deusto.es"
+            },
+            {
+              "createdate": "2021-12-03T08:53:01",
+              "url": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts3",
+              "language": "sv",
+              "email": "d.silva@deusto.es"
             }
-        ]
-    }
+          ],
+          "created": "2021-12-03T07:53:01.282357+00:00",
+          "updated": "2021-12-03T07:53:01.282357+00:00"
+        }
+      }
+    ]
+  }
 }

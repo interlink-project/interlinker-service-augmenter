@@ -175,7 +175,8 @@ def annotationsIndex():
     category=params.get("category")
 
 
-    descriptionUri=params.get("descriptionUri")
+    descriptionId=params.get("descriptionId")
+    descriptionActual= Description._get_Descriptions_byId(id=descriptionId)[0]
    
 
     page=params.get("page")
@@ -183,7 +184,7 @@ def annotationsIndex():
         page="1"
 
     #Realizo la busqueda:
-    annotations= Annotation._get_by_multiple(Annotation,textoABuscar=textoABuscar,estados=estados,url=descriptionUri,category=category,notreply=True,page=page)
+    annotations= Annotation._get_by_multiple(Annotation,textoABuscar=textoABuscar,estados=estados,urls=descriptionActual['urls'],category=category,notreply=True,page=page)
       
     #nroRegistros= Annotation._get_by_multipleCounts(Annotation,textoABuscar=textoABuscar,estados=estados,url=descriptionUri,page=page)
     numRes=annotations['numRes']
@@ -192,7 +193,9 @@ def annotationsIndex():
 
 
      # Cargo las replies de cada annotacion:
-    stats=Annotation.annotationStats(Annotation,uri=descriptionUri)
+    stats=[]
+    for urlItem in descriptionActual['urls']:
+        stats=stats+Annotation.annotationStats(Annotation,uri=urlItem['url'])
 
     dictStats={}
     for itemStat in stats:
@@ -258,7 +261,6 @@ def descriptionByUrl(urlDescription):
     return jsonify(description[0])
 
     
-
 
 
 # CREATE

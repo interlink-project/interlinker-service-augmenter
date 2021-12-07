@@ -270,6 +270,28 @@ POST description/description/_search
 
 POST description/description/_search
 {
+ 
+    "query": {
+        "nested": {
+            "path": "urls",
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "urls.url": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts2"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
+
+
+POST description/description/_search
+{
 
     "query": {
         "nested": {

@@ -198,15 +198,30 @@ class Description(es.Model):
     
     @classmethod
     def _get_Descriptions_byURI(cls,**kwargs):
-        
-
+        #Search for the description that include this url in the urls set.
+   
+  
         q= {
+        
             "query": {
-                "match": {
-                "url":kwargs.pop("url")
+                "nested": {
+                    "path": "urls",
+                    "query": {
+                        "bool": {
+                            "must": [
+                                {
+                                    "match": {
+                                        "urls.url": kwargs.pop("url")
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         }
+
+       
 
         print(q)
 

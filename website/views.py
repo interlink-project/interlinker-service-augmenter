@@ -343,26 +343,23 @@ def claimModeration():
     #This are the URI's
     urlList=[]
     for key in itemsDict:
-        urlList.append(itemsDict[key])
+        if(key.startswith("id_")):
+            urlList.append(itemsDict[key])
 
-    if(len(urlList)==0):
-        #Si el campo de lista esta vacio miro el campo url
-        if oneUrl != "":
-            urlList.append(oneUrl)
-            itemsDict['url_0']=oneUrl
-        else:
-            flash("It is needed to add at least one URL of description.","info")
-            return authInterlink.moderate()
+    if(len(urlList)==0):        
+        flash("It is needed to add at least one URL of description.","danger")
+        return authInterlink.moderate()
 
 
     #Check if the urls of descriptions are valid:
     allUrlValid=True
     listMsgError=[]
     for key in itemsDict:
-        encontrado=Description._get_Descriptions_byURI(url=itemsDict[key])
-        if (len(encontrado)==0):
-            allUrlValid=False
-            listMsgError.append('The description for '+itemsDict[key]+' do not exist.')
+        if(key.startswith("id_")):
+            encontrado=Description._get_Descriptions_byId(id=itemsDict[key])
+            if (len(encontrado)==0):
+                allUrlValid=False
+                listMsgError.append('The description for '+itemsDict[key]+' do not exist.')
 
     if(not allUrlValid):
         for itemError in listMsgError:
@@ -379,7 +376,7 @@ def claimModeration():
         msg = Message('The user '+firstName+' '+lastName+' ha realizado un claim to be a moderator.', sender = 'interlinkdeusto@gmail.com', recipients = [current_user.email])
 
         sites =" ".join(str(x) for x in urlList)
-        claimInfo= "The user {} {} who is a {} ".format(firstName,lastName,userPosition)+"send a request to be a moderator of the following sites: "
+        claimInfo= "The user {} {} who is a {} ".format(firstName,lastName,userPosition)+"send a request to be a moderator of the following descriptions identifiers: "
         
 
 
@@ -505,12 +502,13 @@ def aproveModerator():
         lisDescriptions={}
         if existUrl:
             for key in argumentos:
-                #urlList.append(argumentos[key])
-                encontrado=Description._get_Descriptions_byURI(url=argumentos[key])
-                if (len(encontrado)!=0):
-                    urlList.append(Description._get_Descriptions_byURI(url=argumentos[key])[0])
-                    #lisDescriptions[argumentos[key]]=Description._get_Descriptions_byURI(url=argumentos[key])[0]
-                
+                if(key.startswith('id_')):
+                    #urlList.append(argumentos[key])
+                    encontrado=Description._get_Descriptions_byId(id=argumentos[key])
+                    if (len(encontrado)!=0):
+                        urlList.append(encontrado[0])
+                        #lisDescriptions[argumentos[key]]=Description._get_Descriptions_byURI(url=argumentos[key])[0]
+                    
                 
         
             
