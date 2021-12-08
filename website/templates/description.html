@@ -89,26 +89,35 @@ block content %}
 
         if (dataItem.category == 'question') {
           questColor = '255, 193, 7';
+          stylebtn = 'btn-warning';
         } else if (dataItem.category == 'term') {
           questColor = '223,6,212';
+          stylebtn = 'btn-danger';
         } else if (dataItem.category == 'feedback') {
           questColor = '25, 135, 84';
+          stylebtn = 'btn-danger';
         }
 
+        //Doy formato a la ruta:
+        ruta = dataItem.uri.split('/');
+        ruta = ruta[ruta.length - 1]
 
 
         if (dataItem.state == 1) { // Archived
           botonCategory = '<button class="btn btn-light"  onclick="window.location.href="/subjectPage/";" style="height: 30px;min-width:100px;" > <span style="position: relative;top: -5px;text-decoration: line-through;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
           sectionCategoria = ' <tr style="color: rgba(141, 140, 140, 0.774);"> <td style="font-weight:bold;"> ' + botonCategory + ' </td>';
+          stateText = 'Archived';
         } else if (dataItem.state == 2) { //Approved
-          botonCategory = '<button class="btn"  onclick="window.location.href="/subjectPage/";" style="height: 30px;min-width:100px;font-weight: bold;background-color:rgba(' + questColor + ',0.8);border-color:#af02a7;" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+          botonCategory = '<button class="btn ' + stylebtn + '"  onclick="window.location.href="/subjectPage/";" style="height: 30px;min-width:100px;font-weight: bold;background-color:rgba(' + questColor + ',0.8);border-color:rgba(' + questColor + ',0.9);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
           sectionCategoria = ' <tr style="font-weight: bold;"> <td style="color:#FFFFFF;"> ' + botonCategory + ' </td>';
+          stateText = 'Approved';
         } else if (dataItem.state == 0) { //In Progress
-          botonCategory = '<button class="btn"  onclick="window.location.href="/subjectPage/";" style="height: 30px;min-width:100px;background-color:rgba(' + questColor + ',0.2);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+          botonCategory = '<button class="btn "  onclick="window.location.href="/subjectPage/";" style="height: 30px;min-width:100px;background-color:rgba(' + questColor + ',0.2);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
           sectionCategoria = ' <tr style="color: rgba(0, 0, 0, 0.774);"> <td style="font-weight:bold;"> ' + botonCategory + ' </td>';
+          stateText = 'In Progress';
         }
 
-        $('#tablaAnnotations').append(sectionCategoria + ' <td> ' + dataItem.state + ' </td> <td> ' + dataItem.nroReplies + ' </td><td>' + dataItem.text + '</td>  <td> ' + ISODateString(dateUpdated) + ' </td> <td>  <a href="/description/' + dataItem.id + '" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>  </td></tr>')
+        $('#tablaAnnotations').append(sectionCategoria + ' <td> /' + ruta + ' </td> <td> ' + stateText + ' </td> <td style="text-align: center;"> <a class="btn btn-outline-dark position-relative">' + dataItem.nroReplies + ' </a></td><td>' + dataItem.text + '</td>  <td> ' + ISODateString(dateUpdated) + ' </td> <td>  <a href="/description/' + dataItem.id + '" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>  </td></tr>')
       }
 
       $('#totalRegisters').text(numeroReg);
@@ -262,8 +271,8 @@ block content %}
 <table class="table">
   <thead>
     <tr>
-      <th scope="col-1">Page</th>
       <th scope="col-1">Category</th>
+      <th scope="col-1" style="text-align: center;">Page</th>
       <th scope="col-2" style="text-align: center;">State</th>
       <th scope="col-2" style="text-align: center;">Nro Replies</th>
       <th scope="col-2" style="min-width: 200px;">Description</th>
@@ -371,8 +380,8 @@ block content %}
           </td>
 
           <td style="text-align: center;">
-
-            {{ anotation.uri[-20:]}}
+            {% set uriPath = anotation.uri.split('/') %}
+            /{{ uriPath[-1:] |join('')}}
 
           </td>
 
