@@ -1,60 +1,67 @@
 {
-  "took": 17,
-  "timed_out": false,
-  "_shards": {
-    "total": 5,
-    "successful": 5,
-    "failed": 0
-  },
-  "hits": {
-    "total": 1,
-    "max_score": 2.098612,
-    "hits": [
-      {
-        "_index": "description",
-        "_type": "description",
-        "_id": "AX1_SD4qkuq4cRDKUH1C",
-        "_score": 2.098612,
-        "_source": {
-          "title": "Burial in Riga municipal cemeteries",
-          "description": "e on properly handsome returned throwing am no whatever. In without wishing he of picture no exposed talking minutes. Curiosity continual belonging offending so explained it exquisite. Do remember to followed yourself material mr recurred carriage. High drew west we no or at john. About or given on witty event. Or sociable up material bachelor bringing landlord confined. Busy so many in hung easy find well up. So of exquisite my an explained remainder. Dashwood denoting securing be on perceive my laughing so.\r\n\r\nNow eldest new tastes plenty mother called misery get. Longer excuse for county nor except met its things. Narrow enough sex moment desire are. Hold who what come that seen read age its. Contained or estimable earnestly so perceived. Imprudence he in sufficient cultivated. Delighted promotion improving acuteness an newspaper offending he. Misery in am secure theirs giving an. Design on longer thrown oppose am.\r\n",
-          "keywords": "Burial municipal cemeteries",
-          "moderators": {},
-          "padministration": "Latvija Goverment",
-          "url": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
-          "permissions": {
-            "read": ["group:__world__"]
-          },
-          "urls": [
+    "took": 1,
+    "timed_out": false,
+    "_shards": {
+        "total": 5,
+        "successful": 5,
+        "failed": 0
+    },
+    "hits": {
+        "total": 1,
+        "max_score": 2.3246877,
+        "hits": [
             {
-              "createdate": "2021-12-03T08:53:01",
-              "url": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
-              "language": "lv",
-              "email": "d.silva@deusto.es"
-            },
-            {
-              "createdate": "2021-12-03T08:53:01",
-              "url": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts51",
-              "language": "en",
-              "email": "d.silva@deusto.es"
-            },
-            {
-              "createdate": "2021-12-03T08:53:01",
-              "url": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts2",
-              "language": "es",
-              "email": "d.silva@deusto.es"
-            },
-            {
-              "createdate": "2021-12-03T08:53:01",
-              "url": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts3",
-              "language": "sv",
-              "email": "d.silva@deusto.es"
+                "_index": "description",
+                "_type": "description",
+                "_id": "AX2fOijeQQ_0OCFdQwHD",
+                "_score": 2.3246877,
+                "_source": {
+                    "title": "Funeral in Riga municipal cemeteries",
+                    "description": "Much did had call new drew that kept. Limits expect wonder law she. Now has you views woman noisy match money rooms. To up remark it eldest length oh passed. Off because yet mistake feeling has men. Consulted disposing to moonlight ye extremity. Engage piqued in on coming.\r\n\r\nFull he none no side. Uncommonly surrounded considered for him are its. It we is read good soon. My to considered delightful invitation announcing of no decisively boisterous. Did add dashwoods deficient man concluded additions resources. Or landlord packages overcame distance smallest in recurred. Wrong maids or be asked no on enjoy. Household few sometimes out attending described. Lain just fact four of am meet high.\r\n\r\nKnowledge nay estimable questions repulsive daughters boy. Solicitude gay way unaffected expression for. His mistress ladyship required off horrible disposed rejoiced. Unpleasing pianoforte unreserved as oh he unpleasant no inquietude insipidity. Advantages can discretion possession add favourable cultivated admiration far. Why rather assure how esteem end hunted nearer and before. By an truth after heard going early given he. Charmed to it excited females whether at examine. Him abilities suffering may are yet dependent.\r\n\r\nAs collected deficient objection by it discovery sincerity curiosity. Quiet decay who round three world whole has mrs man. Built the china there tried jokes which gay why. Assure in adieus wicket it is. But spoke round point and one joy. Offending her moonlight men sweetness see unwilling. Often of it tears whole oh balls share an.",
+                    "keywords": "Funeral Riga municipal cemeteries",
+                    "moderators": [
+                        {
+                            "created": "2021-12-09",
+                            "expire": "2021-12-31",
+                            "email": "d.silva@deusto.es"
+                        }
+                    ],
+                    "padministration": "Latvija Goverment",
+                    "permissions": {
+                        "read": [
+                            "group:__world__"
+                        ]
+                    },
+                    "urls": [
+                        {
+                            "createdate": "2021-12-09T13:44:23",
+                            "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/ProcesaApraksts",
+                            "language": "Undefined",
+                            "email": "d.silva@deusto.es"
+                        },
+                        {
+                            "createdate": "2021-12-09T13:44:23",
+                            "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/DokumentiUnVeidlapas",
+                            "language": "Undefined",
+                            "email": "d.silva@deusto.es"
+                        },
+                        {
+                            "createdate": "2021-12-09T13:44:23",
+                            "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/PakalpojumaMaksajumi",
+                            "language": "Undefined",
+                            "email": "d.silva@deusto.es"
+                        },
+                        {
+                            "createdate": "2021-12-09T13:44:23",
+                            "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/CitaInformacija",
+                            "language": "Undefined",
+                            "email": "d.silva@deusto.es"
+                        }
+                    ],
+                    "created": "2021-12-09T12:45:15.411788+00:00",
+                    "updated": "2021-12-09T14:22:40"
+                }
             }
-          ],
-          "created": "2021-12-03T07:53:01.282357+00:00",
-          "updated": "2021-12-03T07:53:01.282357+00:00"
-        }
-      }
-    ]
-  }
+        ]
+    }
 }

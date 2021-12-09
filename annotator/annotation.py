@@ -180,7 +180,7 @@ class Annotation(es.Model):
 
         
         #Parametros de busqueda URI:
-        urls=kwargs.pop("uri")
+        urls=kwargs.pop("uris")
 
         filtroUriSection={
             "bool": {

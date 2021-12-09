@@ -66,7 +66,7 @@ def inicio():
  
     #Cargo los combos:
 
-    vectorUrls=Description._get_uniqueValues(campo="url")
+    vectorUrls=Description._get_uniqueValuesUrl()
     urlList=[]
     for urls in vectorUrls:
         key=urls["key"]
@@ -144,79 +144,86 @@ def dashboard1():
 def saveDescription():
 
     itemsDict  = request.form.to_dict()
-    site = itemsDict.pop("createUrl")
 
     title = itemsDict.pop("createTitle")
     description = itemsDict.pop("createDescription")
     keywords = itemsDict.pop("createKeywords")
     userNombre = itemsDict.pop("usr")
 
+    descriptionId = itemsDict.pop("descriptionId")
 
+    #Obtengo el valor de la administracion publica
     try:
         publicAdmin = itemsDict.pop("createPA")
     except:
         publicAdmin=""
-
     try:
         newPA = itemsDict.pop("addNewPA")
     except:
         newPA=""
-
     if newPA!="":
         publicAdmin=newPA
 
-
     todayDateTime=datetime.datetime.now().replace(microsecond=0).isoformat()
 
-
-    #Example of vector register:
-    #perms = {'read': ['group:__world__']}
-
- 
-
-    #This are the URI's
-    urlList=[]
+    #Obtengo el listado de urls nuevo
+    listadoUrlNuevo={}
     for key in itemsDict:
         if(key.startswith('url_')):
             webAdress=itemsDict[key]
-
             langCode=itemsDict['sel_'+key.split('_')[1]]
-
-            newUrl= {
-                        'createdate': todayDateTime,
-                        'url': itemsDict[key],
-                        'language': langCode,
-                        'email': current_user.email
-                    }
+            if len(langCode)>2:
+                langCode='Undefined'
+            listadoUrlNuevo[webAdress]=langCode
 
 
-            urlList.append(newUrl)
-
-    if(len(urlList)==0):
+    if(len(listadoUrlNuevo)==0):
         #Si el campo de lista esta vacio miro el campo url
         flash("It is needed to add at least one URL of description.","info")
         return jsonify({"error":"It is needed to add at least one URL of description"})
 
-    #Busco si esta la descripcion existe:
+    #Busco si alguno de los URLS ya ha sido incluido en existe:
+    existePreviamente=False
+    listErrorDescriptionSameUrl=[]
+    for itemUrl in listadoUrlNuevo:
+        editDescripcion =Description._get_Descriptions_byURI(url=listadoUrlNuevo[itemUrl])
+        if len(editDescripcion) != 0:
+            existePreviamente=True
+            nombreDesc=editDescripcion.name
+            urlDesc=editDescripcion.url
+            textoError='Error: La descripcion '+nombreDesc+' contiene la url:'+urlDesc
+            listErrorDescriptionSameUrl=listErrorDescriptionSameUrl+textoError
+    
+    if existePreviamente:
+        flash("One or some of the urls had been used in another description."+listErrorDescriptionSameUrl,"info")
+        return jsonify({listErrorDescriptionSameUrl})
 
-    editDescripcion =Description._get_Descriptions_byURI(url=site)
     
-    
-    if len(editDescripcion)==0:
+    if descriptionId=='':
         #Create:
-
         perms = {'read': ['group:__world__']}
-  
         moderat = {}
+
+
+        #Creo listados de Urls:
+        urls=[]
+        for itemUrlFormat in listadoUrlNuevo:
+            newUrl= {
+                        'createdate': todayDateTime,
+                        'url': itemUrlFormat,
+                        'language': listadoUrlNuevo[itemUrlFormat],
+                        'email': current_user.email
+                    }
+            urls.append(newUrl)
 
         newdescription=Description(title=title,description=description,
                                 keywords=keywords,moderators=moderat,
-                                padministration=publicAdmin,url=site,
-                                permissions=perms,urls=urlList
+                                padministration=publicAdmin,
+                                permissions=perms,urls=urls
                                 )
     
     
-        if(title=="" or description==""  or publicAdmin=="" or site=="" ):
+        if(title=="" or description==""  or publicAdmin==""  ):
             description=editDescripcion 
             flash("Algunos campos de la descripción no son correctos.","info")
             return redirect('/descriptionDetail')
@@ -227,9 +234,9 @@ def saveDescription():
             flash("Registro creado correctamente.","info")
 
     else:
-        #Update: 
-        editDescripcion=editDescripcion[0]
 
+        editDescripcion =Description._get_Descriptions_byId(id=descriptionId)[0]
+        #Update: 
         editDescripcion.title=title
         editDescripcion.description=description
         editDescripcion.keywords=keywords
@@ -237,15 +244,26 @@ def saveDescription():
         editDescripcion.updated=todayDateTime
 
 
+        listUrlUpdate=editDescripcion['urls']
+        listModificado=editDescripcion['urls']
+
+        #Busco Url a borrar:
+        contador=0
+        for itemUrl in listUrlUpdate:
+            if itemUrl['url'] not in listadoUrlNuevo.keys():
+               listModificado.pop(contador)       
+            contador=contador+1     
+        
         #Actualizo el listado de links:
-        for key in itemsDict:
-            if(key.startswith('url_')):
-                webAdress=itemsDict[key]
-                langCode=itemsDict['sel_'+key.split('_')[1]]
+        for key in listadoUrlNuevo:
+
+                webAdress=key
+                langCode=listadoUrlNuevo[key]
 
                 #Reviso que todos esten y los que no estan los agrego:
+
                 existe=False
-                for itemUrl in editDescripcion['urls']:
+                for itemUrl in listModificado:
                     if ( itemUrl['url'] == webAdress ):
                         #Ya existe
                         webAdress
@@ -253,61 +271,32 @@ def saveDescription():
                         break
 
                 if existe==False:
-                #Es nuevo y Agrego
+                    #Es nuevo y Agrego
                     newUrl= {
                     'createdate': todayDateTime,
                     'url': webAdress,
                     'language': langCode,
                     'email': current_user.email
                     }
-                    editDescripcion['urls'].append(newUrl)
+                    listModificado.append(newUrl)
                         
-
-
+        editDescripcion['urls']=listModificado
 
 
         #Comprobar los permisos de edicion del usuario:
-        nroEnc=editDescripcion._get_checkPermisos_byURI(email=userNombre,url=site)
+        nroEnc=editDescripcion._get_checkPermisos_byId(email=userNombre,id=descriptionId)
 
         if(nroEnc!=0):
             editDescripcion.updateFields(index="description")   
             description=editDescripcion 
             flash("Registro editado correctamente.","info")
 
-            
-
         else:
             description=editDescripcion 
             flash("No tienes permisos de moderador para editar esta descripción.","info")
 
-
-        
-
-
-    
     
     return redirect('/description/'+description['id']+'/edit')
-
-""" 
-    
-    "title": {"type": "string","analyzer": "standard"},
-    "description": {"type": "string","analyzer": "standard"},
-    "keywords": {"type": "string","analyzer": "standard"},
-    "moderators": {"type": "nested",
-        "properties": {
-            "email": {"type": "string"},
-            "createdat": {"type": "date","format": "dateOptionalTime"},
-            "expire": { "type": "date","format": "dateOptionalTime"},
-        }
-    },
-    "padministration": {"type": "string","analyzer": "standard"},
-    "url": {"type": "string","index": "not_analyzed"},
-    'created': {'type': 'date'},
-    'updated': {'type': 'date'}
-
-
- """
-
 
 
     
@@ -540,13 +529,13 @@ def aprovarClaimsList():
         if(i!=0):
             contador=i*4
         estado=argumentosList[contador]
-        url=argumentosList[contador+1]
+        descriptionId=argumentosList[contador+1]
         initDate=argumentosList[contador+2]
         endDate=argumentosList[contador+3]
         
 
         #Agrego como moderador en la descripcion:
-        descriptions=Description._get_Descriptions_byURI(url=url)
+        descriptions=Description._get_Descriptions_byId(id=descriptionId)
         
         if len(descriptions)==1:
             if estado=="on":

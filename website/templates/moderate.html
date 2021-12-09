@@ -294,8 +294,6 @@ block head %} {{ super() }}
                 <thead>
                     <tr>
                         
-                        <th scope="col-1">Domain</th>
-                        <th scope="col-2" >Page</th>
                         <th scope="col-3">Title</th>
                         <th scope="col-2">Period</th>
                         <th scope="col-1">Option</th>
@@ -305,21 +303,7 @@ block head %} {{ super() }}
                 <tbody id="tablaDescriptions">
                     {% for description in descriptions %}
                     <tr>
-                        {% set rowloop = loop %}
-                        
 
-                        {% set completeAdress = description.url.split('/') %}
-
-                        <td>{{ completeAdress[2] }}</td>
-
-                        {% set specificPage = description.url.split(completeAdress[0:2]|join("/")) %}
-
-                        {% if specificPage[1]|length >  30 %}
-                            <td >{{ specificPage[1][0:30] }}...</td>
-
-                        {% else %}
-                            <td >{{ specificPage[1] }}</td>
-                        {% endif %}
 
                         <td>{{ description.title}}</td>
 

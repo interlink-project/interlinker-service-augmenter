@@ -72,7 +72,7 @@ def dashboard():
 
      #Cargo los combos:
 
-    vectorUrls=Description._get_uniqueValues(campo="url")
+    vectorUrls=Description._get_uniqueValuesUrl()
     urlList=[]
     for urls in vectorUrls:
         key=urls["key"]
@@ -119,7 +119,7 @@ def dashboard():
     for itemDesc in res:
         
         #Cargo datos estadisticos de las descripciones
-        resCategory=Annotation.descriptionStats(Annotation,uri=itemDesc['url'])
+        resCategory=Annotation.descriptionStats(Annotation,uris=itemDesc['urls'])
         
         nroFeedbacks=0
         nroQuestions=0
@@ -363,7 +363,10 @@ def editDescription(descriptionId=None,option='Edit'):
     description = Description._get_Descriptions_byId(id=descriptionId)[0]   
     
     for itemUrl in description['urls']:
-        itemUrl['langText']=getLanguagesList()[itemUrl['language']]
+        if itemUrl['language']!='Undefined':
+            itemUrl['langText']=getLanguagesList()[itemUrl['language']]
+        else:
+            itemUrl['langText']="Undefined"
 
 
     return render_template("descriptionDetail.html", user=current_user, description=description,option=option,publicsa=paList)

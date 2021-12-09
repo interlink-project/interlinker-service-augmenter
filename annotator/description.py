@@ -176,6 +176,45 @@ class Description(es.Model):
 
 
     @classmethod
+    def _get_uniqueValuesUrl(cls):
+        
+        q= {
+            "aggs" : {
+                        "urls" : {
+                            "nested" : {
+                                "path" : "urls"
+                            },
+                            "aggs" : {
+                                "group_by_url": {
+                                    "terms": {
+                                        "field": "urls.url"
+                                    }
+                                }
+
+                            }
+                        }
+                    },
+            "size": 0
+        }
+
+        
+
+        res = cls.es.conn.search(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+
+        resultadosDistintos=res["aggregations"]["urls"]["group_by_url"]["buckets"]
+        
+
+        print(resultadosDistintos)
+
+        return resultadosDistintos
+
+
+    
+
+
+    @classmethod
     def _get_Descriptions_byId(cls,**kwargs):
         
         q= {
@@ -274,7 +313,46 @@ class Description(es.Model):
     
         return res['count']
 
-   
+    def _get_checkPermisos_byId(cls,**kwargs):
+
+        q= {
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "_id":kwargs.pop("id")
+                            }
+                        },
+                        {
+                            "nested": {
+                                "path": "moderators",
+                                "query": {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "match": {
+                                                    "moderators.email": kwargs.pop("email")
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+
+        print(q)
+
+    
+        res = cls.es.conn.count(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+    
+        return res['count']
 
 
     @classmethod
@@ -679,7 +757,6 @@ class Description(es.Model):
                 "description":self.description,
                 "keywords":self.keywords,
                 "padministration":self.padministration,
-                "url":self['url'],
                 "urls":self['urls'],
                 "updated":datetime.datetime.now().replace(microsecond=0).isoformat()
                 }

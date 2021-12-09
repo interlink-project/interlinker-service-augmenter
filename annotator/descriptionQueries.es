@@ -629,13 +629,32 @@ POST description/description/_search
     "aggs": {
         "group_by_url": {
             "terms": {
-                "field": "url"
+                "field": "id"
             }
         }
     },
-     "size": 0
+    "size": 0
 }
 
+
+POST description/description/_search
+{
+    "aggs" : {
+        "urls" : {
+            "nested" : {
+                "path" : "urls"
+            },
+            "aggs" : {
+                "group_by_url": {
+                    "terms": {
+                        "field": "urls.url"
+                    }
+                }
+
+            }
+        }
+    }
+}
 
 
 
@@ -833,6 +852,41 @@ GET description/description/_search
             "must": [
                 {
                     "match_all": {}
+                }
+            ]
+        }
+    }
+}
+
+
+POST description/description/_search
+
+
+POST description/description/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "_id": "AX2fOijeQQ_0OCFdQwHD"
+                    }
+                },
+                {
+                    "nested": {
+                        "path": "moderators",
+                        "query": {
+                            "bool": {
+                                "must": [
+                                    {
+                                        "match": {
+                                            "moderators.email": "d.silva@deusto.es"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
                 }
             ]
         }
