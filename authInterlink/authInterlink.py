@@ -118,8 +118,13 @@ def dashboard():
     #Cargo los números de anotaciones por categoria
     for itemDesc in res:
         
+        #Obtengo los Urls:
+        listUrl=[]
+        for url in itemDesc['urls']:
+            listUrl.append(url['url'])
+
         #Cargo datos estadisticos de las descripciones
-        resCategory=Annotation.descriptionStats(Annotation,uris=itemDesc['urls'])
+        resCategory=Annotation.descriptionStats(Annotation,uris=listUrl)
         
         nroFeedbacks=0
         nroQuestions=0
@@ -381,10 +386,10 @@ def subjectPage(descriptionId=None,annotatorId=None):
 
     annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
 
-    nroReplies = Annotation.count(query={ 'uri': description['url'] ,'category':'reply' })
-    replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  },limit=nroReplies)
+    nroReplies = Annotation.count(query={ '_id': description['id'] ,'category':'reply' })
+    replies = Annotation.search(query={ '_id': description['id'] ,'category':'reply'  },limit=nroReplies)
 
-    nroRepliesOfAnnotation = Annotation.count(query={ 'uri': description['url'] ,'category':'reply','idReplyRoot':annotatorId  })
+    nroRepliesOfAnnotation = Annotation.count(query={ '_id': description['id'] ,'category':'reply','idReplyRoot':annotatorId  })
     
     return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
    # return 'la desc: '+category+'lauri is'+str(uri) 

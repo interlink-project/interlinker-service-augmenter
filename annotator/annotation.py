@@ -191,6 +191,7 @@ class Annotation(es.Model):
         existenUris=False
         
         for url in urls:  
+            existenUris=True
             seccionState =  {
                 "match":{
                     "uri": url
@@ -465,14 +466,14 @@ class Annotation(es.Model):
         existenUris=False
         
         for url in urls:  
-                
-                seccionState =  {
-                    "match":{
-                        "uri": url
-                        }
+            existenUris=True    
+            seccionState =  {
+                "match":{
+                    "uri": url
                     }
+                }
 
-                filtroUriSection['bool']['should'].append(seccionState)
+            filtroUriSection['bool']['should'].append(seccionState)
         
         if existenUris:    
             q['query']['bool']['must'].append(filtroUriSection)

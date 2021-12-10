@@ -1,67 +1,14 @@
 {
-    "took": 1,
-    "timed_out": false,
-    "_shards": {
-        "total": 5,
-        "successful": 5,
-        "failed": 0
-    },
-    "hits": {
-        "total": 1,
-        "max_score": 2.3246877,
-        "hits": [
-            {
-                "_index": "description",
-                "_type": "description",
-                "_id": "AX2fOijeQQ_0OCFdQwHD",
-                "_score": 2.3246877,
-                "_source": {
-                    "title": "Funeral in Riga municipal cemeteries",
-                    "description": "Much did had call new drew that kept. Limits expect wonder law she. Now has you views woman noisy match money rooms. To up remark it eldest length oh passed. Off because yet mistake feeling has men. Consulted disposing to moonlight ye extremity. Engage piqued in on coming.\r\n\r\nFull he none no side. Uncommonly surrounded considered for him are its. It we is read good soon. My to considered delightful invitation announcing of no decisively boisterous. Did add dashwoods deficient man concluded additions resources. Or landlord packages overcame distance smallest in recurred. Wrong maids or be asked no on enjoy. Household few sometimes out attending described. Lain just fact four of am meet high.\r\n\r\nKnowledge nay estimable questions repulsive daughters boy. Solicitude gay way unaffected expression for. His mistress ladyship required off horrible disposed rejoiced. Unpleasing pianoforte unreserved as oh he unpleasant no inquietude insipidity. Advantages can discretion possession add favourable cultivated admiration far. Why rather assure how esteem end hunted nearer and before. By an truth after heard going early given he. Charmed to it excited females whether at examine. Him abilities suffering may are yet dependent.\r\n\r\nAs collected deficient objection by it discovery sincerity curiosity. Quiet decay who round three world whole has mrs man. Built the china there tried jokes which gay why. Assure in adieus wicket it is. But spoke round point and one joy. Offending her moonlight men sweetness see unwilling. Often of it tears whole oh balls share an.",
-                    "keywords": "Funeral Riga municipal cemeteries",
-                    "moderators": [
-                        {
-                            "created": "2021-12-09",
-                            "expire": "2021-12-31",
-                            "email": "d.silva@deusto.es"
-                        }
-                    ],
-                    "padministration": "Latvija Goverment",
-                    "permissions": {
-                        "read": [
-                            "group:__world__"
-                        ]
-                    },
-                    "urls": [
-                        {
-                            "createdate": "2021-12-09T13:44:23",
-                            "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/ProcesaApraksts",
-                            "language": "Undefined",
-                            "email": "d.silva@deusto.es"
-                        },
-                        {
-                            "createdate": "2021-12-09T13:44:23",
-                            "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/DokumentiUnVeidlapas",
-                            "language": "Undefined",
-                            "email": "d.silva@deusto.es"
-                        },
-                        {
-                            "createdate": "2021-12-09T13:44:23",
-                            "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/PakalpojumaMaksajumi",
-                            "language": "Undefined",
-                            "email": "d.silva@deusto.es"
-                        },
-                        {
-                            "createdate": "2021-12-09T13:44:23",
-                            "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/CitaInformacija",
-                            "language": "Undefined",
-                            "email": "d.silva@deusto.es"
-                        }
-                    ],
-                    "created": "2021-12-09T12:45:15.411788+00:00",
-                    "updated": "2021-12-09T14:22:40"
-                }
-            }
-        ]
-    }
+  "took": 2,
+  "timed_out": false,
+  "_shards": {
+    "total": 5,
+    "successful": 5,
+    "failed": 0
+  },
+  "hits": {
+    "total": 0,
+    "max_score": null,
+    "hits": []
+  }
 }

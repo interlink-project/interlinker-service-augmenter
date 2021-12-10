@@ -183,8 +183,11 @@ def annotationsIndex():
     if(page==None):
         page="1"
 
+    listUrl=[]
+    for url in descriptionActual['urls']: 
+        listUrl.append(url['url'])
     #Realizo la busqueda:
-    annotations= Annotation._get_by_multiple(Annotation,textoABuscar=textoABuscar,estados=estados,urls=descriptionActual['urls'],category=category,notreply=True,page=page)
+    annotations= Annotation._get_by_multiple(Annotation,textoABuscar=textoABuscar,estados=estados,urls=listUrl,category=category,notreply=True,page=page)
       
     #nroRegistros= Annotation._get_by_multipleCounts(Annotation,textoABuscar=textoABuscar,estados=estados,url=descriptionUri,page=page)
     numRes=annotations['numRes']

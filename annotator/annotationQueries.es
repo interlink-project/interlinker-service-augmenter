@@ -38,16 +38,6 @@ POST annotator/annotation/_search
         "bool": {
             "must": [
                 {
-                    "match": {
-                        "text": "relevant"
-                    }
-                },
-                {
-                    "match": {
-                        "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero"
-                    }
-                },
-                {
                     "bool": {
                         "should": [
                             {
@@ -66,6 +56,16 @@ POST annotator/annotation/_search
                                 }
                             }
                         ]
+                    }
+                },
+                {
+                    "match": {
+                        "text": "relevant"
+                    }
+                },
+                {
+                    "match": {
+                        "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero"
                     }
                 }
             ]
@@ -183,3 +183,119 @@ POST annotator/annotation/_search
 }
 
 POST annotator/annotation/_search
+{
+    "sort": [
+        {
+            "updated": {
+                "order": "desc",
+                "ignore_unmapped": "True"
+            }
+        }
+    ],
+    "from": 0,
+    "size": 10,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "bool": {
+                        "should": [
+                            {
+                                "match": {
+                                    "state": 0
+                                }
+                            },
+                            {
+                                "match": {
+                                    "state": 1
+                                }
+                            },
+                            {
+                                "match": {
+                                    "state": 2
+                                }
+                            }
+                        ]
+                    }
+                }
+            ],
+            "must_not": [
+                {
+                    "match": {
+                        "category": "reply"
+                    }
+                }
+            ]
+        }
+    }
+}
+
+POST annotator/annotation/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "bool": {
+                        "should": [
+                            {
+                                "match": {
+                                    "uri": {
+                                        "createdate": "2021-12-10T10:01:06",
+                                        "language": "lv",
+                                        "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/ProcesaApraksts",
+                                        "email": "d.silva@deusto.es"
+                                    }
+                                }
+                            },
+                            {
+                                "match": {
+                                    "uri": {
+                                        "createdate": "2021-12-10T10:01:06",
+                                        "language": "lv",
+                                        "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/DokumentiUnVeidlapas",
+                                        "email": "d.silva@deusto.es"
+                                    }
+                                }
+                            },
+                            {
+                                "match": {
+                                    "uri": {
+                                        "createdate": "2021-12-10T10:01:06",
+                                        "language": "lv",
+                                        "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/PakalpojumaMaksajumi",
+                                        "email": "d.silva@deusto.es"
+                                    }
+                                }
+                            },
+                            {
+                                "match": {
+                                    "uri": {
+                                        "createdate": "2021-12-10T10:01:06",
+                                        "language": "lv",
+                                        "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/CitaInformacija",
+                                        "email": "d.silva@deusto.es"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    },
+    "aggs": {
+        "group_category": {
+            "terms": {
+                "field": "category"
+            },
+            "aggs": {
+                "group_state": {
+                    "terms": {
+                        "field": "state"
+                    }
+                }
+            }
+        }
+    }
+}
