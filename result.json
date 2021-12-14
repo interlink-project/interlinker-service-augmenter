@@ -1,5 +1,5 @@
 {
-  "took": 2,
+  "took": 8,
   "timed_out": false,
   "_shards": {
     "total": 5,
@@ -7,8 +7,60 @@
     "failed": 0
   },
   "hits": {
-    "total": 0,
+    "total": 1,
     "max_score": null,
-    "hits": []
+    "hits": [
+      {
+        "_index": "description",
+        "_type": "description",
+        "_id": "AX2jkyPZlFfA_SD7TLxL",
+        "_score": null,
+        "_source": {
+          "title": "Burial in Riga municipal cemeteries",
+          "description": "ontrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section.\r\n\r\nThe standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.",
+          "keywords": "Burial cemeteries",
+          "moderators": [
+            {
+              "created": "2021-12-10",
+              "expire": "2021-12-31",
+              "email": "d.silva@deusto.es"
+            }
+          ],
+          "padministration": "Latvija Goverment",
+          "permissions": {
+            "read": ["group:__world__"]
+          },
+          "urls": [
+            {
+              "createdate": "2021-12-10T10:01:06",
+              "language": "lv",
+              "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/ProcesaApraksts",
+              "email": "d.silva@deusto.es"
+            },
+            {
+              "createdate": "2021-12-10T10:01:06",
+              "language": "lv",
+              "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/DokumentiUnVeidlapas",
+              "email": "d.silva@deusto.es"
+            },
+            {
+              "createdate": "2021-12-10T10:01:06",
+              "language": "lv",
+              "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/PakalpojumaMaksajumi",
+              "email": "d.silva@deusto.es"
+            },
+            {
+              "createdate": "2021-12-10T10:01:06",
+              "language": "lv",
+              "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/CitaInformacija",
+              "email": "d.silva@deusto.es"
+            }
+          ],
+          "created": "2021-12-10T09:01:06.401874+00:00",
+          "updated": "2021-12-10T12:23:11"
+        },
+        "sort": [1639138991000]
+      }
+    ]
   }
 }

@@ -242,8 +242,11 @@ def descriptionsIndex():
 
 
     #annotations = g.annotation_class.search(user=user)
-    descriptions= Description._get_by_multiple(textoABuscar=textoABuscar,padministration=padministration,url=domain,page=page)
-    nroRegistros= Description._get_by_multipleCounts(textoABuscar=textoABuscar,padministration=padministration,url=domain)
+    descriptions= Description._get_by_multiple(textoABuscar=textoABuscar,padministration=padministration,urlPrefix=domain,page=page)
+    
+    nroRegistros=descriptions['numRes']
+    descriptions=descriptions['descriptions']
+    #nroRegistros= Description._get_by_multipleCounts(textoABuscar=textoABuscar,padministration=padministration,urlPrefix=domain)
     
     
     return jsonify({'descriptions':descriptions,'nroRegistros':nroRegistros})

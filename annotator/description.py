@@ -484,7 +484,8 @@ class Description(es.Model):
 
     @classmethod
     def _get_by_multiple(cls,**kwargs):
-        
+
+        #Base filter parameters
         page=kwargs.get("page")
         initReg=(int(page)-1)*10
         q= {
@@ -497,74 +498,72 @@ class Description(es.Model):
                 }
             ],
             "from": initReg,
-            "size": PAGGINATION_SIZE,
-            "query": {
-            "bool": {
-            "must":[
-                {
-                "prefix":{
-                    "title":kwargs.get("textoABuscar")
+            "size": PAGGINATION_SIZE
+        }
+
+
+        #Filter by searchBox
+        textoBusqueda=kwargs.pop("textoABuscar")
+        if textoBusqueda=='':
+            searchScope={
+                            "match_all": {}
+                        }
+        else:
+            searchScope={
+                       
+                        "bool": {
+                            "must":[
+                                {
+                                "match":{
+                                    "title":textoBusqueda
+                                    }
+                                }
+                            ]
+                        }
+                       
+                        }
+
+        q['query']=searchScope
+
+        #Filter by Public administration:
+        padminitration=kwargs.pop("padministration")
+
+        #Filter by Public administration:
+        if padminitration!='':
+            q['query']['bool']['must'].append({
+                                                "match":{
+                                                    "padministration":padminitration
+                                                    }
+                                                })
+
+        #Filter by Domain
+        urlPrefix=kwargs.pop("urlPrefix")
+        if urlPrefix!='':
+            q['query']['bool']['must'].append(
+{
+                    "nested": {
+                        "path": "urls",
+                        "query": {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "prefix": {
+                                            "urls.url": "https://"+urlPrefix
+                                        }
+                                    },
+                                    {
+                                        "prefix": {
+                                            "url": "http://"+urlPrefix
+                                        }
+                                    }
+                                ]
+                            }
+                        }
                     }
                 }
-            ]
-            }
-        }
-        }
-
-        #Parametros de busqueda:
-
-        i = 0
-
-        for key, value in kwargs.items():
-
-            i += 1
-
-            if(key=='url'):
-
-                preUrl={"bool": {
-                "should":[
-                ]
-                }}
-
-                seccion1 =  {
-                    "prefix":{
-                        key: 'http://'+value
-                        }
-
-                    }
-                preUrl['bool']['should'].append(seccion1)
-                seccion2 =  {
-                    "prefix":{
-                        key: 'https://'+value
-                        }
-
-                    }
-                preUrl['bool']['should'].append(seccion2)
-                q['query']['bool']['must'].append(preUrl)
-
-            else:    
-                if value=='Unassigned':
-                    value=''
-
-                    seccion =  {
-                        "match":{
-                            key: value
-                            }
-
-                        }
-
-                    if(key!='textoABuscar' and key!='page'):
-                        q['query']['bool']['must'].append(seccion)
-                else:
-                    seccion =  {
-                        "match":{
-                            key: value
-                            }
-
-                        }
-
-                    if(key!='textoABuscar' and key!='page'and value!=''):
-                        q['query']['bool']['must'].append(seccion)
+            )
+            
+    
 
         print('_get_by_multiple')
         print(q)
@@ -572,7 +571,14 @@ class Description(es.Model):
         res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
                                  body=q)
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+
+        descriptions=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        numRes=res['hits']['total']
+
+        resultado={'descriptions':descriptions,'numRes':numRes}
+        return resultado
+
 
         
     @classmethod

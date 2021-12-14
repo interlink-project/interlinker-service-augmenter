@@ -892,3 +892,56 @@ POST description/description/_search
         }
     }
 }
+
+
+
+POST description/description/_search
+{
+    "sort": [
+        {
+            "updated": {
+                "order": "desc",
+                "ignore_unmapped": "True"
+            }
+        }
+    ],
+    "from": 0,
+    "size": 10,
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "title": "burial"
+                    }
+                },
+                {
+                    "match": {
+                        "padministration": "Latvija Goverment"
+                    }
+                },
+                {
+                    "nested": {
+                        "path": "urls",
+                        "query": {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "prefix": {
+                                            "urls.url": "https://"
+                                        }
+                                    },
+                                    {
+                                        "prefix": {
+                                            "url": "http://"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
