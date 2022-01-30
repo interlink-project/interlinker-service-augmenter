@@ -167,14 +167,29 @@ def saveDescription():
     todayDateTime=datetime.datetime.now().replace(microsecond=0).isoformat()
 
     #Obtengo el listado de urls nuevo
+
+    if 'MainUrlRadio' in itemsDict.keys():
+        mainPageItem=itemsDict['MainUrlRadio']
+    else:
+        mainPageItem=''
+
+
+  
+
+
     listadoUrlNuevo={}
     for key in itemsDict:
         if(key.startswith('url_')):
+
+            isMain=False
+            if(key==mainPageItem):
+                isMain=True
+
             webAdress=itemsDict[key]
-            langCode=itemsDict['sel_'+key.split('_')[1]]
+            langCode=itemsDict['langCode_'+key.split('_')[1]]
             if len(langCode)>2:
                 langCode='Undefined'
-            listadoUrlNuevo[webAdress]=langCode
+            listadoUrlNuevo[webAdress]=[langCode,isMain]
 
 
     if(len(listadoUrlNuevo)==0):
@@ -186,20 +201,24 @@ def saveDescription():
     existePreviamente=False
     listErrorDescriptionSameUrl=[]
     for itemUrl in listadoUrlNuevo:
-        editDescripcion =Description._get_Descriptions_byURI(url=listadoUrlNuevo[itemUrl])
+        editDescripcion =Description._get_Descriptions_byURI(url=itemUrl)
         if len(editDescripcion) != 0:
             existePreviamente=True
-            nombreDesc=editDescripcion.name
-            urlDesc=editDescripcion.url
-            textoError='Error: La descripcion '+nombreDesc+' contiene la url:'+urlDesc
-            listErrorDescriptionSameUrl=listErrorDescriptionSameUrl+textoError
+            nombreDesc=editDescripcion[0]['title']
+            textoError='Error: La descripcion '+nombreDesc+' contiene la url:'+itemUrl
+            listErrorDescriptionSameUrl.append(textoError)
     
-    if existePreviamente:
-        flash("One or some of the urls had been used in another description."+listErrorDescriptionSameUrl,"info")
-        return jsonify({listErrorDescriptionSameUrl})
-
+   
     
     if descriptionId=='':
+
+        #Si existe una descripcion con alguna de las descripciones presentar error creacion
+        if existePreviamente:
+            listErroresDes = " " 
+            listErroresDes.join(listErrorDescriptionSameUrl)
+            flash("One or some of the urls had been used in another description."+listErroresDes,"info")
+            return jsonify({'Errores':listErroresDes})
+
         #Create:
         perms = {'read': ['group:__world__']}
         moderat = {}
@@ -211,7 +230,8 @@ def saveDescription():
             newUrl= {
                         'createdate': todayDateTime,
                         'url': itemUrlFormat,
-                        'language': listadoUrlNuevo[itemUrlFormat],
+                        'language': listadoUrlNuevo[itemUrlFormat][0],
+                        'isMain': listadoUrlNuevo[itemUrlFormat][1],
                         'email': current_user.email
                     }
             urls.append(newUrl)
@@ -258,7 +278,7 @@ def saveDescription():
         for key in listadoUrlNuevo:
 
                 webAdress=key
-                langCode=listadoUrlNuevo[key]
+                langCode=listadoUrlNuevo[key][0]
 
                 #Reviso que todos esten y los que no estan los agrego:
 
@@ -266,7 +286,8 @@ def saveDescription():
                 for itemUrl in listModificado:
                     if ( itemUrl['url'] == webAdress ):
                         #Ya existe
-                        webAdress
+                        itemUrl['language']=langCode
+                        itemUrl['isMain']=listadoUrlNuevo[key][1]
                         existe=True
                         break
 
@@ -276,6 +297,7 @@ def saveDescription():
                     'createdate': todayDateTime,
                     'url': webAdress,
                     'language': langCode,
+                    'isMain': listadoUrlNuevo[key][1],
                     'email': current_user.email
                     }
                     listModificado.append(newUrl)
@@ -705,7 +727,7 @@ def modifica(rutaPagina,userId):
             hrefVal=a_Link.attrs.get("href")
             if hrefVal.startswith('/'):
                 newURLVal = urljoin(rutaPagina, hrefVal)
-                a_Link.attrs['href']="/website/modifica/d.silva@deusto.es/"+newURLVal
+                a_Link.attrs['href']="/website/modifica/d.silva@deusto.es/"+newURLVal.lower()
                 print(a_Link)
 
 

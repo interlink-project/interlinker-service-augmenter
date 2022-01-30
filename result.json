@@ -1,66 +1,515 @@
 {
-  "took": 8,
-  "timed_out": false,
-  "_shards": {
-    "total": 5,
-    "successful": 5,
-    "failed": 0
-  },
-  "hits": {
-    "total": 1,
-    "max_score": null,
-    "hits": [
-      {
-        "_index": "description",
-        "_type": "description",
-        "_id": "AX2jkyPZlFfA_SD7TLxL",
-        "_score": null,
-        "_source": {
-          "title": "Burial in Riga municipal cemeteries",
-          "description": "ontrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section.\r\n\r\nThe standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.",
-          "keywords": "Burial cemeteries",
-          "moderators": [
+    "took": 1,
+    "timed_out": false,
+    "_shards": {
+        "total": 5,
+        "successful": 5,
+        "failed": 0
+    },
+    "hits": {
+        "total": 22,
+        "max_score": 1,
+        "hits": [
             {
-              "created": "2021-12-10",
-              "expire": "2021-12-31",
-              "email": "d.silva@deusto.es"
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1643013940941",
+                "_score": 1,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 1329,
+                            "startOffset": 1312,
+                            "start": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]",
+                            "end": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]"
+                        }
+                    ],
+                    "like": 0,
+                    "dislike": 0,
+                    "created": "2022-01-24T08:45:40.938835+00:00",
+                    "section": null,
+                    "uri": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
+                    "quote": "saraksts, kas no",
+                    "statechanges": [
+                        {
+                            "date": "2022-01-24T17:16:52",
+                            "endstate": 2,
+                            "text": "This text is the best way yto say",
+                            "objtype": "annotation_state",
+                            "user": "d.silva@deusto.es",
+                            "initstate": 0
+                        }
+                    ],
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1643013940930,
+                    "text": "<p>my question is 2</p>",
+                    "state": 2,
+                    "caer": "d.silva@deusto.es",
+                    "utegory": "question",
+                    "uspdated": "2022-01-24T08:45:40.938835+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "uxDescriptionLongPanel"
+                }
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1643013931584",
+                "_score": 1,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 1147,
+                            "startOffset": 1129,
+                            "start": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]",
+                            "end": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]"
+                        }
+                    ],
+                    "like": 0,
+                    "dislike": 0,
+                    "created": "2022-01-24T08:45:31.522963+00:00",
+                    "section": null,
+                    "uri": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
+                    "quote": "mējot Apbedīšanas",
+                    "statechanges": [
+                        {
+                            "date": "2022-01-24T17:18:40",
+                            "endstate": 1,
+                            "text": "this is not accepted",
+                            "objtype": "annotation_state",
+                            "user": "d.silva@deusto.es",
+                            "initstate": 0
+                        }
+                    ],
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1643013931514,
+                    "text": "<p>my question is 1</p>",
+                    "state": 1,
+                    "category": "question",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2022-01-24T08:45:31.522963+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "uxDescriptionLongPanel"
+                }
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1643013915057",
+                "_score": 1,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 829,
+                            "startOffset": 822,
+                            "start": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]",
+                            "end": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]"
+                        }
+                    ],
+                    "like": 0,
+                    "dislike": 0,
+                    "created": "2022-01-24T08:45:14.978674+00:00",
+                    "section": null,
+                    "uri": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
+                    "quote": "kremēta",
+                    "statechanges": [
+                        {
+                            "date": "2022-01-24T17:19:39",
+                            "endstate": 2,
+                            "text": "yes thats right",
+                            "objtype": "annotation_state",
+                            "user": "d.silva@deusto.es",
+                            "initstate": 0
+                        }
+                    ],
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1643013914969,
+                    "text": "<p>fdadsfadsf</p>",
+                    "state": 2,
+                    "category": "term",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2022-01-24T08:45:14.978674+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "uxDescriptionLongPanel"
+                }
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1643013886518",
+                "_score": 1,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 43,
+                            "startOffset": 16,
+                            "start": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]",
+                            "end": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]"
+                        }
+                    ],
+                    "like": 0,
+                    "dislike": 0,
+                    "created": "2022-01-24T08:44:46.464617+00:00",
+                    "section": null,
+                    "uri": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
+                    "quote": "Pakalpojuma saņemšanai bēru",
+                    "statechanges": [
+                        {
+                            "date": "2022-01-24T17:21:30",
+                            "endstate": 2,
+                            "text": "this is great",
+                            "objtype": "annotation_state",
+                            "user": "d.silva@deusto.es",
+                            "initstate": 0
+                        }
+                    ],
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1643013886454,
+                    "text": "<p>This is my feedback 1</p>",
+                    "state": 2,
+                    "category": "feedback",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2022-01-24T08:44:46.464617+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "uxDescriptionLongPanel"
+                }
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1643042226805",
+                "_score": 1,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 95,
+                            "startOffset": 81,
+                            "start": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]",
+                            "end": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]"
+                        }
+                    ],
+                    "like": 0,
+                    "dislike": 0,
+                    "created": "2022-01-24T16:37:06.764025+00:00",
+                    "section": null,
+                    "uri": "https://latvija.lv/en/PPK/gimene/dzimsana/p5049/CitaInformacija",
+                    "quote": "hange the name",
+                    "statechanges": {},
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1643042226750,
+                    "text": "<p>my second feedback</p>",
+                    "state": 0,
+                    "category": "feedback",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2022-01-24T16:37:06.764025+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "uxDescriptionLongPanel"
+                }
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1643290780255",
+                "_score": 1,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 36,
+                            "startOffset": 24,
+                            "start": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[2]/div[2]/div[2]/span[1]",
+                            "end": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[2]/div[2]/div[2]/span[1]"
+                        }
+                    ],
+                    "idReplyRoot": "1643290745210",
+                    "like": 0,
+                    "dislike": 0,
+                    "created": "2022-01-27T13:39:40.262334+00:00",
+                    "section": null,
+                    "uri": "https://latvija.lv/en/ppk/gimene/dzimsana/p5049/procesaapraksts",
+                    "quote": "reached the",
+                    "statechanges": {},
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1643290745186,
+                    "idAnotationReply": "annotation-1643290745210",
+                    "text": "<p>I think this is true</p>",
+                    "state": 0,
+                    "category": "reply",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2022-01-27T13:39:40.262334+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "content_0_contentsimplecontentph_1_uxBaseInfo_uxReceiverDescriptionRow"
+                }
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1643290788970",
+                "_score": 1,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 215,
+                            "startOffset": 199,
+                            "start": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[10]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/span[1]",
+                            "end": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[10]/div[1]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/span[1]"
+                        }
+                    ],
+                    "idReplyRoot": "1643290754525",
+                    "like": 0,
+                    "dislike": 0,
+                    "created": "2022-01-27T13:39:48.916967+00:00",
+                    "section": null,
+                    "uri": "https://latvija.lv/en/ppk/gimene/dzimsana/p5049/procesaapraksts",
+                    "quote": "on of a personal",
+                    "statechanges": {},
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1643290754514,
+                    "idAnotationReply": "annotation-1643290754525",
+                    "text": "<p>not sure</p>",
+                    "state": 0,
+                    "category": "reply",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2022-01-27T13:39:48.916967+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "content_0_contentsimplecontentph_1_uxTabPage"
+                }
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1643042356379",
+                "_score": 1,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 42,
+                            "startOffset": 31,
+                            "start": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[10]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[3]/div[1]/span[1]",
+                            "end": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[10]/div[1]/div[2]/table[1]/tbody[1]/tr[1]/td[3]/div[1]/span[1]"
+                        }
+                    ],
+                    "like": 0,
+                    "dislike": 0,
+                    "created": "2022-01-24T16:39:16.328128+00:00",
+                    "section": null,
+                    "uri": "https://latvija.lv/en/PPK/gimene/dzimsana/p5049/DokumentiUnVeidlapas",
+                    "quote": "y to servic",
+                    "statechanges": {},
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1643042356314,
+                    "text": "<p>This is a question</p>",
+                    "state": 0,
+                    "category": "question",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2022-01-24T16:39:16.328128+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "content_0_contentsimplecontentph_1_uxTabPage"
+                }
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1643290082537",
+                "_score": 1,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 232,
+                            "startOffset": 197,
+                            "start": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]",
+                            "end": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]"
+                        }
+                    ],
+                    "like": 0,
+                    "dislike": 0,
+                    "created": "2022-01-27T13:28:02.495868+00:00",
+                    "section": null,
+                    "uri": "https://latvija.lv/lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
+                    "quote": "Kapa vietas piešķiršana apbedīšanai",
+                    "statechanges": {},
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1643290082486,
+                    "text": "<p>This is my first feedback</p>",
+                    "state": 0,
+                    "category": "feedback",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2022-01-27T13:28:02.495868+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "uxDescriptionLongPanel"
+                }
+            },
+            {
+                "_index": "annotator",
+                "_type": "annotation",
+                "_id": "1643290104588",
+                "_score": 1,
+                "_source": {
+                    "section_title": null,
+                    "ranges": [
+                        {
+                            "endOffset": 829,
+                            "startOffset": 822,
+                            "start": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]",
+                            "end": "/div[1]/form[1]/div[7]/section[1]/div[1]/div[1]/div[9]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]/div[2]"
+                        }
+                    ],
+                    "like": 0,
+                    "dislike": 0,
+                    "created": "2022-01-27T13:28:24.522749+00:00",
+                    "section": null,
+                    "uri": "https://latvija.lv/lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
+                    "quote": "kremēta",
+                    "statechanges": {},
+                    "permissions": {
+                        "read": [
+                            "d.silva@deusto.es"
+                        ],
+                        "update": [
+                            "d.silva@deusto.es"
+                        ],
+                        "admin": [
+                            "d.silva@deusto.es"
+                        ],
+                        "delete": [
+                            "d.silva@deusto.es"
+                        ]
+                    },
+                    "data_creacio": 1643290104514,
+                    "text": "<p>Este es un termino</p>",
+                    "state": 0,
+                    "category": "term",
+                    "user": "d.silva@deusto.es",
+                    "updated": "2022-01-27T13:28:24.522749+00:00",
+                    "consumer": "***REMOVED***",
+                    "order": "uxDescriptionLongPanel"
+                }
             }
-          ],
-          "padministration": "Latvija Goverment",
-          "permissions": {
-            "read": ["group:__world__"]
-          },
-          "urls": [
-            {
-              "createdate": "2021-12-10T10:01:06",
-              "language": "lv",
-              "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/ProcesaApraksts",
-              "email": "d.silva@deusto.es"
-            },
-            {
-              "createdate": "2021-12-10T10:01:06",
-              "language": "lv",
-              "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/DokumentiUnVeidlapas",
-              "email": "d.silva@deusto.es"
-            },
-            {
-              "createdate": "2021-12-10T10:01:06",
-              "language": "lv",
-              "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/PakalpojumaMaksajumi",
-              "email": "d.silva@deusto.es"
-            },
-            {
-              "createdate": "2021-12-10T10:01:06",
-              "language": "lv",
-              "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/CitaInformacija",
-              "email": "d.silva@deusto.es"
-            }
-          ],
-          "created": "2021-12-10T09:01:06.401874+00:00",
-          "updated": "2021-12-10T12:23:11"
-        },
-        "sort": [1639138991000]
-      }
-    ]
-  }
+        ]
+    }
 }

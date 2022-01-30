@@ -134,7 +134,7 @@ block head %} {{ super() }}
             event.preventDefault();
             event.stopPropagation();
             var urltext =$('#oneUrl').val();
-
+            urltext=urltext.toLowerCase();
             //Obtain the description related with this url
 
             

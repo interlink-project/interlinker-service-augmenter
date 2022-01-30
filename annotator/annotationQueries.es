@@ -3,6 +3,8 @@
 DELETE annotator
 
 POST annotator/annotation/_search
+
+POST annotator/annotation/_search
 {
     "query": {
         "bool": {
@@ -276,6 +278,54 @@ POST annotator/annotation/_search
                                         "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/CitaInformacija",
                                         "email": "d.silva@deusto.es"
                                     }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    },
+    "aggs": {
+        "group_category": {
+            "terms": {
+                "field": "category"
+            },
+            "aggs": {
+                "group_state": {
+                    "terms": {
+                        "field": "state"
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+POST annotator/annotation/_search
+
+POST annotator/annotation/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "bool": {
+                        "should": [
+                            {
+                                "match": {
+                                    "uri": "https://latvija.lv/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts"
+                                }
+                            },
+                            {
+                                "match": {
+                                    "uri": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/DokumentiUnVeidlapas"
+                                }
+                            },
+                            {
+                                "match": {
+                                    "uri": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/PakalpojumaMaksajumi"
                                 }
                             }
                         ]

@@ -57,6 +57,8 @@ MAPPING = {
                     "type": "date",
                     "format": "dateOptionalTime"
                 },
+            "ismain": {
+                        "type" : "boolean"},
             "url": {
                     "type": "string",
                     "index": "not_analyzed"

@@ -78,6 +78,9 @@ POST description
                             "type": "string",
                             "index": "not_analyzed"
                         },
+                        "ismain": {
+                            "type" : "boolean"
+                        },
                         "created": {
                             "type": "date",
                             "format": "dateOptionalTime"

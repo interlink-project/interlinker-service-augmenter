@@ -8,6 +8,34 @@
 
     <script>
 
+        function setMainUrl(event){
+            if (event.type == 'change') {
+                //alert('Le doy al main');
+
+                $( ".ismain" ).each(function( index ) {
+                    
+                    
+                    valor=$( this ).prop('checked');
+                    valor;
+                    valor2=$(this).is(':checked');
+                    valor2;
+
+                    var label = $("label[for='" + $(this).attr('id') + "']");
+                    if(valor2==false){
+                        label[0].innerText= '-';
+                    }else{
+                        label[0].innerText= 'Main Page';
+                    }
+                    
+                  });
+    
+
+
+            }
+
+        }
+
+
         function removerUrl(event){
             if (event.type == 'click') {
                 event.target.parentNode.remove();
@@ -21,6 +49,7 @@
                 event.preventDefault();
                 event.stopPropagation();
                 var urltext =$('#oneUrl').val();
+                urltext = urltext.toLowerCase();
 
 
                 function isValidURL(string) {
@@ -101,7 +130,7 @@
                         //Agrego:
                         var contador=$('#urlList').children().length+1;
                         var urltext =$('#oneUrl').val();
-                
+                        urltext= urltext.toLowerCase();
 
                         var urlItems = urltext .split( '/' );
 
@@ -322,11 +351,30 @@
                 {% if description is defined %}
                     {% for urlItem in description.urls %}
                     <div class="input-group"> 
-                        <button class="bi-x" onclick="removerUrl(event)" ></button>  
+                        
+                        <input class="btn-check ismain" type="radio"  onchange="setMainUrl(event)"  name="MainUrlRadio" value="url_{{loop.index}}" id="ismain_{{loop.index}}"  autocomplete="off">
+                        <label class="btn btn-outline-primary" for="ismain_{{loop.index}}">
+                            {% if urlItem.isMain %}
+                                
+                                Main Page
+                                {% else %}
+                                -
+                            {% endif %}
+                            
+                        
+                        </label><br>
+
                         <input type="url" class="form-control" value='{{urlItem.url}}' name="url_{{loop.index}}" id="url_{{loop.index}}" placeholder="Link">
+                       
+                        
+                       
                         <label class="input-group-text" for="url_{{loop.index}}">Language:</label>
                         <input type="text" style="max-width:20vw;text-align: center;" class="form-control" value='{{urlItem.langText}}' code='{{urlItem.language}}' name="sel_{{loop.index}}" id="sel_{{loop.index}}" placeholder="Language">  
+                        <input id="langCode_{{loop.index}}" name="langCode_{{loop.index}}" type="hidden" value='{{urlItem.language}}'>
+
+                        <button class="bi-x" onclick="removerUrl(event)" ></button> 
                         
+
                     </div>
                     {% endfor %}
                 {% endif %}

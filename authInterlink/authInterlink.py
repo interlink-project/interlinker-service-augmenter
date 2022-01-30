@@ -300,6 +300,8 @@ def advanceSearch():
 def description(descriptionId=None):
 
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
+    
+    urlMainPage = [url['url'] for url in description['urls'] if url['isMain'] == True][0]
 
     categoria=request.args.get('category')
 
@@ -347,7 +349,7 @@ def description(descriptionId=None):
 
 
 
-    return render_template("description.html", user=current_user, description=description,anotations=res,categoryLabel=categoria,paginacion=paginacion)
+    return render_template("description.html", user=current_user, description=description,anotations=res,categoryLabel=categoria,paginacion=paginacion,urlMainPage=urlMainPage)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 @authInterlink.route('/description/<string:descriptionId>/<string:option>',)
@@ -384,14 +386,17 @@ def subjectPage(descriptionId=None,annotatorId=None):
 
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
 
+    urlMainPage = [url['url'] for url in description['urls'] if url['isMain'] == True][0]
+
     annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
 
-    nroReplies = Annotation.count(query={ '_id': description['id'] ,'category':'reply' })
-    replies = Annotation.search(query={ '_id': description['id'] ,'category':'reply'  },limit=nroReplies)
+    nroReplies = Annotation.count(query={ 'idReplyRoot': annotatorId ,'category':'reply' })
+    replies = Annotation.search(query={ 'idReplyRoot': annotatorId ,'category':'reply'  },limit=nroReplies)
 
-    nroRepliesOfAnnotation = Annotation.count(query={ '_id': description['id'] ,'category':'reply','idReplyRoot':annotatorId  })
+    nroRepliesOfAnnotation=nroReplies
+    #nroRepliesOfAnnotation = Annotation.count(query={ '_id': description['id'] ,'category':'reply','idReplyRoot':annotatorId  })
     
-    return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
+    return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation,urlMainPage=urlMainPage)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 @authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>/<string:option>', methods=["GET", "POST"])
