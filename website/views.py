@@ -108,7 +108,12 @@ def inicio():
     else:
         res= Description._get_Descriptions(textoABuscar=textoABuscar,padministration=padministration,url=domain,offset=registroInicial)
         totalRegistros= Description._get_DescriptionsCounts(textoABuscar=textoABuscar,padministration=padministration,url=domain)
-        
+
+    for itemDesc in res:
+        urlMainPage = [url['url'] for url in itemDesc['urls'] if url['isMain'] == True][0]
+        itemDesc['mainUrl']=urlMainPage
+
+
 
     pagesNumbers=math.ceil(totalRegistros/10)
     
@@ -647,12 +652,21 @@ def modifica(rutaPagina,userId):
     if('annotationSel' in argumentos.keys()):
         anotationSel=argumentos.pop('annotationSel')
         session['anotationSel']=anotationSel
-
+    
+    #Obtengo el usuario de session 
+    #Lo pongo en la session de cookie local:
+    if not current_user.is_anonymous:
+            session['userId'] = current_user.email # setting session date
+            session['username'] = current_user.email
+            userId= current_user.email
+    else:
+            session['username'] = 'Annonymous'
+            userId= 'Annonymous'
 
     print("La ruta de la Pagina es: "+rutaPagina)
     print("El nombre de usuario es: "+userId)
     
-    session['username'] = userId
+    
 
     headersUserAgent={
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -854,7 +868,7 @@ def modifica(rutaPagina,userId):
                 showEditPermissionsCheckbox: false
             });
 
-            sessionStorage.setItem('user', '"""+userId+"""');
+            sessionStorage.setItem('user', '"""+userId+"""');   
 
             $('body').annotator().annotator('addPlugin', 'RichEditor');
             $('body').annotator().annotator('addPlugin', 'Categories', {

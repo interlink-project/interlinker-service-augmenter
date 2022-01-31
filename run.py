@@ -49,8 +49,6 @@ from authInterlink.helpers import  config
 from authInterlink.user import User
 import secrets
 
-
-
 logging.basicConfig(format='%(asctime)s %(process)d %(name)s [%(levelname)s] '
                            '%(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
@@ -211,6 +209,9 @@ def main(argv):
     @app.before_request
     def before_request():
         
+        
+        
+
         # In a real app, the current user and consumer would be determined by
         # a lookup in either the session or the request headers, as described
         # in the Annotator authentication documentation[1].
@@ -218,7 +219,7 @@ def main(argv):
         # [1]: https://github.com/okfn/annotator/wiki/Authentication
 
    
-        g.user = MockUser('alice')
+        g.user = MockUser('Anonymous')
 
 
         # By default, this test application won't do full-on authentication
