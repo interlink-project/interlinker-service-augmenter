@@ -176,7 +176,7 @@ def saveDescription():
     if 'MainUrlRadio' in itemsDict.keys():
         mainPageItem=itemsDict['MainUrlRadio']
     else:
-        mainPageItem=''
+        mainPageItem='url_1'
 
 
   
@@ -192,7 +192,13 @@ def saveDescription():
 
             webAdress=itemsDict[key]
             langCode=itemsDict['langCode_'+key.split('_')[1]]
-            if len(langCode)>2:
+            langCodeSel=itemsDict['sel_'+key.split('_')[1]]
+
+            if langCode=='':
+                langCode=langCodeSel
+
+
+            if len(langCode)>2 :
                 langCode='Undefined'
             listadoUrlNuevo[webAdress]=[langCode,isMain]
 
@@ -412,7 +418,7 @@ def claimModeration():
 
 
 
-        textHref='http://127.0.0.1:5000/website/aproveModerator?datos='+encMessage.decode('ascii')
+        textHref='http://127.0.0.1:5000/gui/aproveModerator?datos='+encMessage.decode('ascii')
 
         msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
         <table cellpadding='0' cellspacing='0' width='100%' style='background-color: #515151; border-radius: 30px 36
@@ -741,7 +747,7 @@ def modifica(rutaPagina,userId):
             hrefVal=a_Link.attrs.get("href")
             if hrefVal.startswith('/'):
                 newURLVal = urljoin(rutaPagina, hrefVal)
-                a_Link.attrs['href']="/website/modifica/d.silva@deusto.es/"+newURLVal.lower()
+                a_Link.attrs['href']="/gui/modifica/d.silva@deusto.es/"+newURLVal.lower()
                 print(a_Link)
 
 
@@ -751,9 +757,9 @@ def modifica(rutaPagina,userId):
     #Inserto las librerias del AnnotationJS
     #Creo los tags necesarios:
     
-    anotationcss1 = soup.new_tag('link', href="/website/static/lib/annotator-full.1.2.9/annotator.min.css",rel="stylesheet")
-    anotationcss2 = soup.new_tag('link', href="/website/static/src/css/style.css",rel="stylesheet")
-    anotationcss3 = soup.new_tag('link', href="/website/static/lib/css/annotator.touch.css",rel="stylesheet")
+    anotationcss1 = soup.new_tag('link', href="/gui/static/lib/annotator-full.1.2.9/annotator.min.css",rel="stylesheet")
+    anotationcss2 = soup.new_tag('link', href="/gui/static/src/css/style.css",rel="stylesheet")
+    anotationcss3 = soup.new_tag('link', href="/gui/static/lib/css/annotator.touch.css",rel="stylesheet")
 
     fontAwesome3 = soup.new_tag('link', href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",rel="stylesheet")
 
@@ -793,24 +799,24 @@ def modifica(rutaPagina,userId):
     except:
         print("Excepcion en ccs1")
     
-    jqueryScript1 = soup.new_tag('script', src="/website/static/lib/jquery-1.9.1.js")
-    jqueryScript2 = soup.new_tag('script', src="/website/static/lib/annotator-full.1.2.9/annotator-full.min.js")
-    jqueryScript3 = soup.new_tag('script', src="/website/static/lib/jquery-i18n-master/jquery.i18n.min.js")
-    jqueryScript4 = soup.new_tag('script', src="/website/static/lib/jquery.dateFormat.js")
-    jqueryScript5 = soup.new_tag('script', src="/website/static/lib/jquery.slimscroll.js")
+    jqueryScript1 = soup.new_tag('script', src="/gui/static/lib/jquery-1.9.1.js")
+    jqueryScript2 = soup.new_tag('script', src="/gui/static/lib/annotator-full.1.2.9/annotator-full.min.js")
+    jqueryScript3 = soup.new_tag('script', src="/gui/static/lib/jquery-i18n-master/jquery.i18n.min.js")
+    jqueryScript4 = soup.new_tag('script', src="/gui/static/lib/jquery.dateFormat.js")
+    jqueryScript5 = soup.new_tag('script', src="/gui/static/lib/jquery.slimscroll.js")
 
-    jqueryScript12 = soup.new_tag('script', src="/website/static/locale/en/annotator.js")
-    jqueryScript13 = soup.new_tag('script', src="/website/static/lib/tinymce/tinymce.min.js")
-    jqueryScript14 = soup.new_tag('script', src="/website/static/src/richEditor.js")
+    jqueryScript12 = soup.new_tag('script', src="/gui/static/locale/en/annotator.js")
+    jqueryScript13 = soup.new_tag('script', src="/gui/static/lib/tinymce/tinymce.min.js")
+    jqueryScript14 = soup.new_tag('script', src="/gui/static/src/richEditor.js")
 
 
 
-    jqueryScript6 = soup.new_tag('script', src="/website/static/lib/lunr.js-0.5.7/lunr.min.js")
-    jqueryScript7 = soup.new_tag('script', src="/website/static/locale/en/annotator.js")
-    jqueryScript8 = soup.new_tag('script', src="/website/static/lib/annotator.touch.js")
-    jqueryScript9 = soup.new_tag('script', src="/website/static/src/view_annotator.js")
-    jqueryScript10 = soup.new_tag('script', src="/website/static/src/categories.js")
-    jqueryScript11 = soup.new_tag('script', src="/website/static/src/search.js")
+    jqueryScript6 = soup.new_tag('script', src="/gui/static/lib/lunr.js-0.5.7/lunr.min.js")
+    jqueryScript7 = soup.new_tag('script', src="/gui/static/locale/en/annotator.js")
+    jqueryScript8 = soup.new_tag('script', src="/gui/static/lib/annotator.touch.js")
+    jqueryScript9 = soup.new_tag('script', src="/gui/static/src/view_annotator.js")
+    jqueryScript10 = soup.new_tag('script', src="/gui/static/src/categories.js")
+    jqueryScript11 = soup.new_tag('script', src="/gui/static/src/search.js")
 
     try:
         bodyTag.append(jqueryScript1)

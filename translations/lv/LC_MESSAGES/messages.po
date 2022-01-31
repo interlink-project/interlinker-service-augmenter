@@ -23,23 +23,23 @@ msgstr ""
 msgid "Anthony"
 msgstr ""
 
-#: website/templates/settings.html:3
+#: gui/templates/settings.html:3
 msgid "My Settings"
 msgstr "Mani iestatījumi"
 
-#: website/templates/settings.html:4
+#: gui/templates/settings.html:4
 msgid "Your preferences."
 msgstr "Manas preferences."
 
-#: website/templates/settings.html:21
+#: gui/templates/settings.html:21
 msgid "Language"
 msgstr "Valoda"
 
-#: website/templates/settings.html:36
+#: gui/templates/settings.html:36
 msgid "This is your current selected language."
 msgstr "Šī ir jūsu pašreiz atlasītā valoda."
 
-#: website/templates/settings.html:42
+#: gui/templates/settings.html:42
 msgid "Save"
 msgstr "Saglabāt"
 

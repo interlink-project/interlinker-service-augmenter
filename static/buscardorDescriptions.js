@@ -26,7 +26,7 @@ function searchText(event) {
       domainSel = "";
     }
 
-    //window.location = '/website/?searchText=' + texto+'&padministration=' + padministrationSel+'&domain=' + domainSel;
+    //window.location = '/gui/?searchText=' + texto+'&padministration=' + padministrationSel+'&domain=' + domainSel;
     //recargarTabla();
 
     function addShow(data) {

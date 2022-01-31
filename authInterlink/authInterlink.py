@@ -22,7 +22,7 @@ from annotator.annotation import Annotation
 from annotator.description import Description
 from website.languages import getLanguagesList
 
-authInterlink = Blueprint('authInterlink', __name__,template_folder="./website/templates")
+authInterlink = Blueprint('authInterlink', __name__,template_folder="./gui/templates")
 
 APP_STATE = 'ApplicationState'
 NONCE = 'SampleNonce'

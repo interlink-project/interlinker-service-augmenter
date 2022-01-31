@@ -39,11 +39,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     };
 
   //constants
-  var IMAGE_DELETE = "/website/static/src/img/icono_eliminar.png",
-    IMAGE_DELETE_OVER = "/website/static/src/img/papelera_over.png",
-    SHARED_ICON = "/website/static/src/img/shared-icon.png",
-    IMAGE_REPLY = "/website/static/src/img/reply.png",
-    IMAGE_REPLY_OVER = "/website/static/src/img/reply_over.png";
+  var IMAGE_DELETE = "/gui/static/src/img/icono_eliminar.png",
+    IMAGE_DELETE_OVER = "/gui/static/src/img/papelera_over.png",
+    SHARED_ICON = "/gui/static/src/img/shared-icon.png",
+    IMAGE_REPLY = "/gui/static/src/img/reply.png",
+    IMAGE_REPLY_OVER = "/gui/static/src/img/reply_over.png";
   Annotator.Plugin.AnnotatorViewer = (function (_super) {
     __extends(AnnotatorViewer, _super);
 
@@ -870,7 +870,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         var edit_icon = "";
         if (updatePermission) {
           edit_icon =
-            '<img src="/website/static/src/img/edit-icon.png"  ' +
+            '<img src="/gui/static/src/img/edit-icon.png"  ' +
             'class="annotator-viewer-edit" title="Edit" style="float:right;margin-top:3px"/>';
         }
 

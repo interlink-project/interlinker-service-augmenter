@@ -93,7 +93,7 @@ Annotator.Plugin.Search = (function (_super) {
           $("#usuarioConectado").html(data);
           
           if (data=="Annonymous"){
-            newUrl="http://127.0.0.1:5000/website/"
+            newUrl="http://127.0.0.1:5000/gui/"
             $("#botonBackServicepedia").attr("href", newUrl);
           }
           

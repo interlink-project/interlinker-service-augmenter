@@ -245,7 +245,7 @@ def main(argv):
 
     from website.views import views
 
-    app.register_blueprint(views,url_prefix='/website')
+    app.register_blueprint(views,url_prefix='/gui')
 
     @app.route('/static/<path:path>')
     def send_static(path):

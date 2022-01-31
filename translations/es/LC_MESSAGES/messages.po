@@ -22,23 +22,23 @@ msgstr ""
 msgid "Anthony"
 msgstr ""
 
-#: website/templates/settings.html:3
+#: gui/templates/settings.html:3
 msgid "My Settings"
 msgstr "Mi configuración"
 
-#: website/templates/settings.html:4
+#: gui/templates/settings.html:4
 msgid "Your preferences."
 msgstr "Tus preferencias."
 
-#: website/templates/settings.html:21
+#: gui/templates/settings.html:21
 msgid "Language"
 msgstr "Lenguaje"
 
-#: website/templates/settings.html:36
+#: gui/templates/settings.html:36
 msgid "This is your current selected language."
 msgstr "Este es el lenguaje seleccionado."
 
-#: website/templates/settings.html:42
+#: gui/templates/settings.html:42
 msgid "Save"
 msgstr "Guardar"
 
