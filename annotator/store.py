@@ -22,6 +22,7 @@ from flask import Blueprint, Response, session
 from flask import current_app, g
 from flask import request
 from flask import url_for
+from flask_login import current_user
 from six import iteritems
 
 from annotator.atoi import atoi
@@ -29,6 +30,7 @@ from annotator.annotation import Annotation
 from annotator.document import Document
 from annotator.description import Description
 from annotator.elasticsearch import RESULTS_MAX_SIZE
+from annotator.notification import Notification
 
 store = Blueprint('store', __name__)
 
@@ -50,12 +52,22 @@ def jsonify(obj, *args, **kwargs):
 def before_request():
     if not hasattr(g, 'annotation_class'):
         g.annotation_class = Annotation
+    
+    if not hasattr(g, 'notification_class'):
+        g.notification_class = Notification
+    
+    if not hasattr(g, 'description_class'):
+        g.description_class = Description
 
     user = g.auth.request_user(request)
     if user is not None:
         g.user = user
     elif not hasattr(g, 'user'):
         g.user = None
+
+
+
+
 
 
 @store.after_request
@@ -153,6 +165,145 @@ def index():
 
     annotations = g.annotation_class.search(user=user)
     return jsonify(annotations)
+
+# INDEX
+@store.route('/notifications')
+def notificationIndex():
+    if current_app.config.get('AUTHZ_ON'):
+        # Pass the current user to do permission filtering on results
+        user = g.user
+    else:
+        user = None
+
+    notifications = Notification._get_all()
+    return jsonify(notifications)
+
+
+# CREATE
+@store.route('/notifications', methods=['POST'])
+def create_notification():
+    # Only registered users can create annotations
+    if g.user is None:
+        return _failed_authz_response('create annotation')
+
+    if request.json is not None:
+        notification = g.notification_class(
+            _filter_input(
+                request.json,
+                CREATE_FILTER_FIELDS))
+
+        notification['consumer'] = g.user.consumer.key
+        if _get_annotation_user(notification) != g.user.id:
+            notification['user'] = g.user.id
+            
+            if 'username' in session:
+                notification['user'] = session['username']
+            else:
+                notification['user'] = current_user.email
+
+
+        #print("El id inicial es:"+annotation['id'])
+
+        if hasattr(g, 'before_annotation_create'):
+            g.before_annotation_create(notification)
+
+        if hasattr(g, 'after_annotation_create'):
+            notification.save(refresh=False)
+            g.after_annotation_create(notification)
+        
+       
+
+        refresh = request.args.get('refresh') != 'false'
+        notification.save(refresh=refresh)
+
+        #print("El id final es:"+annotation['id'])
+
+        #location = url_for('.read_notification', docid=notification['id'])
+
+        return jsonify(notification), 201#, {'Location': location}
+    else:
+        return jsonify('No JSON payload sent. Annotation not created.',
+                       status=400)
+
+
+# READ
+@store.route('/notifications/<docid>')
+def read_notification(docid):
+    notification = Notification.fetch(docid,index='notification')
+    if not notification:
+        return jsonify('Notification not found!', status=404)
+
+    failure = _check_action(notification, 'read')
+    if failure:
+        return failure
+
+    return jsonify(notification)
+
+
+# UPDATE
+@store.route('/notifications/<docid>', methods=['POST', 'PUT'])
+def update_notification(docid):
+    notification = Notification.fetch(docid,index='notification')
+    if not notification:
+        return jsonify('Notification not found! No update performed.',
+                       status=404)
+
+    failure = _check_action(notification, 'update')
+    if failure:
+        return failure
+
+    if request.json is not None:
+        updated = _filter_input(request.json, UPDATE_FILTER_FIELDS)
+        updated['id'] = docid  # use id from URL, regardless of what arrives in
+                            # JSON payload
+
+        changing_permissions = (
+            'permissions' in updated and
+            updated['permissions'] != notification.get('permissions', {}))
+
+        if changing_permissions:
+            failure = _check_action(notification,
+                                    'admin',
+                                    message='permissions update')
+            if failure:
+                return failure
+
+        notification.updateFields(updated,index='notification')
+
+        if hasattr(g, 'before_notification_update'):
+            g.before_notification_update(notification)
+
+        refresh = request.args.get('refresh') != 'false'
+        notification.save(refresh=refresh)
+
+        if hasattr(g, 'after_notification_update'):
+            g.after_notification_update(notification)
+
+    return jsonify(notification)
+
+
+# DELETE
+@store.route('/notifications/<docid>', methods=['DELETE'])
+def delete_notification(docid):
+    notification = Notification.fetch(docid,index='notification')
+  
+    if not notification:
+        return jsonify('Notification not found. No delete performed.',
+                       status=404)
+
+    failure = _check_action(notification, 'delete')
+    if failure:
+        return failure
+
+    if hasattr(g, 'before_notification_delete'):
+        g.before_notification_delete(notification)
+
+    notification.delete(index='notification')
+
+    if hasattr(g, 'after_notification_delete'):
+        g.after_notification_delete(notification)
+
+    return '', 204
 
 
 # INDEX

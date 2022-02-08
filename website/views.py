@@ -19,6 +19,8 @@ from werkzeug.utils import redirect
 from annotator.annotation import Annotation
 from annotator.document import Document
 from annotator.description import Description
+from authInterlink.helpers import config
+from cryptography.fernet import Fernet
 
 from datetime import date
 
@@ -28,6 +30,8 @@ import urllib.parse
 from urllib.parse import unquote
 from urllib import parse
 import math
+import uuid
+import secrets
 
 from website.languages import getLanguagesList
 
@@ -44,22 +48,6 @@ from flask_login import (
 
 views = Blueprint('views',__name__,static_folder="static",template_folder="templates")
 
-
-""" @views.route('/',methods=['GET', 'POST'])
-def inicio():
-    if request.method == 'POST':
-        anotacion = request.form.get('anotacion')
-
-        if len(anotacion) < 1:
-            flash('Anotation is too short!', category='error')
-        else:
-            new_anotacion = Annotation(texto=anotacion,uri='http://127.0.0.1:8000', user_id=1)
-            db.session.add(new_anotacion)
-            db.session.commit()
-            flash('Annotation added!', category='success')
-
-    return render_template("home.html")
- """
 
 @views.route('/')
 def inicio():
@@ -334,17 +322,19 @@ def saveDescription():
 
     
 #return redirect(url_for("views.modifica",rutaPagina=sitio,userId=userNombre))
-from cryptography.fernet import Fernet
-def generar_clave():
+
+""" def generar_clave():
     clave= Fernet.generate_key()
-    with open("clave.key","wb") as archivo_clave:
-        archivo_clave.write(clave)
+    session["claveCript"]=clave
+    # with open("clave.key","wb") as archivo_clave:
+    #     archivo_clave.write(clave)
 
 def cargar_clave():
-    try:
-        return open("clave.key","rb").read()
-    except:
-        return None
+    return session["claveCript"]
+    # try:
+    #     return open("clave.key","rb").read()
+    # except:
+    #     return None """
 
 
 @views.route("/claimModeration",methods=["POST"])
@@ -407,10 +397,13 @@ def claimModeration():
         
         message = dataClaimEncoded
 
-        key = cargar_clave() 
-        if key ==None:
-            generar_clave()
-            key =cargar_clave()
+        key = config["CRYPT_KEY"] 
+        
+        # cargar_clave() 
+        # if key ==None:
+        #     generar_clave()
+        #     key =cargar_clave()
+
         fernet = Fernet(key) 
         encMessage = fernet.encrypt(message.encode())
         print("original string: ", message) 
@@ -498,10 +491,12 @@ def aproveModerator():
     #Obtain Datos datos
     datosBin=argumentos.pop('datos').encode('ascii')
 
-    key = cargar_clave() 
-    if key ==None:
-        generar_clave()
-        key =cargar_clave()
+    # key = cargar_clave() 
+    # if key ==None:
+    #     generar_clave()
+    #     key =cargar_clave()
+    
+    key = config["CRYPT_KEY"] 
 
     fernet = Fernet(key) 
     
@@ -643,7 +638,9 @@ def aprovarClaimsList():
 def visor():
     return render_template("prototipo.html")
   
-
+@views.route("/survey",methods=["GET"])
+def survey():
+    return render_template("survey.html")
 
 
 #Cargo la pagina desde beautifulSoup y la muestro en pantalla
@@ -685,33 +682,6 @@ def modifica(rutaPagina,userId):
     #print(resp_Contenido.decode())
     soup = BeautifulSoup(resp_Contenido,'html.parser')
 
-
-    #Codigo para Latvia:
-    """ if rutaPagina.startswith("https://latvija.lv/ppk/"):
-        arrayUrl=['DokumentiUnVeidlapas','PakalpojumaMaksajumi','CitaInformacija']
-        #Obtengo seccion doc
-        contador=0
-        for newUrl in arrayUrl:
-            contador=contador+1
-
-            rutaTemp=rutaPagina.split("/")
-            rutaTemp[7]=newUrl
-            newUrl="/".join(rutaTemp)
-
-            responseAdd=requests.get(newUrl,headers=headersUserAgent)
-            resp_ContenidoAdd=responseAdd.content
-            #print(resp_Contenido.decode())
-            soupAdd = BeautifulSoup(resp_ContenidoAdd,'html.parser')
-
-            contenidoAdd= soupAdd.find(id='content_0_contentsimplecontentph_1_uxTabPage')
-           
-            contenidoHeader= soupAdd.find("table",class_="dxtcControl_LatvijaLv service-tab-control")
-           
-
-         
-            contenidoOriginal=soup.find(id='content_0_contentsimplecontentph_1_uxTabPage')
-            contenidoOriginal.append(contenidoHeader)
-            contenidoOriginal.append(contenidoAdd) """
 
     #Quitamos los scripts:
     for data in soup(['script','pre','noscript']):
@@ -838,15 +808,7 @@ def modifica(rutaPagina,userId):
         print("Excepcion en ccs1")
     
 
-    #Anotation Init Version Anterior
-    """
-     jQuery(function ($) {
-        $("#contenidoAnotar").annotator().annotator("setupPlugins", {tokenUrl: 'http://127.0.0.1:8000/token'});
-        
-      });
 
-
-    """
 
 
 
@@ -917,7 +879,7 @@ def modifica(rutaPagina,userId):
 
     anotationIniScript.string =anotationInitScriptTemp
 
-    #anotationIniScript.string.replace('demoUser',str(current_user.id))
+
     try:   
         bodyTag.append(anotationIniScript)
 
@@ -938,7 +900,7 @@ def modifica(rutaPagina,userId):
 
 def generate_token():
     return jwt.encode({
-      'consumerKey': CONSUMER_KEY,
+      'consumerKey': config["CONSUMER_KEY"],
       'userId': current_user.id,
       'issuedAt': _now().isoformat() + 'Z',
       'ttl': CONSUMER_TTL
@@ -994,16 +956,16 @@ import datetime
 import jwt
 
 # Replace these with your details
-CONSUMER_KEY = '***REMOVED***'
-CONSUMER_SECRET = 'yourconsumersecret'
+
+CONSUMER_SECRET = secrets.token_urlsafe(16)
 
 # Only change this if you're sure you know what you're doing
-CONSUMER_TTL = 86400
+CONSUMER_TTL = config["CONSUMER_TTL"]#
 
 @views.route("/token")
 def generate_token():
     return jwt.encode({
-      'consumerKey': CONSUMER_KEY,
+      'consumerKey': config["CONSUMER_KEY"],
       'userId': 1,
       'issuedAt': _now().isoformat() + 'Z',
       'ttl': CONSUMER_TTL

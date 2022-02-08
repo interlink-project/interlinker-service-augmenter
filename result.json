@@ -7,43 +7,149 @@
         "failed": 0
     },
     "hits": {
-        "total": 1,
+        "total": 5,
         "max_score": 1,
         "hits": [
             {
-                "_index": "description",
-                "_type": "description",
-                "_id": "AX6xKwzO4mfL_z6VOWJr",
+                "_index": "notification",
+                "_type": "notification",
+                "_id": "AX7D_3Rl4mfL_z6VOWKE",
                 "_score": 1,
                 "_source": {
-                    "title": "Funeral in Riga municipal cemeteries",
-                    "description": "d hgfhd gfh dgfhdgf ",
-                    "keywords": "Funeral Riga municipal cemeteries",
-                    "moderators": {},
-                    "padministration": "Latvija Goverment",
+                    "email": "d.silva@deusto.es",
+                    "resolved": false,
+                    "category": "survey",
+                    "title": "titulo",
+                    "description": "description text",
+                    "target_url": "http://127.0.0.1:50/",
+                    "isMandatory": true,
+                    "idAsset": "string",
+                    "triggerEvent": "string",
+                    "triggerDate": "string",
+                    "consumer": "***REMOVED***",
+                    "user": "d.silva@deusto.es",
                     "permissions": {
                         "read": [
-                            "group:__world__"
+                            "group:__consumer__"
                         ]
                     },
-                    "urls": [
-                        {
-                            "createdate": "2022-01-31T18:24:49",
-                            "url": "https://latvija.lv/en/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
-                            "language": "en",
-                            "isMain": true,
-                            "email": "d.silva@deusto.es"
-                        },
-                        {
-                            "createdate": "2022-01-31T18:24:49",
-                            "url": "https://latvija.lv/en/ppk/dzives-situacija/apakssituacija/p5551/dokumentiunveidlapas",
-                            "language": "en",
-                            "isMain": false,
-                            "email": "d.silva@deusto.es"
-                        }
-                    ],
-                    "created": "2022-01-31T17:24:49.057595+00:00",
-                    "updated": "2022-01-31T17:24:49.057595+00:00"
+                    "created": "2022-02-04T01:00:10.052181+00:00",
+                    "updated": "2022-02-04T09:10:02.122056+00:00",
+                    "id": "AX7CPveW4mfL_z6VOWJ-"
+                }
+            },
+            {
+                "_index": "notification",
+                "_type": "notification",
+                "_id": "AX7CZrF74mfL_z6VOWKD",
+                "_score": 1,
+                "_source": {
+                    "email": "d.silva@deusto.es",
+                    "resolved": true,
+                    "category": "survey",
+                    "title": "titulo2",
+                    "description": "description text",
+                    "target_url": "http://127.0.0.1:50/",
+                    "isMandatory": true,
+                    "idAsset": "string",
+                    "triggerEvent": "string",
+                    "triggerDate": "string",
+                    "consumer": "***REMOVED***",
+                    "user": "d.silva@deusto.es",
+                    "permissions": {
+                        "read": [
+                            "group:__consumer__"
+                        ]
+                    },
+                    "created": "2022-02-04T01:00:10.052181+00:00",
+                    "updated": "2022-02-04T01:43:06.621767+00:00",
+                    "id": "AX7CQrO74mfL_z6VOWJ_",
+                    "index": "notification"
+                }
+            },
+            {
+                "_index": "notification",
+                "_type": "notification",
+                "_id": "AX7CVHXN4mfL_z6VOWKB",
+                "_score": 1,
+                "_source": {
+                    "email": "d.silva@deusto.es",
+                    "resolved": false,
+                    "category": "survey",
+                    "title": "titulo3",
+                    "description": "description text",
+                    "target_url": "http://127.0.0.1:50/",
+                    "isMandatory": true,
+                    "idAsset": "string",
+                    "triggerEvent": "string",
+                    "triggerDate": "string",
+                    "consumer": "***REMOVED***",
+                    "user": "d.silva@deusto.es",
+                    "permissions": {
+                        "read": [
+                            "group:__consumer__"
+                        ]
+                    },
+                    "created": "2022-02-04T01:00:10.052181+00:00",
+                    "updated": "2022-02-04T01:14:13.063341+00:00",
+                    "id": "AX7CQrO74mfL_z6VOWJ_",
+                    "index": "notification"
+                }
+            },
+            {
+                "_index": "notification",
+                "_type": "notification",
+                "_id": "AX7CQrO74mfL_z6VOWJ_",
+                "_score": 1,
+                "_source": {
+                    "email": "d.silva@deusto.es",
+                    "resolved": false,
+                    "category": "survey",
+                    "title": "titulo2",
+                    "description": "description text",
+                    "target_url": "http://127.0.0.1:50/",
+                    "isMandatory": true,
+                    "idAsset": "string",
+                    "triggerEvent": "string",
+                    "triggerDate": "string",
+                    "consumer": "***REMOVED***",
+                    "user": "d.silva@deusto.es",
+                    "permissions": {
+                        "read": [
+                            "group:__consumer__"
+                        ]
+                    },
+                    "created": "2022-02-04T01:00:10.052181+00:00",
+                    "updated": "2022-02-04T01:04:14.825968+00:00",
+                    "id": "AX7CPveW4mfL_z6VOWJ-",
+                    "index": "notification"
+                }
+            },
+            {
+                "_index": "notification",
+                "_type": "notification",
+                "_id": "AX7CPveW4mfL_z6VOWJ-",
+                "_score": 1,
+                "_source": {
+                    "email": "d.silva@deusto.es",
+                    "resolved": false,
+                    "category": "survey",
+                    "title": "titulo",
+                    "description": "description text",
+                    "target_url": "http://127.0.0.1:50/",
+                    "isMandatory": true,
+                    "idAsset": "string",
+                    "triggerEvent": "string",
+                    "triggerDate": "string",
+                    "consumer": "***REMOVED***",
+                    "user": "d.silva@deusto.es",
+                    "permissions": {
+                        "read": [
+                            "group:__consumer__"
+                        ]
+                    },
+                    "created": "2022-02-04T01:00:10.052181+00:00",
+                    "updated": "2022-02-04T10:08:34"
                 }
             }
         ]

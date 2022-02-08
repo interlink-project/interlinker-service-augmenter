@@ -214,10 +214,15 @@ POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
         "moderators": [
             {
                 "email": "danyche2005@deusto.es",
-                "created": "2021-11-05T08:14:20.359310+00:00",
-                "expire": "2021-11-05T08:14:20.359310+00:00"
+                "created": "2022-11-05T08:14:20.359310+00:00",
+                "expire": "2022-11-05T08:14:20.359310+00:00"
               
-            }
+            },
+        {
+           "email":"dipina@deusto.es",
+           "created": "2022-11-05T08:14:20.359310+00:00",
+           "expire": "2022-11-05T08:14:20.359310+00:00"
+        }
         ]
     }
 }

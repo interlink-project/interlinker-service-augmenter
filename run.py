@@ -25,9 +25,11 @@ import elasticsearch
 from flask import request
 from annotator import es, annotation, auth, authz, document, store,description
 from authInterlink import authInterlink
+from website.views import views
 import secrets
 from tests.helpers import MockUser, MockConsumer, MockAuthenticator
 from tests.helpers import mock_authorizer
+
 
 from datetime import datetime
 import arrow
@@ -109,32 +111,13 @@ def main(argv):
     })
 
 
-    #Configure server parameters
-    app.config['MAIL_SERVER']='smtp.gmail.com'
-    app.config['MAIL_PORT'] = 587
-    app.config['MAIL_USERNAME'] = 'interlinkdeusto@gmail.com'
-    app.config['MAIL_PASSWORD'] = '***REMOVED***'
-    app.config['MAIL_DEFAULT_SENDER'] = 'interlinkdeusto@gmail.com'
-    app.config['MAIL_USE_TLS'] = True
-    app.config['MAIL_USE_SSL'] = False
-    app.config['MAIL_MAX_EMAILS'] = None
-    app.config['MAIL_ASCII_ATTACHMENTS'] = False
-
-    app.config['MAX_CONTENT_LENGTH'] = 3*(1024 * 1024)
-    app.config['UPLOAD_EXTENSIONS'] = ['.pdf']
-    app.config['UPLOAD_PATH'] = 'uploads'
- 
-
-    app.config['USE_SESSION_FOR_NEXT']=True
-
-
     login_manager = LoginManager()
 
     login_manager.login_view = "authInterlink.login"
 
     login_manager.init_app(app)
 
-    app.config['BABEL_DEFAULT_LOCALE'] = 'en'
+    # Babel Settings
 
     babel = Babel(app)
 
@@ -168,17 +151,17 @@ def main(argv):
             return user.timezone
 
 
+    # Additional Flask Filters:
 
     @app.template_filter('datetimeformat')
     def datetimeformat(value, formatText='',localeZone='en'):
-        #Example of format: 'YYYY-MM-DD HH:mm:ss ZZ'
-        #en es-es
+    
+
         if (formatText!=''):
             dateTimeTemp=arrow.get(value)
             local = dateTimeTemp.to('Europe/Berlin')
             
             return local.format(formatText)
-
 
         else:
 
@@ -197,11 +180,9 @@ def main(argv):
         }
 
         return tabla_switch.get(value, "NA")
-       
-            
-       
-     
-
+  
+    # Define the initial user:
+    
     @login_manager.user_loader
     def load_user(user_id):
         return User.get(user_id)
@@ -209,18 +190,12 @@ def main(argv):
     @app.before_request
     def before_request():
         
-        
-        
-
         # In a real app, the current user and consumer would be determined by
         # a lookup in either the session or the request headers, as described
         # in the Annotator authentication documentation[1].
         #
         # [1]: https://github.com/okfn/annotator/wiki/Authentication
-
-   
         g.user = MockUser('Anonymous')
-
 
         # By default, this test application won't do full-on authentication
         # tests. Set AUTH_ON to True in the config file to enable (limited)
@@ -238,44 +213,32 @@ def main(argv):
             g.authorize = authz.authorize
         else:
             g.authorize = mock_authorizer
+        
+    # BluePrints:
 
     app.register_blueprint(store.store)
-
     app.register_blueprint(authInterlink.authInterlink,url_prefix="")
-
-    from website.views import views
-
     app.register_blueprint(views,url_prefix='/gui')
 
-    @app.route('/static/<path:path>')
-    def send_static(path):
-        return send_from_directory('static',path)
-    
-    SWAGGER_URL='/docs'
-    API_URL='/static/swagger.yaml'
+
     
 
     # Call factory function to create our blueprint
     swaggerui_blueprint = get_swaggerui_blueprint(
-        SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
-        API_URL,
+        app.config['SWAGGER_URL'],  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+        app.config['API_URL'],
         config={  # Swagger UI config overrides
             'app_name': "Annotator Swagger"
         },
-        # oauth_config={  # OAuth config. See https://github.com/swagger-api/swagger-ui#oauth2-configuration .
-        #    'clientId': "your-client-id",
-        #    'clientSecret': "your-client-secret-if-required",
-        #    'realm': "your-realms",
-        #    'appName': "your-app-name",
-        #    'scopeSeparator': " ",
-        #    'additionalQueryStringParams': {'test': "hello"}
-        # }
+        
     )
-
-   
-
     app.register_blueprint(swaggerui_blueprint)
 
+
+    # Define the static folder:
+    @app.route('/static/<path:path>')
+    def send_static(path):
+        return send_from_directory('static',path)
 
 
 

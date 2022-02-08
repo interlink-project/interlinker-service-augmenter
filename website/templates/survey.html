@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>
+      Quality Survey
+    </title>
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://unpkg.com/jquery"></script>
+    <script src="https://unpkg.com/survey-jquery@1.9.7/survey.jquery.min.js"></script>
+    
+    <link
+      href="https://unpkg.com/survey-core@1.9.7/modern.min.css"
+      type="text/css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./index.css"></head>
+    <!--1link rel="stylesheet" href="./index.css" /-->
+  </head>
+  <body>
+    <div id="surveyElement" style="display: inline-block; width: 100%"></div>
+    <div id="surveyResult"></div>
+    <script type="text/javascript">
+      Survey.StylesManager.applyTheme("modern");
+
+      var json = {
+        elements: [
+          {
+            name: "name",
+            type: "text",
+            title: "Please enter your name:",
+            placeHolder: "Jon Snow",
+            isRequired: true,
+            autoComplete: "name",
+          },
+          {
+            name: "birthdate",
+            type: "text",
+            inputType: "date",
+            title: "Your birthdate:",
+            isRequired: true,
+            autoComplete: "bdate",
+          },
+          {
+            name: "color",
+            type: "text",
+            inputType: "color",
+            title: "Your favorite color:",
+          },
+          {
+            name: "email",
+            type: "text",
+            inputType: "email",
+            title: "Your e-mail:",
+            placeHolder: "jon.snow@nightwatch.org",
+            isRequired: true,
+            autoComplete: "email",
+            validators: [
+              {
+                type: "email",
+              },
+            ],
+          },
+        ],
+      };
+
+      window.survey = new Survey.Model(json);
+
+      survey.onComplete.add(function (sender) {
+        document.querySelector("#surveyResult").textContent =
+          "Result JSON:\n" + JSON.stringify(sender.data, null, 3);
+      });
+
+      $("#surveyElement").Survey({ model: survey });
+    </script>
+  </body>
+</html>

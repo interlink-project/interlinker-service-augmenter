@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify
 import requests, math
 from urllib.parse import urljoin, urlparse
 import datetime
+import uuid
 
 from flask_babel import format_number,gettext,format_decimal, format_currency, format_percent
 
@@ -24,8 +25,12 @@ from website.languages import getLanguagesList
 
 authInterlink = Blueprint('authInterlink', __name__,template_folder="./gui/templates")
 
-APP_STATE = 'ApplicationState'
-NONCE = 'SampleNonce'
+#Genero Secretos para los estados:
+tok1 = uuid.uuid4()
+tok2 = uuid.uuid4()
+
+APP_STATE = tok1.hex
+NONCE = tok2.hex
 
 @authInterlink.route("/login")
 def login():
@@ -47,25 +52,33 @@ def login():
     return redirect(request_uri)
 
 
+@authInterlink.route("/logout", methods=["GET", "POST"])
+@login_required
+def logout():
+    logout_user()
+    #response = redirect(config["end_session_endpoint"])
+    payload = {'id_token_hint': session['id_token'],
+                    'post_logout_redirect_uri': "http://127.0.0.1:5000/home",
+                    'state': APP_STATE}
+    #headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    r = requests.get(
+        config["end_session_endpoint"],
+        params=payload,
+    )
+    r.url
+    r.text
+    session.clear()
+    #return response
+    #return render_template("home.html")
+    return redirect(config["end_session_endpoint"]) #Por ahora queda asi.
+
+
 @authInterlink.route("/about")
 def about():
-
-    
-
-
     return render_template("about.html")
     
 
 
-
-""" @authInterlink.route("/dashboard")
-@login_required
-def dashboard():
-
-    res = Annotation.search(query={'user': current_user.email})
-    
-
-    return render_template("dashboard.html", user=current_user, anotations=res) """
 @authInterlink.route("/dashboard")
 @login_required
 def dashboard():
@@ -503,37 +516,6 @@ def changeAnnotation(descriptionId=None,annotatorId=None,option=None):
 
         return jsonify(annotation)
 
-        """ annotationRootId=''
-        losvalores=argumentos.keys()
-        if "annotationRootId" in losvalores:
-            annotationRootId=argumentos.pop('annotationRootId')
-
-
-        if annotationRootId != "":
-
-            description = Description._get_Descriptions_byId(id=descriptionId)[0]
-            annotation = Annotation._get_Annotation_byId(id=annotationRootId)[0]
-    
-            nroReplies = Annotation.count(query={ 'uri': description['url'] ,'category':'reply'  })
-            replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  },limit=nroReplies)
-
-            nroRepliesOfAnnotation = Annotation.count(query={ 'uri': description['url'] ,'category':'reply','idAnotationReply':'annotation-'+annotationRootId  })
-
-            return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
-        else:
-
-            description = Description._get_Descriptions_byId(id=descriptionId)[0]
-            annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
-    
-            nroReplies = Annotation.count(query={ 'uri': description['url'] ,'category':'reply'  })
-            replies = Annotation.search(query={ 'uri': description['url'] ,'category':'reply'  },limit=nroReplies)
-
-            nroRepliesOfAnnotation = Annotation.count(query={ 'uri': description['url'] ,'category':'reply','idAnotationReply':'annotation-'+annotatorId  })
-            
-            return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation)
- """
-
-    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 
 
@@ -651,35 +633,3 @@ def callback():
     else:
         return redirect(url_for("authInterlink.dashboard"))
 
-
-@authInterlink.route("/logout", methods=["GET", "POST"])
-@login_required
-def logout():
-
-    logout_user()
-
-    
-    
-    
-    #response = redirect(config["end_session_endpoint"])
-
-    payload = {'id_token_hint': session['id_token'],
-                    'post_logout_redirect_uri': "http://127.0.0.1:5000/home",
-                    'state': APP_STATE}
-
-    #headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    r = requests.get(
-        config["end_session_endpoint"],
-        params=payload,
-    )
-
-    r.url
-
-    r.text
-
-  
-    session.clear()
-
-    #return response
-    #return render_template("home.html")
-    return redirect(config["end_session_endpoint"]) #Por ahora queda asi.
