@@ -51,6 +51,8 @@ from authInterlink.helpers import  config
 from authInterlink.user import User
 import secrets
 
+from config import settings
+
 logging.basicConfig(format='%(asctime)s %(process)d %(name)s [%(levelname)s] '
                            '%(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
@@ -81,6 +83,20 @@ def main(argv):
 
     if app.config.get('ELASTICSEARCH_HOST') is not None:
         es.host = app.config['ELASTICSEARCH_HOST']
+
+    #Charge the docker variables Elasticsearch: 
+
+    if settings.ELASTICSEARCH_URL is not None:
+
+        app.config.update({
+            'ELASTICSEARCH_HOST':settings.ELASTICSEARCH_URL
+        })
+        es.host = app.config['ELASTICSEARCH_HOST']
+
+    print(app.config['ELASTICSEARCH_HOST'])
+    log.info("El host que entra del Docker es:")
+    log.info(app.config['ELASTICSEARCH_HOST'])
+
 
     # We do need to set this one (the other settings have fine defaults)
     default_index = app.name

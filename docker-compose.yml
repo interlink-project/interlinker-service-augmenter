@@ -5,8 +5,9 @@ services:
   # Elasticsearch Docker Images: https://www.docker.elastic.co/
   elasticsearch:
     image: elasticsearch:1.7.6-alpine
-    container_name: elasticsearch
+    container_name: es176
     environment:
+      - node.name=es176
       - xpack.security.enabled=false
       - discovery.type=single-node
       - http.cors.enabled=true
@@ -28,9 +29,29 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
+    networks:
+      - elasticnet3
+
+  augmenterservice:
+    image: interlinker-augmenter:latest
+    container_name: augmenterapp1
+    ports:
+      - "5000:5000"
+    environment:
+      - ELASTICSEARCH_URL=http://127.0.0.1:9200 
+      - node.name=augmenterapp1
+    networks:
+      - elasticnet3
 
 volumes:
   elasticsearch-data:
     driver: local
   elasticsearch-config:
     driver: local
+
+
+networks:
+  elasticnet3:
+    # Use a custom driver
+    driver: bridge
+  

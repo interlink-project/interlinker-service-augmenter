@@ -53,7 +53,7 @@ class ElasticSearch(object):
 
         if parsed.path:
             connargs['url_prefix'] = parsed.path
-
+        print(connargs)
         conn = elasticsearch.Elasticsearch(
             hosts=[connargs],
             connection_class=elasticsearch.Urllib3HttpConnection)
