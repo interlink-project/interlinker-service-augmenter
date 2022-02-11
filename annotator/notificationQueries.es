@@ -60,3 +60,25 @@ POST notification
         }
     }
 }
+
+
+
+POST notification/notification/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "term": {
+                        "resolved": false
+                    }
+                },
+                {
+                    "term": {
+                        "category": "survey"
+                    }
+                }
+            ]
+        }
+    }
+}

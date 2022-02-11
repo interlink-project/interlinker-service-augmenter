@@ -21,6 +21,7 @@ from authInterlink.user import User
 
 from annotator.annotation import Annotation
 from annotator.description import Description
+from annotator.notification import Notification
 from website.languages import getLanguagesList
 
 authInterlink = Blueprint('authInterlink', __name__,template_folder="./gui/templates")
@@ -232,8 +233,14 @@ def dashboard():
     
     paginacion={'page':page,'pagesNumbers':pagesNumbers,'totalRegisters':totalRegistros,'searchBox':textoABuscar,'padministration':padministration,'url':domain}
 
+    #Cargo las Notificaciones
+    listNotifications=Notification._get_Notification_byModerCategory(category="survey")
+    #listNotifications.append(Notification._get_Notification_byModerCategory(category="survey"))
+    numRes=listNotifications['numRes']
+    listNotifications=listNotifications['notifications']
 
-    return render_template("dashboard.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion)
+
+    return render_template("dashboard.html",descriptions=res,notifications=listNotifications,notificationNum=numRes,urls=urlList,publicsa=paList,paginacion=paginacion)
 
 
 @authInterlink.route("/moderate")

@@ -16,9 +16,10 @@ from __future__ import absolute_import
 
 import csv
 import json
+from operator import truediv
 
 from elasticsearch.exceptions import TransportError
-from flask import Blueprint, Response, session
+from flask import Blueprint, Response, session, redirect
 from flask import current_app, g
 from flask import request
 from flask import url_for
@@ -177,6 +178,23 @@ def notificationIndex():
 
     notifications = Notification._get_all()
     return jsonify(notifications)
+
+@store.route('/completeSurvey')
+def completeaSurvey():
+    #Tengo que poner la notificacion como realizada.
+    idAsset=request.args.get('assetId')
+    notification=Notification._get_Notification_byAssetId(assetId=idAsset)
+
+    notification=notification['notifications'][0]
+    notification['resolved']=True
+
+    notification.updateFieldResolve(index="notification")
+
+
+
+    return redirect('/dashboard')
+   
+ 
 
 
 # CREATE

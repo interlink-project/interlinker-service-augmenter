@@ -122,7 +122,13 @@ class Notification(es.Model):
                                  doc_type=cls.__type__,
                                  body=q)
 
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+        notifications=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        numRes=res['hits']['total']
+
+        resultado={'notifications':notifications,'numRes':numRes}
+
+        return resultado
     
     @classmethod
     def _get_Notification_byModerEmail(cls,**kwargs):
@@ -143,9 +149,101 @@ class Notification(es.Model):
         res = cls.es.conn.search(index="notification",
                                  doc_type=cls.__type__,
                                  body=q)
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+       
+
+        notifications=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        numRes=res['hits']['total']
+
+        resultado={'notifications':notifications,'numRes':numRes}
+
+        return resultado
+
+    @classmethod
+    def _get_Notification_byAssetId(cls,**kwargs):
+       
+
+        q= {
+            
+            "query": {
+                "terms": {
+                    "idAsset":[kwargs.pop("assetId")]
+                }
+            }
+        }
+
+        print(q)
+
+    
+        res = cls.es.conn.search(index="notification",
+                                 doc_type=cls.__type__,
+                                 body=q)
+       
+
+        notifications=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        numRes=res['hits']['total']
+
+        resultado={'notifications':notifications,'numRes':numRes}
+
+        return resultado
+
+    @classmethod
+    def _get_Notification_byModerCategory(cls,**kwargs):
+       
+
+        q= {
+            
+            "query": {
+
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "resolved": False
+                            }
+                        },
+                        {
+                            "term": {
+                                "category": kwargs.pop("category")
+                            }
+                        }
+                    ]
+                }
+
+            }
+        }
+
+        print(q)
+
+    
+        res = cls.es.conn.search(index="notification",
+                                 doc_type=cls.__type__,
+                                 body=q)
 
 
+        notifications=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        numRes=res['hits']['total']
+
+        resultado={'notifications':notifications,'numRes':numRes}
+
+        return resultado
+
+
+    def updateFieldResolve(self, *args, **kwargs):
+        #_add_default_permissions(self)
+
+        # If the annotation includes document metadata look to see if we have
+        # the document modeled already. If we don't we'll create a new one
+        # If we do then we'll merge the supplied links into it.
+
+        
+        q = {
+                "doc" : {
+                "resolved":self['resolved'],
+                "updated":datetime.datetime.now().replace(microsecond=0).isoformat()
+                }
+            } 
+
+        super(Notification, self).updateFields(body=q,*args, **kwargs)
 
     @classmethod
     def search_raw(cls, query=None, params=None, raw_result=False,
