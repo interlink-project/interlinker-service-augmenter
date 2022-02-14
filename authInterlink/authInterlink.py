@@ -15,6 +15,7 @@ from flask_login import (
     login_user,
     logout_user,
 )
+from annotator.survey import Survey
 
 from authInterlink.helpers import  config
 from authInterlink.user import User
@@ -303,6 +304,42 @@ def moderate():
 
     return render_template("moderate.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion)
 
+
+@authInterlink.route("/survey")
+@login_required
+def survey():
+
+    textoABuscar=request.args.get("searchText")
+    
+    page=request.args.get("page",1)
+    registroInicial=(int(page)-1)*10
+    
+    totalRegistros=0
+
+    #Searchs:
+    """ if(textoABuscar==None or textoABuscar==''):
+        res= Survey.search(offset=registroInicial)
+        totalRegistros= Survey.count()
+    else:
+        res= Survey._get_Surveys(textoABuscar=textoABuscar,offset=registroInicial) """
+        
+    resTemp=Survey._get_all()
+    res=resTemp['surveys']
+    totalRegistros= resTemp['numRes']
+
+
+    pagesNumbers=math.ceil(totalRegistros/10)
+    
+    paginacion={'page':page,'pagesNumbers':pagesNumbers,'totalRegisters':totalRegistros,'searchBox':textoABuscar}
+
+
+    return render_template("surveys.html",surveys=res,paginacion=paginacion)
+
+@authInterlink.route("/surveyInstantiator",methods=["POST"])
+def surveyInstantiator():
+
+    #Redirecciono al editor:
+    return redirect("http://localhost:8229/assets/instantiate")
 
 
 @authInterlink.route('/advanceSearch',)

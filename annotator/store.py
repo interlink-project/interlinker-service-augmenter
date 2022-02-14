@@ -19,7 +19,7 @@ import json
 from operator import truediv
 
 from elasticsearch.exceptions import TransportError
-from flask import Blueprint, Response, session, redirect
+from flask import Blueprint, Response, session, redirect, flash
 from flask import current_app, g
 from flask import request
 from flask import url_for
@@ -32,6 +32,7 @@ from annotator.document import Document
 from annotator.description import Description
 from annotator.elasticsearch import RESULTS_MAX_SIZE
 from annotator.notification import Notification
+from annotator.survey import Survey
 
 store = Blueprint('store', __name__)
 
@@ -179,6 +180,18 @@ def notificationIndex():
     notifications = Notification._get_all()
     return jsonify(notifications)
 
+# INDEX
+@store.route('/surveys')
+def surveysIndex():
+    if current_app.config.get('AUTHZ_ON'):
+        # Pass the current user to do permission filtering on results
+        user = g.user
+    else:
+        user = None
+
+    surveys = Survey._get_all()
+    return jsonify(surveys)
+
 @store.route('/completeSurvey')
 def completeaSurvey():
     #Tengo que poner la notificacion como realizada.
@@ -194,7 +207,49 @@ def completeaSurvey():
 
     return redirect('/dashboard')
    
- 
+@store.route('/saveSurvey')
+def saveSurvey():
+    #Tengo que poner la notificacion como realizada.
+    idAsset=request.args.get('assetId')
+    title=request.args.get('surveyTitle')
+    description= request.args.get('surveyDesc')
+    #Create a new survey:
+    
+
+    newSurvey=Survey(title=title,
+                     description=description,
+                     idAsset=idAsset,
+                     isMandatory=True
+                    )
+    
+    newSurvey.save(index="survey")
+  
+
+    return redirect("http://localhost:8229/assets/"+idAsset+"/edit")
+
+@store.route('/updateSurvey')
+def updateSurvey():
+
+    #Tengo que poner la notificacion como realizada.
+    idAsset=request.args.get('assetId')
+    title=request.args.get('surveyTitle')
+    description= request.args.get('surveyDesc')
+
+    #Obtengo el survey usando el Assetid
+    surveyEncontrado=Survey._get_Survey_byAssetId(idAsset=idAsset)
+
+    surveyEncontrado=surveyEncontrado['surveys'][0]
+    #Actualizo a new survey:
+    
+    surveyEncontrado['title']=title
+    surveyEncontrado['description']=description
+    
+    
+    Survey.updateFields(surveyEncontrado,index="survey")
+    
+
+
+    return redirect('/survey')
 
 
 # CREATE

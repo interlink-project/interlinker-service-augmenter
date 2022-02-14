@@ -1,0 +1,357 @@
+{% extends "templateV2.html" %} {% block title %} Servicepedia {% endblock %} {%
+    block head %} {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/accordion.css') }}" />
+    {% endblock %} {% block content %}
+
+    <script>
+        //Falta cargar de nuevo cuando se tenga una consulta en memoria
+        
+
+
+
+        function showPublishOps(event){
+            if (event.type == 'click') {
+            
+            var assetId=event.target.getAttribute('asset')
+            var title=event.target.getAttribute('title')
+
+
+
+            //Muestro notificacion:
+            var myModal = new bootstrap.Modal(document.getElementById('notificationBox'),{});
+
+            $('#notificationBoxLabel').text("Lauch Survey")
+
+            var formularioLauch = `
+
+                             <div class="row"  style="align-content: center;  justify-content: center;text-align:center;">
+                              
+                                <b>    
+                                Title: ${title}
+                                </b>    
+                              
+                            </div>
+                            <br/>
+                        <div class="input-group" style="align-content: center;  justify-content: center;"> 
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                    Target Users
+                                </div>
+                                <div class="col-6">
+                                    <select class="form-select input-lg" id="selTargetList" name="selTargetList" aria-label="Default select example" >
+                                        <option value="1" selected>Everybody</option>
+                                        <option value="2">Just some people</option>
+                                    </select>
+                                </div>
+                            </div>
+    
+                            <div class="row">
+                                
+                                    <label for="exampleFormControlTextarea1" class="form-label">List of Users</label>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                               
+                            </div>
+
+                            <div class="row" >
+                                Starting Date:    
+                            <input type="date" name="ini_date" id="ini_date"
+                                placeholder="Starting date" >
+                            </div>
+
+                            <div class="row">
+                                Finishing Date:
+                            <input type="date" name="fin_date" id="fin_date"
+                                placeholder="Finishing date" >
+                            </div>
+
+                        </div>`;
+
+
+            $('#notificationBody').empty();
+            $('#notificationBody').append( formularioLauch );
+         
+
+                                       
+            $('#notificationAcceptBtn').text("Accept");
+            $('#notificationAcceptBtn').hide();
+
+            $('#createUrl').val("");
+            myModal.show();
+
+            }
+        }
+
+    
+        function searchText(event) {
+            if (event.type == 'click') {
+                event.preventDefault();
+    
+                textoBox = document.getElementById("searchBox");
+                texto = textoBox.value
+    
+    
+                let page = event.target.getAttribute('page');
+                if (page == null) {
+                    page = 1;
+                }
+    
+    
+    
+                if (domain.selectedOptions[0].index == 0) {
+                    domainSel = "";
+                }
+    
+                //window.location = '/gui/?searchText=' + texto+'&padministration=' + padministrationSel+'&domain=' + domainSel;
+                //recargarTabla();
+    
+                function addShow(data) {
+    
+                    entries = Object.entries(data)
+                    descripcionesList = entries['0'][1]
+                    numeroReg = entries[1][1]
+    
+                    $('#tablaSurveys').empty();
+    
+                    for (let dataItem of descripcionesList) {
+                        $('#tablaSurveys').append(' <tr> <td> ' + dataItem.padministration + ' </td> <td> ' + dataItem
+                            .title + ' </td>  <td> ' + dataItem.created +
+                            ' </td> <td> <i class="bi bi-tools " style="width:100px;"></i> </td></tr>')
+                    }
+    
+                    $('#totalRegisters').text(numeroReg);
+    
+                    $('#page').text('1');
+    
+                    numeroPaginas = Math.ceil(numeroReg / 10);
+                    $('#pagesNumbers').text(numeroPaginas);
+    
+    
+    
+                    textoBox = document.getElementById("searchBox");
+                    texto = textoBox.value
+    
+                   
+    
+    
+    
+                    $('#paginador').empty();
+                    for (var j = 1; j < numeroPaginas + 1; j++) {
+                        //$('#paginador').append(" <li class='page-item'><a class='page-link' href='?page="+j+"&textoABuscar="+texto+"&padministration="+padministrationSel+"&domain="+domainSel+"'>"+j+"</a></li>");
+                        $('#paginador').append(
+                            " <li class='page-item'><a class='page-link' onclick='searchText(event);' page='" + j +
+                            "'  >" + j + "</a></li>");
+                    }
+    
+    
+    
+                }
+    
+    
+    
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ url_for("store.surveysIndex")|tojson }}',
+                    contentType: 'application/json;charset=UTF-8',
+                    data: JSON.stringify({
+                        "textoABuscar": texto,
+                        "page": page
+                    })
+                }).done(addShow);
+    
+            }
+        }
+    
+    
+    
+        function createNew(event) {
+            if (event.type == 'click') {
+    
+                window.location = '/surveyDetail';
+    
+            }
+        }
+    
+       
+      
+        $(function() {
+            $(".collapse").on('show.bs.collapse', function(e) {
+                if ($(this).is(e.target)) {
+            
+                $("#expFormModeration").removeClass("bi-plus-circle");
+                $("#expFormModeration").addClass("bi-dash-circle");
+                }
+            })
+            });
+    
+            $(function() {
+            $(".collapse").on('hide.bs.collapse', function(e) {
+                if ($(this).is(e.target)) {
+            
+                $("#expFormModeration").removeClass("bi-dash-circle");
+                $("#expFormModeration").addClass("bi-plus-circle");
+                }
+            })
+            });
+    
+    
+      
+    
+    
+    </script>
+    
+    <hr />
+    <div class="container">
+        <div class="row">
+            <div
+            class="col"
+            style="align-content: center; justify-content: center; display: flex;align-items: center;"
+          >
+            <img src="{{url_for('static', filename='surveyIcon.png')}}" style="width:40px ;" alt="Activities">
+            <h4 style="padding-left: 25px;">List of Surveys:</h4>
+      
+          </div>
+    
+    
+    
+        </div>
+        <hr />
+    
+        <div id="result"></div>
+    
+        <div class="row">
+            <div class="table-responsive">
+               
+                <table class="table" style="height: auto">
+                    <thead>
+                        <tr>
+                            
+                            <th scope="col-1">Id</th>
+                            
+                            <th scope="col-4">Title</th>
+                            <th scope="col-7">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaSurveys">
+                        {% for survey in surveys %}
+                        <tr>
+    
+    
+                            <td>{{ survey.id}}</td>
+    
+                            
+                            <td>{{ survey.title}}</td>
+                            <td>
+
+                                {% if survey.description|length > 20 %}
+                                {% set soloTexto= survey.description[0:20]|striptags%}
+                                {% set textoCortado= soloTexto[0:20]+'...' %}
+                                {{ textoCortado|striptags}}
+                                {% endif %}
+
+
+                            </td>
+    
+                            
+                            <td>
+                               
+                                <a  href="http://localhost:8229/assets/{{ survey.idAsset }}/edit" class="btn btn-outline-secondary" style="max-width: 70px;" title="Edit" ><i class="bi bi-tools " style="width:100px;"></i></a>
+                 
+                            </td>
+                            <td>
+                               
+                                <a  onclick="showPublishOps(event)" asset="{{ survey.idAsset }}" title="{{ survey.title }}" class="btn btn-outline-success" >Publish</a>
+                               
+                             
+                            </td>
+    
+                            
+                        </tr>
+    
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <h6 id="searchStats">Total found : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span id='page'>{{paginacion.page}}</span> of <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> Pages).</h6>
+        
+    
+                <div
+                class="container"
+                style="align-content: center; justify-content: center; display: flex"
+              >
+                <div class="row">
+                  <div class="col">
+                    <nav aria-label="...">
+                      <ul class="pagination" id="paginador">
+          
+          
+                      {% for i in range(paginacion.pagesNumbers|int) %}
+                        <li class="page-item"><a class="page-link" href='?page={{ i+1 }}'>{{i+1}}</a></li>
+                      {% endfor %}
+          
+          
+          
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+    
+           <!--  <div class="container">
+                <div class="row">
+                    <div class="col" style="align-content: center; justify-content: center; display: flex">
+                        <h4>Edit information of a registered public service survey:</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">Description Url:</label>
+                    <select class="form-select" id="inputGroupSelect01">
+                        <option selected>Choose...</option>
+                        <option value="1">domain1</option>
+                        <option value="2">domain2</option>
+                        <option value="3">domain3</option>
+                    </select>
+                    <input type="text" class="form-control" placeholder="Url Page" aria-label="Url Page">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">Edit</button>
+                </div>
+            </div>
+    
+            <hr /> -->
+        </div>
+    </div>
+    
+    
+    
+    
+    <div class="container">
+        <div class="row">
+            <div class="col" style="align-content: left; justify-content: left; display: flex">
+                
+                <form class="form-inline my-2 my-lg-0" id="FormSurvey" action="/surveyInstantiator"  enctype="multipart/form-data" method="POST">
+    
+                        <div class="row" style="align-content: center; justify-content: center;">
+                            <div class="col" style="align-content: center; justify-content: center;">
+                                <button type="submit" class="btn btn-secondary" style="margin: 1px;margin-left: 5px;" >Create a new survey</button>
+        
+                            </div>
+                        </div>
+        
+                </form>
+            
+          </button>
+            </div>
+        </div>
+    
+    
+    
+        </div>
+        </div>
+    
+    </div>
+    </div>
+    
+    
+    {% endblock %}

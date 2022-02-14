@@ -643,6 +643,9 @@ def survey():
     return render_template("survey.html")
 
 
+
+
+
 #Cargo la pagina desde beautifulSoup y la muestro en pantalla
 @views.route("/modifica/<userId>/<path:rutaPagina>",methods=["GET","POST"])
 def modifica(rutaPagina,userId):
