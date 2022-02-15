@@ -262,6 +262,38 @@ class Annotation(es.Model):
     
         return res
 
+    #Get users that has participated as Moderator or Annotator
+    @classmethod
+    def currentActiveUsers(cls,**kwargs):
+        q={
+            "size":0,
+           
+            "aggs" : {
+                    "group_by_user": {
+                        "terms": {
+                            "field": "user"
+                        }
+                }
+
+            }
+        }
+        
+        print(q)
+
+    
+        res = cls.es.conn.search(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+
+
+        if(len(res['aggregations']['group_by_user']['buckets'])>0):
+            res=res['aggregations']['group_by_user']['buckets']
+        else:
+            res=[]
+        
+        return res
+                                 
+    
 
 
     #Return the number of time a user register a like over an annotation

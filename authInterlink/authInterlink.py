@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, flash
 import requests, math
 from urllib.parse import urljoin, urlparse
 import datetime
@@ -234,14 +234,9 @@ def dashboard():
     
     paginacion={'page':page,'pagesNumbers':pagesNumbers,'totalRegisters':totalRegistros,'searchBox':textoABuscar,'padministration':padministration,'url':domain}
 
-    #Cargo las Notificaciones
-    listNotifications=Notification._get_Notification_byModerCategory(category="survey")
-    #listNotifications.append(Notification._get_Notification_byModerCategory(category="survey"))
-    numRes=listNotifications['numRes']
-    listNotifications=listNotifications['notifications']
+    listNotifications,numRes=cargarNotifications()
 
-
-    return render_template("dashboard.html",descriptions=res,notifications=listNotifications,notificationNum=numRes,urls=urlList,publicsa=paList,paginacion=paginacion)
+    return render_template("dashboard.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion,notifications=listNotifications,notificationNum=numRes)
 
 
 @authInterlink.route("/moderate")
@@ -302,7 +297,10 @@ def moderate():
     paginacion={'page':page,'pagesNumbers':pagesNumbers,'totalRegisters':totalRegistros,'searchBox':textoABuscar,'padministration':padministration,'url':domain}
 
 
-    return render_template("moderate.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion)
+    #Cargo las Notificaciones
+    listNotifications,numRes=cargarNotifications()
+
+    return render_template("moderate.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion,notifications=listNotifications,notificationNum=numRes)
 
 
 @authInterlink.route("/survey")
@@ -332,14 +330,89 @@ def survey():
     
     paginacion={'page':page,'pagesNumbers':pagesNumbers,'totalRegisters':totalRegistros,'searchBox':textoABuscar}
 
+    #Cargo las Notificaciones
+    listNotifications,numRes=cargarNotifications()
 
-    return render_template("surveys.html",surveys=res,paginacion=paginacion)
+    return render_template("surveys.html",surveys=res,paginacion=paginacion,notifications=listNotifications,notificationNum=numRes)
 
 @authInterlink.route("/surveyInstantiator",methods=["POST"])
 def surveyInstantiator():
 
     #Redirecciono al editor:
     return redirect("http://localhost:8229/assets/instantiate")
+
+def obtainUsersEmail(listItemsBucket=[]):
+    listUsers=[]
+    for itemBucket in listItemsBucket:
+        userEmail=itemBucket['key']
+        if userEmail!='Anonymous' and userEmail!='Annonymous' :
+            listUsers.append(userEmail)
+    return listUsers
+
+
+
+@authInterlink.route("/lauchSurvey",methods=["POST"])
+def surveyLauchProcess():
+
+    #Obtengo los valores del Survey:
+    selTargetUsers=request.form.get("selTargetList")
+    listUsersArea=request.form.get("listUsersArea")
+    is_optional=request.form.get("is_optional")
+    ini_date=request.form.get("ini_date")
+    fin_date=request.form.get("fin_date")
+    selEvent=request.form.get("selEvent")
+
+    mandatory=True
+    if is_optional =='on':
+        mandatory=False
+
+
+    #Creo la notification:
+    idAsset=request.form.get('assetId')
+    title=request.form.get('surveyTitle')
+    description= request.form.get('surveyDesc')
+
+    #Defino the users:
+    listUsersEmails=[]
+    if selTargetUsers=="everybody":
+
+        listUsersWhoAnnotated=obtainUsersEmail(Annotation.currentActiveUsers())
+        listUsersWhoModerate= obtainUsersEmail(Description.currentActiveUsersModerators())
+        listUsersEmails=list(set(listUsersWhoAnnotated+listUsersWhoModerate))
+        
+    else:
+        listUsersEmails= listUsersArea.split(";")
+    
+
+
+    for userEmail in listUsersEmails:
+
+        email=userEmail
+        target_url="http://localhost:8229/assets/"+idAsset+"/view/"
+
+        newNotification=Notification(
+                        title=title,
+                        email=email,
+                        description=description,
+                        target_url=target_url,
+                        resolved=False,
+                        category="survey",
+                        idAsset=idAsset,
+                        triggerEvent=selEvent,
+                        triggerDate=ini_date,
+                        isMandatory=mandatory
+                        )
+        
+
+
+        newNotification.save(index="notification")
+
+
+    #Se ha lanzado exitosamente el suvey:
+    flash("The survey has been lauched.","info")
+       
+    #Redirecciono al editor:
+    return redirect("/survey")
 
 
 @authInterlink.route('/advanceSearch',)
@@ -404,9 +477,10 @@ def description(descriptionId=None):
     
     paginacion={'page':page,'pagesNumbers':pagesNumbers,'totalRegisters':numRes}
 
+    #Cargo las Notificaciones
+    listNotifications,numRes=cargarNotifications()
 
-
-    return render_template("description.html", user=current_user, description=description,anotations=res,categoryLabel=categoria,paginacion=paginacion,urlMainPage=urlMainPage)
+    return render_template("description.html", user=current_user, description=description,anotations=res,categoryLabel=categoria,paginacion=paginacion,urlMainPage=urlMainPage,notifications=listNotifications,notificationNum=numRes)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 @authInterlink.route('/description/<string:descriptionId>/<string:option>',)
@@ -453,7 +527,10 @@ def subjectPage(descriptionId=None,annotatorId=None):
     nroRepliesOfAnnotation=nroReplies
     #nroRepliesOfAnnotation = Annotation.count(query={ '_id': description['id'] ,'category':'reply','idReplyRoot':annotatorId  })
     
-    return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation,urlMainPage=urlMainPage)
+    #Cargo las Notificaciones
+    listNotifications,numRes=cargarNotifications()
+
+    return render_template("subjectPage.html", user=current_user, annotation=annotation,description=description,categoryLabel=annotation['category'],replies=replies,nroReplies=nroRepliesOfAnnotation,urlMainPage=urlMainPage,notifications=listNotifications,notificationNum=numRes)
    # return 'la desc: '+category+'lauri is'+str(uri) 
 
 @authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>/<string:option>', methods=["GET", "POST"])
@@ -587,7 +664,11 @@ def descriptionDetail():
 @authInterlink.route("/profile")
 @login_required
 def profile():
-    return render_template("profile.html", user=current_user)
+
+    #Cargo las Notificaciones
+    listNotifications,numRes=cargarNotifications()
+
+    return render_template("profile.html", user=current_user,notifications=listNotifications,notificationNum=numRes)
 
 @authInterlink.route("/settings")
 @login_required
@@ -606,11 +687,10 @@ def settings():
     us_num=format_decimal(1.2346)
     results.append(us_num)
     
+    #Cargo las Notificaciones
+    listNotifications,numRes=cargarNotifications()
 
-  
-
-
-    return render_template("settings.html", user=current_user,results=results,anthony=anthony)
+    return render_template("settings.html", user=current_user,results=results,anthony=anthony,notifications=listNotifications,notificationNum=numRes)
 
 
 @authInterlink.route("/oidc_callback")
@@ -676,4 +756,12 @@ def callback():
         return redirect(paginaNext)
     else:
         return redirect(url_for("authInterlink.dashboard"))
+
+def cargarNotifications():
+    #Cargo las Notificaciones
+    listNotifications=Notification._get_Notification_byModerCategory(category="survey")
+    #listNotifications.append(Notification._get_Notification_byModerCategory(category="survey"))
+    numRes=listNotifications['numRes']
+    listNotifications=listNotifications['notifications']
+    return listNotifications,numRes
 

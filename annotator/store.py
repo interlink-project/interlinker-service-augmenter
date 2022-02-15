@@ -209,7 +209,7 @@ def completeaSurvey():
    
 @store.route('/saveSurvey')
 def saveSurvey():
-    #Tengo que poner la notificacion como realizada.
+   
     idAsset=request.args.get('assetId')
     title=request.args.get('surveyTitle')
     description= request.args.get('surveyDesc')

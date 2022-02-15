@@ -665,6 +665,27 @@ POST description/description/_search
 }
 
 
+POST description/description/_search
+{
+    "aggs" : {
+        "moderators" : {
+            "nested" : {
+                "path" : "moderators"
+            },
+            "aggs" : {
+                "group_by_url": {
+                    "terms": {
+                        "field": "moderators.email"
+                    }
+                }
+
+            }
+        }
+    },
+    "size": 0
+}
+
+
 
 
 POST description/description/_search
@@ -953,3 +974,4 @@ POST description/description/_search
         }
     }
 }
+

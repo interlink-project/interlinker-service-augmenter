@@ -7,65 +7,96 @@
         //Falta cargar de nuevo cuando se tenga una consulta en memoria
         
 
+        function enableArea(event){
+            opcion=$( "#selTarget").val();
+            textoOpcion=$( "#selTarget option:selected" ).text();
+           
+            if (opcion=='list'){
+                $('#listUsersArea').prop("disabled", false);
+            }else{
+                $('#listUsersArea').prop("disabled", true);
+            }
+            
+
+        }
 
 
         function showPublishOps(event){
             if (event.type == 'click') {
             
             var assetId=event.target.getAttribute('asset')
-            var title=event.target.getAttribute('title')
+            var surveytitle=event.target.getAttribute('surveytitle')
+            var surveydescription=event.target.getAttribute('surveydescription')
 
 
 
             //Muestro notificacion:
             var myModal = new bootstrap.Modal(document.getElementById('notificationBox'),{});
 
-            $('#notificationBoxLabel').text("Lauch Survey")
+            $('#notificationBoxLabel').text("Survey Launcher")
 
             var formularioLauch = `
-
-                             <div class="row"  style="align-content: center;  justify-content: center;text-align:center;">
-                              
+                        <form class="row g-3" action="/lauchSurvey" method="post">
+                            <div class="mb-3" style="text-align:center;">
                                 <b>    
-                                Title: ${title}
+                                Title: ${surveytitle}
                                 </b>    
-                              
+                    
                             </div>
-                            <br/>
-                        <div class="input-group" style="align-content: center;  justify-content: center;"> 
                             
-                            <div class="row">
-                                <div class="col-6">
-                                    Target Users
-                                </div>
-                                <div class="col-6">
-                                    <select class="form-select input-lg" id="selTargetList" name="selTargetList" aria-label="Default select example" >
-                                        <option value="1" selected>Everybody</option>
-                                        <option value="2">Just some people</option>
-                                    </select>
-                                </div>
-                            </div>
-    
-                            <div class="row">
+                            <div class="mb-3">
+                                <label for="selTarget" class="form-label">Target Users:</label>
                                 
-                                    <label for="exampleFormControlTextarea1" class="form-label">List of Users</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                               
+                                <select class="form-select input-lg" id="selTarget" name="selTargetList" aria-label="Default select example" onchange="if (this.selectedIndex) enableArea();"  required>
+                                        <option selected disabled value="">...</option>
+                                        <option value="everybody">Everybody</option>
+                                        <option value="list">A list of users</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="listUsersArea" class="form-label">List of Users (separated by ;)</label>
+                                <textarea class="form-control" id="listUsersArea" name="listUsersArea" rows="3" disabled></textarea>
                             </div>
 
-                            <div class="row" >
-                                Starting Date:    
-                            <input type="date" name="ini_date" id="ini_date"
-                                placeholder="Starting date" >
+                            <div class="mb-3">
+                                <input class="form-check-input" type="checkbox" name="is_optional"
+                                id="is_optional">
+                                <label for="is_optional" class="form-label">Optional</label>
+                                
                             </div>
 
-                            <div class="row">
-                                Finishing Date:
-                            <input type="date" name="fin_date" id="fin_date"
-                                placeholder="Finishing date" >
+                            <div class="mb-3">
+                                <label for="ini_date" class="form-label">Starting Date:</label>
+                                <input type="date" style="margin-left=5px" name="ini_date" id="ini_date"
+                                placeholder="Starting date" required>
                             </div>
 
-                        </div>`;
+                            <div class="mb-3">
+                                <label for="fin_date" class="form-label">Finishing date</label>
+                                <input type="date" name="fin_date" id="fin_date"
+                                placeholder="Finishing date" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="selEvent" class="form-label">Show it in the event of:</label>
+                                <select class="form-select input-lg" id="selEvent" name="selEvent" aria-label="Default select example" >
+                                        <option selected value="asnotification">Open notifications</option>
+                                        <option value="opennigsession">Opening a Session</option>
+                                        <option value="closesession">Closing a Session</option>
+                                    </select>
+                            </div>
+
+                            <input id="assetId" name="assetId" type="hidden" value="${assetId}">
+                            <input id="surveyTitle" name="surveyTitle" type="hidden" value="${surveytitle}">
+                            <input id="surveyDesc"  name="surveyDesc"  type="hidden" value="${surveydescription}">
+
+                            <div class="col-12" style="text-align:center;">
+                                <button class="btn btn-primary" type="submit">Lauch  the survey!</button>
+                            </div>
+
+                            </form>
+                            
+                           `;
 
 
             $('#notificationBody').empty();
@@ -227,14 +258,17 @@
                         <tr>
                             
                             <th scope="col-1">Id</th>
-                            
                             <th scope="col-4">Title</th>
                             <th scope="col-7">Description</th>
+                            <th scope="col-7">Settings</th>
+                            <th scope="col-7">Launch</th>
+                            <th scope="col-7">Answers</th>
+                            
                         </tr>
                     </thead>
                     <tbody id="tablaSurveys">
                         {% for survey in surveys %}
-                        <tr>
+                        <tr >
     
     
                             <td>{{ survey.id}}</td>
@@ -260,9 +294,15 @@
                             </td>
                             <td>
                                
-                                <a  onclick="showPublishOps(event)" asset="{{ survey.idAsset }}" title="{{ survey.title }}" class="btn btn-outline-success" >Publish</a>
+ 
+
+                                <a onclick="showPublishOps(event)" asset="{{ survey.idAsset }}"  surveytitle="{{ survey.title }}" surveydescription="{{ survey.description }}" title="Answers" ><input type="button" asset="{{ survey.idAsset }}"  surveytitle="{{ survey.title }}" surveydescription="{{ survey.description }}" style="background-image: url('{{url_for('static', filename='rocket.png')}}'); " class="botonIcon" /></a>
+                            </td>
+                            <td>
                                
-                             
+                          
+                 
+                                <a style="margin-top:-10px;"  href="http://localhost:8229/api/v1/assets/{{ survey.idAsset }}/answers" title="Answers" ><input type="button" style="background-image: url('{{url_for('static', filename='answers.png')}}'); " class="botonIcon" /></a>
                             </td>
     
                             

@@ -177,6 +177,44 @@ class Description(es.Model):
         return resultadosDistintos
 
 
+    #Get users that has participated as Moderator of a Description
+    @classmethod
+    def currentActiveUsersModerators(cls,**kwargs):
+        q={
+            "aggs" : {
+                    "moderators" : {
+                        "nested" : {
+                            "path" : "moderators"
+                        },
+                        "aggs" : {
+                            "group_by_user": {
+                                "terms": {
+                                    "field": "moderators.email"
+                                }
+                            }
+
+                        }
+                    }
+                },
+            "size": 0
+        }
+        
+        print(q)
+
+    
+        res = cls.es.conn.search(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+
+
+        if(len(res['aggregations']['moderators']['group_by_user']['buckets'])>0):
+            res=res['aggregations']['moderators']['group_by_user']['buckets']
+        else:
+            res=[]
+        
+        return res
+
+
     @classmethod
     def _get_uniqueValuesUrl(cls):
         

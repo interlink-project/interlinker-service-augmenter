@@ -4,53 +4,53 @@ import datetime
 TYPE = 'notification'
 MAPPING = {
 
-        "id": {
-            "type": "string",
-            "index": "no"
-        },
-        "email": {
-            "type": "string"
-        },
+            "id": {
+                "type": "string",
+                "index": "no"
+            },
+            "email": {
+                "type": "string"
+            },
 
-        "resolved": {
-            "type": "boolean"
-        },
-        "created": {
-            "type": "date"
-        },
-        "updated": {
-            "type": "date"
-        },
+            "resolved": {
+                "type": "boolean"
+            },
+            "created": {
+                "type": "date"
+            },
+            "updated": {
+                "type": "date"
+            },
 
-        "category": {
-            "type": "string"
-        },
-        "title": {
-            "type": "string",
-            "analyzer": "standard"
-        },
-        "description": {
-            "type": "string",
-            "analyzer": "standard"
-        },
-        "target_url": {
-            "type": "string"
-        },
+            "category": {
+                "type": "string"
+            },
+            "title": {
+                "type": "string",
+                "analyzer": "standard"
+            },
+            "description": {
+                "type": "string",
+                "analyzer": "standard"
+            },
+            "target_url": {
+                "type": "string"
+            },
 
-        
-        "isMandatory":{
-            "type": "boolean"
-        },
+            
+            "isMandatory":{
+                "type": "boolean"
+            },
 
-        "idAsset": {
-            "type": "string"
-        },
-        "triggerEvent": {
-            "type": "string"
-        },
-        "triggerDate": {
-            "type": "string"
-        }
+            "idAsset": {
+                "type": "string"
+            },
+            "triggerEvent": {
+                "type": "string"
+            },
+            "triggerDate": {
+                "type": "string"
+            }
 }
 
 
@@ -66,7 +66,7 @@ class Notification(es.Model):
 
     def save(self, *args, **kwargs):
         _add_default_permissions(self)
-        super(Notification, self).save(*args,index='notification', **kwargs)
+        super(Notification, self).save(*args, **kwargs)
 
 
 

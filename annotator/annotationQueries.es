@@ -302,6 +302,23 @@ POST annotator/annotation/_search
     }
 }
 
+POST annotator/annotation/_search
+{
+
+    "aggs" : {
+        "group_by_user": {
+            "terms": {
+                "field": "user"
+            }
+        }
+
+    },
+        
+   
+    "size": 0
+}
+
+
 
 POST annotator/annotation/_search
 

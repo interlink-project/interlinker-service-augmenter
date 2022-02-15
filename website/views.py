@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, flash, jsonify, g,session
 import json, requests, math, os
 
 from werkzeug.utils import secure_filename
+from annotator.notification import Notification
 from authInterlink import authInterlink
 
 
@@ -108,7 +109,13 @@ def inicio():
     paginacion={'page':page,'pagesNumbers':pagesNumbers,'totalRegisters':totalRegistros,'searchBox':textoABuscar,'padministration':padministration,'url':domain}
 
 
-    return render_template("home.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion)
+    #Cargo las Notificaciones
+    listNotifications=Notification._get_Notification_byModerCategory(category="survey")
+    #listNotifications.append(Notification._get_Notification_byModerCategory(category="survey"))
+    numRes=listNotifications['numRes']
+    listNotifications=listNotifications['notifications']
+
+    return render_template("home.html",descriptions=res,urls=urlList,publicsa=paList,paginacion=paginacion,notifications=listNotifications,notificationNum=numRes)
 
 
 
