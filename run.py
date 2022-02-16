@@ -23,7 +23,8 @@ from flask_mail import Mail, Message
 
 import elasticsearch
 from flask import request
-from annotator import es, annotation, auth, authz, document, store,description
+from annotator import es, annotation, auth, authz, document, notification, store,description, survey
+from annotator.survey import Survey
 from authInterlink import authInterlink
 from website.views import views
 import secrets
@@ -92,6 +93,19 @@ def main(argv):
             'ELASTICSEARCH_HOST':settings.ELASTICSEARCH_URL
         })
         es.host = app.config['ELASTICSEARCH_HOST']
+    
+    if settings.SURVEYINTERLINK_URL is not None:
+        #Guardo la direccion en la configuracion del proyecto
+        app.config.update({
+            'SURVEY_HOST':settings.SURVEYINTERLINK_URL
+        })
+    
+    if settings.SURVEYAPI_VERSION is not None:
+        #Guardo la direccion en la configuracion del proyecto
+        app.config.update({
+            'SURVEYAPI_VERSION':settings.SURVEYAPI_VERSION
+        })
+        
 
     print(app.config['ELASTICSEARCH_HOST'])
     log.info("El host que entra del Docker es:")
@@ -107,9 +121,12 @@ def main(argv):
 
     with app.test_request_context():
         try:
+            #Creo los indices necesarios:
             annotation.Annotation.create_all()
-            #description.Description.create_all(index="description")
-            document.Document.create_all()
+            notification.Notification.create_all(index="notification")
+            survey.Survey.create_all(index="survey")
+            description.Description.create_all(index="description")
+
         except elasticsearch.exceptions.RequestError as e:
             if e.error.startswith('MergeMappingException'):
                 date = time.strftime('%Y-%m-%d')

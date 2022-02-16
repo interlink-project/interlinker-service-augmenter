@@ -3,6 +3,7 @@ import requests, math
 from urllib.parse import urljoin, urlparse
 import datetime
 import uuid
+from flask import current_app, g
 
 from flask_babel import format_number,gettext,format_decimal, format_currency, format_percent
 
@@ -333,13 +334,17 @@ def survey():
     #Cargo las Notificaciones
     listNotifications,numRes=cargarNotifications()
 
-    return render_template("surveys.html",surveys=res,paginacion=paginacion,notifications=listNotifications,notificationNum=numRes)
+    #Defino la direccion del SurveyHost
+    surveyHost=current_app.config['SURVEY_HOST']
+    surveyApiVersion=current_app.config['SURVEYAPI_VERSION']
+
+    return render_template("surveys.html",surveys=res,paginacion=paginacion,notifications=listNotifications,notificationNum=numRes,surveyHost=surveyHost,surveyApiVersion=surveyApiVersion)
 
 @authInterlink.route("/surveyInstantiator",methods=["POST"])
 def surveyInstantiator():
 
     #Redirecciono al editor:
-    return redirect("http://localhost:8229/assets/instantiate")
+    return redirect(current_app.config['SURVEY_HOST']+"/assets/"+"instantiate")
 
 def obtainUsersEmail(listItemsBucket=[]):
     listUsers=[]
@@ -388,7 +393,7 @@ def surveyLauchProcess():
     for userEmail in listUsersEmails:
 
         email=userEmail
-        target_url="http://localhost:8229/assets/"+idAsset+"/view/"
+        target_url=current_app.config['SURVEY_HOST']+ "/assets/"+idAsset+"/view/"
 
         newNotification=Notification(
                         title=title,

@@ -189,7 +189,7 @@ def surveysIndex():
     else:
         user = None
 
-    surveys = Survey._get_all()
+    surveys = Survey._get_all()  
     return jsonify(surveys)
 
 @store.route('/completeSurvey')
@@ -225,7 +225,7 @@ def saveSurvey():
     newSurvey.save(index="survey")
   
 
-    return redirect("http://localhost:8229/assets/"+idAsset+"/edit")
+    return redirect(current_app.config['SURVEY_HOST']+"/assets/"+idAsset+"/edit")
 
 @store.route('/updateSurvey')
 def updateSurvey():

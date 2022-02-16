@@ -38,8 +38,12 @@ services:
     container_name: augmenterservice
     ports:
       - 5000:5000
+    env_file:
+      - .env
     environment:
-      - ELASTICSEARCH_URL=http://elasticsearch:9200 
+      - ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
+      - SURVEYINTERLINK_URL=${SURVEYINTERLINK_URL}
+      - SURVEYAPI_VERSION=${SURVEYAPI_VERSION}
     depends_on:
       - elasticsearch
     networks:

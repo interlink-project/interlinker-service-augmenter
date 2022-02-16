@@ -289,7 +289,7 @@
                             
                             <td>
                                
-                                <a  href="http://localhost:8229/assets/{{ survey.idAsset }}/edit" class="btn btn-outline-secondary" style="max-width: 70px;" title="Edit" ><i class="bi bi-tools " style="width:100px;"></i></a>
+                                <a  href="{{ surveyHost }}/assets/{{ survey.idAsset }}/edit" class="btn btn-outline-secondary" style="max-width: 70px;" title="Edit" ><i class="bi bi-tools " style="width:100px;"></i></a>
                  
                             </td>
                             <td>
@@ -302,7 +302,7 @@
                                
                           
                  
-                                <a style="margin-top:-10px;"  href="http://localhost:8229/api/v1/assets/{{ survey.idAsset }}/answers" title="Answers" ><input type="button" style="background-image: url('{{url_for('static', filename='answers.png')}}'); " class="botonIcon" /></a>
+                                <a style="margin-top:-10px;"  href="{{ surveyHost }}/api/{{ surveyApiVersion }}/assets/{{ survey.idAsset }}/answers" title="Answers" ><input type="button" style="background-image: url('{{url_for('static', filename='answers.png')}}'); " class="botonIcon" /></a>
                             </td>
     
                             
