@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block head %}
+
+<title>instantiator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.5.11/jsoneditor.min.js"
+    integrity="sha512-RL3kaj0W9BjXTR6ptyJgJ5U+mjMa/6U/s3VcnrIWqJsc6/O2U7Jk6pNl10tRHoM9//SBjWl9huHsM6jjGv8sFg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.5.11/jsoneditor.min.css"
+    integrity="sha512-nnOk6g+Ad1MdoerOautiVacB6N+rKYkPO0YGCSq/Mgrb45RXtPC7xEK+R+lyWA1GRBbnLBc71npsBTrF5rBEpw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock %}
+
+{% block body %}
+
+<script type="text/babel" src="{{BASE_PATH}}/static/components/multipleselect.js"></script>
+<script type="text/babel" src="{{BASE_PATH}}/static/components/form.js"></script>
+<script type="text/babel" src="{{BASE_PATH}}/static/instantiator.js"></script>
+
+{% endblock %}

@@ -97,7 +97,7 @@ def main(argv):
     if settings.SURVEYINTERLINK_URL is not None:
         #Guardo la direccion en la configuracion del proyecto
         app.config.update({
-            'SURVEY_HOST':settings.SURVEYINTERLINK_URL
+            'SURVEYINTERLINK_URL':settings.SURVEYINTERLINK_URL
         })
     
     if settings.SURVEYAPI_VERSION is not None:
@@ -108,8 +108,12 @@ def main(argv):
         
 
     print(app.config['ELASTICSEARCH_HOST'])
-    log.info("El host que entra del Docker es:")
+    log.info("El host que entra del Docker ES es:")
     log.info(app.config['ELASTICSEARCH_HOST'])
+
+    print(app.config['SURVEYINTERLINK_URL'])
+    log.info("El host que entra del Docker Survey es:")
+    log.info(app.config['SURVEYINTERLINK_URL'])
 
 
     # We do need to set this one (the other settings have fine defaults)
@@ -276,7 +280,7 @@ def main(argv):
 
 
     host = os.environ.get('HOST', '0.0.0.0')
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORTAUGMENTER', 5000))
     app.run(host=host, port=port,debug=True)
 
  

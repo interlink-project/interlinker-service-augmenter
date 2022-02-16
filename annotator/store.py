@@ -225,7 +225,7 @@ def saveSurvey():
     newSurvey.save(index="survey")
   
 
-    return redirect(current_app.config['SURVEY_HOST']+"/assets/"+idAsset+"/edit")
+    return redirect(current_app.config['SURVEYINTERLINK_URL']+"/assets/"+idAsset+"/edit")
 
 @store.route('/updateSurvey')
 def updateSurvey():

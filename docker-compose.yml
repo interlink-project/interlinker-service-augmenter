@@ -45,28 +45,31 @@ services:
       - SURVEYAPI_VERSION=${SURVEYAPI_VERSION}
     depends_on:
       - elasticsearch
+      - survey
 
 
 
   survey:
-      image: 'surveydev:${TAG-latest}'
-      container_name: survey-solo
+      build:
+            context: ./surveyapp
+            dockerfile: Dockerfile
+            target: dev
+      container_name: survey
+      ports:
+        - "${SOLODEVPORT}:${PORT}"
       volumes:
-        - ./app:/app
+        - ./surveyapp/app:/app
       env_file:
         - .env
       environment:
+        - node.name=survey
         - PROTOCOL=http://
         - SERVER_NAME=${DOMAIN?Variable not set}
         - PORT
         - BASE_PATH=
         - MONGODB_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb:27017/${MONGODB_DATABASE}?retryWrites=true&w=majority
-      build:
-        context: .
-        dockerfile: Dockerfile
-        target: dev
-      ports:
-        - "${SOLODEVPORT}:${PORT}"
+ 
+   
 
   mongodb:
     image: bitnami/mongodb:latest

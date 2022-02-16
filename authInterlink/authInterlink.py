@@ -335,7 +335,7 @@ def survey():
     listNotifications,numRes=cargarNotifications()
 
     #Defino la direccion del SurveyHost
-    surveyHost=current_app.config['SURVEY_HOST']
+    surveyHost=current_app.config['SURVEYINTERLINK_URL']
     surveyApiVersion=current_app.config['SURVEYAPI_VERSION']
 
     return render_template("surveys.html",surveys=res,paginacion=paginacion,notifications=listNotifications,notificationNum=numRes,surveyHost=surveyHost,surveyApiVersion=surveyApiVersion)
@@ -344,7 +344,7 @@ def survey():
 def surveyInstantiator():
 
     #Redirecciono al editor:
-    return redirect(current_app.config['SURVEY_HOST']+"/assets/"+"instantiate")
+    return redirect(current_app.config['SURVEYINTERLINK_URL']+"/assets/"+"instantiate")
 
 def obtainUsersEmail(listItemsBucket=[]):
     listUsers=[]
@@ -393,7 +393,7 @@ def surveyLauchProcess():
     for userEmail in listUsersEmails:
 
         email=userEmail
-        target_url=current_app.config['SURVEY_HOST']+ "/assets/"+idAsset+"/view/"
+        target_url=current_app.config['SURVEYINTERLINK_URL']+ "/assets/"+idAsset+"/view/"
 
         newNotification=Notification(
                         title=title,

@@ -418,7 +418,7 @@ def claimModeration():
 
 
 
-        textHref='http://127.0.0.1:5000/gui/aproveModerator?datos='+encMessage.decode('ascii')
+        textHref='http://localhost:5000/gui/aproveModerator?datos='+encMessage.decode('ascii')
 
         msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
         <table cellpadding='0' cellspacing='0' width='100%' style='background-color: #515151; border-radius: 30px 36
