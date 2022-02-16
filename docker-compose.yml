@@ -29,8 +29,7 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
-    networks:
-      - elasticnet3
+
 
   augmenterservice:
     build: .
@@ -46,8 +45,42 @@ services:
       - SURVEYAPI_VERSION=${SURVEYAPI_VERSION}
     depends_on:
       - elasticsearch
-    networks:
-      - elasticnet3
+
+
+
+  survey:
+      image: 'surveydev:${TAG-latest}'
+      container_name: survey-solo
+      volumes:
+        - ./app:/app
+      env_file:
+        - .env
+      environment:
+        - PROTOCOL=http://
+        - SERVER_NAME=${DOMAIN?Variable not set}
+        - PORT
+        - BASE_PATH=
+        - MONGODB_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb:27017/${MONGODB_DATABASE}?retryWrites=true&w=majority
+      build:
+        context: .
+        dockerfile: Dockerfile
+        target: dev
+      ports:
+        - "${SOLODEVPORT}:${PORT}"
+
+  mongodb:
+    image: bitnami/mongodb:latest
+    container_name: survey-mongodb
+    env_file:
+      - .env
+    healthcheck:
+      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo admin -u $MONGODB_ROOT_USER -p $MONGODB_ROOT_PASSWORD --quiet | grep 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+
 
 volumes:
   elasticsearch-data:
@@ -56,8 +89,5 @@ volumes:
     driver: local
 
 
-networks:
-  elasticnet3:
-    # Use a custom driver
-    driver: bridge
+
   
