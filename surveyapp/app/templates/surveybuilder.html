@@ -54,6 +54,10 @@
 
         creator.saveSurveyFunc = function (saveNo, callback) {
             console.log(creator.text)
+            
+            var { domain } = jQuery('#data').data();
+            servicepediaurl=domain.SERVICEPEDIA_URL;
+
             if (datafrombackend) {
                 // Update
                 http.put(`${basepath}/api/v1/assets/${datafrombackend._id}`, creator.text).then(res => {

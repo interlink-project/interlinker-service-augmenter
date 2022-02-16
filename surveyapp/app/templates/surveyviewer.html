@@ -33,6 +33,11 @@
                     console.log(sender.data)
                     http.post(`${basepath}/api/v1/assets/${datafrombackend._id}/answers/${user}`, sender.data).then(res => {
                     console.log(res.data);
+
+                    var { domain } = jQuery('#data').data();
+                    servicepediaurl=domain.SERVICEPEDIA_URL;
+
+
                     document.location = `${servicepediaurl}/completeSurvey?assetId=${datafrombackend._id}`;
                 });
                 });

@@ -5,7 +5,7 @@ function deleteAnotacion(anotacionId, anotacionIdCode) {
   }).then((_res) => {
     //Elimino la anotacion de la base de ElasticSearch
 
-    fetch("http://127.0.0.1:5000/annotations/" + anotacionIdCode, {
+    fetch("http://localhost:5000/annotations/" + anotacionIdCode, {
       method: "DELETE",
     }).then(function (data) {
       console.log(data);
@@ -22,7 +22,7 @@ function deleteDescription(descriptionId, descriptionIdCode) {
   }).then((_res) => {
     //Elimino todas las descripciones relacionadas:
 
-    fetch("http://127.0.0.1:5000/annotations/" + descriptionIdCode, {
+    fetch("http://localhost:5000/annotations/" + descriptionIdCode, {
       method: "DELETE",
     }).then(function (data) {
       console.log(data);

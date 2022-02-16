@@ -177,7 +177,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
         async function doAjax(item) {
           const result = await $.ajax({
-            url: "http://127.0.0.1:5000/annotations/" + item.id,
+            url: "http://localhost:5000/annotations/" + item.id,
             dataType: "json",
             type: "get",
             contentType: "application/json",
@@ -211,7 +211,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
         async function doAjax(item) {
           const result = await $.ajax({
-            url: "http://127.0.0.1:5000/annotations/" + item.id,
+            url: "http://localhost:5000/annotations/" + item.id,
             dataType: "json",
             type: "get",
             contentType: "application/json",
@@ -429,7 +429,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       }
 
       request = $.ajax({
-        url: "http://127.0.0.1:5000/annotations",
+        url: "http://localhost:5000/annotations",
         dataType: "json",
         type: "post",
         contentType: "application/json",
@@ -685,7 +685,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       ).text(strippedHtmlText);
 
       request = $.ajax({
-        url: "http://127.0.0.1:5000/annotations/" + annotation.id,
+        url: "http://localhost:5000/annotations/" + annotation.id,
         dataType: "json",
         type: "put",
         contentType: "application/json",

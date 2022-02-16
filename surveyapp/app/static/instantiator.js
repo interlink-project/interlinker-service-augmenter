@@ -54,9 +54,10 @@ function App() {
             console.log("RESPONSE CONFIRM", response.data);
             sendMessage("asset_created", response.data);
             
-            var { domain, basepath, datafrombackend, servicepediaurl } = jQuery('#data').data();
+            var { domain } = jQuery('#data').data();
+            servicepediaUrl=domain.SERVICEPEDIA_URL;
 
-            window.location.replace(`${servicepediaurl}/saveSurvey?assetId=${response.data['_id']}&surveyTitle=${response.data['title']}&surveyDesc=${response.data['description']}`);
+            window.location.replace(`${servicepediaUrl}/saveSurvey?assetId=${response.data['_id']}&surveyTitle=${response.data['title']}&surveyDesc=${response.data['description']}`);
             
             
         })

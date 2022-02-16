@@ -3,7 +3,7 @@ const {
     createTheme,
 } = MaterialUI;
 
-var { domain, basepath, datafrombackend } = jQuery('#data').data();
+var { domain, basepath, datafrombackend, servicepediaUrl } = jQuery('#data').data();
 const origin = domain.PROTOCOL + domain.SERVER_NAME
 console.log(origin, datafrombackend, basepath)
 

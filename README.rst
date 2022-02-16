@@ -36,7 +36,7 @@ You should see something like:
 
 .. code-block:: Python
 
-    * Running on http://127.0.0.1:5000/
+    * Running on http://localhost:5000/
     * Restarting with reloader...
 
 
@@ -54,7 +54,7 @@ documentation <http://docs.annotatorjs.org/en/v1.2.x/storage.html>`__ for
 details.
 
 The API access point can be found in:
-<http://127.0.0.1:5000/docs>
+<http://localhost:5000/docs>
 
 Website APP
 -----------
