@@ -61,7 +61,7 @@ def logout():
     logout_user()
     #response = redirect(config["end_session_endpoint"])
     payload = {'id_token_hint': session['id_token'],
-                    'post_logout_redirect_uri': "http://localhost:5000/home",
+                    'post_logout_redirect_uri': "http://127.0.0.1:5000/home",
                     'state': APP_STATE}
     #headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     r = requests.get(
@@ -511,8 +511,9 @@ def editDescription(descriptionId=None,option='Edit'):
         else:
             itemUrl['langText']="Undefined"
 
-
-    return render_template("descriptionDetail.html", user=current_user, description=description,option=option,publicsa=paList)
+#Cargo las Notificaciones
+    listNotifications,numRes=cargarNotifications()  
+    return render_template("descriptionDetail.html", user=current_user, description=description,option=option,publicsa=paList,notifications=listNotifications,notificationNum=numRes)
 
 
 

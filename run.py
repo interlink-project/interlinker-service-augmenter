@@ -93,27 +93,39 @@ def main(argv):
             'ELASTICSEARCH_HOST':settings.ELASTICSEARCH_URL
         })
         es.host = app.config['ELASTICSEARCH_HOST']
-    
+    app.config.update({
+            'SURVEYINTERLINK_URL':"http://127.0.0.1:8229"
+        })
+    app.config.update({
+            'SURVEYAPI_VERSION':"v1"
+        })
+
+        
     if settings.SURVEYINTERLINK_URL is not None:
         #Guardo la direccion en la configuracion del proyecto
         app.config.update({
-            'SURVEYINTERLINK_URL':settings.SURVEYINTERLINK_URL
+            'SURVEYINTERLINK_URL':"http://127.0.0.1:8229"
         })
     
     if settings.SURVEYAPI_VERSION is not None:
         #Guardo la direccion en la configuracion del proyecto
         app.config.update({
-            'SURVEYAPI_VERSION':settings.SURVEYAPI_VERSION
+            'SURVEYAPI_VERSION':"v1"
+        })
+    if settings.PORTAUGMENTER is not None:
+        #Guardo la direccion en la configuracion del proyecto
+        app.config.update({
+            'PORTAUGMENTER':5000
         })
         
 
-    print(app.config['ELASTICSEARCH_HOST'])
-    log.info("El host que entra del Docker ES es:")
-    log.info(app.config['ELASTICSEARCH_HOST'])
+    #print(app.config['ELASTICSEARCH_HOST'])
+    #log.info("El host que entra del Docker ES es:")
+    #log.info(app.config['ELASTICSEARCH_HOST'])
 
-    print(app.config['SURVEYINTERLINK_URL'])
-    log.info("El host que entra del Docker Survey es:")
-    log.info(app.config['SURVEYINTERLINK_URL'])
+    #print(app.config['SURVEYINTERLINK_URL'])
+    #log.info("El host que entra del Docker Survey es:")
+    #log.info(app.config['SURVEYINTERLINK_URL'])
 
 
     # We do need to set this one (the other settings have fine defaults)
@@ -130,6 +142,7 @@ def main(argv):
             notification.Notification.create_all(index="notification")
             survey.Survey.create_all(index="survey")
             description.Description.create_all(index="description")
+            document.Document.create_all()
 
         except elasticsearch.exceptions.RequestError as e:
             if e.error.startswith('MergeMappingException'):
@@ -279,7 +292,7 @@ def main(argv):
 
 
 
-    host = os.environ.get('HOST', '0.0.0.0')
+    host = os.environ.get('HOST', '127.0.0.1')
     port = int(os.environ.get('PORTAUGMENTER', 5000))
     app.run(host=host, port=port,debug=True)
 

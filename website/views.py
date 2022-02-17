@@ -34,6 +34,8 @@ import math
 import uuid
 import secrets
 
+from config import settings
+
 from website.languages import getLanguagesList
 
 
@@ -257,7 +259,7 @@ def saveDescription():
         else:
             newdescription.save(index="description")
             description=newdescription
-            flash("Registro creado correctamente.","info")
+            flash("Record created successfully.","info")
 
     else:
 
@@ -418,7 +420,7 @@ def claimModeration():
 
 
 
-        textHref='http://localhost:5000/gui/aproveModerator?datos='+encMessage.decode('ascii')
+        textHref='http://127.0.0.1:5000/gui/aproveModerator?datos='+encMessage.decode('ascii')
 
         msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
         <table cellpadding='0' cellspacing='0' width='100%' style='background-color: #515151; border-radius: 30px 36
@@ -742,6 +744,13 @@ def modifica(rutaPagina,userId):
     anotationcss3 = soup.new_tag('link', href="/gui/static/lib/css/annotator.touch.css",rel="stylesheet")
 
     fontAwesome3 = soup.new_tag('link', href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",rel="stylesheet")
+
+    userName = soup.new_tag( 'meta', id='dataBackEnd', username=current_user.email, portaugmenter=settings.PORTAUGMENTER)
+    
+    try:
+        headTag.append(userName)
+    except:
+        print("Excepcion en Username")
 
  
     try:
