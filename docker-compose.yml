@@ -43,11 +43,10 @@ services:
       - ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
       - SURVEYINTERLINK_URL=${SURVEYINTERLINK_URL}
       - SURVEYAPI_VERSION=${SURVEYAPI_VERSION}
+      - HOSTAUGMENTER=${HOSTAUGMENTER}
     depends_on:
       - elasticsearch
       - survey
-
-
 
   survey:
       build:
@@ -56,7 +55,7 @@ services:
             target: dev
       container_name: survey
       ports:
-        - "${SOLODEVPORT}:${PORT}"
+        - "${SOLODEVPORT_SURVEY}:${PORT_SURVEY}"
       volumes:
         - ./surveyapp/app:/app
       env_file:
@@ -64,8 +63,8 @@ services:
       environment:
         - node.name=survey
         - PROTOCOL=http://
-        - SERVER_NAME=${DOMAIN?Variable not set}
-        - PORT
+        - SERVER_NAME=${DOMAIN_SURVEY?Variable not set}
+        - PORT=${SOLODEVPORT_SURVEY}
         - BASE_PATH=
         - MONGODB_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb:27017/${MONGODB_DATABASE}?retryWrites=true&w=majority
  
@@ -85,6 +84,10 @@ services:
     volumes: 
       - mongodb-data:/data/db
 
+
+  
+  
+  
 
 
 volumes:
