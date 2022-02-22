@@ -17,19 +17,16 @@ class AssetSchema(BaseModel):
         allow_population_by_field_name = True
 
 class AssetBasicDataSchema(BaseModel):
-    id: str = Field(alias='_id')
+    # id: str = Field(alias='_id')
     title: str = Field(alias='name')
-    interlinker_name: str = "Survey"
     icon: str = "https://cdn.pixabay.com/photo/2017/05/15/23/48/survey-2316468_1280.png"
     createdTime: datetime.datetime = Field(alias='created_at')
     modifiedTime: Optional[datetime.datetime] = Field(alias='updated_at')
-    viewLink: Optional[str]
-    editLink: Optional[str]
-    cloneLink: Optional[str]
-
+   
     class Config:
         allow_population_by_field_name = True
-        
+      
+    """
     @validator('viewLink', always=True)
     def view_link(cls, name, values):
         asset_id = values["id"]
@@ -44,3 +41,8 @@ class AssetBasicDataSchema(BaseModel):
     def clone_link(cls, name, values):
         asset_id = values["id"]
         return settings.COMPLETE_SERVER_NAME + f"/assets/{asset_id}/clone"
+    viewLink: Optional[str]
+    editLink: Optional[str]
+    cloneLink: Optional[str]
+    """
+    

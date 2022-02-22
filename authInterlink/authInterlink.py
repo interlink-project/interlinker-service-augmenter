@@ -336,7 +336,6 @@ def survey():
 
     #Defino la direccion del SurveyHost
     surveyHost=current_app.config['SURVEYINTERLINK_URL']
-    surveyApiVersion=current_app.config['SURVEYAPI_VERSION']
 
     return render_template("surveys.html",surveys=res,paginacion=paginacion,notifications=listNotifications,notificationNum=numRes,surveyHost=surveyHost,surveyApiVersion=surveyApiVersion)
 

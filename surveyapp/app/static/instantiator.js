@@ -33,7 +33,7 @@ function App() {
         if (inIframe) {
           window.parent.postMessage({
             'code': code,
-            'data': dataToSend
+            'message': dataToSend
           }, origin);
         } else {
           setCreated(dataToSend)

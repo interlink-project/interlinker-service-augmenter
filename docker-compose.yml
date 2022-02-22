@@ -13,7 +13,7 @@ services:
       - http.cors.enabled=true
       - http.cors.allow-origin=*
       - discovery.zen.ping.unicast.hosts=127.0.0.1
-     
+
     ulimits:
       memlock:
         soft: -1
@@ -30,7 +30,6 @@ services:
       - 9200:9200
       - 9300:9300
 
-
   augmenterservice:
     build: .
     restart: always
@@ -40,36 +39,40 @@ services:
     env_file:
       - .env
     environment:
-      - ELASTICSEARCH_URL=${ELASTICSEARCH_URL}
-      - SURVEYINTERLINK_URL=${SURVEYINTERLINK_URL}
-      - SURVEYAPI_VERSION=${SURVEYAPI_VERSION}
-      - HOSTAUGMENTER=${HOSTAUGMENTER}
+      - ELASTICSEARCH_URL=http://elasticsearch:9200 
+      - SURVEYINTERLINK_URL=http://127.0.0.1:${PORT_SURVEY}
+      - HOSTAUGMENTER=0.0.0.0
+      - PORTAUGMENTER=5000
+      
     depends_on:
       - elasticsearch
       - survey
 
   survey:
-      build:
-            context: ./surveyapp
-            dockerfile: Dockerfile
-            target: dev
-      container_name: survey
-      ports:
-        - "${SOLODEVPORT_SURVEY}:${PORT_SURVEY}"
-      volumes:
-        - ./surveyapp/app:/app
-      env_file:
-        - .env
-      environment:
-        - node.name=survey
-        - PROTOCOL=http://
-        - SERVER_NAME=${DOMAIN_SURVEY?Variable not set}
-        - PORT=${SOLODEVPORT_SURVEY}
-        - BASE_PATH=
-        - MONGODB_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb:27017/${MONGODB_DATABASE}?retryWrites=true&w=majority
- 
-   
-
+    build:
+      context: ./surveyapp
+      dockerfile: Dockerfile
+      target: dev
+    container_name: survey
+    ports:
+      - "${PORT_SURVEY}:80"
+    volumes:
+      - ./surveyapp/app:/app
+    env_file:
+      - .env
+    environment:
+      - MODE=integrated
+      - SERVICEPEDIA_URL=http://127.0.0.1:${PORT_SERVICEPEDIA}
+      - PROTOCOL=http://
+      - SERVER_NAME=${DOMAIN?Variable not set}
+      - PORT=80
+      - BASE_PATH=
+      - MONGODB_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb:27017/${MONGODB_DATABASE}?retryWrites=true&w=majority
+      - BACKEND_CORS_ORIGINS=["http://localhost","http://127.0.0.1","http://augmenterservice"]
+      - SECRET_KEY=changethis
+      - MONGODB_DATABASE=${MONGODB_DATABASE}
+      - COLLECTION_NAME=survey_assets
+      
   mongodb:
     image: bitnami/mongodb:latest
     container_name: survey-mongodb
@@ -81,14 +84,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 20s
-    volumes: 
+    volumes:
       - mongodb-data:/data/db
-
-
-  
-  
-  
-
 
 volumes:
   elasticsearch-data:
@@ -97,7 +94,3 @@ volumes:
     driver: local
   mongodb-data:
     driver: local
-
-
-
-  

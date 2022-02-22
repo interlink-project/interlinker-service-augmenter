@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     MONGODB_DATABASE: str
     COLLECTION_NAME: str
 
-    SERVICEPEDIA_URL:str = os.getenv("SERVICEPEDIA_URL")
+    SERVICEPEDIA_URL: str
     
     class Config:
         case_sensitive = True

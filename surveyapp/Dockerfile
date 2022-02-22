@@ -8,8 +8,6 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-
 COPY ./app /app
 ENV PYTHONPATH=/app
 
-EXPOSE 8229
-
 FROM builder as dev
 RUN poetry install --no-root
 RUN chmod +x ./start-dev.sh
