@@ -40,9 +40,10 @@ services:
       - .env
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200 
-      - SURVEYINTERLINK_URL=http://127.0.0.1:${PORT_SURVEY}
+      - SURVEYINTERLINK_URL=http://${DOMAIN}:${PORT_SURVEY}
       - HOSTAUGMENTER=0.0.0.0
       - PORTAUGMENTER=5000
+      - REDIRECT_URI=http://${DOMAIN}/oidc_callback
       
     depends_on:
       - elasticsearch
@@ -62,7 +63,7 @@ services:
       - .env
     environment:
       - MODE=integrated
-      - SERVICEPEDIA_URL=http://127.0.0.1:${PORT_SERVICEPEDIA}
+      - SERVICEPEDIA_URL=http://${DOMAIN}:${PORT_SERVICEPEDIA}
       - PROTOCOL=http://
       - SERVER_NAME=${DOMAIN?Variable not set}
       - PORT=80
