@@ -8,7 +8,7 @@ import iso8601
 import elasticsearch
 from six import iteritems
 from six.moves.urllib.parse import urlparse
-
+from config import settings
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ class ElasticSearch(object):
     """
 
     def __init__(self,
-                 host='http://127.0.0.1:9200',
+                 host=settings.ELASTICSEARCH_URL,
                  index='annotator',
                  authorization_enabled=False):
         self.host = host

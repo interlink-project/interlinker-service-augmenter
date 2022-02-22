@@ -12,7 +12,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_pyfile(os.path.join(here, 'test.cfg'))
 
-    es.host = app.config['ELASTICSEARCH_HOST']
+    es.host = app.config['ELASTICSEARCH_URL']
     es.index = app.config['ELASTICSEARCH_INDEX']
     es.authorization_enabled = app.config['AUTHZ_ON']
 

@@ -18,7 +18,7 @@ from flask_login import (
 )
 from annotator.survey import Survey
 
-from authInterlink.helpers import  config
+
 from authInterlink.user import User
 
 from annotator.annotation import Annotation
@@ -38,8 +38,8 @@ NONCE = tok2.hex
 @authInterlink.route("/login")
 def login():
     # get request params
-    query_params = {'client_id': config["client_id"],
-                    'redirect_uri': config["redirect_uri"],
+    query_params = {'client_id': current_app.config["CLIENT_ID"],
+                    'redirect_uri': current_app.config["REDIRECT_URI"],
                     'scope': "openid email profile",
                     'state': APP_STATE,
                     'nonce': NONCE,
@@ -48,7 +48,7 @@ def login():
 
     # build request_uri
     request_uri = "{base_url}?{query_params}".format(
-        base_url=config["auth_uri"],
+        base_url=current_app.config["AUTH_URI"],
         query_params=requests.compat.urlencode(query_params)
     )
 
@@ -65,7 +65,7 @@ def logout():
                     'state': APP_STATE}
     #headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     r = requests.get(
-        config["end_session_endpoint"],
+        current_app.config["END_SESSION_ENDPOINT"],
         params=payload,
     )
     r.url
@@ -73,7 +73,7 @@ def logout():
     session.clear()
     #return response
     #return render_template("home.html")
-    return redirect(config["end_session_endpoint"]) #Por ahora queda asi.
+    return redirect(current_app.config["END_SESSION_ENDPOINT"]) #Por ahora queda asi.
 
 
 @authInterlink.route("/about")
@@ -718,10 +718,10 @@ def callback():
                     }
     query_params = requests.compat.urlencode(query_params)
     exchange = requests.post(
-        config["token_uri"],
+        current_app.config["TOKEN_URI"],
         headers=headers,
         data=query_params,
-        auth=(config["client_id"], config["client_secret"]),
+        auth=(current_app.config["CLIENT_ID"], current_app.config["CLIENT_SECRET"]),
     ).json()
 
     # Get tokens and validate
@@ -739,7 +739,7 @@ def callback():
     #    return "ID token is invalid", 403
 
     # Authorization flow successful, get userinfo and login user
-    userinfo_response = requests.get(config["userinfo_uri"],
+    userinfo_response = requests.get(current_app.config["USERINFO_URI"],
                                      headers={'Authorization': f'Bearer {access_token}'}).json()
 
     unique_id = userinfo_response["sub"]

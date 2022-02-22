@@ -48,7 +48,7 @@ from flask_login import (
     logout_user,
 )
 
-from authInterlink.helpers import  config
+
 from authInterlink.user import User
 import secrets
 
@@ -68,64 +68,7 @@ here = os.path.dirname(__file__)
 def main(argv):
     app = Flask(__name__)
 
-    cfg_file = 'annotator.cfg'
-    if len(argv) == 2:
-        cfg_file = argv[1]
-
-    cfg_path = os.path.join(here, cfg_file)
-
-    try:
-        app.config.from_pyfile(cfg_path)
-    except IOError:
-        print("Could not find config file %s" % cfg_path, file=sys.stderr)
-        print("Perhaps copy annotator.cfg.example to annotator.cfg",
-              file=sys.stderr)
-        sys.exit(1)
-
-    if app.config.get('ELASTICSEARCH_HOST') is not None:
-        es.host = app.config['ELASTICSEARCH_HOST']
-
-    #Charge the docker variables Elasticsearch: 
-
-    if settings.ELASTICSEARCH_URL is not None:
-
-        app.config.update({
-            'ELASTICSEARCH_HOST':settings.ELASTICSEARCH_URL
-        })
-        es.host = app.config['ELASTICSEARCH_HOST']
-    app.config.update({
-            'SURVEYINTERLINK_URL':"http://127.0.0.1:8229"
-        })
-    app.config.update({
-            'SURVEYAPI_VERSION':"v1"
-        })
-
-        
-    if settings.SURVEYINTERLINK_URL is not None:
-        #Guardo la direccion en la configuracion del proyecto
-        app.config.update({
-            'SURVEYINTERLINK_URL':"http://127.0.0.1:8229"
-        })
-    
-    if settings.SURVEYAPI_VERSION is not None:
-        #Guardo la direccion en la configuracion del proyecto
-        app.config.update({
-            'SURVEYAPI_VERSION':"v1"
-        })
-    if settings.PORTAUGMENTER is not None:
-        #Guardo la direccion en la configuracion del proyecto
-        app.config.update({
-            'PORTAUGMENTER':5000
-        })
-        
-
-    #print(app.config['ELASTICSEARCH_HOST'])
-    #log.info("El host que entra del Docker ES es:")
-    #log.info(app.config['ELASTICSEARCH_HOST'])
-
-    #print(app.config['SURVEYINTERLINK_URL'])
-    #log.info("El host que entra del Docker Survey es:")
-    #log.info(app.config['SURVEYINTERLINK_URL'])
+    app.config.from_object(settings)
 
 
     # We do need to set this one (the other settings have fine defaults)
@@ -292,8 +235,8 @@ def main(argv):
 
 
 
-    host = os.environ.get('HOSTAUGMENTER', '127.0.0.1')
-    port = int(os.environ.get('PORTAUGMENTER', 5000))
+    host = settings.HOSTAUGMENTER
+    port = settings.PORTAUGMENTER
     app.run(host=host, port=port,debug=True)
 
  

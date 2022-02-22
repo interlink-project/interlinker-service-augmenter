@@ -20,7 +20,7 @@ from werkzeug.utils import redirect
 from annotator.annotation import Annotation
 from annotator.document import Document
 from annotator.description import Description
-from authInterlink.helpers import config
+
 from cryptography.fernet import Fernet
 
 from datetime import date
@@ -406,7 +406,7 @@ def claimModeration():
         
         message = dataClaimEncoded
 
-        key = config["CRYPT_KEY"] 
+        key = settings.CRYPT_KEY
         
         # cargar_clave() 
         # if key ==None:
@@ -505,7 +505,7 @@ def aproveModerator():
     #     generar_clave()
     #     key =cargar_clave()
     
-    key = config["CRYPT_KEY"] 
+    key = settings.CRYPT_KEY
 
     fernet = Fernet(key) 
     
@@ -919,7 +919,7 @@ def modifica(rutaPagina,userId):
 
 def generate_token():
     return jwt.encode({
-      'consumerKey': config["CONSUMER_KEY"],
+      'consumerKey': settings.CONSUMER_KEY,
       'userId': current_user.id,
       'issuedAt': _now().isoformat() + 'Z',
       'ttl': CONSUMER_TTL
@@ -979,12 +979,12 @@ import jwt
 CONSUMER_SECRET = secrets.token_urlsafe(16)
 
 # Only change this if you're sure you know what you're doing
-CONSUMER_TTL = config["CONSUMER_TTL"]#
+CONSUMER_TTL = settings.CONSUMER_TTL#
 
 @views.route("/token")
 def generate_token():
     return jwt.encode({
-      'consumerKey': config["CONSUMER_KEY"],
+      'consumerKey': settings.CRYPT_KEY,
       'userId': 1,
       'issuedAt': _now().isoformat() + 'Z',
       'ttl': CONSUMER_TTL
