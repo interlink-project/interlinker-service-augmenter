@@ -212,10 +212,7 @@ def main(argv):
 
     app.register_blueprint(store.store)
     app.register_blueprint(authInterlink.authInterlink,url_prefix="")
-    app.register_blueprint(views,url_prefix=f'{settings.BASE_PATH}/gui')
-
-
-    
+    app.register_blueprint(views,url_prefix='/gui')
 
     # Call factory function to create our blueprint
     swaggerui_blueprint = get_swaggerui_blueprint(

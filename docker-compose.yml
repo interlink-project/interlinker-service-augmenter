@@ -86,7 +86,7 @@ services:
       - HOST=0.0.0.0
       - PORT=${PORT_SERVICEPEDIA}
       - PROTOCOL=http://
-      - BASE_PATH=/augmenterservice
+      - BASE_PATH=
     depends_on:
       - elasticsearch
       - survey
@@ -97,9 +97,10 @@ services:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
       - traefik.http.services.${STACK_NAME?Variable not set}-augmenterservice.loadbalancer.server.port=${PORT_SERVICEPEDIA}
-      - traefik.http.routers.${STACK_NAME?Variable not set}-augmenterservice.rule=Host(`${DOMAIN}`) && PathPrefix(`/augmenterservice`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-augmenterservice.middlewares=augmenterservice-stripprefix
-      - traefik.http.middlewares.augmenterservice-stripprefix.stripprefix.prefixes=/augmenterservice
+      - traefik.http.routers.${STACK_NAME?Variable not set}-augmenterservice.rule=PathPrefix(`/`)
+      #  Host(`${DOMAIN}`) && PathPrefix(`/augmenterservice`)
+      # - traefik.http.routers.${STACK_NAME?Variable not set}-augmenterservice.middlewares=augmenterservice-stripprefix
+      # - traefik.http.middlewares.augmenterservice-stripprefix.stripprefix.prefixes=/augmenterservice
   survey:
     build:
       context: ./surveyapp
