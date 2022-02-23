@@ -30,6 +30,7 @@ from website.views import views
 import secrets
 from tests.helpers import MockUser, MockConsumer, MockAuthenticator
 from tests.helpers import mock_authorizer
+from config import settings
 
 
 from datetime import datetime
@@ -211,7 +212,7 @@ def main(argv):
 
     app.register_blueprint(store.store)
     app.register_blueprint(authInterlink.authInterlink,url_prefix="")
-    app.register_blueprint(views,url_prefix='/gui')
+    app.register_blueprint(views,url_prefix=f'{settings.BASE_PATH}/gui')
 
 
     
@@ -235,8 +236,8 @@ def main(argv):
 
 
 
-    host = settings.HOSTAUGMENTER
-    port = settings.PORTAUGMENTER
+    host = settings.HOST
+    port = settings.PORT
     app.run(host=host, port=port,debug=True)
 
  

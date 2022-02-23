@@ -745,7 +745,7 @@ def modifica(rutaPagina,userId):
 
     fontAwesome3 = soup.new_tag('link', href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css",rel="stylesheet")
 
-    userName = soup.new_tag( 'meta', id='dataBackEnd', username=current_user.email, portaugmenter=settings.PORTAUGMENTER)
+    userName = soup.new_tag( 'meta', id='dataBackEnd', username=current_user.email, port=settings.PORT)
     
     try:
         headTag.append(userName)

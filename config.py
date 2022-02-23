@@ -8,8 +8,8 @@ class Settings(BaseSettings):
     
     ELASTICSEARCH_URL: str = os.getenv("ELASTICSEARCH_URL")
     SURVEYINTERLINK_URL: str = os.getenv("SURVEYINTERLINK_URL")
-    PORTAUGMENTER: str = os.getenv("PORTAUGMENTER")
-    HOSTAUGMENTER: str = os.getenv("HOSTAUGMENTER")
+    PORT: str = os.getenv("PORT")
+    HOST: str = os.getenv("HOST", "0.0.0.0")
 
 
     DEBUG: bool = os.getenv("DEBUG")
@@ -57,7 +57,10 @@ class Settings(BaseSettings):
     TOKEN_URI:str = os.getenv("TOKEN_URI")
     TOKEN_INTROSPECTION_URI:str = os.getenv("TOKEN_INTROSPECTION_URI")
 
-    REDIRECT_URI:str = os.getenv("REDIRECT_URI")
+    PROTOCOL: str
+    BASE_PATH: str
+    DOMAIN: str
+    REDIRECT_URI:str = os.getenv("PROTOCOL") + os.getenv("DOMAIN") + os.getenv("BASE_PATH")
     
     USERINFO_URI:str = os.getenv("USERINFO_URI")
 

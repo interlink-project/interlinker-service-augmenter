@@ -1,6 +1,49 @@
 version: '3.7'
-
 services:
+  proxy:
+    container_name: traefik
+    image: traefik:v2.2
+    networks:
+      - traefik-public
+      - default
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "80:80"
+      - "8090:8080"
+    command:
+       # Enable Docker in Traefik, so that it reads labels from Docker services
+      - --providers.docker
+      # Do not expose all Docker services, only the ones explicitly exposed
+      - --providers.docker.exposedbydefault=false
+      # Disable Docker Swarm mode for local development
+      # - --providers.docker.swarmmode
+      # Enable the access log, with HTTP requests
+      - --accesslog
+      # Enable the Traefik log, for configurations and errors
+      - --log
+      # Enable the Dashboard and API
+      - --api
+      # Enable the Dashboard and API in insecure mode for local development
+      - --api.insecure=true
+    labels:
+      - traefik.docker.network=traefik-public
+      - traefik.http.routers.${STACK_NAME?Variable not set}-traefik-public-http.rule=Host(`${DOMAIN?Variable not set}`)
+      - traefik.http.services.${STACK_NAME?Variable not set}-traefik-public.loadbalancer.server.port=80
+  
+  mongodb:
+    image: bitnami/mongodb:latest
+    container_name: mongodb
+    env_file:
+      - .env
+    healthcheck:
+      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo admin -u root -p $MONGODB_ROOT_PASSWORD --quiet | grep 1
+      interval: 10s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+    networks:
+      - default
 
   # Elasticsearch Docker Images: https://www.docker.elastic.co/
   elasticsearch:
@@ -26,68 +69,69 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
       - elasticsearch-config:/usr/share/elasticsearch/config
-    ports:
-      - 9200:9200
-      - 9300:9300
+    networks:
+      - default
 
   augmenterservice:
     build: .
     restart: always
     container_name: augmenterservice
-    ports:
-      - 5000:5000
+    volumes:
+      - ".:/app"
     env_file:
       - .env
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200 
-      - SURVEYINTERLINK_URL=http://${DOMAIN}:${PORT_SURVEY}
-      - HOSTAUGMENTER=0.0.0.0
-      - PORTAUGMENTER=5000
-      - REDIRECT_URI=http://${DOMAIN}/oidc_callback
-      
+      - SURVEYINTERLINK_URL=http://${DOMAIN}/surveymod
+      - HOST=0.0.0.0
+      - PORT=${PORT_SERVICEPEDIA}
+      - PROTOCOL=http://
+      - BASE_PATH=/augmenterservice
     depends_on:
       - elasticsearch
       - survey
-
+    networks:
+      - traefik-public
+      - default
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.http.services.${STACK_NAME?Variable not set}-augmenterservice.loadbalancer.server.port=${PORT_SERVICEPEDIA}
+      - traefik.http.routers.${STACK_NAME?Variable not set}-augmenterservice.rule=Host(`${DOMAIN}`) && PathPrefix(`/augmenterservice`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-augmenterservice.middlewares=augmenterservice-stripprefix
+      - traefik.http.middlewares.augmenterservice-stripprefix.stripprefix.prefixes=/augmenterservice
   survey:
     build:
       context: ./surveyapp
       dockerfile: Dockerfile
       target: dev
     container_name: survey
-    ports:
-      - "${PORT_SURVEY}:80"
     volumes:
       - ./surveyapp/app:/app
     env_file:
       - .env
     environment:
       - MODE=integrated
-      - SERVICEPEDIA_URL=http://${DOMAIN}:${PORT_SERVICEPEDIA}
+      - SERVICEPEDIA_URL=http://${DOMAIN}/augmenterservice
       - PROTOCOL=http://
       - SERVER_NAME=${DOMAIN?Variable not set}
-      - PORT=80
-      - BASE_PATH=
+      - PORT=${PORT_SURVEY}
+      - BASE_PATH=/surveymod
       - MONGODB_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb:27017/${MONGODB_DATABASE}?retryWrites=true&w=majority
       - BACKEND_CORS_ORIGINS=["http://localhost","http://127.0.0.1","http://augmenterservice"]
       - SECRET_KEY=changethis
       - MONGODB_DATABASE=${MONGODB_DATABASE}
       - COLLECTION_NAME=survey_assets
-      
-  mongodb:
-    image: bitnami/mongodb:latest
-    container_name: survey-mongodb
-    env_file:
-      - .env
-    healthcheck:
-      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo admin -u $MONGODB_ROOT_USER -p $MONGODB_ROOT_PASSWORD --quiet | grep 1
-      interval: 10s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
-    volumes:
-      - mongodb-data:/data/db
-
+    networks:
+      - traefik-public
+      - default
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.http.services.${STACK_NAME?Variable not set}-surveymod.loadbalancer.server.port=${PORT_SURVEY}
+      - traefik.http.routers.${STACK_NAME?Variable not set}-surveymod.rule=Host(`${DOMAIN}`) && PathPrefix(`/surveymod`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-surveymod.middlewares=surveymod-stripprefix
+      - traefik.http.middlewares.surveymod-stripprefix.stripprefix.prefixes=/surveymod
 volumes:
   elasticsearch-data:
     driver: local
@@ -95,3 +139,7 @@ volumes:
     driver: local
   mongodb-data:
     driver: local
+
+networks:
+  traefik-public:
+  default:
