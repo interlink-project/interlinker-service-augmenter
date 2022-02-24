@@ -91,12 +91,11 @@ Annotator.Plugin.Search = (function (_super) {
         success: function (data) {
           // alert("El usuario esta en la casa." + data);
           $("#usuarioConectado").html(data);
-          
-          if (data=="Annonymous"){
-            newUrl="http://127.0.0.1:5000/"
+
+          if (data == "Annonymous") {
+            newUrl = "http://127.0.0.1:5000/";
             $("#botonBackServicepedia").attr("href", newUrl);
           }
-          
         },
         error: function (jqXhr, textStatus, errorThrown) {
           console.log(errorThrown);

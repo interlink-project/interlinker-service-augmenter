@@ -36,7 +36,7 @@ from api.survey import Survey
 
 store = Blueprint('store', __name__)
 
-CREATE_FILTER_FIELDS = ('updated', 'created', 'consumer')#, 'id')
+CREATE_FILTER_FIELDS = ('updated', 'created', 'consumer')  # , 'id')
 UPDATE_FILTER_FIELDS = ('updated', 'created', 'user', 'consumer')
 
 
@@ -54,10 +54,10 @@ def jsonify(obj, *args, **kwargs):
 def before_request():
     if not hasattr(g, 'annotation_class'):
         g.annotation_class = Annotation
-    
+
     if not hasattr(g, 'notification_class'):
         g.notification_class = Notification
-    
+
     if not hasattr(g, 'description_class'):
         g.description_class = Description
 
@@ -66,10 +66,6 @@ def before_request():
         g.user = user
     elif not hasattr(g, 'user'):
         g.user = None
-
-
-
-
 
 
 @store.after_request
@@ -169,6 +165,8 @@ def index():
     return jsonify(annotations)
 
 # INDEX
+
+
 @store.route('/notifications')
 def notificationIndex():
     if current_app.config.get('AUTHZ_ON'):
@@ -181,6 +179,8 @@ def notificationIndex():
     return jsonify(notifications)
 
 # INDEX
+
+
 @store.route('/surveys')
 def surveysIndex():
     if current_app.config.get('AUTHZ_ON'):
@@ -189,65 +189,61 @@ def surveysIndex():
     else:
         user = None
 
-    surveys = Survey._get_all()  
+    surveys = Survey._get_all()
     return jsonify(surveys)
+
 
 @store.route('/completeSurvey')
 def completeaSurvey():
-    #Tengo que poner la notificacion como realizada.
-    idAsset=request.args.get('assetId')
-    notification=Notification._get_Notification_byAssetId(assetId=idAsset)
+    # Tengo que poner la notificacion como realizada.
+    idAsset = request.args.get('assetId')
+    notification = Notification._get_Notification_byAssetId(assetId=idAsset)
 
-    notification=notification['notifications'][0]
-    notification['resolved']=True
+    notification = notification['notifications'][0]
+    notification['resolved'] = True
 
     notification.updateFieldResolve(index="notification")
 
-
-
     return redirect(url_for('dashboard'))
-   
+
+
 @store.route('/saveSurvey')
 def saveSurvey():
-   
-    idAsset=request.args.get('assetId')
-    title=request.args.get('surveyTitle')
-    description= request.args.get('surveyDesc')
-    #Create a new survey:
-    
 
-    newSurvey=Survey(title=title,
-                     description=description,
-                     idAsset=idAsset,
-                     isMandatory=True
-                    )
-    
+    idAsset = request.args.get('assetId')
+    title = request.args.get('surveyTitle')
+    description = request.args.get('surveyDesc')
+    # Create a new survey:
+
+    newSurvey = Survey(title=title,
+                       description=description,
+                       idAsset=idAsset,
+                       isMandatory=True
+                       )
+
     newSurvey.save(index="survey")
-  
 
     return redirect(current_app.config['SURVEYINTERLINK_URL']+"/assets/"+idAsset+"/edit")
+
 
 @store.route('/updateSurvey')
 def updateSurvey():
 
-    #Tengo que poner la notificacion como realizada.
-    idAsset=request.args.get('assetId')
-    title=request.args.get('surveyTitle')
-    description= request.args.get('surveyDesc')
+    # Tengo que poner la notificacion como realizada.
+    idAsset = request.args.get('assetId')
+    title = request.args.get('surveyTitle')
+    description = request.args.get('surveyDesc')
 
-    #Obtengo el survey usando el Assetid
-    surveyEncontrado=Survey._get_Survey_byAssetId(idAsset=idAsset)
+    # Obtengo el survey usando el Assetid
+    surveyEncontrado = Survey._get_Survey_byAssetId(idAsset=idAsset)
 
-    surveyEncontrado=surveyEncontrado['surveys'][0]
-    #Actualizo a new survey:
-    
-    surveyEncontrado['title']=title
-    surveyEncontrado['description']=description
-    
-    
-    Survey.updateFields(surveyEncontrado,index="survey")
-    
+    surveyEncontrado = surveyEncontrado['surveys'][0]
+    # Actualizo a new survey:
 
+    surveyEncontrado['title'] = title
+    surveyEncontrado['description'] = description
+
+    Survey.updateFields(surveyEncontrado, index="survey")
 
     return redirect('/survey')
 
@@ -268,12 +264,11 @@ def create_notification():
         notification['consumer'] = g.user.consumer.key
         if _get_annotation_user(notification) != g.user.id:
             notification['user'] = g.user.id
-            
+
             if 'username' in session:
                 notification['user'] = session['username']
             else:
                 notification['user'] = current_user.email
-
 
         #print("El id inicial es:"+annotation['id'])
 
@@ -283,8 +278,6 @@ def create_notification():
         if hasattr(g, 'after_annotation_create'):
             notification.save(refresh=False)
             g.after_annotation_create(notification)
-        
-       
 
         refresh = request.args.get('refresh') != 'false'
         notification.save(refresh=refresh)
@@ -293,7 +286,7 @@ def create_notification():
 
         #location = url_for('.read_notification', docid=notification['id'])
 
-        return jsonify(notification), 201#, {'Location': location}
+        return jsonify(notification), 201  # , {'Location': location}
     else:
         return jsonify('No JSON payload sent. Annotation not created.',
                        status=400)
@@ -302,7 +295,7 @@ def create_notification():
 # READ
 @store.route('/notifications/<docid>')
 def read_notification(docid):
-    notification = Notification.fetch(docid,index='notification')
+    notification = Notification.fetch(docid, index='notification')
     if not notification:
         return jsonify('Notification not found!', status=404)
 
@@ -316,7 +309,7 @@ def read_notification(docid):
 # UPDATE
 @store.route('/notifications/<docid>', methods=['POST', 'PUT'])
 def update_notification(docid):
-    notification = Notification.fetch(docid,index='notification')
+    notification = Notification.fetch(docid, index='notification')
     if not notification:
         return jsonify('Notification not found! No update performed.',
                        status=404)
@@ -328,7 +321,7 @@ def update_notification(docid):
     if request.json is not None:
         updated = _filter_input(request.json, UPDATE_FILTER_FIELDS)
         updated['id'] = docid  # use id from URL, regardless of what arrives in
-                            # JSON payload
+        # JSON payload
 
         changing_permissions = (
             'permissions' in updated and
@@ -341,7 +334,7 @@ def update_notification(docid):
             if failure:
                 return failure
 
-        notification.updateFields(updated,index='notification')
+        notification.updateFields(updated, index='notification')
 
         if hasattr(g, 'before_notification_update'):
             g.before_notification_update(notification)
@@ -358,8 +351,8 @@ def update_notification(docid):
 # DELETE
 @store.route('/notifications/<docid>', methods=['DELETE'])
 def delete_notification(docid):
-    notification = Notification.fetch(docid,index='notification')
-  
+    notification = Notification.fetch(docid, index='notification')
+
     if not notification:
         return jsonify('Notification not found. No delete performed.',
                        status=404)
@@ -385,62 +378,54 @@ def annotationsIndex():
 
     params = json.loads(request.data.decode('utf-8'))
 
+    textoABuscar = params.get("textoABuscar")
+    if(textoABuscar == None):
+        textoABuscar = ""
 
-    textoABuscar=params.get("textoABuscar")
-    if(textoABuscar==None):
-        textoABuscar=""
+    estados = params.get("estados")
 
-    estados=params.get("estados")
+    stateInProgress = estados['InProgress']
+    stateArchived = estados['Archived']
+    stateApproved = estados['Approved']
 
-    stateInProgress=estados['InProgress']
-    stateArchived=estados['Archived']
-    stateApproved=estados['Approved']
+    category = params.get("category")
 
-    category=params.get("category")
+    descriptionId = params.get("descriptionId")
+    descriptionActual = Description._get_Descriptions_byId(id=descriptionId)[0]
 
+    page = params.get("page")
+    if(page == None):
+        page = "1"
 
-    descriptionId=params.get("descriptionId")
-    descriptionActual= Description._get_Descriptions_byId(id=descriptionId)[0]
-   
-
-    page=params.get("page")
-    if(page==None):
-        page="1"
-
-    listUrl=[]
-    for url in descriptionActual['urls']: 
+    listUrl = []
+    for url in descriptionActual['urls']:
         listUrl.append(url['url'])
-    #Realizo la busqueda:
-    annotations= Annotation._get_by_multiple(Annotation,textoABuscar=textoABuscar,estados=estados,urls=listUrl,category=category,notreply=True,page=page)
-      
+    # Realizo la busqueda:
+    annotations = Annotation._get_by_multiple(
+        Annotation, textoABuscar=textoABuscar, estados=estados, urls=listUrl, category=category, notreply=True, page=page)
+
     #nroRegistros= Annotation._get_by_multipleCounts(Annotation,textoABuscar=textoABuscar,estados=estados,url=descriptionUri,page=page)
-    numRes=annotations['numRes']
-    annotations=annotations['annotations']
+    numRes = annotations['numRes']
+    annotations = annotations['annotations']
 
-
-
-     # Cargo las replies de cada annotacion:
-    stats=[]
+    # Cargo las replies de cada annotacion:
+    stats = []
     for urlItem in descriptionActual['urls']:
-        stats=stats+Annotation.annotationStats(Annotation,uri=urlItem['url'])
+        stats = stats + \
+            Annotation.annotationStats(Annotation, uri=urlItem['url'])
 
-    dictStats={}
+    dictStats = {}
     for itemStat in stats:
-        clave=itemStat['key']
-        val=itemStat['doc_count']
-        dictStats[clave]=val
+        clave = itemStat['key']
+        val = itemStat['doc_count']
+        dictStats[clave] = val
     for itemRes in annotations:
         if itemRes['id'] in dictStats.keys():
-            itemRes['nroReplies']=dictStats[itemRes['id']]
+            itemRes['nroReplies'] = dictStats[itemRes['id']]
         else:
-            itemRes['nroReplies']=0
+            itemRes['nroReplies'] = 0
 
-
-
-
-    return jsonify({'annotations':annotations,'nroRegistros':numRes})
-
-
+    return jsonify({'annotations': annotations, 'nroRegistros': numRes})
 
 
 # INDEX
@@ -449,48 +434,42 @@ def descriptionsIndex():
 
     params = json.loads(request.data.decode('utf-8'))
 
+    textoABuscar = params.get("textoABuscar")
+    if(textoABuscar == None):
+        textoABuscar = ""
+    padministration = params.get("padministration")
+    if(padministration == None):
+        padministration = ""
+    domain = params.get("domain")
+    if(domain == None):
+        domain = ""
 
-    textoABuscar=params.get("textoABuscar")
-    if(textoABuscar==None):
-        textoABuscar=""
-    padministration=params.get("padministration")
-    if(padministration==None):
-        padministration=""
-    domain=params.get("domain")
-    if(domain==None):
-        domain=""
-
-    page=params.get("page")
-    if(page==None):
-        page="1"
-
+    page = params.get("page")
+    if(page == None):
+        page = "1"
 
     #annotations = g.annotation_class.search(user=user)
-    descriptions= Description._get_by_multiple(textoABuscar=textoABuscar,padministration=padministration,urlPrefix=domain,page=page)
-    
-    nroRegistros=descriptions['numRes']
-    descriptions=descriptions['descriptions']
-    #nroRegistros= Description._get_by_multipleCounts(textoABuscar=textoABuscar,padministration=padministration,urlPrefix=domain)
-    
-    
-    return jsonify({'descriptions':descriptions,'nroRegistros':nroRegistros})
+    descriptions = Description._get_by_multiple(
+        textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain, page=page)
 
+    nroRegistros = descriptions['numRes']
+    descriptions = descriptions['descriptions']
+    #nroRegistros= Description._get_by_multipleCounts(textoABuscar=textoABuscar,padministration=padministration,urlPrefix=domain)
+
+    return jsonify({'descriptions': descriptions, 'nroRegistros': nroRegistros})
 
 
 @store.route('/description/<path:urlDescription>', methods=["POST"])
 def descriptionByUrl(urlDescription):
 
     params = json.loads(request.data.decode('utf-8'))
-    url=params['url']
+    url = params['url']
     description = Description._get_Descriptions_byURI(url=url)
 
-
-    if len(description)==0:
+    if len(description) == 0:
         return jsonify([])
 
     return jsonify(description[0])
-
-    
 
 
 # CREATE
@@ -519,8 +498,6 @@ def create_annotation():
         if hasattr(g, 'after_annotation_create'):
             annotation.save(refresh=False)
             g.after_annotation_create(annotation)
-        
-       
 
         refresh = request.args.get('refresh') != 'false'
         annotation.save(refresh=refresh)
@@ -564,7 +541,7 @@ def update_annotation(docid):
     if request.json is not None:
         updated = _filter_input(request.json, UPDATE_FILTER_FIELDS)
         updated['id'] = docid  # use id from URL, regardless of what arrives in
-                            # JSON payload
+        # JSON payload
 
         changing_permissions = (
             'permissions' in updated and
@@ -637,14 +614,12 @@ def search_annotations():
     if current_app.config.get('AUTHZ_ON'):
         # Pass the current user to do permission filtering on results
         kwargs['user'] = g.user
-    print(f' Kwargs: {kwargs}' )
+    print(f' Kwargs: {kwargs}')
     results = g.annotation_class.search(**kwargs)
     total = g.annotation_class.count(**kwargs)
 
     return jsonify({'total': total,
                     'rows': results})
-
-
 
 
 # RAW ES SEARCH
@@ -678,7 +653,7 @@ def search_annotations_raw():
 # Return the current user logged.
 @store.route('/user', methods=['GET'])
 def getUser():
-    return jsonify(session['username'])
+    return jsonify(current_user.email)
 
 
 def _filter_input(obj, fields):
@@ -686,9 +661,6 @@ def _filter_input(obj, fields):
         obj.pop(field, None)
 
     return obj
-
-
-
 
 
 def _get_annotation_user(ann):
@@ -724,13 +696,13 @@ def _failed_authz_response(msg=''):
     else:
         # If the user is not authenticated at all we send a 401.
         return jsonify("Cannot authorize request{0}. Perhaps you're not logged in "
-                    "as a user with appropriate permissions on this "
-                    "annotation? "
-                    "(user={user}, consumer={consumer})".format(
-                        ' (' + msg + ')' if msg else '',
-                        user=user,
-                        consumer=consumer),
-                    status=401)
+                       "as a user with appropriate permissions on this "
+                       "annotation? "
+                       "(user={user}, consumer={consumer})".format(
+                           ' (' + msg + ')' if msg else '',
+                           user=user,
+                           consumer=consumer),
+                       status=401)
 
 
 def _build_query_raw(request):
