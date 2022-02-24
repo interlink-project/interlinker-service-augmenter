@@ -326,8 +326,8 @@ def saveDescription():
             description=editDescripcion 
             flash("No tienes permisos de moderador para editar esta descripción.","info")
 
-    
-    return redirect('/description/'+description['id']+'/edit')
+         
+    return redirect(url_for('authInterlink.editDescription',descriptionId= description['id'],option= 'edit') )
 
 
     

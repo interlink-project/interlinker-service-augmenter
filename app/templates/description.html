@@ -7,7 +7,7 @@ block content %}
     if (event.type == 'click') {
       event.preventDefault();
       category = event.target.name.substring(2);
-      window.location.href = "/description/{{description.id}}?category=" + category.toLowerCase();
+      window.location.href = '{{ url_for('authInterlink.description',descriptionId= description.id) }}?category='+category.toLowerCase();
     }
 
   }

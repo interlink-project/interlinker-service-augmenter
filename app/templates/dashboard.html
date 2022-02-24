@@ -65,11 +65,10 @@ block head %} {{ super() }}
 
           dateUpdated = new Date(dataItem.updated);
 
+                                                                                                                                                                                                                                                                                                                
+          $('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td> '+ISODateString(dateUpdated)+' </td> <td> {% if current_user.is_authenticated %} <a href="{{ url_for('authInterlink.description',descriptionId= '+dataItem.id+') }}" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% else %} <a href="/modifica/'+dataItem.url+'"  class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% endif %} </td></tr>')
 
-          $('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td> '+ISODateString(dateUpdated)+' </td> <td> {% if current_user.is_authenticated %} <a href="/description/'+dataItem.id+'" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% else %} <a href="/modifica/'+dataItem.url+'"  class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% endif %} </td></tr>')
-
-          //$('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td>  '+dataItem.created+' </td> <td> <a href="/description/'+dataItem.id+'" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> </td></tr>')
-
+          
         }
 
         $('#totalRegisters').text(numeroReg);
@@ -278,8 +277,8 @@ block head %} {{ super() }}
             </td>
             <td  style="text-align: center;">{{ description.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
 
-            <td  >
-              <a  href="/description/{{ description.id }}/edit" class="btn btn-outline-secondary bi-tools"  ></a>
+            <td  >     
+              <a  href="{{ url_for('authInterlink.editDescription',descriptionId= description.id , option= 'edit') }}" class="btn btn-outline-secondary bi-tools"  ></a>
             </td>
 
 
@@ -304,7 +303,7 @@ block head %} {{ super() }}
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
                 title="Question"
-                onclick="window.location.href='/description/{{ description.id }}?category=question';"
+                onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}?category=question';"
               >
                 {{description.nroQuest}}
   
@@ -339,7 +338,7 @@ block head %} {{ super() }}
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
                 title="Feedback"
-                onclick="window.location.href='/description/{{ description.id }}?category=feedback';"
+                onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}?category=feedback';"
               
                 >
                 
@@ -376,7 +375,7 @@ block head %} {{ super() }}
                 data-bs-toggle="tooltip"
                 data-bs-placement="bottom"
                 title="Term"
-                onclick="window.location.href='/description/{{ description.id }}?category=term';"
+                onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}?category=term';"
               
               >
               {{description.nroTerms}} 
@@ -405,7 +404,8 @@ block head %} {{ super() }}
                 alt="All"
     
                 title="All"
-                onclick="window.location.href='/description/{{ description.id }}';"
+                onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}';"
+              
               >All</button>
             </div>
 

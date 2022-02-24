@@ -153,7 +153,7 @@ block head %} {{ super() }}
 
     function obtenerDescription(urltext){
         //No encuentra una description:
-        urlPost='/description/'+urltext;
+        urlPost={{ url_for('authInterlink.description',descriptionId= urltext) }};
 
         function onSucess(data) {
 
@@ -324,8 +324,8 @@ block head %} {{ super() }}
 
                         </td>
                         <td>
-                           
-                            <a  href="/description/{{ description.id }}/edit" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-tools " style="width:100px;"></i></a>
+                                    
+                            <a  href="{{ url_for('authInterlink.editDescription',descriptionId= description.id , option= 'edit') }}" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-tools " style="width:100px;"></i></a>
              
                         </td>
 
