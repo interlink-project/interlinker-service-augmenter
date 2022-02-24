@@ -1,0 +1,397 @@
+{% extends "templateV2.html" %} {% block title %} Servicepedia {% endblock %} {%
+    block head %} {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/accordion.css') }}" />
+    {% endblock %} {% block content %}
+
+    <script>
+        //Falta cargar de nuevo cuando se tenga una consulta en memoria
+        
+
+        function enableArea(event){
+            opcion=$( "#selTarget").val();
+            textoOpcion=$( "#selTarget option:selected" ).text();
+           
+            if (opcion=='list'){
+                $('#listUsersArea').prop("disabled", false);
+            }else{
+                $('#listUsersArea').prop("disabled", true);
+            }
+            
+
+        }
+
+
+        function showPublishOps(event){
+            if (event.type == 'click') {
+            
+            var assetId=event.target.getAttribute('asset')
+            var surveytitle=event.target.getAttribute('surveytitle')
+            var surveydescription=event.target.getAttribute('surveydescription')
+
+
+
+            //Muestro notificacion:
+            var myModal = new bootstrap.Modal(document.getElementById('notificationBox'),{});
+
+            $('#notificationBoxLabel').text("Survey Launcher")
+
+            var formularioLauch = `
+                        <form class="row g-3" action="/lauchSurvey" method="post">
+                            <div class="mb-3" style="text-align:center;">
+                                <b>    
+                                Title: ${surveytitle}
+                                </b>    
+                    
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="selTarget" class="form-label">Target Users:</label>
+                                
+                                <select class="form-select input-lg" id="selTarget" name="selTargetList" aria-label="Default select example" onchange="if (this.selectedIndex) enableArea();"  required>
+                                        <option selected disabled value="">...</option>
+                                        <option value="everybody">Everybody</option>
+                                        <option value="list">A list of users</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="listUsersArea" class="form-label">List of Users (separated by ;)</label>
+                                <textarea class="form-control" id="listUsersArea" name="listUsersArea" rows="3" disabled></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <input class="form-check-input" type="checkbox" name="is_optional"
+                                id="is_optional">
+                                <label for="is_optional" class="form-label">Optional</label>
+                                
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="ini_date" class="form-label">Starting Date:</label>
+                                <input type="date" style="margin-left=5px" name="ini_date" id="ini_date"
+                                placeholder="Starting date" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fin_date" class="form-label">Finishing date</label>
+                                <input type="date" name="fin_date" id="fin_date"
+                                placeholder="Finishing date" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="selEvent" class="form-label">Show it in the event of:</label>
+                                <select class="form-select input-lg" id="selEvent" name="selEvent" aria-label="Default select example" >
+                                        <option selected value="asnotification">Open notifications</option>
+                                        <option value="opennigsession">Opening a Session</option>
+                                        <option value="closesession">Closing a Session</option>
+                                    </select>
+                            </div>
+
+                            <input id="assetId" name="assetId" type="hidden" value="${assetId}">
+                            <input id="surveyTitle" name="surveyTitle" type="hidden" value="${surveytitle}">
+                            <input id="surveyDesc"  name="surveyDesc"  type="hidden" value="${surveydescription}">
+
+                            <div class="col-12" style="text-align:center;">
+                                <button class="btn btn-primary" type="submit">Lauch  the survey!</button>
+                            </div>
+
+                            </form>
+                            
+                           `;
+
+
+            $('#notificationBody').empty();
+            $('#notificationBody').append( formularioLauch );
+         
+
+                                       
+            $('#notificationAcceptBtn').text("Accept");
+            $('#notificationAcceptBtn').hide();
+
+            $('#createUrl').val("");
+            myModal.show();
+
+            }
+        }
+
+    
+        function searchText(event) {
+            if (event.type == 'click') {
+                event.preventDefault();
+    
+                textoBox = document.getElementById("searchBox");
+                texto = textoBox.value
+    
+    
+                let page = event.target.getAttribute('page');
+                if (page == null) {
+                    page = 1;
+                }
+    
+    
+    
+                if (domain.selectedOptions[0].index == 0) {
+                    domainSel = "";
+                }
+    
+                //window.location = '/?searchText=' + texto+'&padministration=' + padministrationSel+'&domain=' + domainSel;
+                //recargarTabla();
+    
+                function addShow(data) {
+    
+                    entries = Object.entries(data)
+                    descripcionesList = entries['0'][1]
+                    numeroReg = entries[1][1]
+    
+                    $('#tablaSurveys').empty();
+    
+                    for (let dataItem of descripcionesList) {
+                        $('#tablaSurveys').append(' <tr> <td> ' + dataItem.padministration + ' </td> <td> ' + dataItem
+                            .title + ' </td>  <td> ' + dataItem.created +
+                            ' </td> <td> <i class="bi bi-tools " style="width:100px;"></i> </td></tr>')
+                    }
+    
+                    $('#totalRegisters').text(numeroReg);
+    
+                    $('#page').text('1');
+    
+                    numeroPaginas = Math.ceil(numeroReg / 10);
+                    $('#pagesNumbers').text(numeroPaginas);
+    
+    
+    
+                    textoBox = document.getElementById("searchBox");
+                    texto = textoBox.value
+    
+                   
+    
+    
+    
+                    $('#paginador').empty();
+                    for (var j = 1; j < numeroPaginas + 1; j++) {
+                        //$('#paginador').append(" <li class='page-item'><a class='page-link' href='?page="+j+"&textoABuscar="+texto+"&padministration="+padministrationSel+"&domain="+domainSel+"'>"+j+"</a></li>");
+                        $('#paginador').append(
+                            " <li class='page-item'><a class='page-link' onclick='searchText(event);' page='" + j +
+                            "'  >" + j + "</a></li>");
+                    }
+    
+    
+    
+                }
+    
+    
+    
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ url_for("store.surveysIndex")|tojson }}',
+                    contentType: 'application/json;charset=UTF-8',
+                    data: JSON.stringify({
+                        "textoABuscar": texto,
+                        "page": page
+                    })
+                }).done(addShow);
+    
+            }
+        }
+    
+    
+    
+        function createNew(event) {
+            if (event.type == 'click') {
+    
+                window.location = '/surveyDetail';
+    
+            }
+        }
+    
+       
+      
+        $(function() {
+            $(".collapse").on('show.bs.collapse', function(e) {
+                if ($(this).is(e.target)) {
+            
+                $("#expFormModeration").removeClass("bi-plus-circle");
+                $("#expFormModeration").addClass("bi-dash-circle");
+                }
+            })
+            });
+    
+            $(function() {
+            $(".collapse").on('hide.bs.collapse', function(e) {
+                if ($(this).is(e.target)) {
+            
+                $("#expFormModeration").removeClass("bi-dash-circle");
+                $("#expFormModeration").addClass("bi-plus-circle");
+                }
+            })
+            });
+    
+    
+      
+    
+    
+    </script>
+    
+    <hr />
+    <div class="container">
+        <div class="row">
+            <div
+            class="col"
+            style="align-content: center; justify-content: center; display: flex;align-items: center;"
+          >
+            <img src="{{url_for('static', filename='surveyIcon.png')}}" style="width:40px ;" alt="Activities">
+            <h4 style="padding-left: 25px;">List of Surveys:</h4>
+      
+          </div>
+    
+    
+    
+        </div>
+        <hr />
+    
+        <div id="result"></div>
+    
+        <div class="row">
+            <div class="table-responsive">
+               
+                <table class="table" style="height: auto">
+                    <thead>
+                        <tr>
+                            
+                            <th scope="col-1">Id</th>
+                            <th scope="col-4">Title</th>
+                            <th scope="col-7">Description</th>
+                            <th scope="col-7">Settings</th>
+                            <th scope="col-7">Launch</th>
+                            <th scope="col-7">Answers</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="tablaSurveys">
+                        {% for survey in surveys %}
+                        <tr >
+    
+    
+                            <td>{{ survey.id}}</td>
+    
+                            
+                            <td>{{ survey.title}}</td>
+                            <td>
+
+                                {% if survey.description|length > 20 %}
+                                {% set soloTexto= survey.description[0:20]|striptags%}
+                                {% set textoCortado= soloTexto[0:20]+'...' %}
+                                {{ textoCortado|striptags}}
+                                {% endif %}
+
+
+                            </td>
+    
+                            
+                            <td>
+                               
+                                <a  href="{{ surveyHost }}/assets/{{ survey.idAsset }}/edit" class="btn btn-outline-secondary" style="max-width: 70px;" title="Edit" ><i class="bi bi-tools " style="width:100px;"></i></a>
+                 
+                            </td>
+                            <td>
+                               
+ 
+
+                                <a onclick="showPublishOps(event)" asset="{{ survey.idAsset }}"  surveytitle="{{ survey.title }}" surveydescription="{{ survey.description }}" title="Answers" ><input type="button" asset="{{ survey.idAsset }}"  surveytitle="{{ survey.title }}" surveydescription="{{ survey.description }}" style="background-image: url('{{url_for('static', filename='rocket.png')}}'); " class="botonIcon" /></a>
+                            </td>
+                            <td>
+                               
+                          
+                 
+                                <a style="margin-top:-10px;"  href="{{ surveyHost }}/api/{{ surveyApiVersion }}/assets/{{ survey.idAsset }}/answers" title="Answers" ><input type="button" style="background-image: url('{{url_for('static', filename='answers.png')}}'); " class="botonIcon" /></a>
+                            </td>
+    
+                            
+                        </tr>
+    
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <h6 id="searchStats">Total found : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span id='page'>{{paginacion.page}}</span> of <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> Pages).</h6>
+        
+    
+                <div
+                class="container"
+                style="align-content: center; justify-content: center; display: flex"
+              >
+                <div class="row">
+                  <div class="col">
+                    <nav aria-label="...">
+                      <ul class="pagination" id="paginador">
+          
+          
+                      {% for i in range(paginacion.pagesNumbers|int) %}
+                        <li class="page-item"><a class="page-link" href='?page={{ i+1 }}'>{{i+1}}</a></li>
+                      {% endfor %}
+          
+          
+          
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+    
+           <!--  <div class="container">
+                <div class="row">
+                    <div class="col" style="align-content: center; justify-content: center; display: flex">
+                        <h4>Edit information of a registered public service survey:</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">Description Url:</label>
+                    <select class="form-select" id="inputGroupSelect01">
+                        <option selected>Choose...</option>
+                        <option value="1">domain1</option>
+                        <option value="2">domain2</option>
+                        <option value="3">domain3</option>
+                    </select>
+                    <input type="text" class="form-control" placeholder="Url Page" aria-label="Url Page">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">Edit</button>
+                </div>
+            </div>
+    
+            <hr /> -->
+        </div>
+    </div>
+    
+    
+    
+    
+    <div class="container">
+        <div class="row">
+            <div class="col" style="align-content: left; justify-content: left; display: flex">
+                
+                <form class="form-inline my-2 my-lg-0" id="FormSurvey" action="/surveyInstantiator"  enctype="multipart/form-data" method="POST">
+    
+                        <div class="row" style="align-content: center; justify-content: center;">
+                            <div class="col" style="align-content: center; justify-content: center;">
+                                <button type="submit" class="btn btn-secondary" style="margin: 1px;margin-left: 5px;" >Create a new survey</button>
+        
+                            </div>
+                        </div>
+        
+                </form>
+            
+          </button>
+            </div>
+        </div>
+    
+    
+    
+        </div>
+        </div>
+    
+    </div>
+    </div>
+    
+    
+    {% endblock %}

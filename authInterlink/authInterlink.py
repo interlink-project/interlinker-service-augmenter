@@ -16,17 +16,17 @@ from flask_login import (
     login_user,
     logout_user,
 )
-from annotator.survey import Survey
+from api.survey import Survey
 
 
 from authInterlink.user import User
 
-from annotator.annotation import Annotation
-from annotator.description import Description
-from annotator.notification import Notification
-from website.languages import getLanguagesList
+from api.annotation import Annotation
+from api.description import Description
+from api.notification import Notification
+from app.languages import getLanguagesList
 
-authInterlink = Blueprint('authInterlink', __name__,template_folder="./gui/templates")
+authInterlink = Blueprint('authInterlink', __name__,template_folder="./app/templates")
 
 #Genero Secretos para los estados:
 tok1 = uuid.uuid4()
@@ -83,7 +83,7 @@ def about():
 
 
 @authInterlink.route("/dashboard")
-@login_required
+
 def dashboard():
 
      #Cargo los combos:
@@ -416,7 +416,7 @@ def surveyLauchProcess():
     flash("The survey has been lauched.","info")
        
     #Redirecciono al editor:
-    return redirect("/survey")
+    return redirect(url_for("survey"))
 
 
 @authInterlink.route('/advanceSearch',)

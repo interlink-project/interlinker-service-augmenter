@@ -8,7 +8,7 @@ from mock import Mock, patch
 from six import u
 from werkzeug import Headers
 
-from annotator import auth
+from api import auth
 
 class MockRequest():
     def __init__(self, headers):

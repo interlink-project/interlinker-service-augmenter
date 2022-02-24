@@ -21,6 +21,7 @@ babel = "*"
 flask-babel = "*"
 cryptography = "*"
 pydantic = "*"
+gunicorn = "*"
 
 [dev-packages]
 

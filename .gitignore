@@ -8,3 +8,6 @@
 /.tox
 *.pyc
 .vscode/settings.json
+*.egg-info/
+*.egg
+eggs/

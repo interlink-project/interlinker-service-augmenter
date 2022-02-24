@@ -1,7 +1,7 @@
 import os
 from flask import Flask, g, request
 
-from annotator import es, auth, authz, annotation, store, document
+from api import es, auth, authz, annotation, store, document
 
 from .helpers import MockUser, MockConsumer
 

@@ -1,0 +1,480 @@
+{% extends "templateV2.html" %} {% block title %} Servicepedia {% endblock %} {%
+block content %}
+
+<script>
+
+  function selectCategory(event) {
+    if (event.type == 'click') {
+      event.preventDefault();
+      category = event.target.name.substring(2);
+      window.location.href = "/description/{{description.id}}?category=" + category.toLowerCase();
+    }
+
+  }
+
+  function goSubjectPage(event, descriptionId, annotationId) {
+    if (event.type == 'click') {
+      event.preventDefault();
+      window.location.href = '/subjectPage/' + descriptionId + '/' + annotationId + '';
+    }
+  }
+
+  function filterState(event) {
+    if (event.type == 'change') {
+      aplicoFiltros(event);
+    }
+  }
+
+  function searchText(event) {
+    if (event.type == 'click') {
+      event.preventDefault();
+      aplicoFiltros(event);
+    }
+  }
+
+
+  function aplicoFiltros(event) {
+
+    //Obtengo valores de filtros:
+
+    let estados = { InProgress: "on", Archived: "on", Approved: "on" };
+
+    estados['InProgress'] = document.getElementById("checkInProgress").checked;
+    estados['Approved'] = document.getElementById("checkApproved").checked;
+    estados['Archived'] = document.getElementById("checkArchived").checked;
+
+
+    textoBox = document.getElementById("searchBox");
+    texto = textoBox.value;
+
+    descriptionSpan = document.getElementById("descriptionId");
+    descriptionId = descriptionSpan.textContent;
+
+    let category = '';
+    if (document.getElementById("rbFeedback").checked) category = 'feedback';
+    if (document.getElementById("rbTerm").checked) category = 'term';
+    if (document.getElementById("rbQuestion").checked) category = 'question';
+
+    category;
+
+
+    //Refresco la tabla con los valores filtrados:
+
+    let page = event.target.getAttribute('page');
+    if (page == null) {
+      page = 1;
+    }
+
+
+    function onSearchAnnotations(data) {
+
+      descriptionSpan = document.getElementById("descriptionId");
+      descriptionId = descriptionSpan.textContent;
+
+      entries = Object.entries(data);
+      annotationsList = entries['0'][1];
+      numeroReg = entries[1][1];
+
+      $('#tablaAnnotations').empty();
+
+      let contador = 0;
+      for (let dataItem of annotationsList) {
+        contador = contador + 1;
+
+
+        function ISODateString(d) {
+          function pad(n) { return n < 10 ? '0' + n : n }
+          return pad(d.getUTCDate()) + '-'
+            + pad(d.getUTCMonth() + 1) + '-'
+            + d.getUTCFullYear() + ' '
+            + pad(d.getUTCHours() + 1) + ':'
+            + pad(d.getUTCMinutes())
+        }
+
+
+        dateUpdated = new Date(dataItem.created);
+
+
+        //Defino los colores
+
+        if (dataItem.category == 'question') {
+          questColor = '255, 193, 7';
+          stylebtn = 'btn-warning';
+        } else if (dataItem.category == 'term') {
+          questColor = '223,6,212';
+          stylebtn = 'btn-danger';
+        } else if (dataItem.category == 'feedback') {
+          questColor = '25, 135, 84';
+          stylebtn = 'btn-danger';
+        }
+
+        //Doy formato a la ruta:
+        ruta = dataItem.uri.split('/');
+        ruta = ruta[ruta.length - 1]
+
+
+        if (dataItem.state == 1) { // Archived
+          botonCategory = '<button class="btn btn-light"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;" > <span style="position: relative;top: -5px;text-decoration: line-through;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+          sectionCategoria = ' <tr style="color: rgba(141, 140, 140, 0.774);"> <td style="font-weight:bold;"> ' + botonCategory + ' </td>';
+          stateText = 'Archived';
+        } else if (dataItem.state == 2) { //Approved
+          botonCategory = '<button class="btn ' + stylebtn + '"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;font-weight: bold;background-color:rgba(' + questColor + ',0.8);border-color:rgba(' + questColor + ',0.9);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+          sectionCategoria = ' <tr style="font-weight: bold;"> <td style="color:#FFFFFF;"> ' + botonCategory + ' </td>';
+          stateText = 'Approved';
+        } else if (dataItem.state == 0) { //In Progress
+          botonCategory = '<button class="btn "  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;background-color:rgba(' + questColor + ',0.2);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+          sectionCategoria = ' <tr style="color: rgba(0, 0, 0, 0.774);"> <td style="font-weight:bold;"> ' + botonCategory + ' </td>';
+          stateText = 'In Progress';
+        }
+
+        $('#tablaAnnotations').append(sectionCategoria + ' <td> /' + ruta + ' </td> <td> ' + stateText + ' </td> <td style="text-align: center;"> <a class="btn btn-outline-dark position-relative">' + dataItem.nroReplies + ' </a></td><td>' + dataItem.text + '</td>  <td> ' + ISODateString(dateUpdated) + ' </td> <td>  <a href="/subjectPage/' + descriptionId + '/' + dataItem.id + '" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>  </td></tr>')
+      }
+
+      $('#totalRegisters').text(numeroReg);
+
+      $('#page').text('1');
+
+      numeroPaginas = Math.ceil(numeroReg / 10);
+      $('#pagesNumbers').text(numeroPaginas);
+
+
+
+      textoBox = document.getElementById("searchBox");
+      texto = textoBox.value;
+
+
+
+      $('#paginador').empty();
+      for (var j = 1; j < numeroPaginas + 1; j++) {
+        //$('#paginador').append(" <li class='page-item'><a class='page-link' href='?page="+j+"&textoABuscar="+texto+"&padministration="+padministrationSel+"&domain="+domainSel+"'>"+j+"</a></li>");
+        $('#paginador').append(" <li class='page-item'><a class='page-link' onclick='aplicoFiltros(event);' page='" + j + "'  >" + j + "</a></li>");
+      }
+
+
+
+    }
+
+
+
+    $.ajax({
+      method: 'POST',
+      url: {{ url_for('store.annotationsIndex')| tojson}},
+  contentType: 'application/json;charset=UTF-8',
+    data: JSON.stringify({ "textoABuscar": texto, "estados": estados, "descriptionId": descriptionId, "page": page, "category": category })
+    }).done(onSearchAnnotations);
+        
+    
+  }
+
+
+</script>
+
+
+<hr />
+
+<div style="display: block">
+  <div class="row">
+    <div class="col-8" style="text-align: center;margin-top: 4px;display: inline-flex;">
+      <a href="/modifica/{{ current_user.email }}/{{ urlMainPage }}" class="bi bi-eye"
+        style="zoom: 2;-moz-transform: scale(2);padding: 0rem;margin-right: 0.2em;color: rgb(0, 72, 100);"></a>
+
+      <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
+      <span id="descriptionUri" hidden>{{description['url']}}</span>
+      <span id="descriptionId" hidden>{{description['id']}}</span>
+
+    </div>
+    <div class="col-4">
+
+
+      <div class="hstack gap-0">
+
+
+
+
+
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+          {% if categoryLabel == 'feedback'%}
+          <input type="radio" class="btn-check" name="rbFeedback" id="rbFeedback" autocomplete="off"
+            onclick="selectCategory(event);" checked>
+          {% else %}
+          <input type="radio" class="btn-check" name="rbFeedback" id="rbFeedback" autocomplete="off"
+            onclick="selectCategory(event);">
+          {% endif %}
+
+          <label class="btn btn-outline-primary" for="rbFeedback">Feedback</label>
+
+          {% if categoryLabel == 'term'%}
+          <input type="radio" class="btn-check" name="rbTerm" id="rbTerm" onclick="selectCategory(event);"
+            autocomplete="off" checked>
+          {% else %}
+          <input type="radio" class="btn-check" name="rbTerm" id="rbTerm" onclick="selectCategory(event);"
+            autocomplete="off">
+          {% endif %}
+
+          <label class="btn btn-outline-primary" for="rbTerm">Term</label>
+          {% if categoryLabel == 'question'%}
+          <input type="radio" class="btn-check" name="rbQuestion" id="rbQuestion" onclick="selectCategory(event);"
+            autocomplete="off" checked>
+          {% else %}
+          <input type="radio" class="btn-check" name="rbQuestion" id="rbQuestion" onclick="selectCategory(event);"
+            autocomplete="off">
+          {% endif %}
+          <label class="btn btn-outline-primary" for="rbQuestion">Question</label>
+          <div class="vr" style="padding-right: 3px;"></div>
+
+          {% if categoryLabel == 'all'%}
+          <input type="radio" class="btn-check" name="rbAll" id="rbAll" onclick="selectCategory(event);"
+            autocomplete="off" checked>
+          {% else %}
+          <input type="radio" class="btn-check" name="rbAll" id="rbAll" onclick="selectCategory(event);"
+            autocomplete="off">
+          {% endif %}
+          <label class="btn btn-outline-primary" for="rbAll">All</label>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<hr />
+
+<div class="row">
+
+  <div class="col-6" style="display: flex;flex-direction: row;">
+    <input id="searchBox" class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+      onkeydown="searchText(event)" style="min-width: 200px;" />
+    <button class="btn btn-outline-secondary" onclick="searchText(event)">Search</button>
+
+  </div>
+
+  <div class="col-6">
+    <div style="display: flex; flex-direction: row-reverse;">
+
+
+      <div class="form-check form-switch" style="padding-right: 10px;">
+        <input class="form-check-input" type="checkbox" id="checkInProgress" onchange="filterState(event)" checked>
+        <label class="form-check-label" for="checkInProgress">In Progress</label>
+      </div>
+      <div class="form-check form-switch" style="padding-right: 10px;">
+        <input class="form-check-input" type="checkbox" id="checkArchived" onchange="filterState(event)" checked>
+        <label class="form-check-label" for="checkArchived">Archived</label>
+      </div>
+      <div class="form-check form-switch" style="padding-right: 10px;">
+        <input class="form-check-input" type="checkbox" id="checkApproved" onchange="filterState(event)" checked>
+        <label class="form-check-label" for="checkApproved">Approved</label>
+      </div>
+
+
+
+    </div>
+  </div>
+
+
+</div>
+<hr />
+
+
+{% block annotations %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col-1">Category</th>
+      <th scope="col-1" style="text-align: center;">Page</th>
+      <th scope="col-2" style="text-align: center;">State</th>
+      <th scope="col-2" style="text-align: center;">Nro Replies</th>
+      <th scope="col-2" style="min-width: 200px;">Description</th>
+      <th scope="col-2" style="text-align: center;">Update Date</th>
+      <th scope="col-2" style="text-align: center;">Option</th>
+
+    </tr>
+  </thead>
+  <tbody id="tablaAnnotations">
+    {% for anotation in anotations %} {% if anotation.category != 'reply' %}
+
+
+    {% if anotation.state == 1 %}
+    <tr style="color: rgba(141, 140, 140, 0.774);">
+      <td>
+        <button class='btn btn-light'
+          onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+          style="height: 30px;min-width:100px;" alt="{{ anotation.state|estadosAnnotation}}"
+          title="{{ anotation.state|estadosAnnotation}}">
+
+
+          {% elif anotation.state == 2 %}
+    <tr style="color: rgba(0, 0, 0, 0.774);font-weight: bold;">
+      <td>
+        {% if anotation.category == 'feedback' %}
+
+        <button class='btn btn-success'
+          onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+          style="height: 30px;min-width:100px;font-weight: bold;" alt="{{ anotation.state|estadosAnnotation}}"
+          title="{{ anotation.state|estadosAnnotation}}">
+
+
+          {% elif anotation.category == 'question' %}
+
+
+          <button class='btn btn-warning'
+            onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+            style="height: 30px;min-width:100px;font-weight: bold;" alt="{{ anotation.state|estadosAnnotation}}"
+            title="{{ anotation.state|estadosAnnotation}}">
+
+
+            {% elif anotation.category == 'term' %}
+
+            <button class='btn btn-danger'
+              onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+              style="height: 30px;min-width:100px;font-weight: bold;background-color: #df06d4;border-color: #af02a7;"
+              alt="{{ anotation.state|estadosAnnotation}}" title="{{ anotation.state|estadosAnnotation}}">
+
+
+              {% endif %}
+
+
+
+              {% else %}
+
+              {% if anotation.category == 'feedback' %}
+              <!--  <tr style="background-color: #d0ffdc;" >
+          -->
+    <tr>
+      <td>
+        <button class='btn annotation-cat-feedback'
+          onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+          style="height: 30px;min-width:100px;" alt="{{ anotation.state|estadosAnnotation}}"
+          title="{{ anotation.state|estadosAnnotation}}">
+
+          {% endif %}
+          {% if anotation.category == 'question' %}
+          <!--  <tr style="background-color: #f6ffa8;" >
+          -->
+    <tr></tr>
+    <td>
+      <button class='btn annotation-cat-question'
+        onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+        style="height: 30px;min-width:100px;" alt="{{ anotation.state|estadosAnnotation}}"
+        title="{{ anotation.state|estadosAnnotation}}">
+
+        {% endif %}
+        {% if anotation.category == 'term' %}
+        <!--  <tr style="background-color: #ffa7fb;" >
+          -->
+        <tr>
+          <td>
+
+            <button class='btn annotation-cat-term'
+              onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+              style="height: 30px;min-width:100px;" alt="{{ anotation.state|estadosAnnotation}}"
+              title="{{ anotation.state|estadosAnnotation}}">
+
+              {% endif %}
+
+              {% endif%}
+
+              {% if anotation.state == 1 %}
+              <span style="position: relative;top: -5px;text-decoration: line-through;">
+                {{ anotation.category[0]|upper }}{{ anotation.category[1:] }}
+              </span>
+              {% else %}
+              <span style="position: relative;top: -5px;">
+                {{ anotation.category[0]|upper }}{{ anotation.category[1:] }}
+              </span>
+              {% endif%}
+
+            </button>
+
+          </td>
+
+          <td style="text-align: center;">
+            {% set uriPath = anotation.uri.split('/') %}
+            /{{ uriPath[-1:] |join('')}}
+
+          </td>
+
+          <td style="text-align: center;">
+
+            {{ anotation.state|estadosAnnotation}}
+
+          </td>
+
+
+
+          <!-- 
+      <td style="text-align: center;">{{ anotation.id}} </td>
+      <td style="text-align: center;"> </td>
+      -->
+          <td style="text-align: center;">
+
+            <a class="btn btn-outline-dark position-relative">
+              {{ anotation.nroReplies }}
+
+            </a>
+
+
+          </td>
+
+          {% if anotation.text|length > 200 %}
+          {% set soloTexto= anotation.text[0:200]|striptags%}
+          {% set textoCortado= soloTexto[0:200] %}
+          <td>{{ textoCortado|striptags}} </td>
+          {% else %}
+          <td>{{ anotation.text[0:250]|striptags}} </td>
+          {% endif %}
+
+
+
+
+          <td style="text-align: center;">{{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+          <td>
+            <a href="/subjectPage/{{ description.id }}/{{ anotation.id }}" class="btn btn-outline-secondary"
+              style="max-width: 70px;"><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
+
+          </td>
+
+
+        </tr>
+        {% endif %} {% endfor %}
+  </tbody>
+</table>
+
+<h6 id="searchStats">Total found : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span
+    id='page'>{{paginacion.page}}</span> of <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> Pages).</h6>
+
+
+<div class="container" style="align-content: center; justify-content: center; display: flex">
+  <div class="row">
+    <div class="col">
+      <nav aria-label="...">
+        <ul class="pagination" id="paginador">
+
+
+          {% for i in range(paginacion.pagesNumbers|int) %}
+          <li class="page-item"><a class="page-link" href='?page={{ i+1 }}'>{{i+1}}</a></li>
+          {% endfor %}
+
+
+
+        </ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
+
+<script>
+  var tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+</script>
+
+{% endblock %}

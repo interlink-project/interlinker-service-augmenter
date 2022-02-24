@@ -1,5 +1,5 @@
 from . import helpers as h
-from annotator.authz import authorize
+from api.authz import authorize
 
 class TestAuthorization(object):
 

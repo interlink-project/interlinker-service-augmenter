@@ -2,7 +2,7 @@ from nose.tools import *
 from mock import MagicMock
 from . import TestCase, helpers as h
 
-from annotator.annotation import Annotation
+from api.annotation import Annotation
 
 uri1 = u'http://xyz.com'
 uri2 = u'urn:uuid:xxxxx'

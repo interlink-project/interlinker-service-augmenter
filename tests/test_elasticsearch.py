@@ -3,7 +3,7 @@ from mock import MagicMock, patch
 
 import elasticsearch
 
-from annotator.elasticsearch import ElasticSearch, _Model
+from api.elasticsearch import ElasticSearch, _Model
 
 class TestElasticSearch(object):
 

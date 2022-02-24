@@ -6,8 +6,8 @@ from mock import patch
 from flask import json, g
 from six.moves import xrange
 
-from annotator import auth, es
-from annotator.annotation import Annotation
+from api import auth, es
+from api.annotation import Annotation
 
 
 class TestStore(TestCase):

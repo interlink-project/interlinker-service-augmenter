@@ -2,7 +2,7 @@ from flask import g
 from nose.tools import *
 
 from . import TestCase
-from annotator.document import Document
+from api.document import Document
 
 
 peerj = {
