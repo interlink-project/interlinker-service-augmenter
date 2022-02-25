@@ -1,5 +1,6 @@
 #!/bin/bash
 
+docker-compose down
 # Start up the containers
 docker-compose -f docker-compose.yml --env-file .env build
 

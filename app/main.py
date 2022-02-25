@@ -44,15 +44,17 @@ log = logging.getLogger('annotator')
 
 here = os.path.dirname(__file__)
 
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 
 
 
 
-
-def create_app():
+def create_app(testing:bool = True):
     app = Flask(__name__)
-
+    app.debug = testing
+    
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
     print("Entra hasta aqui")
     app.config.from_object(settings)

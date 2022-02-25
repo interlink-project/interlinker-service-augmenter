@@ -1,3 +1,4 @@
+import logging
 from flask import Blueprint, jsonify, flash
 import requests
 import math
@@ -59,8 +60,9 @@ def login():
 
 
 @authInterlink.route("/logout", methods=["GET", "POST"])
-# @login_required
+@login_required
 def logout():
+    print(session)
     logout_user()
     #response = redirect(config["end_session_endpoint"])
     payload = {'id_token_hint': session['id_token'],
@@ -271,7 +273,7 @@ def access(iduser, uemail):
 
 
 @authInterlink.route("/moderate")
-# @login_required
+@login_required
 def moderate():
 
     # Cargo los combos:
@@ -330,7 +332,7 @@ def moderate():
 
 
 @authInterlink.route("/survey")
-# @login_required
+@login_required
 def survey():
 
     textoABuscar = request.args.get("searchText")
@@ -451,7 +453,7 @@ def advanceSearch():
 
 
 @authInterlink.route('/description/<string:descriptionId>',)
-# @login_required
+@login_required
 def description(descriptionId=None):
 
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
@@ -510,7 +512,7 @@ def description(descriptionId=None):
 
 
 @authInterlink.route('/description/<string:descriptionId>/<string:option>',)
-# @login_required
+@login_required
 def editDescription(descriptionId=None, option='Edit'):
 
     vectorPAs = Description._get_uniqueValues(campo="padministration")
@@ -538,7 +540,7 @@ def editDescription(descriptionId=None, option='Edit'):
 
 
 @authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>',)
-# @login_required
+@login_required
 def subjectPage(descriptionId=None, annotatorId=None):
 
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
@@ -564,7 +566,7 @@ def subjectPage(descriptionId=None, annotatorId=None):
 
 
 @authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>/<string:option>', methods=["GET", "POST"])
-# @login_required
+@login_required
 def changeAnnotation(descriptionId=None, annotatorId=None, option=None):
 
     if option == 'state':
@@ -660,7 +662,7 @@ def changeAnnotation(descriptionId=None, annotatorId=None, option=None):
 
 
 @authInterlink.route("/descriptionDetail")
-# @login_required
+@login_required
 def descriptionDetail():
 
     vectorPAs = Description._get_uniqueValues(campo="padministration")
@@ -674,13 +676,16 @@ def descriptionDetail():
         paList.append(key)
     print(paList)
 
+    logging.info('Me dice si el usuario es anonimo:')
+    logging.info(current_user.is_anonymous)
+    
     res = Annotation.search(query={'user': current_user.email})
 
     return render_template("descriptionDetail.html", user=current_user, anotations=res, publicsa=paList)
 
 
 @authInterlink.route("/profile")
-# @login_required
+@login_required
 def profile():
 
     # Cargo las Notificaciones
@@ -690,7 +695,7 @@ def profile():
 
 
 @authInterlink.route("/settings")
-# @login_required
+@login_required
 def settings():
 
     results = []
