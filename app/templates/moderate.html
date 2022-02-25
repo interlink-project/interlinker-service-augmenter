@@ -153,7 +153,7 @@ block head %} {{ super() }}
 
     function obtenerDescription(urltext){
         //No encuentra una description:
-        urlPost={{ url_for('authInterlink.description',descriptionId= urltext) }};
+        urlPost="{{ url_for('authInterlink.description', descriptionId= '') }}"+urltext;
 
         function onSucess(data) {
 
@@ -412,7 +412,7 @@ block head %} {{ super() }}
     <div class="row">
 
 
-        <form class="form-inline my-2 my-lg-0" id="FormModerator" action="/claimModeration"  enctype="multipart/form-data" method="POST">
+        <form class="form-inline my-2 my-lg-0" id="FormModerator" action="{{ url_for('views.claimModeration')}}"  enctype="multipart/form-data" method="POST">
 
 
 

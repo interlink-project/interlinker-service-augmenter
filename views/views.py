@@ -390,7 +390,7 @@ def claimModeration():
         print("original string: ", message)
         print("encrypted string: ", encMessage)
 
-        textHref = 'http://127.0.0.1:80/augmenterservice/aproveModerator?datos=' + \
+        textHref = settings.HOST+'/augmenterservice/aproveModerator?datos=' + \
             encMessage.decode('ascii')
 
         msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
@@ -437,7 +437,7 @@ def claimModeration():
         if filename != '':
 
             file_ext = os.path.splitext(filename)[1]
-            if file_ext not in current_app.config['UPLOAD_EXTENSIONS']:
+            if file_ext not in settings.UPLOAD_EXTENSIONScurrent_app.config['UPLOAD_EXTENSIONS']:
                 abort(400)
 
             # Guardo Archivo
