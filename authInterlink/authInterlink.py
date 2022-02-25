@@ -238,6 +238,38 @@ def dashboard():
     return render_template("dashboard.html", descriptions=res, urls=urlList, publicsa=paList, paginacion=paginacion, notifications=listNotifications, notificationNum=numRes)
 
 
+@authInterlink.route("/access/<iduser>/<uemail>")
+def access(iduser, uemail):
+
+    if(iduser == 'a'):
+
+        unique_id = 'anonymous'
+        user_email = 'anonymous'
+        user_name = 'anonymous'
+    else:
+
+        unique_id = uemail
+        user_email = uemail
+        user_name = iduser
+
+    user = User(
+        id_=unique_id, name=user_name, email=user_email
+    )
+
+    if not User.get(unique_id):
+        User.create(unique_id, user_name, user_email)
+
+    login_user(user)
+   # g.user =user
+
+    session['username'] = user_email
+    session['userId'] = user_email
+
+    session.pop('_flashes', None)
+
+    return redirect(url_for("authInterlink.dashboard"))
+
+
 @authInterlink.route("/moderate")
 # @login_required
 def moderate():
