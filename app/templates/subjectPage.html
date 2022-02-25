@@ -494,7 +494,7 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
     <button
     type="button"
     class="btn bi-blockquote-left border btn-secondary"
-    onclick="window.location.href='/modifica/{{ description.url }}?annotationSel={{ annotation.id }} ';"
+    onclick="window.location.href='{{ url_for('views.modifica'),rutaPagina='+description.url+',userId='Anonymous' }}?annotationSel={{ annotation.id }} ';"
     hidden="true"
     >
       See in Text

@@ -129,12 +129,6 @@ def buscar():
 
 
 # Formulatio de carga de Pagina
-@views.route("/dashboard1")
-def dashboard1():
-    return render_template("dashboard1.html")
-
-
-# Formulatio de carga de Pagina
 @views.route("/registrar", methods=["POST"])
 def saveDescription():
 
@@ -396,7 +390,7 @@ def claimModeration():
         print("original string: ", message)
         print("encrypted string: ", encMessage)
 
-        textHref = 'http://127.0.0.1:5000/aproveModerator?datos=' + \
+        textHref = 'http://127.0.0.1:80/augmenterservice/aproveModerator?datos=' + \
             encMessage.decode('ascii')
 
         msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
@@ -691,8 +685,8 @@ def modifica(rutaPagina, userId):
             hrefVal = a_Link.attrs.get("href")
             if hrefVal.startswith('/'):
                 newURLVal = urljoin(rutaPagina, hrefVal)
-                a_Link.attrs['href'] = "/modifica/d.silva@deusto.es/" + \
-                    newURLVal.lower()
+                a_Link.attrs['href'] = url_for(
+                    'views.modifica', rutaPagina=newURLVal.lower(), userId=current_user.email)
                 print(a_Link)
 
     print("Total CSS insertados en the page:", len(css_files))

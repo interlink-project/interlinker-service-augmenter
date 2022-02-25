@@ -177,7 +177,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
         async function doAjax(item) {
           const result = await $.ajax({
-            url: "http://127.0.0.1:5000/annotations/" + item.id,
+            url: "http://127.0.0.1:80/augmenterservice/annotations/" + item.id,
             dataType: "json",
             type: "get",
             contentType: "application/json",
@@ -211,7 +211,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
         async function doAjax(item) {
           const result = await $.ajax({
-            url: "http://127.0.0.1:5000/annotations/" + item.id,
+            url: "http://127.0.0.1:80/augmenterservice/annotations/" + item.id,
             dataType: "json",
             type: "get",
             contentType: "application/json",
@@ -415,11 +415,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
          caso contrario ingreso le asigno el mismo que el reference 
       */
 
-      if (current_annotation.idReplyRoot=="" || typeof current_annotation.idReplyRoot == 'undefined' ){
-        anotacionReply.idReplyRoot=current_annotation.id
-        
-      }else{
-        anotacionReply.idReplyRoot=current_annotation.idReplyRoot
+      if (
+        current_annotation.idReplyRoot == "" ||
+        typeof current_annotation.idReplyRoot == "undefined"
+      ) {
+        anotacionReply.idReplyRoot = current_annotation.id;
+      } else {
+        anotacionReply.idReplyRoot = current_annotation.idReplyRoot;
       }
 
       /*
@@ -429,7 +431,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       }
 
       request = $.ajax({
-        url: "http://127.0.0.1:5000/annotations",
+        url: "http://127.0.0.1:80/augmenterservice/annotations",
         dataType: "json",
         type: "post",
         contentType: "application/json",
@@ -685,7 +687,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       ).text(strippedHtmlText);
 
       request = $.ajax({
-        url: "http://127.0.0.1:5000/annotations/" + annotation.id,
+        url:
+          "http://127.0.0.1:80/augmenterservice/annotations/" + annotation.id,
         dataType: "json",
         type: "put",
         contentType: "application/json",
@@ -845,8 +848,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       deletePermission = annotation.permissions.delete.includes(currentUser);
       replyPermission = true;
 
-      if(currentUser== "Anonymous"){
-        replyPermission=false;
+      if (currentUser == "Anonymous") {
+        replyPermission = false;
       }
 
       console.log(updatePermission);
@@ -892,9 +895,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         '" class="annotator-viewer-reply" title="' +
         i18n_dict.Reply +
         '" style=" float:right;margin-top:3px;;margin-left:3px"/>';
-      
-      if(!replyPermission){
-        reply_icon="";
+
+      if (!replyPermission) {
+        reply_icon = "";
       }
 
       if (annotation.estat == 1 || annotation.permissions.read.length === 0) {
@@ -936,7 +939,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           annotation.idAnotationReply.split("-")[1] +
           "</br>IdRoot:" +
           annotation.idReplyRoot +
-          "</br>"+
+          "</br>" +
           "Id:" +
           annotation.id +
           '<div style="width: 160px;height: 2px;border-bottom: 1px solid #d4d4d4;position: relative;" class="line"></div>' +
