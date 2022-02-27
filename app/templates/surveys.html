@@ -301,8 +301,8 @@
                             <td>
                                
                           
-                 
-                                <a style="margin-top:-10px;"  href="{{ surveyHost }}/api/{{ surveyApiVersion }}/assets/{{ survey.idAsset }}/answers" title="Answers" ><input type="button" style="background-image: url('{{url_for('static', filename='answers.png')}}'); " class="botonIcon" /></a>
+                                              
+                                <a style="margin-top:-10px;"  href="{{ surveyHost }}/api/v1/assets/{{ survey.idAsset }}/answers" title="Answers" ><input type="button" style="background-image: url('{{url_for('static', filename='answers.png')}}'); " class="botonIcon" /></a>
                             </td>
     
                             
@@ -370,7 +370,7 @@
         <div class="row">
             <div class="col" style="align-content: left; justify-content: left; display: flex">
                 
-                <form class="form-inline my-2 my-lg-0" id="FormSurvey" action="/surveyInstantiator"  enctype="multipart/form-data" method="POST">
+                <form class="form-inline my-2 my-lg-0" id="FormSurvey" action="{{ url_for('authInterlink.surveyInstantiator')}}"  enctype="multipart/form-data" method="POST">
     
                         <div class="row" style="align-content: center; justify-content: center;">
                             <div class="col" style="align-content: center; justify-content: center;">

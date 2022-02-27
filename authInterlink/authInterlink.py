@@ -365,7 +365,7 @@ def survey():
     # Defino la direccion del SurveyHost
     surveyHost = current_app.config['SURVEYINTERLINK_URL']
 
-    return render_template("surveys.html", surveys=res, paginacion=paginacion, notifications=listNotifications, notificationNum=numRes, surveyHost=surveyHost, surveyApiVersion=surveyApiVersion)
+    return render_template("surveys.html", surveys=res, paginacion=paginacion, notifications=listNotifications, notificationNum=numRes, surveyHost=surveyHost)
 
 
 @authInterlink.route("/surveyInstantiator", methods=["POST"])
