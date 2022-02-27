@@ -85,7 +85,7 @@ services:
       - SURVEYINTERLINK_URL=http://${DOMAIN}/surveymod
       - HOST=0.0.0.0
       - PORT=${PORT_SERVICEPEDIA}
-      - PROTOCOL=http://
+      - PROTOCOL=https://
       - BASE_PATH=/augmenterservice
       - SCRIPT_NAME=/augmenterservice
     depends_on:
