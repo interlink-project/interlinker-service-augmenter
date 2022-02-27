@@ -92,7 +92,7 @@ Annotator.Plugin.Search = (function (_super) {
           <input class="search" id="search" type="text" results />
         <a class="annotator-panel-reset" href="#clear">Reset</a>`
       );
-      servicepediaPath = servicepediaPath.replace(/^http:\/\//i, "https://");
+      //servicepediaPath = servicepediaPath.replace(/^http:\/\//i, "https://");
 
       //Pongo el Usuario Logueado
       request = $.ajax({

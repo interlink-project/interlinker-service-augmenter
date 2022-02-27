@@ -705,8 +705,10 @@ def modifica(rutaPagina, userId):
     fontAwesome3 = soup.new_tag(
         'link', href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", rel="stylesheet")
 
+    servicepediaPath = settings.REDIRECT_SERVICEPEDIA.replace(
+        "http://", "https://")
     metauserName = soup.new_tag(
-        'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=settings.REDIRECT_SERVICEPEDIA, currentuser=current_user.email)
+        'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=servicepediaPath, currentuser=current_user.email)
 
     try:
         headTag.append(metauserName)
