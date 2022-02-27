@@ -10,8 +10,8 @@ class Settings(BaseSettings):
     SURVEYINTERLINK_URL: str = os.getenv("SURVEYINTERLINK_URL")
     PORT: str = os.getenv("PORT")
     HOST: str = os.getenv("HOST", "0.0.0.0")
-    REDIRECT_SERVICEPEDIA: str = "https" + \
-        os.getenv("DOMAIN") + os.getenv("BASE_PATH")
+    REDIRECT_SERVICEPEDIA: str = os.getenv(
+        "PROTOCOL") + os.getenv("DOMAIN") + os.getenv("BASE_PATH")
 
     DEBUG: bool = os.getenv("DEBUG")
     SECRET_KEY: str = os.getenv("SECRET_KEY")
