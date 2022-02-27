@@ -87,7 +87,7 @@ def after_request(response):
 
 
 # ROOT
-@store.route('/')
+@store.route('/api')
 def root():
     return jsonify({
         'message': "Annotator Store API",

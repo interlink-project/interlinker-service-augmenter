@@ -65,8 +65,26 @@ block head %} {{ super() }}
 
           dateUpdated = new Date(dataItem.updated);
 
-                                                                                                                                                                                                                                                                                                                
-          $('#tablaDescriptions').append(' <tr> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td> '+ISODateString(dateUpdated)+' </td> <td> {% if current_user.is_authenticated %} <a href="{{ url_for('authInterlink.description',descriptionId= '+dataItem.id+') }}" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% else %} <a href="{{ url_for('views.modifica',rutaPagina='+dataItem.url+',userId='+current_user.email+') }}'"  class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% endif %} </td></tr>')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+          $('#tablaDescriptions').append(
+            ` 
+            <tr>
+              <td> '+dataItem.padministration+' </td>
+              <td> '+dataItem.title+' </td>
+              <td> '+ISODateString(dateUpdated)+' </td>
+              <td> 
+                {% if current_user.is_authenticated %} 
+                  <a href="{{ url_for('authInterlink.description',descriptionId= '${dataItem.id}') }}" class="btn btn-outline-secondary" style="max-width: 70px;" >
+                    <i class="bi bi-box-arrow-in-right " style="width:100px;"></i>
+                  </a> 
+                {% else %} 
+                  <a href="{{ url_for('views.modifica',rutaPagina='${dataItem.url}',userId='${current_user.email}') }}'"  class='btn btn-outline-secondary' style='max-width: 70px;' >
+                    <i class='bi bi-box-arrow-in-right' style='width:100px;'></i>
+                  </a> 
+                {% endif %} 
+                </td>
+            </tr>
+            `);
 
           
         }

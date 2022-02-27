@@ -38,12 +38,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       return child;
     };
 
+  var pathOrigen = document
+    .getElementById("databackend")
+    .getAttribute("basepath");
+
   //constants
-  var IMAGE_DELETE = "/static/src/img/icono_eliminar.png",
-    IMAGE_DELETE_OVER = "/static/src/img/papelera_over.png",
-    SHARED_ICON = "/static/src/img/shared-icon.png",
-    IMAGE_REPLY = "/static/src/img/reply.png",
-    IMAGE_REPLY_OVER = "/static/src/img/reply_over.png";
+  var IMAGE_DELETE = pathOrigen + "/static/src/img/icono_eliminar.png",
+    IMAGE_DELETE_OVER = pathOrigen + "/static/src/img/papelera_over.png",
+    SHARED_ICON = pathOrigen + "/static/src/img/shared-icon.png",
+    IMAGE_REPLY = pathOrigen + "/static/src/img/reply.png",
+    IMAGE_REPLY_OVER = pathOrigen + "/static/src/img/reply_over.png";
   Annotator.Plugin.AnnotatorViewer = (function (_super) {
     __extends(AnnotatorViewer, _super);
 
@@ -160,6 +164,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       var item;
       //item contains all the annotation information, this information is stored in an attribute called data-annotation.
       item = $(event.target).parents(".annotator-marginviewer-element");
+      var servicepediaPath = document
+        .getElementById("databackend")
+        .getAttribute("servicepediapath");
+
       if (type == "delete") {
         return this.annotator.deleteAnnotation(item.data("annotation"));
       }
@@ -177,7 +185,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
         async function doAjax(item) {
           const result = await $.ajax({
-            url: "http://127.0.0.1:80/augmenterservice/annotations/" + item.id,
+            url: servicepediaPath + "/annotations/" + item.id,
             dataType: "json",
             type: "get",
             contentType: "application/json",
@@ -211,7 +219,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
         async function doAjax(item) {
           const result = await $.ajax({
-            url: "http://127.0.0.1:80/augmenterservice/annotations/" + item.id,
+            url: servicepediaPath + "/annotations/" + item.id,
             dataType: "json",
             type: "get",
             contentType: "application/json",
@@ -680,6 +688,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       let strippedHtmlText = annotation.text.replace(/<[^>]+>/g, "");
       strippedHtmlText = htmlEntities(strippedHtmlText);
 
+      var servicepediaPath = document
+        .getElementById("databackend")
+        .getAttribute("servicepediapath");
+
       $(
         "#annotation-" +
           idAnotacion +
@@ -687,8 +699,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       ).text(strippedHtmlText);
 
       request = $.ajax({
-        url:
-          "http://127.0.0.1:80/augmenterservice/annotations/" + annotation.id,
+        url: servicepediaPath + "/annotations/" + annotation.id,
         dataType: "json",
         type: "put",
         contentType: "application/json",
@@ -870,10 +881,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
             '" style=" float:right;margin-top:3px;;margin-left:3px"/>';
         }
 
+        var pathOrigen = document
+          .getElementById("databackend")
+          .getAttribute("basepath");
+
         var edit_icon = "";
         if (updatePermission) {
           edit_icon =
-            '<img src="/static/src/img/edit-icon.png"  ' +
+            '<img src="' +
+            pathOrigen +
+            '/static/src/img/edit-icon.png"  ' +
             'class="annotator-viewer-edit" title="Edit" style="float:right;margin-top:3px"/>';
         }
 

@@ -1,3 +1,4 @@
+from app.config import settings
 import logging
 from flask import Blueprint, jsonify, flash
 import requests
@@ -66,7 +67,7 @@ def logout():
     logout_user()
     #response = redirect(config["end_session_endpoint"])
     payload = {'id_token_hint': session['id_token'],
-               'post_logout_redirect_uri': "http://127.0.0.1:80/augmenterservice/home",
+               'post_logout_redirect_uri': settings.REDIRECT_SERVICEPEDIA+"/home",
                'state': APP_STATE}
     #headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     r = requests.get(
@@ -678,7 +679,7 @@ def descriptionDetail():
 
     logging.info('Me dice si el usuario es anonimo:')
     logging.info(current_user.is_anonymous)
-    
+
     res = Annotation.search(query={'user': current_user.email})
 
     return render_template("descriptionDetail.html", user=current_user, anotations=res, publicsa=paList)
@@ -694,9 +695,9 @@ def profile():
     return render_template("profile.html", user=current_user, notifications=listNotifications, notificationNum=numRes)
 
 
-@authInterlink.route("/settings")
+@authInterlink.route("/settingApp")
 @login_required
-def settings():
+def settingAppPage():
 
     results = []
 

@@ -1,3 +1,4 @@
+import logging
 import jwt
 import datetime
 from re import I
@@ -57,7 +58,7 @@ views = Blueprint('views', __name__, static_folder="./app/static",
                   template_folder="./app/templates")
 
 
-@views.route('/gui')
+@views.route('/')
 def inicio():
 
     # Cargo los combos:
@@ -704,12 +705,14 @@ def modifica(rutaPagina, userId):
     fontAwesome3 = soup.new_tag(
         'link', href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", rel="stylesheet")
 
-    #userName = soup.new_tag( 'meta', id='dataBackEnd', username=current_user.email, port=settings.PORT)
+    metauserName = soup.new_tag(
+        'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=settings.REDIRECT_SERVICEPEDIA, currentuser=current_user.email)
 
     try:
-        headTag.append(userName)
+        headTag.append(metauserName)
     except:
         print("Excepcion en Username")
+        logging.error("Da una excepcion en esta linea")
 
     try:
         headTag.append(anotationcss1)
