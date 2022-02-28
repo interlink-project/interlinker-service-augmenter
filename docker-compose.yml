@@ -84,10 +84,12 @@ services:
       - ELASTICSEARCH_URL=http://elasticsearch:9200 
       - SURVEYINTERLINK_URL=http://${DOMAIN}/surveymod
       - HOST=0.0.0.0
+      - VIRTUAL_HOST=servicepedia.${DOMAIN?Variable not set}
       - PORT=${PORT_SERVICEPEDIA}
-      - PROTOCOL=https://
-      - BASE_PATH=/augmenterservice
-      - SCRIPT_NAME=/augmenterservice
+      - PROTOCOL=http://
+      - BASE_PATH=
+
+ 
     depends_on:
       - elasticsearch
       - survey
@@ -98,7 +100,7 @@ services:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
       - traefik.http.services.${STACK_NAME?Variable not set}-augmenterservice.loadbalancer.server.port=${PORT_SERVICEPEDIA}
-      - traefik.http.routers.${STACK_NAME?Variable not set}-augmenterservice.rule=Host(`${DOMAIN}`) && PathPrefix(`/augmenterservice`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-augmenterservice.rule=Host(`${DOMAIN}`) 
     command: gunicorn --reload --log-level debug  --bind 0.0.0.0:${PORT_SERVICEPEDIA} --workers 1 "app.main:create_app()" --preload
 
   survey:

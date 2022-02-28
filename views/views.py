@@ -680,13 +680,18 @@ def modifica(rutaPagina, userId):
                 headTag.append(anotationTemp)
                 print("Line{}: {}".format(count, css_url))
 
+
+    #Obtengo el usuario Logueado o pongo anonimo:
+
+    usuarioActivo=current_user.email if not current_user.is_anonymous else 'Anonymous' 
+
     for a_Link in soup.find_all("a"):
         if a_Link.attrs.get("href"):
             hrefVal = a_Link.attrs.get("href")
             if hrefVal.startswith('/'):
                 newURLVal = urljoin(rutaPagina, hrefVal)
                 a_Link.attrs['href'] = url_for(
-                    'views.modifica', rutaPagina=newURLVal.lower(), userId=current_user.email)
+                    'views.modifica', rutaPagina=newURLVal.lower(), userId=usuarioActivo)
                 print(a_Link)
 
     print("Total CSS insertados en the page:", len(css_files))
@@ -704,10 +709,17 @@ def modifica(rutaPagina, userId):
     fontAwesome3 = soup.new_tag(
         'link', href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", rel="stylesheet")
 
-    servicepediaPath = settings.REDIRECT_SERVICEPEDIA.replace(
-        "http://", "https://")
+
+    servicepediaPath = settings.REDIRECT_SERVICEPEDIA
+
+    if not (settings.DOMAIN == "127.0.0.1"):
+        servicepediaPath = servicepediaPath.replace(
+            "http://", "https://")
+
+
+
     metauserName = soup.new_tag(
-        'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=servicepediaPath, currentuser=current_user.email)
+            'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=servicepediaPath, currentuser=usuarioActivo)
 
     try:
         headTag.append(metauserName)

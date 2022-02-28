@@ -653,7 +653,10 @@ def search_annotations_raw():
 # Return the current user logged.
 @store.route('/user', methods=['GET'])
 def getUser():
-    return jsonify(current_user.email)
+
+    usuarioActivo=current_user.email if not current_user.is_anonymous else 'Anonymous' 
+
+    return jsonify(usuarioActivo)
 
 
 def _filter_input(obj, fields):

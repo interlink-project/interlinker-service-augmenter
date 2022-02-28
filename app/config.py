@@ -10,8 +10,7 @@ class Settings(BaseSettings):
     SURVEYINTERLINK_URL: str = os.getenv("SURVEYINTERLINK_URL")
     PORT: str = os.getenv("PORT")
     HOST: str = os.getenv("HOST", "0.0.0.0")
-    REDIRECT_SERVICEPEDIA: str = os.getenv(
-        "PROTOCOL") + os.getenv("DOMAIN") + os.getenv("BASE_PATH")
+    
 
     DEBUG: bool = os.getenv("DEBUG")
     SECRET_KEY: str = os.getenv("SECRET_KEY")
@@ -57,8 +56,23 @@ class Settings(BaseSettings):
     PROTOCOL: str
     BASE_PATH: str
     DOMAIN: str
-    REDIRECT_URI: str = os.getenv(
-        "PROTOCOL") + os.getenv("DOMAIN") + os.getenv("BASE_PATH") + "/oidc_callback"
+
+    if(os.getenv("DOMAIN")== '127.0.0.1'):
+    #Local
+        REDIRECT_URI: str = os.getenv(
+            "PROTOCOL") + os.getenv("DOMAIN") + os.getenv("BASE_PATH") + "/oidc_callback"
+
+        REDIRECT_SERVICEPEDIA: str = os.getenv(
+            "PROTOCOL") + os.getenv("DOMAIN") + os.getenv("BASE_PATH")
+    else:
+    #server
+        REDIRECT_URI: str = os.getenv(
+            "PROTOCOL") + os.getenv("VIRTUAL_HOST") + os.getenv("BASE_PATH") + "/oidc_callback"
+
+        REDIRECT_SERVICEPEDIA: str = os.getenv(
+            "PROTOCOL") + os.getenv("VIRTUAL_HOST") + os.getenv("BASE_PATH")
+        
+
 
     USERINFO_URI: str = os.getenv("USERINFO_URI")
 
