@@ -461,11 +461,13 @@ block head %} {{ super() }}
 
                 <div class="row">
                     <div class="input-group mb-3">
-                        <label class="input-group-text" for="oneUrl">Domain/Pages:</label>
+                        <label class="input-group-text" for="oneUrl">
+                            Description finder :</label>
                 
-                        <input type="text" class="form-control" id="oneUrl" name="oneUrl" placeholder="Url Page"
+                        <input type="text" class="form-control" id="oneUrl" name="oneUrl" placeholder="http://www.website.com/page.html"
                             aria-label="Url Page" onkeydown="validarURL(event)" onfocusout="validarURL(event)" >
-                        <button class="btn btn-outline-secondary" id="inputGroupFileAddon04"  onclick="agregarUrl(event)">Add</button>
+                        <button class="btn btn-outline-secondary" id="inputGroupFileAddon04"  onclick="agregarUrl(event)">
+                            Search</button>
 
                     </div>
                 </div>
