@@ -52,6 +52,7 @@ def login():
                     'response_mode': 'query'}
     
     logging.info(query_params)
+    print(query_params)
 
     # build request_uri
     request_uri = "{base_url}?{query_params}".format(

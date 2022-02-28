@@ -1,4 +1,5 @@
 import secrets
+import logging
 from typing import List, Union
 from pydantic import AnyHttpUrl, BaseSettings, validator
 import os
@@ -57,6 +58,11 @@ class Settings(BaseSettings):
     BASE_PATH: str
     DOMAIN: str
 
+    print('El dominio es')
+    print(os.getenv("DOMAIN"))
+
+  
+
     if(os.getenv("DOMAIN")== '127.0.0.1'):
     #Local
         REDIRECT_URI: str = os.getenv(
@@ -72,7 +78,8 @@ class Settings(BaseSettings):
         REDIRECT_SERVICEPEDIA: str = os.getenv(
             "PROTOCOL") + os.getenv("VIRTUAL_HOST") + os.getenv("BASE_PATH")
         
-
+    print(REDIRECT_URI)
+    print(REDIRECT_SERVICEPEDIA)
 
     USERINFO_URI: str = os.getenv("USERINFO_URI")
 
