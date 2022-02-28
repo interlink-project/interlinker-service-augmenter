@@ -15,7 +15,10 @@ block content %}
   function goSubjectPage(event, descriptionId, annotationId) {
     if (event.type == 'click') {
       event.preventDefault();
-      window.location.href = '/subjectPage/' + descriptionId + '/' + annotationId + '';
+      window.location.href = '{{ url_for('authInterlink.subjectPage',descriptionId= descriptionId,annotatorId=annotationId) }}';
+    
+      subjectPage(descriptionId=None, annotatorId=None)
+    
     }
   }
 
@@ -127,7 +130,25 @@ block content %}
           stateText = 'In Progress';
         }
 
-        $('#tablaAnnotations').append(sectionCategoria + ' <td> /' + ruta + ' </td> <td> ' + stateText + ' </td> <td style="text-align: center;"> <a class="btn btn-outline-dark position-relative">' + dataItem.nroReplies + ' </a></td><td>' + dataItem.text + '</td>  <td> ' + ISODateString(dateUpdated) + ' </td> <td>  <a href="/subjectPage/' + descriptionId + '/' + dataItem.id + '" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>  </td></tr>')
+        $('#tablaAnnotations').append(
+          ` ${sectionCategoria}
+            <td> /${ruta} </td>
+            <td> ${stateText} </td> 
+            
+            <td style="text-align: center;"> 
+              <a class="btn btn-outline-dark position-relative"> ${dataItem.nroReplies} </a>
+            </td>
+            
+            <td> ${dataItem.text} </td>  
+            <td> ${ISODateString(dateUpdated)} </td> 
+            
+            <td> 
+              <a href="{{ url_for('authInterlink.subjectPage',descriptionId= '${descriptionId}',annotatorId='${dataItem.id}') }}" class="btn btn-outline-secondary" style="max-width: 70px;" >
+                <i class="bi bi-box-arrow-in-right " style="width:100px;"></i>
+              </a>  
+            </td>
+
+          </tr>`)
       }
 
       $('#totalRegisters').text(numeroReg);
@@ -299,7 +320,7 @@ block content %}
     <tr style="color: rgba(141, 140, 140, 0.774);">
       <td>
         <button class='btn btn-light'
-          onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+          onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';"
           style="height: 30px;min-width:100px;" alt="{{ anotation.state|estadosAnnotation}}"
           title="{{ anotation.state|estadosAnnotation}}">
 
@@ -310,7 +331,7 @@ block content %}
         {% if anotation.category == 'feedback' %}
 
         <button class='btn btn-success'
-          onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+          onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';"
           style="height: 30px;min-width:100px;font-weight: bold;" alt="{{ anotation.state|estadosAnnotation}}"
           title="{{ anotation.state|estadosAnnotation}}">
 
@@ -319,7 +340,7 @@ block content %}
 
 
           <button class='btn btn-warning'
-            onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+            onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';"
             style="height: 30px;min-width:100px;font-weight: bold;" alt="{{ anotation.state|estadosAnnotation}}"
             title="{{ anotation.state|estadosAnnotation}}">
 
@@ -327,7 +348,7 @@ block content %}
             {% elif anotation.category == 'term' %}
 
             <button class='btn btn-danger'
-              onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+              onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';"
               style="height: 30px;min-width:100px;font-weight: bold;background-color: #df06d4;border-color: #af02a7;"
               alt="{{ anotation.state|estadosAnnotation}}" title="{{ anotation.state|estadosAnnotation}}">
 
@@ -344,7 +365,7 @@ block content %}
     <tr>
       <td>
         <button class='btn annotation-cat-feedback'
-          onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+          onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';"
           style="height: 30px;min-width:100px;" alt="{{ anotation.state|estadosAnnotation}}"
           title="{{ anotation.state|estadosAnnotation}}">
 
@@ -355,7 +376,7 @@ block content %}
     <tr></tr>
     <td>
       <button class='btn annotation-cat-question'
-        onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+        onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';"
         style="height: 30px;min-width:100px;" alt="{{ anotation.state|estadosAnnotation}}"
         title="{{ anotation.state|estadosAnnotation}}">
 
@@ -367,7 +388,7 @@ block content %}
           <td>
 
             <button class='btn annotation-cat-term'
-              onclick="window.location.href='/subjectPage/{{ description.id }}/{{ anotation.id }}';"
+              onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';"
               style="height: 30px;min-width:100px;" alt="{{ anotation.state|estadosAnnotation}}"
               title="{{ anotation.state|estadosAnnotation}}">
 
@@ -430,7 +451,7 @@ block content %}
 
           <td style="text-align: center;">{{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
           <td>
-            <a href="/subjectPage/{{ description.id }}/{{ anotation.id }}" class="btn btn-outline-secondary"
+            <a href="{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}" class="btn btn-outline-secondary"
               style="max-width: 70px;"><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
 
           </td>

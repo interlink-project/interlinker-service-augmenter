@@ -12,8 +12,12 @@
       commentsChangeState = "";
 
       if (annotationId != "") {
-        urlPost = "/subjectPage/{{ description.id}}/" + annotationId + "/like";
+        descriptionID = '{{description.id}}'
+        urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='like' ) }}`;
+        urlPost = urlPost.replace("DESCRIPTIONID",descriptionID);
+        urlPost = urlPost.replace("ANNOTATIONID",annotationId);
 
+        
         //Para el caso que sea un reply
         function successSearch(data) {
           let nroLikes = data["like"];
@@ -120,7 +124,11 @@
     //window.location='/subjectPage/{{ description.id}}/{{ annotation.id}}/state?state='+stateToChange
     if (commentsChangeState != "") {
       if (annotationId != "") {
-        urlPost = "/subjectPage/{{ description.id}}/" + annotationId + "/state";
+
+        descriptionID = '{{description.id}}'
+        urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='state' ) }}`;
+        urlPost = urlPost.replace("DESCRIPTIONID",descriptionID);
+        urlPost = urlPost.replace("ANNOTATIONID",annotationId);
 
         //Para el caso que sea un reply
         function successSearch(data) {
@@ -138,7 +146,12 @@
           $("#notificationBox").modal("hide");
         }
       } else {
-        urlPost = "/subjectPage/{{ description.id}}/{{ annotation.id}}/state";
+
+
+        descriptionID = '{{description.id}}'
+        urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='state' ) }}`;
+        urlPost = urlPost.replace("DESCRIPTIONID",descriptionID);
+        urlPost = urlPost.replace("ANNOTATIONID",annotationId);
 
         //Para el caso que es una anotacion base
         function successSearch(data) {
@@ -494,7 +507,6 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
     <button
     type="button"
     class="btn bi-blockquote-left border btn-secondary"
-    onclick="window.location.href='{{ url_for('views.modifica'),rutaPagina='+description.url+',userId='Anonymous' }}?annotationSel={{ annotation.id }} ';"
     hidden="true"
     >
       See in Text
