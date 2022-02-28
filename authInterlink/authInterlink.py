@@ -57,10 +57,8 @@ def login():
                     'response_type': 'code',
                     'response_mode': 'query'}
     logging.info('parametros de configuracion auth:')
-    print(query_params)
-
-    logging.info('parametros de configuracion auth:')
-    print(query_params)
+    logging.info(query_params)
+    
 
     # build request_uri
     request_uri = "{base_url}?{query_params}".format(
