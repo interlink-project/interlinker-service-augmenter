@@ -42,6 +42,12 @@ NONCE = tok2.hex
 
 @authInterlink.route("/login")
 def login():
+
+
+    redirecttoCallback=settings.REDIRECT_URI
+    if(redirecttoCallback=='https://dev.interlink-project.eu/oidc_callback'):
+        redirecttoCallback='https://servicepedia.dev.interlink-project.eu/oidc_callback'
+
     # get request params
     query_params = {'client_id': current_app.config["CLIENT_ID"],
                     'redirect_uri': settings.REDIRECT_URI,
@@ -50,8 +56,10 @@ def login():
                     'nonce': NONCE,
                     'response_type': 'code',
                     'response_mode': 'query'}
-    
-    logging.info(query_params)
+    logging.info('parametros de configuracion auth:')
+    print(query_params)
+
+    logging.info('parametros de configuracion auth:')
     print(query_params)
 
     # build request_uri
