@@ -433,21 +433,20 @@ def claimModeration():
 
         # Agrego los archivos
 
-        uploaded_file = request.files['archivoIdentificacion']
-        filename = secure_filename(uploaded_file.filename)
-        if filename != '':
+        # uploaded_file = request.files['archivoIdentificacion']
+        # filename = secure_filename(uploaded_file.filename)
+        # if filename != '':
 
-            file_ext = os.path.splitext(filename)[1]
-            if file_ext not in settings.UPLOAD_EXTENSIONScurrent_app.config['UPLOAD_EXTENSIONS']:
-                abort(400)
-
-            # Guardo Archivo
-            uploaded_file.save(filename)
-            # Lo adjunto al email
-            with current_app.open_resource(filename) as fp:
-                msg.attach(filename, 'application/pdf', fp.read())
-            # Lo borro del disco
-            os.remove(filename)
+        #     file_ext = os.path.splitext(filename)[1]
+        #     if file_ext not in settings.UPLOAD_EXTENSIONS:
+        #         abort(400)
+        #     # Guardo Archivo
+        #     uploaded_file.save(filename)
+        #     # Lo adjunto al email
+        #     with current_app.open_resource(filename) as fp:
+        #         msg.attach(filename, 'application/pdf', fp.read())
+        #     # Lo borro del disco
+        #     os.remove(filename)
 
         mail = Mail(current_app)
         mail.send(msg)
