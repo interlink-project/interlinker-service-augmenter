@@ -44,12 +44,14 @@ NONCE = tok2.hex
 def login():
     # get request params
     query_params = {'client_id': current_app.config["CLIENT_ID"],
-                    'redirect_uri': current_app.config["REDIRECT_URI"],
+                    'redirect_uri': settings.REDIRECT_URI,
                     'scope': "openid email profile",
                     'state': APP_STATE,
                     'nonce': NONCE,
                     'response_type': 'code',
                     'response_mode': 'query'}
+    
+    logging.info(query_params)
 
     # build request_uri
     request_uri = "{base_url}?{query_params}".format(
