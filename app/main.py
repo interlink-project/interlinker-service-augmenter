@@ -50,9 +50,9 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 
 
-def create_app(testing:bool = True):
+def create_app():
     app = Flask(__name__)
-    app.debug = testing
+    app.debug = True
     
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
