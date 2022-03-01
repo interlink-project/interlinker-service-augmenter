@@ -635,8 +635,7 @@ def modifica(rutaPagina, userId):
         session['username'] = current_user.email
         userId = current_user.email
     else:
-        session['username'] = 'Annonymous'
-        userId = 'Annonymous'
+        userId = 'Anonymous'
 
     print("La ruta de la Pagina es: "+rutaPagina)
     print("El nombre de usuario es: "+userId)

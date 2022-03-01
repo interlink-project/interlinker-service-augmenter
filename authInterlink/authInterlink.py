@@ -389,7 +389,7 @@ def obtainUsersEmail(listItemsBucket=[]):
     listUsers = []
     for itemBucket in listItemsBucket:
         userEmail = itemBucket['key']
-        if userEmail != 'Anonymous' and userEmail != 'Annonymous':
+        if userEmail != 'Anonymous':
             listUsers.append(userEmail)
     return listUsers
 

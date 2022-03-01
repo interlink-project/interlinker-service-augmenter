@@ -81,11 +81,17 @@ Annotator.Plugin.Search = (function (_super) {
         .getElementById("databackend")
         .getAttribute("servicepediapath");
 
+      
+      var userlogged = sessionStorage.getItem("user")
+      var etiquetaBoton="<i class='fa fa-home'></i> Servicepedia";
+      if(userlogged=="Anonymous"){
+        etiquetaBoton="Log In";
+      }
+
       //Adding a input box for search
       $("li.filter-panel").before(
         `<a class="btn annotator-panel-reset" id="botonBackServicepedia" href = "${servicepediaPath}/dashboard">
-        <i class="fa fa-home"></i> 
-        Servicepedia
+        ${etiquetaBoton}
         </a> 
         <div style="font-weight: 700;">
           <span id="usuarioConectado"></span> is connected.</div>   
@@ -104,8 +110,8 @@ Annotator.Plugin.Search = (function (_super) {
           // alert("El usuario esta en la casa." + data);
           $("#usuarioConectado").html(data);
 
-          if (data == "Annonymous") {
-            newUrl = servicepediaPath + "/";
+          if (data == "Anonymous") {
+            newUrl = servicepediaPath + "/login";
             $("#botonBackServicepedia").attr("href", newUrl);
           }
         },

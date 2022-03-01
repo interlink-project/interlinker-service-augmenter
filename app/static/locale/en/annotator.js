@@ -13,5 +13,6 @@ var i18n_dict = {
                 "Edit"                     : "Edit",
                 "Delete"                   : "Delete",
                 "share"                    : "Shared",
-                "confirm_delete"           : "Do you want to delete this annotation?"
+                "confirm_delete"           : "Do you want to delete this annotation?",
+                "Reply"                    : "Reply"
         };

@@ -11,6 +11,7 @@ var i18n_dict = {
                 "view_annotations"         : "Veure anotacions",
                 "doesnot_suport"           : "El navegador actual no soporta anotacions",
                 "Edit"                     : "Editar",
-                "Delete"                   : "Borrar"
+                "Delete"                   : "Borrar",
+                "Reply"                    : "Reply"
               
         };
