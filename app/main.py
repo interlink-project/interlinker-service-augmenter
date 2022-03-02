@@ -1,5 +1,6 @@
 
 from __future__ import print_function
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 import os
 import logging
@@ -11,7 +12,7 @@ from flask_mail import Mail, Message
 
 import elasticsearch
 from flask import request
-from api import es, annotation, auth, authz, document, notification, store,description, survey
+from api import es, annotation, auth, authz, document, notification, store, description, survey
 from api.survey import Survey
 from authInterlink import authInterlink
 from views import views
@@ -22,7 +23,7 @@ from tests.helpers import mock_authorizer
 from datetime import datetime
 import arrow
 from flask_swagger_ui import get_swaggerui_blueprint
-from flask_babel import Babel 
+from flask_babel import Babel
 from flask_login import (
     LoginManager,
     current_user,
@@ -44,21 +45,15 @@ log = logging.getLogger('annotator')
 
 here = os.path.dirname(__file__)
 
-from werkzeug.middleware.proxy_fix import ProxyFix
-
-
-
-
 
 def create_app():
     app = Flask(__name__)
     app.debug = True
-    
+
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
     print("Entra hasta aqui")
     app.config.from_object(settings)
-
 
     # We do need to set this one (the other settings have fine defaults)
     default_index = app.name
@@ -69,10 +64,11 @@ def create_app():
 
     with app.test_request_context():
         try:
-            #Creo los indices necesarios:
+            # Creo los indices necesarios:
             annotation.Annotation.create_all()
             notification.Notification.create_all(index="notification")
             survey.Survey.create_all(index="survey")
+            description.Description.drop_all(index="description")
             description.Description.create_all(index="description")
             document.Document.create_all()
 
@@ -92,7 +88,6 @@ def create_app():
         'SECRET_KEY': secrets.token_urlsafe(16)
     })
 
-
     login_manager = LoginManager()
 
     login_manager.login_view = "authInterlink.login"
@@ -106,25 +101,24 @@ def create_app():
     @babel.localeselector
     def get_locale():
         # if a user is logged in, use the locale from the user settings
-        
+
         user = getattr(g, 'user', None)
         user = current_user
-
 
         if request.args.get('lang'):
             session['lang'] = request.args.get('lang')
             return session.get('lang', session['lang'])
-        
-        #if user is not None:
+
+        # if user is not None:
         #    return user.locale
-        
+
         # otherwise try to guess the language from the user accept
         # header the browser transmits.  We support de/fr/en in this
         # example.  The best match wins.
-        
-        return request.accept_languages.best_match(['es','en','lv'])
-        
-        #return 'en'
+
+        return request.accept_languages.best_match(['es', 'en', 'lv'])
+
+        # return 'en'
 
     @babel.timezoneselector
     def get_timezone():
@@ -132,24 +126,22 @@ def create_app():
         if user is not None:
             return user.timezone
 
-
     # Additional Flask Filters:
 
     @app.template_filter('datetimeformat')
-    def datetimeformat(value, formatText='',localeZone='en'):
-    
+    def datetimeformat(value, formatText='', localeZone='en'):
 
-        if (formatText!=''):
-            dateTimeTemp=arrow.get(value)
+        if (formatText != ''):
+            dateTimeTemp = arrow.get(value)
             local = dateTimeTemp.to('Europe/Berlin')
-            
+
             return local.format(formatText)
 
         else:
 
-            dateTimeTemp=arrow.get(value)
+            dateTimeTemp = arrow.get(value)
             local = dateTimeTemp.to('Europe/Berlin')
-            
+
             return local.humanize(locale=localeZone)
 
     @app.template_filter('estadosAnnotation')
@@ -162,16 +154,16 @@ def create_app():
         }
 
         return tabla_switch.get(value, "NA")
-  
+
     # Define the initial user:
-    
+
     @login_manager.user_loader
     def load_user(user_id):
         return User.get(user_id)
 
     @app.before_request
     def before_request():
-        
+
         # In a real app, the current user and consumer would be determined by
         # a lookup in either the session or the request headers, as described
         # in the Annotator authentication documentation[1].
@@ -195,13 +187,12 @@ def create_app():
             g.authorize = authz.authorize
         else:
             g.authorize = mock_authorizer
-        
-
 
     # Define the static folder:
+
     @app.route('/static/<path:path>')
     def send_static(path):
-        return send_from_directory('static',path)
+        return send_from_directory('static', path)
 
     # BluePrints:
 
@@ -209,22 +200,16 @@ def create_app():
     app.register_blueprint(authInterlink.authInterlink)
     app.register_blueprint(views.views)
 
-
-    
-
     # Call factory function to create our blueprint
     swaggerui_blueprint = get_swaggerui_blueprint(
-        app.config['SWAGGER_URL'],  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+        # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+        app.config['SWAGGER_URL'],
         app.config['API_URL'],
         config={  # Swagger UI config overrides
             'app_name': "Annotator Swagger"
         },
-        
+
     )
     app.register_blueprint(swaggerui_blueprint)
 
-
-
-
     return app
-
