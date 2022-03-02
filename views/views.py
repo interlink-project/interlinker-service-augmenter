@@ -7,6 +7,7 @@ import json
 import requests
 import math
 import os
+import iso8601
 
 from werkzeug.utils import secure_filename
 from api.notification import Notification
@@ -103,7 +104,7 @@ def inicio():
 
     for itemDesc in res:
         urlMainPage = [url['url']
-                       for url in itemDesc['urls'] if url['isMain'] == True][0]
+                       for url in itemDesc['urls'] if url['ismain'] == True][0]
         itemDesc['mainUrl'] = urlMainPage
 
     pagesNumbers = math.ceil(totalRegistros/10)
@@ -111,12 +112,16 @@ def inicio():
     paginacion = {'page': page, 'pagesNumbers': pagesNumbers, 'totalRegisters': totalRegistros,
                   'searchBox': textoABuscar, 'padministration': padministration, 'url': domain}
 
-    # Cargo las Notificaciones
-    listNotifications = Notification._get_Notification_byModerCategory(
-        category="survey")
-    # listNotifications.append(Notification._get_Notification_byModerCategory(category="survey"))
-    numRes = listNotifications['numRes']
-    listNotifications = listNotifications['notifications']
+    if not current_user.is_anonymous:
+        # Cargo las Notificaciones
+        listNotifications = Notification._get_Notification_byModerCategory(
+            category="survey",user=current_user.email)
+    
+        numRes = listNotifications['numRes']
+        listNotifications = listNotifications['notifications']
+    else: 
+        numRes=0
+        listNotifications=[]
 
     return render_template("home.html", descriptions=res, urls=urlList, publicsa=paList, paginacion=paginacion, notifications=listNotifications, notificationNum=numRes)
 
@@ -167,9 +172,9 @@ def saveDescription():
     for key in itemsDict:
         if(key.startswith('url_')):
 
-            isMain = False
+            ismain = False
             if(key == mainPageItem):
-                isMain = True
+                ismain = True
 
             webAdress = itemsDict[key]
             langCode = itemsDict['langCode_'+key.split('_')[1]]
@@ -180,7 +185,7 @@ def saveDescription():
 
             if len(langCode) > 2:
                 langCode = 'Undefined'
-            listadoUrlNuevo[webAdress] = [langCode, isMain]
+            listadoUrlNuevo[webAdress] = [langCode, ismain]
 
     if(len(listadoUrlNuevo) == 0):
         # Si el campo de lista esta vacio miro el campo url
@@ -210,7 +215,7 @@ def saveDescription():
 
         # Create:
         perms = {'read': ['group:__world__']}
-        moderat = {}
+        moderat = []
 
         # Creo listados de Urls:
         urls = []
@@ -219,7 +224,7 @@ def saveDescription():
                 'createdate': todayDateTime,
                 'url': itemUrlFormat,
                 'language': listadoUrlNuevo[itemUrlFormat][0],
-                'isMain': listadoUrlNuevo[itemUrlFormat][1],
+                'ismain': listadoUrlNuevo[itemUrlFormat][1],
                 'email': current_user.email
             }
             urls.append(newUrl)
@@ -236,9 +241,33 @@ def saveDescription():
             return redirect('/descriptionDetail')
 
         else:
+
+            #Agrego al usuario creador como moderador.
+            #Le permito ser moderador por 30 dias.
+            from datetime import timedelta
+            initDate=datetime.datetime.now(iso8601.iso8601.UTC).isoformat()
+            endDate=(datetime.datetime.now(iso8601.iso8601.UTC)+ timedelta(days=30)).isoformat()
+
+            newdescription['moderators'].append({
+                "created": initDate,
+                "expire": endDate,
+                "email": current_user.email
+            })
+            
+
+
             newdescription.save(index="description")
             description = newdescription
             flash("Record created successfully.", "info")
+
+            
+
+            
+               
+                    
+       
+
+
 
     else:
 
@@ -274,7 +303,7 @@ def saveDescription():
                 if (itemUrl['url'] == webAdress):
                     # Ya existe
                     itemUrl['language'] = langCode
-                    itemUrl['isMain'] = listadoUrlNuevo[key][1]
+                    itemUrl['ismain'] = listadoUrlNuevo[key][1]
                     existe = True
                     break
 
@@ -284,7 +313,7 @@ def saveDescription():
                     'createdate': todayDateTime,
                     'url': webAdress,
                     'language': langCode,
-                    'isMain': listadoUrlNuevo[key][1],
+                    'ismain': listadoUrlNuevo[key][1],
                     'email': current_user.email
                 }
                 listModificado.append(newUrl)
@@ -303,6 +332,7 @@ def saveDescription():
         else:
             description = editDescripcion
             flash("No tienes permisos de moderador para editar esta descripción.", "info")
+        
 
     return redirect(url_for('authInterlink.editDescription', descriptionId=description['id'], option='edit'))
 

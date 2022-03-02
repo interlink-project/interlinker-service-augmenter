@@ -266,7 +266,11 @@
         <div class="grid-container">
 
             <div class="row" style="padding: 10px;">
+                {% if description is defined %}
+                <h4> Edit a description</h4>
+                {% else %}
                 <h4> Register a new description</h4>
+                {% endif %}
             </div>
             <div class="row">
                 <div class="form-floating">
@@ -394,7 +398,7 @@
                         
                         <input class="btn-check ismain" type="radio"  onchange="setMainUrl(event)"  name="MainUrlRadio" value="url_{{loop.index}}" id="ismain_{{loop.index}}"  autocomplete="off">
                         <label class="btn btn-outline-primary" for="ismain_{{loop.index}}">
-                            {% if urlItem.isMain %}
+                            {% if urlItem.ismain %}
                                 Main Page
                                 {% else %}
                                 -

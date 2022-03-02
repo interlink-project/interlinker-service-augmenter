@@ -261,6 +261,49 @@ class Annotation(es.Model):
                                  
     
         return res
+    
+    @classmethod
+    def _get_Annotations_by_User(cls,**kwargs):
+
+        q={
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "user": kwargs.pop("user")
+                            }
+                        }
+                    ]
+                }
+            },
+            "aggs": {
+                "group_by_uri": {
+                    "terms": {
+                        "field": "uri"
+                    }
+                }
+            },
+            "size": 0
+        }
+
+
+
+        print(q)
+
+
+        res = cls.es.conn.search(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+
+
+        if(len(res['aggregations']['group_by_uri']['buckets'])>0):
+            res=res['aggregations']['group_by_uri']['buckets']
+        else:
+            res=[]
+
+    
+        return res
 
     #Get users that has participated as Moderator or Annotator
     @classmethod

@@ -975,3 +975,19 @@ POST description/description/_search
     }
 }
 
+
+POST description/description/_search
+{
+  
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "url": "https://latvija.lv/en/ppk/izglitiba/augstaka-izglitiba/p11899/procesaapraksts"
+                    }
+                }
+            ]
+        }
+    }
+}

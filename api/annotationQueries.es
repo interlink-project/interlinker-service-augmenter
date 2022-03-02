@@ -366,3 +366,31 @@ POST annotator/annotation/_search
         }
     }
 }
+
+
+
+POST annotator/annotation/_search
+
+
+POST annotator/annotation/_search
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "match": {
+                        "user": "d.silva@deusto.es"
+                    }
+                }
+            ]
+        }
+    },
+    "aggs": {
+        "group_by_uri": {
+            "terms": {
+                "field": "uri"
+            }
+        }
+    },
+    "size": 0
+}

@@ -65,20 +65,198 @@ block head %} {{ super() }}
 
           dateUpdated = new Date(dataItem.updated);
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+          linkDescriptionShow = "{{ url_for('views.modifica',rutaPagina='RUTAPAGINAMAIN',userId='USERID') }}"
+          linkDescriptionShow = linkDescriptionShow.replace("RUTAPAGINAMAIN",dataItem.url);
+          linkDescriptionShow = linkDescriptionShow.replace("USERID",dataItem.url);
+
+
+          linkDescription = "{{ url_for('authInterlink.description',descriptionId= 'DESCRIPTIONID' ) }}"
+          linkDescription = linkDescription.replace("DESCRIPTIONID",dataItem.id);
+                                              
+          linktoEditDescriptionEdit= "{{ url_for('authInterlink.editDescription',descriptionId= 'DESCRIPTIONID', option= 'edit') }}"                                    
+          linktoEditDescriptionEdit = linktoEditDescriptionEdit.replace("DESCRIPTIONID",dataItem.id);
+
+          //Formato para Questions
+
+          classeCatelblQ="bg-secondary" ;
+          classeCateBtnQ="btn-outline-secondary";
+
+          if( dataItem.progressQues!=100.0 && dataItem.nroQuest!=0){
+            classeCatelblQ="bg-danger";
+            classeCateBtnQ="btn-warning";
+          }
+
+          //Formato para Feeds
+
+          classeCatelblF="bg-secondary" ;
+          classeCateBtnF="btn-outline-secondary";
+
+          if( dataItem.progressFeed!=100.0 && dataItem.nroFeeds!=0){
+            classeCatelblF="bg-success";
+            classeCateBtnF="btn-success";
+          }
+
+           //Formato para Terms
+
+          classeCatelblT="bg-secondary" ;
+          classeCateBtnT="btn-outline-secondary";
+
+          if( dataItem.progressTerm!=100.0 && dataItem.nroTerms!=0){
+            classeCatelblT="bg-primary";
+            classeCateBtnT="btn-info";
+          }
+
+
+
+
+         
+        
+
           $('#tablaDescriptions').append(
             ` 
             <tr>
-              <td> '+dataItem.padministration+' </td>
-              <td> '+dataItem.title+' </td>
-              <td> '+ISODateString(dateUpdated)+' </td>
+              <td> ${dataItem.padministration} </td>
+              <td> ${dataItem.title} </td>
+             
+
+              <td  style="text-align: center;">
+
+                <div class="progress" style="height: 20px;">
+                  <div class="progress-bar" role="progressbar" style="width: ${dataItem.progressTotal }%;" aria-valuenow=${dataItem.progressTotal } aria-valuemin="0" aria-valuemax="100" ></div>
+                  
+                </div>
+                <a tabindex="0"  role="button"  data-bs-toggle="popover" data-bs-trigger="focus" data-bs-placement="bottom" data-bs-html=true data-bs-content="${dataItem.textoStats}">${dataItem.progressTotal}%</a>
+               
+              </td>
+
+              <td  style="text-align: center;">${ISODateString(dateUpdated)}</td>
+
+              <td >     
+                <a  href="${linktoEditDescriptionEdit}" class="btn btn-outline-secondary bi-tools"  ></a>
+              </td>
+
+              <td  style="text-align: center;">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                
+              
+              
+             
+
+              
+              
+              <button
+                type="button"
+                class="btn ${ classeCateBtnQ } position-relative"
+                alt="Question"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                title="Question"
+                onclick="window.location.href='${linkDescription}?category=question';"
+              >
+                ${dataItem.nroQuest}
+  
+                <span
+                  class="
+                    position-absolute
+                    top-0
+                    start-60
+                    translate-middle
+                    badge
+                    rounded-pill
+                    ${ classeCatelblQ }
+                  "
+                  style="opacity: 0.8"
+                >
+                Q
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              </button>
+
+              
+
+              <button
+                type="button"
+                class="btn ${ classeCateBtnF } position-relative"
+                alt="Feedback"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                title="Feedback"
+                onclick="window.location.href='${linkDescription}?category=feedback';"
+              
+                >
+                ${dataItem.nroFeeds}
+             
+                <span
+                  class="
+                    position-absolute
+                    top-0
+                    start-60
+                    translate-middle
+                    badge
+                    rounded-pill
+                    ${ classeCatelblF }
+                  "
+                  style="opacity: 0.8"
+                >
+                F
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              </button>
+            
+
+            
+
+              <button
+                type="button"
+                class="btn ${ classeCateBtnT } position-relative"
+                alt="Term"
+                data-bs-toggle="tooltip"
+                data-bs-placement="bottom"
+                title="Term"
+                onclick="window.location.href='${linkDescription}?category=term';"
+              
+              >
+              ${dataItem.nroTerms} 
+                <span
+                  class="
+                    position-absolute
+                    top-0
+                    start-60
+                    translate-middle
+                    badge
+                    rounded-pill
+                    ${ classeCatelblT }
+                    
+                  "
+                  style="opacity: 0.8"
+                >
+                  
+                  T
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              </button>
+            </div>
+
+            <div class="btn-group me-2" role="group" aria-label="Second group">
+              <button type="button" class="btn btn-primary"
+                alt="All"
+    
+                title="All"
+                onclick="window.location.href='${linkDescription}';"
+              
+              >All</button>
+            </div>
+
+            </td>
+
+
               <td> 
                 {% if current_user.is_authenticated %} 
-                  <a href="{{ url_for('authInterlink.description',descriptionId= '${dataItem.id}') }}" class="btn btn-outline-secondary" style="max-width: 70px;" >
+                  <a href="${linkDescription}" class="btn btn-outline-secondary" style="max-width: 70px;" >
                     <i class="bi bi-box-arrow-in-right " style="width:100px;"></i>
                   </a> 
                 {% else %} 
-                  <a href="{{ url_for('views.modifica',rutaPagina='${dataItem.url}',userId='${current_user.email}') }}'"  class='btn btn-outline-secondary' style='max-width: 70px;' >
+                  <a href="${linkDescriptionShow}"  class='btn btn-outline-secondary' style='max-width: 70px;' >
                     <i class='bi bi-box-arrow-in-right' style='width:100px;'></i>
                   </a> 
                 {% endif %} 
@@ -135,7 +313,7 @@ block head %} {{ super() }}
         method: 'POST',
         url: {{ url_for('store.descriptionsIndex')|tojson }},
         contentType: 'application/json;charset=UTF-8',
-        data: JSON.stringify({"textoABuscar":texto,"padministration":padministrationSel,"domain":domainSel,"page":page})
+        data: JSON.stringify({"textoABuscar":texto,"padministration":padministrationSel,"domain":domainSel,"page":page,"byuser":"True"})
       }).done(addShow);
 
     }

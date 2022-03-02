@@ -437,9 +437,11 @@ def descriptionsIndex():
     textoABuscar = params.get("textoABuscar")
     if(textoABuscar == None):
         textoABuscar = ""
+    
     padministration = params.get("padministration")
     if(padministration == None):
         padministration = ""
+
     domain = params.get("domain")
     if(domain == None):
         domain = ""
@@ -447,16 +449,26 @@ def descriptionsIndex():
     page = params.get("page")
     if(page == None):
         page = "1"
+    
+    byuser = params.get("byuser")
+    if(byuser == None or byuser =='False'):
+        descriptions = Description._get_by_multiple(
+            textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain, page=page)
+    else:
 
-    #annotations = g.annotation_class.search(user=user)
-    descriptions = Description._get_by_multiple(
-        textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain, page=page)
+        registroInicial=(page-1)*10+1
+
+        descriptions = Description._getDescriptionsUser_Stats_onSearch(
+            textoABuscar=textoABuscar, padministration=padministration, domain=domain, registroInicial=registroInicial,user=current_user.email)
+
+
 
     nroRegistros = descriptions['numRes']
     descriptions = descriptions['descriptions']
     #nroRegistros= Description._get_by_multipleCounts(textoABuscar=textoABuscar,padministration=padministration,urlPrefix=domain)
 
     return jsonify({'descriptions': descriptions, 'nroRegistros': nroRegistros})
+
 
 
 @store.route('/description/<path:urlDescription>', methods=["POST"])

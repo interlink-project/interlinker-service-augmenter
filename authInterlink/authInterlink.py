@@ -132,114 +132,14 @@ def dashboard():
     registroInicial = (int(page)-1)*10
 
     totalRegistros = 0
-    if(textoABuscar == None or textoABuscar == ''):
-        res = Description.search(offset=registroInicial)
-        totalRegistros = Description.count()
-    else:
-        res = Description._get_Descriptions(
-            textoABuscar=textoABuscar, padministration=padministration, url=domain, offset=registroInicial)
-        totalRegistros = Description._get_DescriptionsCounts(
-            textoABuscar=textoABuscar, padministration=padministration, url=domain)
 
-    # Cargo los números de anotaciones por categoria
-    for itemDesc in res:
+    res=Description._getDescriptionsUser_Stats_onSearch(textoABuscar=textoABuscar, padministration=padministration, domain=domain, registroInicial=registroInicial,user=current_user.email)
 
-        # Obtengo los Urls:
-        listUrl = []
-        for url in itemDesc['urls']:
-            listUrl.append(url['url'])
+    totalRegistros = res['numRes']
+    res = res['descriptions']
+    
 
-        # Cargo datos estadisticos de las descripciones
-        resCategory = Annotation.descriptionStats(Annotation, uris=listUrl)
-
-        nroFeedbacks = 0
-        nroQuestions = 0
-        nroTerms = 0
-
-        nroFeedProgress = 0
-        nroFeedApproved = 0
-        nroQuesProgress = 0
-        nroQuesApproved = 0
-        nroTermProgress = 0
-        nroTermApproved = 0
-
-        # Obtengo la informacion estadistica:
-        if(len(resCategory) > 0):
-
-            for itemCategory in resCategory:
-
-                cateGroup = itemCategory['key']
-
-                if(cateGroup == 'feedback'):
-                    nroFeedbacks = itemCategory['doc_count']
-                    listStates = itemCategory['group_state']['buckets']
-
-                    for itemState in listStates:
-                        cateState = itemState['key']
-                        nroState = itemState['doc_count']
-                        if(cateState == 0):  # In Progress
-                            nroFeedProgress = nroState
-                        if(cateState == 2):  # In Approved
-                            nroFeedApproved = nroState
-
-                if(cateGroup == 'question'):
-                    nroQuestions = itemCategory['doc_count']
-                    listStates = itemCategory['group_state']['buckets']
-
-                    for itemState in listStates:
-                        cateState = itemState['key']
-                        nroState = itemState['doc_count']
-                        if(cateState == 0):  # In Progress
-                            nroQuesProgress = nroState
-                        if(cateState == 2):  # In Approved
-                            nroQuesApproved = nroState
-
-                if(cateGroup == 'term'):
-                    nroTerms = itemCategory['doc_count']
-                    listStates = itemCategory['group_state']['buckets']
-
-                    for itemState in listStates:
-                        cateState = itemState['key']
-                        nroState = itemState['doc_count']
-                        if(cateState == 0):  # In Progress
-                            nroTermProgress = nroState
-                        if(cateState == 2):  # In Approved
-                            nroTermApproved = nroState
-
-        # Cargo los valores totales
-        itemDesc['nroTerms'] = nroTerms
-        itemDesc['nroQuest'] = nroQuestions
-        itemDesc['nroFeeds'] = nroFeedbacks
-
-        # Cargo los progressBar con valores por estados.
-        # Progreso Total (%) = Approved * 100 / (InProgress + Approved)
-        # Feedback Progress:
-
-        # Incluyo validacion de la division  x / 0 (if statement)
-
-        progressFeed = ((nroFeedApproved * 100) / (nroFeedProgress +
-                        nroFeedApproved)) if (nroFeedProgress + nroFeedApproved) != 0 else 0
-        progressTerm = ((nroTermApproved * 100) / (nroTermProgress +
-                        nroTermApproved)) if (nroTermProgress + nroTermApproved) != 0 else 0
-        progressQues = ((nroQuesApproved * 100) / (nroQuesProgress +
-                        nroQuesApproved)) if (nroQuesProgress + nroQuesApproved) != 0 else 0
-
-        itemDesc['progressFeed'] = progressFeed
-        itemDesc['progressTerm'] = progressTerm
-        itemDesc['progressQues'] = progressQues
-
-        textoStats = ("<b>Feedback ("+str(nroFeedApproved)+"/"+str(nroFeedApproved+nroFeedProgress)+")</b> : "+str(round(progressFeed))+"% <br>" +
-                      "<b>Terms ("+str(nroTermApproved)+"/"+str(nroTermApproved+nroTermProgress)+")</b>: "+str(round(progressTerm))+"% <br>" +
-                      "<b>Questions ("+str(nroQuesApproved)+"/"+str(nroQuesApproved+nroQuesProgress)+")</b>: "+str(round(progressQues))+"% <br>")
-
-        itemDesc['textoStats'] = textoStats
-
-        progressTotalApproved = nroFeedApproved + nroTermApproved + nroQuesApproved
-        progressTotalInProgress = nroFeedProgress + nroTermProgress + nroQuesProgress
-        progressTotal = ((progressTotalApproved * 100) / (progressTotalInProgress +
-                         progressTotalApproved)) if (progressTotalInProgress + progressTotalApproved) != 0 else 0
-
-        itemDesc['progressTotal'] = round(progressTotal)
+    
 
     pagesNumbers = math.ceil(totalRegistros/10)
 
@@ -470,7 +370,7 @@ def description(descriptionId=None):
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
 
     urlMainPage = [url['url']
-                   for url in description['urls'] if url['isMain'] == True][0]
+                   for url in description['urls'] if url['ismain'] == True][0]
 
     categoria = request.args.get('category')
 
@@ -557,7 +457,7 @@ def subjectPage(descriptionId=None, annotatorId=None):
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
 
     urlMainPage = [url['url']
-                   for url in description['urls'] if url['isMain'] == True][0]
+                   for url in description['urls'] if url['ismain'] == True][0]
 
     annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
 
@@ -692,7 +592,10 @@ def descriptionDetail():
 
     res = Annotation.search(query={'user': current_user.email})
 
-    return render_template("descriptionDetail.html", user=current_user, anotations=res, publicsa=paList)
+    # Cargo las Notificaciones
+    listNotifications, numRes = cargarNotifications()
+
+    return render_template("descriptionDetail.html", user=current_user, anotations=res, publicsa=paList, notifications=listNotifications, notificationNum=numRes)
 
 
 @authInterlink.route("/profile")
@@ -797,8 +700,8 @@ def callback():
 def cargarNotifications():
     # Cargo las Notificaciones
     listNotifications = Notification._get_Notification_byModerCategory(
-        category="survey")
-    # listNotifications.append(Notification._get_Notification_byModerCategory(category="survey"))
+        category="survey",user=current_user.email)
+  
     numRes = listNotifications['numRes']
     listNotifications = listNotifications['notifications']
     return listNotifications, numRes

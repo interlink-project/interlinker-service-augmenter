@@ -412,8 +412,8 @@ block content %}
 
           <td style="text-align: center;">
             {% set uriPath = anotation.uri.split('/') %}
-            /{{ uriPath[-1:] |join('')}}
-
+            
+            <a href="{{ url_for('views.modifica',rutaPagina='',userId='Anonymous') }}{{anotation.uri}}">/{{ uriPath[-1:] |join('')}}</a>
           </td>
 
           <td style="text-align: center;">

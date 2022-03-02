@@ -290,13 +290,15 @@ block head %} {{ super() }}
     <div class="row">
         <div class="table-responsive">
            
-            <table class="table" style="height: auto">
+            <table class="table" style="height: auto" >
                 <thead>
                     <tr>
                         
                         <th scope="col-3">Title</th>
-                        <th scope="col-2">Period</th>
-                        <th scope="col-1">Option</th>
+                        <th scope="col-2" >Period</th>
+                        <th scope="col-2" style="text-align: center;">Edit</th>
+                        
+                        <th scope="col-1" style="text-align: center;">Access</th>
                        
                     </tr>
                 </thead>
@@ -324,8 +326,13 @@ block head %} {{ super() }}
 
                         </td>
                         <td>
+                            <a title="Edit Metadata"  href="{{ url_for('authInterlink.editDescription',descriptionId= description.id , option= 'edit') }}" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-tools " style="width:100px;"></i></a>
+
+                        </td>
+                        <td>
                                     
-                            <a  href="{{ url_for('authInterlink.editDescription',descriptionId= description.id , option= 'edit') }}" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-tools " style="width:100px;"></i></a>
+                            
+                            <a title="Access" href="{{ url_for('authInterlink.description',descriptionId='') }}{{ description.id }}" class="btn btn-outline-secondary" style="max-width: 70px;"><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
              
                         </td>
 

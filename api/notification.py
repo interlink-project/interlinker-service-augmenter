@@ -205,6 +205,11 @@ class Notification(es.Model):
                             "term": {
                                 "category": kwargs.pop("category")
                             }
+                        },
+                        {
+                            "term": {
+                                "email": kwargs.pop("user")
+                            }
                         }
                     ]
                 }
