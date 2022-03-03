@@ -476,7 +476,7 @@ def descriptionsShow():
 
     descriptions = Description._get_all()
     
-    return jsonify(descriptions['descriptions'])
+    return jsonify(descriptions)
 
 # INDEX
 @store.route('/descriptions', methods=["POST"])
