@@ -190,7 +190,21 @@ def surveysIndex():
         user = None
 
     surveys = Survey._get_all()
-    return jsonify(surveys)
+    
+    return jsonify(surveys['surveys'])
+
+# READ
+@store.route('/surveys/<docid>')
+def read_survey(docid):
+    survey = Survey.fetch(docid, index='survey')
+    if not survey:
+        return jsonify('Notification not found!', status=404)
+
+    failure = _check_action(survey, 'read')
+    if failure:
+        return failure
+
+    return jsonify(survey)
 
 
 @store.route('/completeSurvey')
