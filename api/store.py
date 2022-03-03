@@ -467,7 +467,7 @@ def annotationsIndex():
 
 #READ
 @store.route('/descriptions')
-def descriptionsIndex():
+def descriptionsShow():
     if current_app.config.get('AUTHZ_ON'):
         # Pass the current user to do permission filtering on results
         user = g.user
