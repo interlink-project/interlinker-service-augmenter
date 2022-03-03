@@ -465,6 +465,18 @@ def annotationsIndex():
 
     return jsonify({'annotations': annotations, 'nroRegistros': numRes})
 
+#READ
+@store.route('/descriptions')
+def descriptionsIndex():
+    if current_app.config.get('AUTHZ_ON'):
+        # Pass the current user to do permission filtering on results
+        user = g.user
+    else:
+        user = None
+
+    descriptions = Description._get_all()
+    
+    return jsonify(descriptions['descriptions'])
 
 # INDEX
 @store.route('/descriptions', methods=["POST"])
