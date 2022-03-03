@@ -19,6 +19,60 @@ tags:
   description: Everything about your Annotations
  
 paths:
+  /surveys:
+    get:
+      tags:
+        - surveys
+      description: List all the surveys registered
+      summary: List Surveys
+      operationId: getSurveys
+
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Survey'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Survey'
+        '400':
+          description: Invalid status value
+      parameters:
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          description: The number of items to skip before starting to collect the result set
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: The numbers of items to return
+    delete:
+      tags:
+        - surveys
+      summary: Deletes a survey
+      operationId: deleteSurvey
+      parameters:
+        - name: surveyId
+          in: path
+          description: Survey id to delete
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Survey not found
+
   /notifications:
     get:
       tags:
@@ -427,6 +481,26 @@ components:
           type: string
 
 
+    Survey:
+      type: object
+      properties:
+        id:
+          type: string
+        idAsset:
+          type: string          
+        title:
+          type: string
+        description:
+          type: boolean
+        isMandatory:
+          type: string
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        
   requestBodies:
     Annotation:
       content:
@@ -447,4 +521,14 @@ components:
           schema:
             $ref: '#/components/schemas/Notification'
       description: Notification object that needs to be added to the store
+      required: true
+    Survey:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Survey'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Survey'
+      description: Survey object that needs to be added to the store
       required: true

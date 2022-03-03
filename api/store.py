@@ -372,6 +372,30 @@ def delete_notification(docid):
     return '', 204
 
 
+# DELETE
+@store.route('/surveys/<docid>', methods=['DELETE'])
+def delete_survey(docid):
+    survey = Survey.fetch(docid, index='survey')
+
+    if not survey:
+        return jsonify('Survey not found. No delete performed.',
+                       status=404)
+
+    failure = _check_action(survey, 'delete')
+    if failure:
+        return failure
+
+    if hasattr(g, 'before_survey_delete'):
+        g.before_survey_delete(survey)
+
+    survey.delete(index='survey')
+
+    if hasattr(g, 'after_survey_delete'):
+        g.after_survey_delete(survey)
+
+    return '', 204
+
+
 # INDEX
 @store.route('/searchannotations', methods=["POST"])
 def annotationsIndex():
