@@ -296,8 +296,10 @@ class Description(es.Model):
     @classmethod
     def _getDescriptionsUser_Stats_onSearch(cls,**kwargs):
 
+        user=kwargs.pop("user")
+
         #Obtengo todas las anotaciones del usuario
-        listAnnotations=Annotation._get_Annotations_by_User(user=kwargs.pop("user"))
+        listAnnotations=Annotation._get_Annotations_by_User(user=user)
 
         textoABuscar=kwargs.pop("textoABuscar")
         padministration=kwargs.pop("padministration")
@@ -325,6 +327,25 @@ class Description(es.Model):
                 if not existsDescr:
                     listDescription.append(descriptionFound)
 
+        # Now I obtain all descriptions where I am moderator
+
+        #Apply filters and the search options
+        descriptionsModerator = Description._get_by_multiple(textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain,isModerator=True, page="all",user=user)
+
+        nroRegistros = descriptionsModerator['numRes']
+        
+        if(nroRegistros>0):
+            descriptionFound = descriptionsModerator['descriptions'][0]
+
+            #Si la descripcion ya ha sido agregada entonces no debe agregarse :
+            existsDescr=False
+            for itemDescript in listDescription:
+                if(itemDescript['id']==descriptionFound['id']):
+                    existsDescr=True
+                    break
+            if not existsDescr:
+                listDescription.append(descriptionFound)
+        
 
         registroInicial=kwargs.pop("registroInicial")
         listDescription[registroInicial:registroInicial+10]
@@ -812,7 +833,32 @@ class Description(es.Model):
                     }
                 }
             )
-            
+
+        #Filter by Moderator
+        if 'isModerator' in kwargs:
+            ismoderator=kwargs.pop("isModerator")
+            if ismoderator != None:
+                if ismoderator==True:
+                    userEmail=kwargs.pop("user")
+                    q['query']['bool']['must'].append(
+                    {
+                        "nested": {
+                            "path": "moderators",
+                            "query": {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "match": {
+                                                "moderators.email": userEmail
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                )
+
     
 
         print('_get_by_multiple')

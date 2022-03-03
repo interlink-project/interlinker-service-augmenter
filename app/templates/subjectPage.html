@@ -148,10 +148,9 @@
       } else {
 
 
-        descriptionID = '{{description.id}}'
         urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='state' ) }}`;
-        urlPost = urlPost.replace("DESCRIPTIONID",descriptionID);
-        urlPost = urlPost.replace("ANNOTATIONID",annotationId);
+        urlPost = urlPost.replace("DESCRIPTIONID",'{{ description.id}}');
+        urlPost = urlPost.replace("ANNOTATIONID",'{{ annotation.id}}');
 
         //Para el caso que es una anotacion base
         function successSearch(data) {

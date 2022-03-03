@@ -15,7 +15,12 @@ block content %}
   function goSubjectPage(event, descriptionId, annotationId) {
     if (event.type == 'click') {
       event.preventDefault();
-      window.location.href = '{{ url_for('authInterlink.subjectPage',descriptionId= descriptionId,annotatorId=annotationId) }}';
+
+      urlRef = `{{ url_for('authInterlink.subjectPage',descriptionId= DESCRIPTIONID,annotatorId=ANNOTATIONID) }}`;
+      urlRef = urlRef.replace("ANNOTATIONID",annotationId);
+      urlRef = urlRef.replace("DESCRIPTIONID",descriptionId);
+
+      window.location.href = urlRef;
     
       subjectPage(descriptionId=None, annotatorId=None)
     
@@ -130,6 +135,11 @@ block content %}
           stateText = 'In Progress';
         }
 
+        urlRef = `{{ url_for('authInterlink.subjectPage',descriptionId= 'DESCRIPTIONID',annotatorId='ANNOTATIONID') }}`;
+        urlRef = urlRef.replace("DESCRIPTIONID",descriptionId);
+        urlRef = urlRef.replace("ANNOTATIONID",dataItem.id);
+        
+
         $('#tablaAnnotations').append(
           ` ${sectionCategoria}
             <td> /${ruta} </td>
@@ -143,7 +153,7 @@ block content %}
             <td> ${ISODateString(dateUpdated)} </td> 
             
             <td> 
-              <a href="{{ url_for('authInterlink.subjectPage',descriptionId= '${descriptionId}',annotatorId='${dataItem.id}') }}" class="btn btn-outline-secondary" style="max-width: 70px;" >
+              <a href="${urlRef}" class="btn btn-outline-secondary" style="max-width: 70px;" >
                 <i class="bi bi-box-arrow-in-right " style="width:100px;"></i>
               </a>  
             </td>

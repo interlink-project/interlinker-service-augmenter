@@ -1951,6 +1951,17 @@ ol.oluoc .numeracio {
   display: none;
 }
 
+
+input[type="radio"]+label span {
+  display: inline-block;
+  width: 0px;
+  margin: -2px 10px 0 0;
+  vertical-align: middle;
+  /* background: url(../img/radio.png) no-repeat; */
+  cursor: pointer;
+}
+
+
 /* Styles for smaller screens */
 
 @media only screen and (max-width: 480px) {
