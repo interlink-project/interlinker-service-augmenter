@@ -24,19 +24,21 @@
         function showPublishOps(event){
             if (event.type == 'click') {
             
-            var assetId=event.target.getAttribute('asset')
-            var surveytitle=event.target.getAttribute('surveytitle')
-            var surveydescription=event.target.getAttribute('surveydescription')
+            var assetId=event.target.getAttribute('asset');
+            var surveytitle=event.target.getAttribute('surveytitle');
+            var surveydescription=event.target.getAttribute('surveydescription');
 
 
 
             //Muestro notificacion:
             var myModal = new bootstrap.Modal(document.getElementById('notificationBox'),{});
 
-            $('#notificationBoxLabel').text("Survey Launcher")
+            $('#notificationBoxLabel').text("Survey Launcher");
+
+            urlActionLauch=`{{ url_for('authInterlink.surveyLauchProcess') }}`;
 
             var formularioLauch = `
-                        <form class="row g-3" action="/lauchSurvey" method="post">
+                        <form class="row g-3" action="${urlActionLauch}" method="post">
                             <div class="mb-3" style="text-align:center;">
                                 <b>    
                                 Title: ${surveytitle}

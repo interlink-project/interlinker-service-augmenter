@@ -218,7 +218,7 @@ def completeaSurvey():
 
     notification.updateFieldResolve(index="notification")
 
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('authInterlink.dashboard'))
 
 
 @store.route('/saveSurvey')

@@ -351,8 +351,7 @@ def surveyLauchProcess():
     # Se ha lanzado exitosamente el suvey:
     flash("The survey has been lauched.", "info")
 
-    # Redirecciono al editor:
-    return redirect(url_for("survey"))
+    return redirect(url_for("authInterlink.survey"))
 
 
 @authInterlink.route('/advanceSearch',)
