@@ -361,6 +361,15 @@ def advanceSearch():
 
     return render_template("advanceSearch.html", user=current_user, anotations=res)
 
+@authInterlink.route('/genReport/<string:descriptionId>',)
+def genReport(descriptionId=None):
+
+    print(descriptionId)
+
+    return render_template("dashboard.html")
+
+
+
 
 @authInterlink.route('/description/<string:descriptionId>',)
 @login_required
