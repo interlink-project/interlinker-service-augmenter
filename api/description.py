@@ -44,7 +44,7 @@ MAPPING = {
     
     "padministration": {
         "type": "string",
-        "analyzer": "standard"
+        "index": "not_analyzed"
     },
 
     "url": {
