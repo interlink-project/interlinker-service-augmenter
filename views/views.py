@@ -724,7 +724,7 @@ def augment(rutaPagina):
             if hrefVal.startswith('/'):
                 newURLVal = urljoin(rutaPagina, hrefVal)
                 a_Link.attrs['href'] = url_for(
-                    'views.augment', rutaPagina=newURLVal.lower())
+                    'views.augment', rutaPagina=newURLVal.lower())+'?description='+descriptionRef
                 print(a_Link)
 
     print("Total CSS insertados en the page:", len(css_files))
