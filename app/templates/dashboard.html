@@ -250,17 +250,6 @@ block head %} {{ super() }}
             </td>
 
 
-              <td> 
-                {% if current_user.is_authenticated %} 
-                  <a href="${linkDescription}" class="btn btn-outline-secondary" style="max-width: 70px;" >
-                    <i class="bi bi-box-arrow-in-right " style="width:100px;"></i>
-                  </a> 
-                {% else %} 
-                  <a href="${linkDescriptionShow}"  class='btn btn-outline-secondary' style='max-width: 70px;' >
-                    <i class='bi bi-box-arrow-in-right' style='width:100px;'></i>
-                  </a> 
-                {% endif %} 
-                </td>
             </tr>
             `);
 
@@ -315,7 +304,7 @@ block head %} {{ super() }}
         contentType: 'application/json;charset=UTF-8',
         data: JSON.stringify({"textoABuscar":texto,"padministration":padministrationSel,"domain":domainSel,"page":page,"byuser":"True"})
       }).done(addShow);
-
+    
     }
   }
 

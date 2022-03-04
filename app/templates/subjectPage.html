@@ -1,4 +1,5 @@
-{% extends "description.html" %} {% block annotations %}
+{% extends "templateV2.html" %} {% block title %} Servicepedia {% endblock %} {%
+  block content %}
 
 <script>
   function registrarLike(
@@ -179,6 +180,34 @@
     }
   });
 </script>
+
+
+
+<hr />
+
+<div style="display: block">
+  <div class="row">
+    <div class="col-12" style="text-align: center;margin-top: 4px;display: inline-flex;">
+      <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description['id'] ) }}';" style="padding: -2px;margin:0px;border: 0px;margin-right: 5px;" >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+        </svg>
+
+      </button>
+      <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
+      <span id="descriptionUri" hidden>{{description['url']}}</span>
+      <span id="descriptionId" hidden>{{description['id']}}</span>
+
+    </div>
+    
+  </div>
+
+</div>
+
+<hr />
+
+
+
 
 {% set ns = namespace(ismoderator=false) %} {% for moderator in
 description.moderators %} {% if user.email == moderator.email %} {% set

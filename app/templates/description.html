@@ -35,8 +35,19 @@ block content %}
 
   function searchText(event) {
     if (event.type == 'click') {
+     
       event.preventDefault();
       aplicoFiltros(event);
+      
+    }
+  }
+
+  function searchTextEnter(event) {
+    if (event.type == 'keydown') {
+      if (event.keyCode === 13) {
+      event.preventDefault();
+      aplicoFiltros(event);
+      }
     }
   }
 
@@ -106,13 +117,13 @@ block content %}
         //Defino los colores
 
         if (dataItem.category == 'question') {
-          questColor = '255, 193, 7';
+          questColor = '246, 255, 168';
           stylebtn = 'btn-warning';
         } else if (dataItem.category == 'term') {
-          questColor = '223,6,212';
+          questColor = '255,167,251';
           stylebtn = 'btn-danger';
         } else if (dataItem.category == 'feedback') {
-          questColor = '25, 135, 84';
+          questColor = '208, 255, 220';
           stylebtn = 'btn-danger';
         }
 
@@ -126,11 +137,24 @@ block content %}
           sectionCategoria = ' <tr style="color: rgba(141, 140, 140, 0.774);"> <td style="font-weight:bold;"> ' + botonCategory + ' </td>';
           stateText = 'Archived';
         } else if (dataItem.state == 2) { //Approved
-          botonCategory = '<button class="btn ' + stylebtn + '"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;font-weight: bold;background-color:rgba(' + questColor + ',0.8);border-color:rgba(' + questColor + ',0.9);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+
+           if (dataItem.category == 'question') {
+              questColor = '255,193,7';
+              stylebtn = 'btn-warning';
+            } else if (dataItem.category == 'term') {
+              questColor = '223,6,212';
+              stylebtn = 'btn-danger';
+            } else if (dataItem.category == 'feedback') {
+              questColor = '25,135,84';
+              stylebtn = 'btn-danger';
+            }
+
+
+          botonCategory = '<button class="btn ' + stylebtn + '"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;font-weight: bold;background-color:rgba(' + questColor + ',1);border-color:rgba(' + questColor + ',0.9);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
           sectionCategoria = ' <tr style="font-weight: bold;"> <td style="color:#FFFFFF;"> ' + botonCategory + ' </td>';
           stateText = 'Approved';
         } else if (dataItem.state == 0) { //In Progress
-          botonCategory = '<button class="btn "  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;background-color:rgba(' + questColor + ',0.2);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+          botonCategory = '<button class="btn "  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;background-color:rgba(' + questColor + ',1);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
           sectionCategoria = ' <tr style="color: rgba(0, 0, 0, 0.774);"> <td style="font-weight:bold;"> ' + botonCategory + ' </td>';
           stateText = 'In Progress';
         }
@@ -139,10 +163,17 @@ block content %}
         urlRef = urlRef.replace("DESCRIPTIONID",descriptionId);
         urlRef = urlRef.replace("ANNOTATIONID",dataItem.id);
         
+        urlRefMod = `{{ url_for('views.modifica',rutaPagina='RUTAPAGE',userId='USERID') }}`
+        urlRefMod = urlRefMod.replace("RUTAPAGE",dataItem.uri);
+        urlRefMod = urlRefMod.replace("USERID",'Anonimo');
 
         $('#tablaAnnotations').append(
           ` ${sectionCategoria}
-            <td> /${ruta} </td>
+            <td>
+              
+               <a href="${urlRefMod}">/${ruta}</a>
+        
+            </td>
             <td> ${stateText} </td> 
             
             <td style="text-align: center;"> 
@@ -276,8 +307,10 @@ block content %}
 
   <div class="col-6" style="display: flex;flex-direction: row;">
     <input id="searchBox" class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
-      onkeydown="searchText(event)" style="min-width: 200px;" />
+      onkeydown="searchTextEnter(event)" style="min-width: 200px;" />
     <button class="btn btn-outline-secondary" onclick="searchText(event)">Search</button>
+
+    
 
   </div>
 
@@ -423,7 +456,7 @@ block content %}
           <td style="text-align: center;">
             {% set uriPath = anotation.uri.split('/') %}
             
-            <a href="{{ url_for('views.modifica',rutaPagina='',userId='Anonymous') }}{{anotation.uri}}">/{{ uriPath[-1:] |join('')}}</a>
+            <a href="{{ url_for('views.modifica',rutaPagina='',userId='{{current_user.email}}') }}{{anotation.uri}}">/{{ uriPath[-1:] |join('')}}</a>
           </td>
 
           <td style="text-align: center;">
