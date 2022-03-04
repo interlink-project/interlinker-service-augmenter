@@ -163,9 +163,9 @@ block content %}
         urlRef = urlRef.replace("DESCRIPTIONID",descriptionId);
         urlRef = urlRef.replace("ANNOTATIONID",dataItem.id);
         
-        urlRefMod = `{{ url_for('views.modifica',rutaPagina='RUTAPAGE',userId='USERID') }}`
+        urlRefMod = `{{ url_for('views.augment',rutaPagina='RUTAPAGE') }}?description=DESCRIPTIONID`
         urlRefMod = urlRefMod.replace("RUTAPAGE",dataItem.uri);
-        urlRefMod = urlRefMod.replace("USERID",'Anonimo');
+        urlRefMod = urlRefMod.replace("DESCRIPTIONID",dataItem.id);
 
         $('#tablaAnnotations').append(
           ` ${sectionCategoria}
@@ -237,7 +237,7 @@ block content %}
 <div style="display: block">
   <div class="row">
     <div class="col-8" style="text-align: center;margin-top: 4px;display: inline-flex;">
-      <a href="{{ url_for('views.modifica',rutaPagina=urlMainPage,userId=current_user.email) }}" class="bi bi-eye"
+      <a href="{{ url_for('views.augment',rutaPagina=urlMainPage) }}?description={{description['id']}}" class="bi bi-eye"
         style="zoom: 2;-moz-transform: scale(2);padding: 0rem;margin-right: 0.2em;color: rgb(0, 72, 100);"></a>
 
       <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
@@ -456,7 +456,7 @@ block content %}
           <td style="text-align: center;">
             {% set uriPath = anotation.uri.split('/') %}
             
-            <a href="{{ url_for('views.modifica',rutaPagina='',userId='{{current_user.email}}') }}{{anotation.uri}}">/{{ uriPath[-1:] |join('')}}</a>
+            <a href="{{ url_for('views.augment',rutaPagina='')}}{{anotation.uri}}?description={{description['id']}}">/{{ uriPath[-1:] |join('')}}</a>
           </td>
 
           <td style="text-align: center;">

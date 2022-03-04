@@ -65,7 +65,7 @@ block head %} {{ super() }}
 
           dateUpdated = new Date(dataItem.updated);
 
-          linkDescriptionShow = "{{ url_for('views.modifica',rutaPagina='RUTAPAGINAMAIN',userId='USERID') }}"
+          linkDescriptionShow = "{{ url_for('views.augment',rutaPagina='RUTAPAGINAMAIN') }}"
           linkDescriptionShow = linkDescriptionShow.replace("RUTAPAGINAMAIN",dataItem.url);
           linkDescriptionShow = linkDescriptionShow.replace("USERID",dataItem.url);
 

@@ -131,7 +131,7 @@ def inicio():
 def buscar():
     sitio = request.form["nm"]
     userNombre = request.form["usr"]
-    return redirect(url_for("views.modifica", rutaPagina=sitio, userId=userNombre))
+    return redirect(url_for("views.augment", rutaPagina=sitio))
 
 
 # Formulatio de carga de Pagina
@@ -337,7 +337,7 @@ def saveDescription():
     return redirect(url_for('authInterlink.editDescription', descriptionId=description['id'], option='edit'))
 
 
-# return redirect(url_for("views.modifica",rutaPagina=sitio,userId=userNombre))
+# return redirect(url_for("views.augment",rutaPagina=sitio,userId=userNombre))
 """ def generar_clave():
     clave= Fernet.generate_key()
     session["claveCript"]=clave
@@ -646,17 +646,23 @@ def survey():
 
 
 # Cargo la pagina desde beautifulSoup y la muestro en pantalla
-@views.route("/modifica/<userId>/<path:rutaPagina>", methods=["GET", "POST"])
-def modifica(rutaPagina, userId):
+@views.route("/augment/<path:rutaPagina>", methods=["GET", "POST"])
+def augment(rutaPagina):
 
     # En el caso que se tiene interes en una anotacion en particular
     argumentos = request.args.to_dict()
     anotationSel = ''
+    descriptionRef = ''
 
     scriptToFocusParragraph = ''
     if('annotationSel' in argumentos.keys()):
         anotationSel = argumentos.pop('annotationSel')
         session['anotationSel'] = anotationSel
+
+    if('description' in argumentos.keys()):
+        descriptionRef = argumentos.pop('description')
+        
+       
 
     # Obtengo el usuario de session
     # Lo pongo en la session de cookie local:
@@ -667,8 +673,6 @@ def modifica(rutaPagina, userId):
     else:
         userId = 'Anonymous'
 
-    print("La ruta de la Pagina es: "+rutaPagina)
-    print("El nombre de usuario es: "+userId)
 
     headersUserAgent = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -720,7 +724,7 @@ def modifica(rutaPagina, userId):
             if hrefVal.startswith('/'):
                 newURLVal = urljoin(rutaPagina, hrefVal)
                 a_Link.attrs['href'] = url_for(
-                    'views.modifica', rutaPagina=newURLVal.lower(), userId=usuarioActivo)
+                    'views.augment', rutaPagina=newURLVal.lower())
                 print(a_Link)
 
     print("Total CSS insertados en the page:", len(css_files))
@@ -746,9 +750,9 @@ def modifica(rutaPagina, userId):
             "http://", "https://")
 
 
-
+    descriptionRedirect=''
     metauserName = soup.new_tag(
-            'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=servicepediaPath, currentuser=usuarioActivo)
+            'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=servicepediaPath,descriptionRef=descriptionRef, currentuser=usuarioActivo)
 
     try:
         headTag.append(metauserName)
