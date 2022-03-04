@@ -68,7 +68,7 @@ def create_app():
             annotation.Annotation.create_all()
             notification.Notification.create_all(index="notification")
             survey.Survey.create_all(index="survey")
-            # description.Description.drop_all(index="description")
+            description.Description.drop_all(index="description")
             description.Description.create_all(index="description")
             document.Document.create_all()
 
