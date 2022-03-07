@@ -165,7 +165,7 @@ block content %}
         
         urlRefMod = `{{ url_for('views.augment',rutaPagina='RUTAPAGE') }}?description=DESCRIPTIONID`
         urlRefMod = urlRefMod.replace("RUTAPAGE",dataItem.uri);
-        urlRefMod = urlRefMod.replace("DESCRIPTIONID",dataItem.id);
+        urlRefMod = urlRefMod.replace("DESCRIPTIONID",descriptionId);
 
         $('#tablaAnnotations').append(
           ` ${sectionCategoria}
@@ -466,7 +466,7 @@ block content %}
           <td style="text-align: center;">
             {% set uriPath = anotation.uri.split('/') %}
             
-            <a href="{{ url_for('views.augment',rutaPagina='')}}{{anotation.uri}}?description={{description['id']}}">/{{ uriPath[-1:] |join('')}}</a>
+            <a href="{{ url_for('views.augment',rutaPagina='')}}{{anotation.uri}}?description={{ description.id }}">/{{ uriPath[-1:] |join('')}}</a>
           </td>
 
           <td style="text-align: center;">
