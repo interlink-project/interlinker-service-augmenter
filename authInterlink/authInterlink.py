@@ -390,17 +390,27 @@ def genReport(descriptionId=None):
     name = datetime.datetime.now().strftime("%Y%m%dT%H%M%S")+"_reportFilled.docx"
     root = "app/Render/"+name
     
+    logging.info('The 1 root is:')
+    logging.error(root)
+    
+
     doc.save(root)
     
     
     #Fix the correct folder:
     root = "Render/"+name
 
+    logging.info('The 2 root is:')
+    logging.error(root)
+
     #Borro el archivo generado despues de que hago la descarga.
     @after_this_request
     def delete(response):
         logging.info('root:')
         logging.error(root)
+
+        logging.info('The 3 root is:')
+        logging.error('app/'+root)
         
         os.remove('app/'+root)
         return response
