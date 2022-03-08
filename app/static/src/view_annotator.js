@@ -439,7 +439,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       }
 
       request = $.ajax({
-        url: "http://127.0.0.1:80/augmenterservice/annotations",
+        url: "http://127.0.0.1:80/annotations",
         dataType: "json",
         type: "post",
         contentType: "application/json",

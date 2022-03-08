@@ -2,7 +2,7 @@ import logging
 import jwt
 import datetime
 from re import I
-from flask import Blueprint, render_template, request, flash, jsonify, g, session, abort
+from flask import Blueprint, render_template, request, flash, jsonify, g, session, abort, after_this_request
 import json
 import requests
 import math
@@ -399,7 +399,7 @@ def claimModeration():
 
         # Now will send the email:
         msg = Message('The user '+firstName+' '+lastName+' ha realizado un claim to be a moderator.',
-                      sender='interlinkdeusto@gmail.com', recipients=[current_user.email])
+                      sender='interlinkdeusto@gmail.com', recipients=['interlinkdeusto@gmail.com'])
 
         sites = " ".join(str(x) for x in urlList)
         claimInfo = "The user {} {} who is a {} ".format(
@@ -421,7 +421,7 @@ def claimModeration():
         print("original string: ", message)
         print("encrypted string: ", encMessage)
 
-        textHref = settings.HOST+'/augmenterservice/aproveModerator?datos=' + \
+        textHref = settings.HOST+'/aproveModerator?datos=' + \
             encMessage.decode('ascii')
 
         msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
@@ -463,25 +463,44 @@ def claimModeration():
 
         # Agrego los archivos
 
-        # uploaded_file = request.files['archivoIdentificacion']
-        # filename = secure_filename(uploaded_file.filename)
-        # if filename != '':
+        uploaded_file = request.files['archivoIdentificacion']
+        filename = secure_filename(uploaded_file.filename)
+        if filename != '':
 
-        #     file_ext = os.path.splitext(filename)[1]
-        #     if file_ext not in settings.UPLOAD_EXTENSIONS:
-        #         abort(400)
-        #     # Guardo Archivo
-        #     uploaded_file.save(filename)
-        #     # Lo adjunto al email
-        #     with current_app.open_resource(filename) as fp:
-        #         msg.attach(filename, 'application/pdf', fp.read())
-        #     # Lo borro del disco
-        #     os.remove(filename)
+            file_ext = os.path.splitext(filename)[1]
+            if file_ext not in settings.UPLOAD_EXTENSIONS:
+                abort(400)
+            # Guardo Archivo
+            filepathTemp = "app/Render/"+filename
+            uploaded_file.save(filepathTemp)
+
+            
+            filepathTemp = "Render/"+filename
+            # Lo adjunto al email
+            with current_app.open_resource(filepathTemp) as fp:
+                msg.attach(filename, 'application/pdf', fp.read())
+
+            # Lo borro del disco
+            
+            #os.remove(filepathTemp)
+
+            #Borro el archivo generado despues de que hago la descarga.
+            @after_this_request
+            def delete(response):
+                logging.info('root:')
+                logging.error(filepathTemp)
+                
+                os.remove('app/'+filepathTemp)
+                return response
 
         mail = Mail(current_app)
         mail.send(msg)
 
         flash("The moderation request has been send.", "info")
+
+
+        
+
 
         return authInterlink.moderate()
 

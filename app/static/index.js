@@ -6,7 +6,7 @@ function deleteAnotacion(anotacionId, anotacionIdCode) {
     //Elimino la anotacion de la base de ElasticSearch
 
     fetch(
-      "http://127.0.0.1:80/augmenterservice/annotations/" + anotacionIdCode,
+      "http://127.0.0.1:80/annotations/" + anotacionIdCode,
       {
         method: "DELETE",
       }
@@ -26,7 +26,7 @@ function deleteDescription(descriptionId, descriptionIdCode) {
     //Elimino todas las descripciones relacionadas:
 
     fetch(
-      "http://127.0.0.1:80/augmenterservice/annotations/" + descriptionIdCode,
+      "http://127.0.0.1:80/annotations/" + descriptionIdCode,
       {
         method: "DELETE",
       }
