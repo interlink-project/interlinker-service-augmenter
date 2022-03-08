@@ -1,11 +1,13 @@
 from app.config import settings
 import logging
-from flask import Blueprint, jsonify, flash
+from flask import Blueprint, jsonify, flash, send_file, send_from_directory, after_this_request
 import requests
 import math
 from urllib.parse import urljoin, urlparse
 import datetime
 import uuid
+import os
+from docxtpl import DocxTemplate
 from flask import current_app, g
 
 from flask_babel import format_number, gettext, format_decimal, format_currency, format_percent
@@ -364,9 +366,51 @@ def advanceSearch():
 @authInterlink.route('/genReport/<string:descriptionId>',)
 def genReport(descriptionId=None):
 
-    print(descriptionId)
+    #Obtain description data:
 
-    return render_template("dashboard.html")
+    description = Description._get_Descriptions_byId(id=descriptionId)[0]
+    fechaActual = datetime.datetime.now()
+    fechaActual = fechaActual.strftime("%d/%m/%y")
+
+    #Obtain approved annotations of a description data:
+    listAnnotationsApproved = Annotation._get_AnnotationsApproved_by_Urls(listUrls=description['urls'])
+    listAnnotationsApproved= listAnnotationsApproved['annotations']
+
+    doc = DocxTemplate('app/static/servicepediaReport_template.docx')
+    context = { 'dateReport' : fechaActual, 
+                'description_title':description['title'],
+                'shortDescription':description['description'],
+                'annotations':listAnnotationsApproved ,
+                'qent':'false',
+                'tent':'false',
+                'fent':'false'
+                }
+    doc.render(context)
+
+    name = datetime.datetime.now().strftime("%Y%m%dT%H%M%S")+"_reportFilled.docx"
+    root = "app/Render/"+name
+    
+    doc.save(root)
+    
+    
+    #Fix the correct folder:
+    root = "Render/"+name
+
+    #Borro el archivo generado despues de que hago la descarga.
+    @after_this_request
+    def delete(response):
+        logging.info('root:')
+        logging.error(root)
+        
+        os.remove('app/'+root)
+        return response
+
+    return send_file(root,name,as_attachment=True,
+                                    attachment_filename=os.path.basename(name))
+
+
+
+
 
 
 

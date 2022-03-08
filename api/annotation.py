@@ -501,6 +501,81 @@ class Annotation(es.Model):
         resultado={'annotations':annotations,'numRes':numRes}
         return resultado
 
+    @classmethod
+    def _get_AnnotationsApproved_by_Urls(cls,**kwargs):
+        listUrls=kwargs.pop('listUrls')
+
+        q= {
+            "sort": [
+                {
+                "category": {
+                    "order": "desc",
+                    "ignore_unmapped": True
+                }
+                }
+            ],
+            "from": 0,
+            "size": 10000,
+            "query": {
+                "bool": {
+                "must":[]
+                }
+            }
+        }
+
+        #Que tengan una de las siguientes URIS:
+        filtroUriSection={
+            "bool": {
+                "should": []
+                }
+        }
+
+        for urlItem in listUrls:  
+            seccionState =  {
+                "match":{
+                    "uri": urlItem['url']
+                    }
+                }
+
+            filtroUriSection['bool']['should'].append(seccionState)
+        
+        q['query']['bool']['must'].append(filtroUriSection)
+
+        # Not replies:
+        sectCategory={
+                    "match":{
+                        "category": "reply"
+                        }
+                    }
+
+        q['query']['bool']['must_not']=[]
+        q['query']['bool']['must_not'].append(sectCategory)
+
+
+        #Solamente los que tienen estados approvados (state=2)
+        valueState=2 
+                
+        seccionState =  {
+            "match":{
+                "state": valueState
+                }
+            }
+
+        
+        q['query']['bool']['must'].append(seccionState)
+
+        
+        #Run the query:
+
+        res = cls.es.conn.search(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        numRes=res['hits']['total']
+
+        resultado={'annotations':annotations,'numRes':numRes}
+        return resultado
+
 
 
     def _get_by_multiple(cls,**kwargs):
