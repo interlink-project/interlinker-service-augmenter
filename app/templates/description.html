@@ -54,6 +54,7 @@ block content %}
 
   function aplicoFiltros(event) {
 
+
     //Obtengo valores de filtros:
 
     let estados = { InProgress: "on", Archived: "on", Approved: "on" };
@@ -61,6 +62,8 @@ block content %}
     estados['InProgress'] = document.getElementById("checkInProgress").checked;
     estados['Approved'] = document.getElementById("checkApproved").checked;
     estados['Archived'] = document.getElementById("checkArchived").checked;
+
+    let justMyContributions=document.getElementById("checkMyContributions").checked;
 
 
     textoBox = document.getElementById("searchBox");
@@ -177,7 +180,9 @@ block content %}
             <td> ${stateText} </td> 
             
             <td style="text-align: center;"> 
-              <a class="btn btn-outline-dark position-relative"> ${dataItem.nroReplies} </a>
+              <h5>
+              <a class="badge bg-light text-dark position-relative" style="text-decoration: none;" > ${dataItem.nroReplies} </a>
+              </h5>
             </td>
             
             <td> ${dataItem.text} </td>  
@@ -222,7 +227,7 @@ block content %}
       method: 'POST',
       url: {{ url_for('store.annotationsIndex')| tojson}},
   contentType: 'application/json;charset=UTF-8',
-    data: JSON.stringify({ "textoABuscar": texto, "estados": estados, "descriptionId": descriptionId, "page": page, "category": category })
+    data: JSON.stringify({ "textoABuscar": texto, "estados": estados,"justMyContributions":justMyContributions, "descriptionId": descriptionId, "page": page, "category": category })
     }).done(onSearchAnnotations);
         
     
@@ -295,10 +300,13 @@ block content %}
         </div>
 
         <button type="button" title="Report" class="btn btn-outline-secondary" onclick="window.location.href='{{ url_for('authInterlink.genReport',descriptionId= description['id'] ) }}';" style="padding: -2px;margin:0px;margin-left=5px;border: 0px;margin-right: 5px;" >
-         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-file-earmark-word" viewBox="0 0 16 16">
-          <path d="M5.485 6.879a.5.5 0 1 0-.97.242l1.5 6a.5.5 0 0 0 .967.01L8 9.402l1.018 3.73a.5.5 0 0 0 .967-.01l1.5-6a.5.5 0 0 0-.97-.242l-1.036 4.144-.997-3.655a.5.5 0 0 0-.964 0l-.997 3.655L5.485 6.88z"></path>
-          <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"></path>
-        </svg>
+         
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-journal-check" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"></path>
+            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"></path>
+            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"></path>
+          </svg> 
+          
 
         </button>
 
@@ -315,7 +323,7 @@ block content %}
 
 <div class="row">
 
-  <div class="col-6" style="display: flex;flex-direction: row;">
+  <div class="col-4" style="display: flex;flex-direction: row;">
     <input id="searchBox" class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
       onkeydown="searchTextEnter(event)" style="min-width: 200px;" />
     <button class="btn btn-outline-secondary" onclick="searchText(event)">Search</button>
@@ -324,7 +332,19 @@ block content %}
 
   </div>
 
-  <div class="col-6">
+  <div class="col-4">
+    <div style="display: flex; flex-direction: row-reverse;">
+
+
+      <div class="form-check" style="padding-right: 10px;">
+        <input class="form-check-input" type="checkbox" id="checkMyContributions" onchange="filterState(event)" >
+        <label class="form-check-label" for="checkMyContributions">My Contributions</label>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-4">
     <div style="display: flex; flex-direction: row-reverse;">
 
 
@@ -333,11 +353,11 @@ block content %}
         <label class="form-check-label" for="checkInProgress">In Progress</label>
       </div>
       <div class="form-check form-switch" style="padding-right: 10px;">
-        <input class="form-check-input" type="checkbox" id="checkArchived" onchange="filterState(event)" checked>
+        <input class="form-check-input" type="checkbox" id="checkArchived" onchange="filterState(event)" >
         <label class="form-check-label" for="checkArchived">Archived</label>
       </div>
       <div class="form-check form-switch" style="padding-right: 10px;">
-        <input class="form-check-input" type="checkbox" id="checkApproved" onchange="filterState(event)" checked>
+        <input class="form-check-input" type="checkbox" id="checkApproved" onchange="filterState(event)" >
         <label class="form-check-label" for="checkApproved">Approved</label>
       </div>
 
@@ -463,7 +483,7 @@ block content %}
 
           </td>
 
-          <td style="text-align: center;">
+          <td style="text-align: left;">
             {% set uriPath = anotation.uri.split('/') %}
             
             <a href="{{ url_for('views.augment',rutaPagina='')}}{{anotation.uri}}?description={{ description.id }}">/{{ uriPath[-1:] |join('')}}</a>
@@ -482,12 +502,12 @@ block content %}
       <td style="text-align: center;"> </td>
       -->
           <td style="text-align: center;">
-
-            <a class="btn btn-outline-dark position-relative">
+            <h5>
+            <a class="badge bg-light text-dark position-relative" style="text-decoration: none;">
               {{ anotation.nroReplies }}
 
             </a>
-
+            </h5>
 
           </td>
 

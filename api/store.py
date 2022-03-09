@@ -33,6 +33,7 @@ from api.description import Description
 from api.elasticsearch import RESULTS_MAX_SIZE
 from api.notification import Notification
 from api.survey import Survey
+import logging
 
 store = Blueprint('store', __name__)
 
@@ -426,6 +427,10 @@ def annotationsIndex():
     stateArchived = estados['Archived']
     stateApproved = estados['Approved']
 
+    justMyContributions=False
+    if "justMyContributions" in params:
+        justMyContributions = params.get("justMyContributions")
+
     category = params.get("category")
 
     descriptionId = params.get("descriptionId")
@@ -440,7 +445,7 @@ def annotationsIndex():
         listUrl.append(url['url'])
     # Realizo la busqueda:
     annotations = Annotation._get_by_multiple(
-        Annotation, textoABuscar=textoABuscar, estados=estados, urls=listUrl, category=category, notreply=True, page=page)
+        Annotation, textoABuscar=textoABuscar, estados=estados, urls=listUrl, category=category, notreply=True, page=page, justMyContributions=justMyContributions,user=current_user.email)
 
     #nroRegistros= Annotation._get_by_multipleCounts(Annotation,textoABuscar=textoABuscar,estados=estados,url=descriptionUri,page=page)
     numRes = annotations['numRes']

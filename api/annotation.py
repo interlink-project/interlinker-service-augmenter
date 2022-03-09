@@ -1,3 +1,4 @@
+from flask import current_app
 from api import authz, document, es
 import datetime
 
@@ -305,6 +306,44 @@ class Annotation(es.Model):
     
         return res
 
+    @classmethod
+    def _get_Annotations_by_Root_User(cls,**kwargs):
+
+        q={
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "user": kwargs.pop("user")
+                            }
+                        },
+                        {
+                            "match": {
+                                "idReplyRoot": kwargs.pop("idReplyRoot")
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+
+
+
+        print(q)
+
+
+        res = cls.es.conn.search(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        numRes=res['hits']['total']
+        
+
+        resultado={'annotations':annotations,'numRes':numRes,'query':q}
+        return resultado
+
+
     #Get users that has participated as Moderator or Annotator
     @classmethod
     def currentActiveUsers(cls,**kwargs):
@@ -587,7 +626,21 @@ class Annotation(es.Model):
         category=kwargs.pop("category")
         notreply=kwargs.pop("notreply")
 
+        justMyContributions=False
+        user=''
+
         initReg=(int(page)-1)*10
+        pgsize=PAGGINATION_SIZE
+
+        if 'justMyContributions' in kwargs:
+            justMyContributions=kwargs.pop("justMyContributions")
+            user=kwargs.pop("user")
+            
+            if justMyContributions:
+                initReg=0
+                pgsize=10000
+
+        
         q= {
             "sort": [
                 {
@@ -598,7 +651,7 @@ class Annotation(es.Model):
                 }
             ],
             "from": initReg,
-            "size": PAGGINATION_SIZE,
+            "size": pgsize,
             "query": {
                 "bool": {
                 "must":[]
@@ -677,7 +730,6 @@ class Annotation(es.Model):
             if estados[keyItem]:
                 existenStates=True
                 if(keyItem=="Approved"):
-                    
                     valueState=2   
                 if(keyItem=="Archived"):
                     valueState=1   
@@ -708,6 +760,27 @@ class Annotation(es.Model):
         numRes=res['hits']['total']
 
         resultado={'annotations':annotations,'numRes':numRes}
+
+        #Redefino los valores de paginacion:
+        initReg=(int(page)-1)*10
+        pgsize=PAGGINATION_SIZE
+
+        # Filtro unicamente las que he contribuido
+        listAnnotations = []
+        if justMyContributions:
+            for annotationItem in annotations:
+                #Look for annotation with my participations
+                resRootRef = Annotation._get_Annotations_by_Root_User(user=user, idReplyRoot=annotationItem['id'])
+               
+                if resRootRef['numRes']>0 or annotationItem['user']==user:
+                    listAnnotations.append(annotationItem)
+
+            annotations = listAnnotations[initReg:initReg+PAGGINATION_SIZE]
+            numRes = len(listAnnotations)
+            resultado={'annotations':annotations,'numRes':numRes}
+
+
+        
         return resultado
 
 

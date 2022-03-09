@@ -455,7 +455,7 @@ def description(descriptionId=None):
             Annotation.annotationStats(Annotation, uri=itemUrl['url'])
 
     res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
-                                      'InProgress': True, 'Archived': True, 'Approved': True}, urls=listUrlsPages, category=categoria, notreply=True, page=page)
+                                      'InProgress': True, 'Archived': False, 'Approved': False}, urls=listUrlsPages, category=categoria, notreply=True, page=page)
     numRes = res['numRes']
     res = res['annotations']
 
