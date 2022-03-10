@@ -1,5 +1,6 @@
 from flask import current_app
 from api import authz, document, es
+from bs4 import BeautifulSoup
 import datetime
 
 TYPE = 'annotation'
@@ -611,6 +612,14 @@ class Annotation(es.Model):
                                  body=q)
         annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
         numRes=res['hits']['total']
+
+
+        #Re formateo los campos text por que tienen tags y deben ser solamente textos.
+
+        for annotation in annotations:
+            soup=BeautifulSoup(annotation['text'], features="html.parser")
+            annotation['text']= soup.get_text()
+
 
         resultado={'annotations':annotations,'numRes':numRes}
         return resultado
