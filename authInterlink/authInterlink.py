@@ -153,9 +153,10 @@ def logout():
     # # return render_template("home.html")
     # # Por ahora queda asi.
     # return redirect(current_app.config["END_SESSION_ENDPOINT"])
-    paginaToRedirect=settings.PROTOCOL+'localhost'+url_for('views.inicio')
+    paginaToRedirect=settings.REDIRECT_SERVICEPEDIA+url_for('views.inicio')
 
     return redirect(settings.AUTHINTERLINK_URL+'/logout'+'?redirect_on_callback='+paginaToRedirect)
+
 
 
 
