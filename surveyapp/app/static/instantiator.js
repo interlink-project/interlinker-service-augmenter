@@ -16,30 +16,10 @@ function App() {
     const [description, setDescription] = React.useState("");
     const [error, setError] = React.useState("");
     const [created, setCreated] = React.useState(false);
-    const inIframe = window.location !== window.parent.location
 
     React.useEffect(() => {
-        if (inIframe) {
-            window.parent.postMessage({
-                'code': 'initialized',
-            }, origin);
-        }
+        sendMessage("initialized")
     }, [])
-
-    const sendMessage = (code, data) => {
-        const dataToSend = {
-          id: data._id
-        }
-        if (inIframe) {
-          window.parent.postMessage({
-            'code': code,
-            'message': dataToSend
-          }, origin);
-        } else {
-          setCreated(dataToSend)
-        }
-      }
-    
 
     const submit = () => {
         if (!title) {
@@ -52,14 +32,11 @@ function App() {
         }
         service.create({ title, description }).then(response => {
             console.log("RESPONSE CONFIRM", response.data);
-            sendMessage("asset_created", response.data);
-            
-            var { domain } = jQuery('#data').data();
-            servicepediaUrl=domain.SERVICEPEDIA_URL;
+            const dataToSend = {
+                id: response.data._id
+            }
+            sendMessage("asset_created", dataToSend, () => setCreated(dataToSend), null, window.close)
 
-            window.location.replace(`${servicepediaUrl}/saveSurvey?assetId=${response.data['_id']}&surveyTitle=${response.data['title']}&surveyDesc=${response.data['description']}`);
-            
-            
         })
     }
     return (

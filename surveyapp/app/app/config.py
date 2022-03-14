@@ -22,8 +22,6 @@ class Settings(BaseSettings):
     MONGODB_URL: str
     MONGODB_DATABASE: str
     COLLECTION_NAME: str
-
-    SERVICEPEDIA_URL: str
     
     class Config:
         case_sensitive = True

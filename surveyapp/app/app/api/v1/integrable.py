@@ -45,13 +45,13 @@ async def delete_asset(id: str, collection: AsyncIOMotorCollection = Depends(get
 
 
 @integrablerouter.get(
-    "/assets/{id}/view/{current_user}", response_description="GUI for viewing survey"
+    "/assets/{id}/view", response_description="GUI for viewing survey"
 )
-async def asset_viewer(id: str, request: Request, current_user: str, collection: AsyncIOMotorCollection = Depends(get_collection)):
+async def asset_viewer(id: str, request: Request, current_user: dict = Depends(get_current_active_user), collection: AsyncIOMotorCollection = Depends(get_collection)):
     survey = await crud.get(collection, id)
     if survey is not None:
         response = templates.TemplateResponse("surveyviewer.html", {
-                                              "request": request, "BASE_PATH": settings.BASE_PATH, "DOMAIN_INFO": json.dumps(domainfo), "DATA": json.dumps(survey, indent=4, sort_keys=True, default=str),"USER":current_user, "title": survey["title"]})
+                                              "request": request, "BASE_PATH": settings.BASE_PATH, "DOMAIN_INFO": json.dumps(domainfo), "DATA": json.dumps(survey, indent=4, sort_keys=True, default=str), "title": survey["title"]})
         return response
 
     raise HTTPException(status_code=404, detail=f"Asset {id} not found")
@@ -71,7 +71,7 @@ async def asset_editor(id: str, request: Request, collection: AsyncIOMotorCollec
 
 
 @integrablerouter.post(
-    "/assets/{id}/clone", response_description="Asset JSON", response_model=AssetSchema, status_code=201
+    "/assets/{id}/clone", response_description="Asset JSON", status_code=201, response_model=AssetBasicDataSchema
 )
 async def clone_asset(id: str, collection: AsyncIOMotorCollection = Depends(get_collection)):
     if (survey := await crud.get(collection, id)) is not None:

@@ -18,7 +18,9 @@
     <script src="https://unpkg.com/survey-creator-knockout@1.9.6-beta.1/survey-creator-knockout.min.js"></script>
     <link href="https://unpkg.com/survey-creator-knockout@1.9.6-beta.1/survey-creator-knockout.min.css" type="text/css"
         rel="stylesheet" />
-    <meta id="data" data-domain="{{DOMAIN_INFO}}" data-basepath="{{BASE_PATH}}" data-dataFromBackend="{{DATA}}" data-servicepediaurl="{{SERVICEPEDIA_URL}}">
+    <meta id="data" data-domain="{{DOMAIN_INFO}}" data-basepath="{{BASE_PATH}}" data-dataFromBackend="{{DATA}}">
+    <script type="text/babel" src="{{BASE_PATH}}/static/generic.js"></script>
+
 </head>
 
 <body>
@@ -26,8 +28,11 @@
         <div id="creatorElement" style="height: 100vh;"></div>
     </div>
     <script type="text/javascript">
-        var { domain, basepath, datafrombackend, servicepediaurl } = jQuery('#data').data();
+        var { domain, basepath, datafrombackend } = jQuery('#data').data();
         const origin = domain.PROTOCOL + domain.SERVER_NAME
+        const inIframe = window.location !== window.parent.location
+        const hasOpener = window.opener && !window.opener.closed
+
         console.log(origin, datafrombackend, basepath)
 
         var http = axios.create({
@@ -52,46 +57,41 @@
             creator.JSON = datafrombackend
         }
 
+       
+
         creator.saveSurveyFunc = function (saveNo, callback) {
             console.log(creator.text)
-            
-            var { domain } = jQuery('#data').data();
-            servicepediaurl=domain.SERVICEPEDIA_URL;
-
             if (datafrombackend) {
                 // Update
                 http.put(`${basepath}/api/v1/assets/${datafrombackend._id}`, creator.text).then(res => {
-                    console.log(res.data)
-                    if (window.parent) {
-                        window.parent.postMessage({
-                            'code': 'asset_updated',
-                            'data': res.data
-                        }, "*");
-                    }
-                    window.location.replace(`${servicepediaurl}/updateSurvey?assetId=${datafrombackend._id}&surveyTitle=${datafrombackend.title}&surveyDesc=${datafrombackend.description}`);
+                    console.log(res.data);
+
                     callback(saveNo, true);
                 }).catch(err => callback(saveNo, false));
             } else {
                 http.post(`${basepath}/api/v1/assets/`, creator.text).then(res => {
                     console.log(res.data)
-                    if (window.parent) {
+
+                    if (inIframe) {
                         window.parent.postMessage({
-                            'code': 'asset_created',
-                            'data': res.data
-                        }, "*");
+                            'code': "asset_created",
+                            'message': res.data
+                        }, origin);
+                    } else if (hasOpener) {
+                        window.opener.postMessage({
+                            'code': "asset_created",
+                            'message': res.data
+                        }, origin);
+
                     }
-                    window.location.replace(`${servicepediaurl}/saveSurvey?assetId=${res._id}&surveyTitle=${res.title}&surveyDesc=${res.description}`);
                     callback(saveNo, true);
-                 
                 }).catch(err => callback(saveNo, false));
             }
         }
 
-        if (window.parent) {
-            window.parent.postMessage({
-                'code': 'initialized',
-            }, "*");
-        }
+
+        sendMessage("initialized")
+
     </script>
 </body>
 

@@ -9,6 +9,7 @@ class Settings(BaseSettings):
 
     ELASTICSEARCH_URL: str = os.getenv("ELASTICSEARCH_URL")
     SURVEYINTERLINK_URL: str = os.getenv("SURVEYINTERLINK_URL")
+    AUTHINTERLINK_URL: str = os.getenv("AUTHINTERLINK_URL")
     PORT: str = os.getenv("PORT")
     HOST: str = os.getenv("HOST", "0.0.0.0")
     
@@ -63,7 +64,7 @@ class Settings(BaseSettings):
 
   
 
-    if(os.getenv("DOMAIN")== '127.0.0.1'):
+    if(os.getenv("DOMAIN")== 'localhost'):
     #Local Development
         REDIRECT_URI: str = os.getenv(
             "PROTOCOL") + os.getenv("DOMAIN") + os.getenv("BASE_PATH") + "/oidc_callback"

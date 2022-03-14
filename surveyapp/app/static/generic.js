@@ -3,7 +3,7 @@ const {
     createTheme,
 } = MaterialUI;
 
-var { domain, basepath, datafrombackend, servicepediaUrl } = jQuery('#data').data();
+var { domain, basepath, datafrombackend } = jQuery('#data').data();
 const origin = domain.PROTOCOL + domain.SERVER_NAME
 console.log(origin, datafrombackend, basepath)
 
@@ -103,3 +103,24 @@ var theme = createTheme({
         '0 0 1px 0 rgba(0,0,0,0.31), 0 24px 36px -8px rgba(0,0,0,0.25)'
     ]
 });
+
+const inIframe = window.location !== window.parent.location
+const hasOpener = window.opener && !window.opener.closed
+
+const sendMessage = (code, data, callback, callbackIframe, callbackOpener) => {
+    if (inIframe) {
+        window.parent.postMessage({
+            'code': code,
+            'message': data
+        }, origin);
+        callbackIframe && callbackIframe()
+    } else if (hasOpener) {
+        window.opener.postMessage({
+            'code': code,
+            'message': data
+        }, origin);
+        callbackOpener && callbackOpener()
+    }else{
+      callback && callback()
+    }
+}

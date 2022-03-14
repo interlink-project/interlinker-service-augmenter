@@ -30,6 +30,7 @@ from api.annotation import Annotation
 from api.description import Description
 from api.notification import Notification
 from app.languages import getLanguagesList
+from authInterlink.authentication import get_current_active_user, get_current_user
 
 authInterlink = Blueprint('authInterlink', __name__,
                           template_folder="./app/templates")
@@ -41,57 +42,121 @@ tok2 = uuid.uuid4()
 APP_STATE = tok1.hex
 NONCE = tok2.hex
 
-
 @authInterlink.route("/login")
 def login():
 
+    #LLamo al componente de authentication para verificar que existe un usuario en session
+    usuario=get_current_user(request)
 
-    redirecttoCallback=settings.REDIRECT_URI
-    if(redirecttoCallback=='https://dev.interlink-project.eu/oidc_callback'):
-        redirecttoCallback='https://servicepedia.dev.interlink-project.eu/oidc_callback'
+    #If the user is not logged in call a log in method of ath
+    if usuario==None:
 
-    # get request params
-    query_params = {'client_id': current_app.config["CLIENT_ID"],
-                    'redirect_uri': redirecttoCallback,
-                    'scope': "openid email profile",
-                    'state': APP_STATE,
-                    'nonce': NONCE,
-                    'response_type': 'code',
-                    'response_mode': 'query'}
-    logging.info('parametros de configuracion auth:')
-    logging.info(query_params)
+        paginaRedirigir=settings.REDIRECT_SERVICEPEDIA+url_for('authInterlink.dashboard')
 
+        # url = 'http://localhost:8929'+'/login'
+        # user_agent = {'User-agent': 'Mozilla/5.0'}
+        # PARAMS = {'redirect_on_callback':paginaRedirigir}
 
-    # build request_uri
-    request_uri = "{base_url}?{query_params}".format(
-        base_url=current_app.config["AUTH_URI"],
-        query_params=requests.compat.urlencode(query_params)
+        # response = requests.get(url,params=PARAMS, headers=user_agent)
+
+        # print(response.status_code)
+
+        # return redirect(response.url)
+        
+        redirectToAuth=settings.AUTHINTERLINK_URL+'/login'+'?redirect_on_callback='+paginaRedirigir
+        logging.info('Pagina de login:')
+        logging.info(redirectToAuth)
+        return redirect(redirectToAuth)
+
+    unique_id = usuario["sub"]
+    user_email = usuario["email"]
+    user_name = usuario["given_name"]
+
+    user = User(
+        id_=unique_id, name=user_name, email=user_email
     )
 
-    return redirect(request_uri)
+    if not User.get(unique_id):
+        User.create(unique_id, user_name, user_email)
+
+    login_user(user)
+   # g.user =user
+
+    session.pop('_flashes', None)
+
+     # la pagina que se pretende ingresar es:
+    paginaNext = ''
+    if 'next' in session.keys():
+        paginaNext = session['next']
+
+    if paginaNext != "":
+        return redirect(paginaNext)
+    else:
+        return redirect(url_for("authInterlink.dashboard"))
+
+
+
+
+# @authInterlink.route("/loginDaniel")
+# def loginDaniel():
+
+#     redirecttoCallback=settings.REDIRECT_URI
+#     if(redirecttoCallback=='https://dev.interlink-project.eu/oidc_callback'):
+#         redirecttoCallback=settings.REDIRECT_SERVICEPEDIA+'/oidc_callback'
+
+#     # get request params
+#     query_params = {'client_id': current_app.config["CLIENT_ID"],
+#                     'redirect_uri': redirecttoCallback,
+#                     'scope': "openid email profile",
+#                     'state': APP_STATE,
+#                     'nonce': NONCE,
+#                     'response_type': 'code',
+#                     'response_mode': 'query'}
+#     logging.info('parametros de configuracion auth:')
+#     logging.info(query_params)
+
+
+#     # build request_uri
+#     request_uri = "{base_url}?{query_params}".format(
+#         base_url=current_app.config["AUTH_URI"],
+#         query_params=requests.compat.urlencode(query_params)
+#     )
+
+#     return redirect(request_uri)
 
 
 @authInterlink.route("/logout", methods=["GET", "POST"])
 @login_required
 def logout():
-    print(session)
+
+    #Quito el usuario loggeado del componente auth
+
+
+    #Quito el usuario de la session de flask
     logout_user()
-    #response = redirect(config["end_session_endpoint"])
-    payload = {'id_token_hint': session['id_token'],
-               'post_logout_redirect_uri': settings.REDIRECT_SERVICEPEDIA+"/home",
-               'state': APP_STATE}
-    #headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-    r = requests.get(
-        current_app.config["END_SESSION_ENDPOINT"],
-        params=payload,
-    )
-    r.url
-    r.text
+    
+   
+    
+    # #response = redirect(config["end_session_endpoint"])
+    # payload = {'id_token_hint': session['id_token'],
+    #            'post_logout_redirect_uri': settings.REDIRECT_SERVICEPEDIA+"/home",
+    #            'state': APP_STATE}
+    # #headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    # r = requests.get(
+    #     current_app.config["END_SESSION_ENDPOINT"],
+    #     params=payload,
+    # )
+    # r.url
+    # r.text
     session.clear()
-    # return response
-    # return render_template("home.html")
-    # Por ahora queda asi.
-    return redirect(current_app.config["END_SESSION_ENDPOINT"])
+    # # return response
+    # # return render_template("home.html")
+    # # Por ahora queda asi.
+    # return redirect(current_app.config["END_SESSION_ENDPOINT"])
+    paginaToRedirect=settings.PROTOCOL+'localhost'+url_for('views.inicio')
+
+    return redirect(settings.AUTHINTERLINK_URL+'/logout'+'?redirect_on_callback='+paginaToRedirect)
+
 
 
 @authInterlink.route("/about")
@@ -284,7 +349,8 @@ def survey():
 def surveyInstantiator():
 
     # Redirecciono al editor:
-    return redirect(current_app.config['SURVEYINTERLINK_URL']+"/assets/"+"instantiate")
+    #return redirect(current_app.config['SURVEYINTERLINK_URL']+"/assets/"+"instantiate")
+    return redirect(settings.SURVEYINTERLINK_URL+"/assets/"+"instantiate")
 
 
 def obtainUsersEmail(listItemsBucket=[]):

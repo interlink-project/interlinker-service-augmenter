@@ -83,6 +83,7 @@ services:
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200 
       - SURVEYINTERLINK_URL=http://${DOMAIN}/surveymod
+      - AUTHINTERLINK_URL=http://${DOMAIN}/auth
       - HOST=0.0.0.0
       - VIRTUAL_HOST=servicepedia.${DOMAIN?Variable not set}
       - PORT=${PORT_SERVICEPEDIA}
@@ -93,6 +94,7 @@ services:
     depends_on:
       - elasticsearch
       - survey
+      - auth
     networks:
       - traefik-public
       - default
@@ -135,6 +137,49 @@ services:
       - traefik.http.routers.${STACK_NAME?Variable not set}-surveymod.rule=Host(`${DOMAIN}`) && PathPrefix(`/surveymod`)
       - traefik.http.routers.${STACK_NAME?Variable not set}-surveymod.middlewares=surveymod-stripprefix
       - traefik.http.middlewares.surveymod-stripprefix.stripprefix.prefixes=/surveymod
+    ports:
+      - "8229:80"
+  
+  auth:
+    build:
+      context: ./backend-auth
+      dockerfile: Dockerfile
+      target: dev
+    container_name: auth-integrated
+    volumes:
+      - ./backend-auth:/app
+    env_file:
+      - .env
+    environment:
+      - MODE=integrated
+      - PROTOCOL=http://
+      - SERVER_NAME=${DOMAIN?Variable not set}
+      - PORT=${PORT_AUTH}
+      - BASE_PATH=
+      - MONGODB_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb:27017/${MONGODB_DATABASE}?retryWrites=true&w=majority
+      - BACKEND_CORS_ORIGINS=["http://localhost","http://127.0.0.1","http://augmenterservice"]
+      - SECRET_KEY=changethis
+      - MONGODB_DATABASE=${MONGODB_DATABASE}
+      - COLLECTION_NAME=users
+      - CLIENT_ID=c_0e0822df-9df8-48d6-b4d9-c542a4623f1b
+      - SERVER_METADATA_URL=https://aac.platform.smartcommunitylab.it/.well-known/openid-configuration
+
+    networks:
+      - traefik-public
+      - default
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.http.services.${STACK_NAME?Variable not set}-auth.loadbalancer.server.port=${PORT_AUTH}
+      - traefik.http.routers.${STACK_NAME?Variable not set}-auth.rule=Host(`${DOMAIN}`) && PathPrefix(`/auth`)
+      - traefik.http.routers.${STACK_NAME?Variable not set}-auth.middlewares=auth-stripprefix
+      - traefik.http.middlewares.auth-stripprefix.stripprefix.prefixes=/auth
+
+    
+      
+      
+
+
 volumes:
   elasticsearch-data:
     driver: local

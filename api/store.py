@@ -33,7 +33,9 @@ from api.description import Description
 from api.elasticsearch import RESULTS_MAX_SIZE
 from api.notification import Notification
 from api.survey import Survey
+from app.config import settings
 import logging
+import requests
 
 store = Blueprint('store', __name__)
 
@@ -208,10 +210,10 @@ def read_survey(docid):
     return jsonify(survey)
 
 
-@store.route('/completeSurvey')
-def completeaSurvey():
+@store.route('/completeSurvey/<idAsset>')
+def completeaSurvey(idAsset):
     # Tengo que poner la notificacion como realizada.
-    idAsset = request.args.get('assetId')
+
     notification = Notification._get_Notification_byAssetId(assetId=idAsset)
 
     notification = notification['notifications'][0]
@@ -222,12 +224,25 @@ def completeaSurvey():
     return redirect(url_for('authInterlink.dashboard'))
 
 
-@store.route('/saveSurvey')
-def saveSurvey():
+@store.route('/saveSurvey/<idAsset>')
+def saveSurvey(idAsset):
 
-    idAsset = request.args.get('assetId')
-    title = request.args.get('surveyTitle')
-    description = request.args.get('surveyDesc')
+    # api-endpoint
+    
+    URL = "http://survey/assets/"+idAsset
+    
+    logging.info(URL)
+    r = requests.get(url = URL)
+    logging.info(r)
+    data = r.json()
+    
+    logging.info(data)
+
+    #Obtengo los datos del survey:
+    description=data['description']
+    title = data['name']
+    
+
     # Create a new survey:
 
     newSurvey = Survey(title=title,
@@ -238,8 +253,7 @@ def saveSurvey():
 
     newSurvey.save(index="survey")
 
-    return redirect(current_app.config['SURVEYINTERLINK_URL']+"/assets/"+idAsset+"/edit")
-
+    return redirect(url_for('views.survey'))
 
 @store.route('/updateSurvey')
 def updateSurvey():

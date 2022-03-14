@@ -227,9 +227,65 @@
             })
             });
     
-    
+        function openNewWindow(event) {
+            if(event.type=='click'){
+
+                let href = event.target.getAttribute('href');
+                window.open(href, "_blank");
+
+            }
+        }
+
+        function openEditSurvey(el) {
+
+                let href = el.getAttribute('href');
+                window.open(href, "_blank");
+
+        }
+        
+
+
+        
+        window.addEventListener("message", onMessage, false);
       
+        async function onMessage(event) {
+            // Check sender origin to be trusted
+            //if (event.origin.length > 0 && event.origin.includes(env.DOMAIN)) return;
+            
+           // if (event.origin.length > 0) return;
+            const { code, message } = event.data
+            console.log(code, message)
     
+            if (code === "asset_created") {
+             
+                let codigoAsset=message['id']
+                //Redirijo al editor
+                        
+                urlRef = `{{ url_for('store.saveSurvey',idAsset= 'SURVEYID') }}`;
+                urlRef = urlRef.replace("SURVEYID",codigoAsset);
+
+                window.location.href = urlRef;
+                
+            }
+            if (code === "asset_update") {
+
+                //Just refresh the page
+                        
+                urlRef = `{{ url_for('store.surveysIndex') }}`;
+                window.location.href = urlRef;
+                
+            }
+            if (code === "asset_completed") {
+                let codigoAsset=message['id']
+                //Redirijo al editor
+                        
+                urlRef = `{{ url_for('store.completeaSurvey',idAsset= 'SURVEYID') }}`;
+                urlRef = urlRef.replace("SURVEYID",codigoAsset);
+
+                window.location.href = urlRef;
+                
+            }
+        }
     
     </script>
     
@@ -291,8 +347,8 @@
                             
                             <td>
                                
-                                <a  href="{{ surveyHost }}/assets/{{ survey.idAsset }}/edit" class="btn btn-outline-secondary" style="max-width: 70px;" title="Edit" ><i class="bi bi-tools " style="width:100px;"></i></a>
-                 
+                                <a onclick="openEditSurvey(this);return false;"  href="{{ surveyHost }}/assets/{{ survey.idAsset }}/edit" class="btn btn-outline-secondary" style="max-width: 70px;" title="Edit" ><i class="bi bi-tools " style="width:100px;"></i></a>
+                                
                             </td>
                             <td>
                                
@@ -372,16 +428,17 @@
         <div class="row">
             <div class="col" style="align-content: left; justify-content: left; display: flex">
                 
-                <form class="form-inline my-2 my-lg-0" id="FormSurvey" action="{{ url_for('authInterlink.surveyInstantiator')}}"  enctype="multipart/form-data" method="POST">
-    
-                        <div class="row" style="align-content: center; justify-content: center;">
-                            <div class="col" style="align-content: center; justify-content: center;">
-                                <button type="submit" class="btn btn-secondary" style="margin: 1px;margin-left: 5px;" >Create a new survey</button>
+               
+                <div class="row" style="align-content: center; justify-content: center;">
+                    <div class="col" style="align-content: center; justify-content: center;">
+                        <button onclick="openNewWindow(event)" href="{{ surveyHost }}/assets/instantiate"  class="btn btn-secondary" style="margin: 1px;margin-left: 5px;" >Create a new survey</button>
+
+                    </div>
+                </div>
         
-                            </div>
-                        </div>
-        
-                </form>
+              
+
+                
             
           </button>
             </div>

@@ -764,7 +764,7 @@ def augment(rutaPagina):
 
     servicepediaPath = settings.REDIRECT_SERVICEPEDIA
 
-    if not (settings.DOMAIN == "127.0.0.1"):
+    if not (settings.DOMAIN == "localhost"):
         servicepediaPath = servicepediaPath.replace(
             "http://", "https://")
 
