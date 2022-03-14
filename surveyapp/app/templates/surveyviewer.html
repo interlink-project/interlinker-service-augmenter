@@ -27,13 +27,38 @@
             }
         });
 
-       
+        const inIframe = window.location !== window.parent.location
+        const hasOpener = window.opener && !window.opener.closed
+
+        const sendMessage = (code, data, callback, callbackIframe, callbackOpener) => {
+            if (inIframe) {
+                window.parent.postMessage({
+                    'code': code,
+                    'message': data
+                }, origin);
+                callbackIframe && callbackIframe()
+            } else if (hasOpener) {
+                window.opener.postMessage({
+                    'code': code,
+                    'message': data
+                }, origin);
+                callbackOpener && callbackOpener()
+            }else{
+            callback && callback()
+            }
+        }
+
             survey
                 .onComplete
                 .add(function (sender) {
                     console.log(sender.data)
                     http.post(`${basepath}/api/v1/assets/${datafrombackend._id}/answers`, sender.data).then(res => {
-                    
+                    console.log(res.data);
+
+                    dataToSend=res.data;
+                    sendMessage("asset_completed", dataToSend, () => setCreated(dataToSend), null, null);
+
+                });
                 });
                 
             $("#surveyElement").Survey({model: survey});

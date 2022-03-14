@@ -51,6 +51,7 @@ async def callback(request: Request, redirect_on_callback: Optional[str] = Cooki
             expires=token["expires_in"],
             httponly=True,
             samesite='strict',
+            domain=settings.SERVER_NAME,
             secure=settings.PRODUCTION_MODE,
         )
         

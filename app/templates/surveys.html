@@ -227,20 +227,17 @@
             })
             });
     
+        var surveyWindow;
         function openNewWindow(event) {
             if(event.type=='click'){
-
                 let href = event.target.getAttribute('href');
-                window.open(href, "_blank");
-
+                surveyWindow = window.open(href, "_blank")
             }
         }
 
         function openEditSurvey(el) {
-
                 let href = el.getAttribute('href');
-                window.open(href, "_blank");
-
+                surveyWindow = window.open(href, "_blank");
         }
         
 
@@ -256,6 +253,7 @@
             const { code, message } = event.data
             console.log(code, message)
     
+            
             if (code === "asset_created") {
              
                 let codigoAsset=message['id']
@@ -265,14 +263,17 @@
                 urlRef = urlRef.replace("SURVEYID",codigoAsset);
 
                 window.location.href = urlRef;
+
+                surveyWindow.close();
                 
             }
-            if (code === "asset_update") {
+            if (code === "asset_updated") {
 
-                //Just refresh the page
                         
-                urlRef = `{{ url_for('store.surveysIndex') }}`;
+                urlRef = `{{ url_for('authInterlink.survey') }}`;
                 window.location.href = urlRef;
+
+                surveyWindow.close();
                 
             }
             if (code === "asset_completed") {
@@ -283,6 +284,8 @@
                 urlRef = urlRef.replace("SURVEYID",codigoAsset);
 
                 window.location.href = urlRef;
+
+                surveyWindow.close();
                 
             }
         }
