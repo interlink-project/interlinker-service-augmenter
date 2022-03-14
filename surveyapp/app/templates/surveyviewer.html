@@ -35,13 +35,13 @@
                 window.parent.postMessage({
                     'code': code,
                     'message': data
-                }, origin);
+                }, '*');
                 callbackIframe && callbackIframe()
             } else if (hasOpener) {
                 window.opener.postMessage({
                     'code': code,
                     'message': data
-                }, origin);
+                }, '*');
                 callbackOpener && callbackOpener()
             }else{
             callback && callback()
@@ -56,7 +56,7 @@
                     console.log(res.data);
 
                     dataToSend=res.data;
-                    sendMessage("asset_completed", dataToSend, () => setCreated(dataToSend), null, null);
+                    sendMessage("asset_completed", dataToSend, null, null, null);
 
                 });
                 });
