@@ -165,7 +165,7 @@ def about():
 
 
 @authInterlink.route("/dashboard")
-@login_required
+
 def dashboard():
 
     # Cargo los combos:
