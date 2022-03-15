@@ -172,7 +172,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         return this.annotator.deleteAnnotation(item.data("annotation"));
       }
       if (type == "reply") {
-        console.log("Ha entrado en la accion de reply");
+        //console.log("Ha entrado en la accion de reply");
 
         var annotator_textArea = item.find("div.annotator-marginviewer-reply");
         annotator_textArea = annotator_textArea.find("div.anotador_text");
@@ -206,7 +206,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       //this.annotator.replyAnnotation(item.data("annotation"));
 
       if (type == "edit") {
-        console.log("Ha entrado en la accion de edit");
+        //console.log("Ha entrado en la accion de edit");
 
         var annotator_textArea = item.find("div.annotator-marginviewer-text");
         annotator_textArea = annotator_textArea.find("div.anotador_text");
@@ -379,7 +379,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       }
       var anotation_reference = "annotation-" + current_annotation.id;
       $("#" + anotation_reference).data("annotation", current_annotation);
-      console.log(this.annotations);
+      //console.log(this.annotations);
       this.annotator.updateAnnotation(current_annotation);
 
       //Actualizo los datos que tienen los highliths.
@@ -863,8 +863,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         replyPermission = false;
       }
 
-      console.log(updatePermission);
-      console.log(deletePermission);
+      //console.log(updatePermission);
+      //console.log(deletePermission);
 
       var shared_annotation = "";
       var class_label = "label";

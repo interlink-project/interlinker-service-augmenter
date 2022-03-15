@@ -248,7 +248,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       if ((field.checked = "checked")) {
         category = annotation.category;
       }
-      console.log("updateField");
+      //console.log("updateField");
       return this.input.val(category);
     };
 
