@@ -59,6 +59,39 @@ views = Blueprint('views', __name__, static_folder="./app/static",
                   template_folder="./app/templates")
 
 
+#Integrations Roots:
+
+
+@views.route('/assets/instantiate')
+@login_required
+def instantiateInterlinker():
+
+
+
+    vectorPAs = Description._get_uniqueValues(campo="padministration")
+    paList = []
+    for pas in vectorPAs:
+        key = pas["key"]
+
+        if key == "":
+            key = 'Unassigned'
+
+        paList.append(key)
+    #print(paList)
+
+    #logging.info('Me dice si el usuario es anonimo:')
+    #logging.info(current_user.is_anonymous)
+
+  
+
+
+
+    return render_template("instantiate.html", user=current_user, publicsa=paList)
+
+    
+
+
+
 @views.route('/')
 def inicio():
 
@@ -137,15 +170,21 @@ def buscar():
 # Formulatio de carga de Pagina
 @views.route("/registrar", methods=["POST"])
 def saveDescription():
-
+    logging.info('Los datos a guardar son:')
+    logging.info(request.form)
     itemsDict = request.form.to_dict()
-
+    
+    
+    
     title = itemsDict.pop("createTitle")
     description = itemsDict.pop("createDescription")
     keywords = itemsDict.pop("createKeywords")
     userNombre = itemsDict.pop("usr")
-
     descriptionId = itemsDict.pop("descriptionId")
+
+    interlinkIntegration=False
+    if 'interlinkerPlat' in itemsDict.keys():
+        interlinkIntegration=True
 
     # Obtengo el valor de la administracion publica
     try:
@@ -333,8 +372,10 @@ def saveDescription():
             description = editDescripcion
             flash("No tienes permisos de moderador para editar esta descripción.", "info")
         
-
-    return redirect(url_for('authInterlink.editDescription', descriptionId=description['id'], option='edit'))
+    if interlinkIntegration:
+        return redirect(url_for('authInterlink.description',descriptionId= newdescription.id ) )
+    else:
+        return redirect(url_for('authInterlink.editDescription', descriptionId=description['id'], option='edit'))
 
 
 # return redirect(url_for("views.augment",rutaPagina=sitio,userId=userNombre))
@@ -965,7 +1006,7 @@ def generate_token():
 def obtenerReemplazarImagenes(rutaPagina, soup):
     # De la misma forma busco todas las imagenes:
     urls = []
-    for img in tqdm(soup.find_all("img"), "Extracting images"):
+    for img in soup.find_all("img"):
         img_url = img.attrs.get("src")
         if not img_url:
             # if img does not contain src attribute, just skip

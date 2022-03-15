@@ -49,6 +49,73 @@
         }
     }
 
+
+    window.addEventListener("message", onMessage, false);
+      
+    async function onMessage(event) {
+        // Check sender origin to be trusted
+        //if (event.origin.length > 0 && event.origin.includes(env.DOMAIN)) return;
+        
+        // if (event.origin.length > 0) return;
+        const { code, message } = event.data
+        console.log(code, message)
+
+        
+        if (code === "asset_created") {
+          
+            let codigoAsset=message['id']
+            //Redirijo al editor
+                    
+            urlRef = `{{ url_for('store.saveSurvey',idAsset= 'SURVEYID') }}`;
+            urlRef = urlRef.replace("SURVEYID",codigoAsset);
+
+            window.location.href = urlRef;
+
+            surveyWindow.close();
+            
+        }
+        if (code === "asset_updated") {
+
+                    
+            urlRef = `{{ url_for('authInterlink.survey') }}`;
+            window.location.href = urlRef;
+
+            surveyWindow.close();
+            
+        }
+        if (code === "asset_completed") {
+            let codigoAsset=message['asset_id']
+            //Redirijo al editor
+                    
+            urlRef = `{{ url_for('store.completeaSurvey',idAsset= 'SURVEYID') }}`;
+            urlRef = urlRef.replace("SURVEYID",codigoAsset);
+
+            window.location.href = urlRef;
+
+            surveyWindow.close();
+            
+        }
+    }
+
+    var surveyWindow;
+    function openNewWindow(event) {
+        if(event.type=='click'){
+            let href = event.target.getAttribute('href');
+            surveyWindow = window.open(href, "_blank")
+        }
+    }
+
+    function openViewSurvey(el) {
+      let href = el.getAttribute('href');
+      surveyWindow = window.open(href, "_blank");
+    }
+
+    function openEditSurvey(el) {
+      let href = el.getAttribute('href');
+      surveyWindow = window.open(href, "_blank");
+    }
+
+
 </script>
 
 
@@ -223,8 +290,9 @@
                         <div class="fw-bold"> {{ notification.category }} </div>
                         {{ notification.title }}
                       </div>
-                      
-                      <a href="{{ notification.target_url }}" class="btn btn-outline-success btn-lg " style="color:black;" tabindex="-1" role="button" >Rellenar</a>
+
+                                
+                      <a onclick="openViewSurvey(this); return false;"  href="{{ notification.target_url }}"  class="btn btn-outline-success btn-lg " style="color:black;" tabindex="-1" role="button" >Rellenar</a>
                     </li>
                     
                     {% endfor %}
