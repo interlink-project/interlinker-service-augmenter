@@ -235,8 +235,25 @@
 
         }
 
-        
-
+        const inIframe = window.location !== window.parent.location
+        const hasOpener = window.opener && !window.opener.closed
+        const sendMessage = (code, data, callback, callbackIframe, callbackOpener) => {
+            if (inIframe) {
+                window.parent.postMessage({
+                    'code': code,
+                    'message': data
+                }, '*');
+                callbackIframe && callbackIframe()
+            } else if (hasOpener) {
+                window.opener.postMessage({
+                    'code': code,
+                    'message': data
+                }, '*');
+                callbackOpener && callbackOpener()
+            }else{
+            callback && callback()
+            }
+        }
        
 
         function registroAsset(){
@@ -249,17 +266,31 @@
             xhr = new XMLHttpRequest();
             
         
-            xhr.open( 'POST', "http://localhost{{url_for('views.saveDescription')}}", true );
-            xhr.onreadystatechange = function ( response ) {
-                alert( response );
+            xhr.open( 'POST', "{{servicepediaUrl}}{{url_for('views.saveDescription')}}", true );
+            xhr.onreadystatechange = function () {
+                if(xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    console.log(xhr.responseText);
+
+                    /*
+                        La respuesta esta configurada para que de el id de la description:
+                        {id: description['id']}
+                    */
+
+
+                    const dataToSend = xhr.responseText
+
+                    sendMessage("asset_created", dataToSend, null, null, window.close)
+
+                
+                }
 
             };
 
-           /* var object = {};
-            formData.forEach((value, key) => object[key] = value);
-            var jsondata = JSON.stringify(object);
+            xhr.onload = function() {
+                document.getElementById("demo").innerHTML = this.responseText;
+              }
 
-            console.log(jsondata)*/
+            formData.append('interlinkerPlataform', true);
             xhr.send( formData );
         
             return false; // prevent further bubbling of event
@@ -276,6 +307,9 @@
                 });
                 $( "div" ).text( str );
             }).change();
+
+
+        sendMessage("initialized")
         
     </script>
 
@@ -472,7 +506,7 @@
                 
                 <button class="btn btn-info" id="btnSubmitDescription" style="width: 200px;color: white;"  type="submit"  >
                     {% if description is defined %}
-                    Edit
+                    EDIT
                     {% else %}
                     CREATE
                     {% endif %}

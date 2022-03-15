@@ -66,8 +66,6 @@ views = Blueprint('views', __name__, static_folder="./app/static",
 @login_required
 def instantiateInterlinker():
 
-
-
     vectorPAs = Description._get_uniqueValues(campo="padministration")
     paList = []
     for pas in vectorPAs:
@@ -79,18 +77,151 @@ def instantiateInterlinker():
         paList.append(key)
     #print(paList)
 
-    #logging.info('Me dice si el usuario es anonimo:')
-    #logging.info(current_user.is_anonymous)
+    return render_template("instantiate.html", user=current_user, publicsa=paList,servicepediaUrl=settings.REDIRECT_SERVICEPEDIA)
+
+@views.route('/assets/<id>')
+@login_required
+def assetData(id):
+
+    descriptiondata = Description._get_Descriptions_byId(id=id)[0]
+    logging.info('La informacion del asset es:' +id )
+    logging.info(descriptiondata)
+    return jsonify(
+        name=descriptiondata['title'],
+        created_at=descriptiondata['created'],
+        updated_at=descriptiondata['updated']
+    )
+
+
+@views.route('/assets/<id>/view')
+@login_required
+def assetView(id):
+    description = Description._get_Descriptions_byId(id=id)[0]
+
+    urlMainPage = [url['url']
+                   for url in description['urls'] if url['ismain'] == True][0]
+
+    return redirect(url_for("views.augment", rutaPagina=urlMainPage))
+
+
+@views.route('/assets/<id>', methods=["DELETE"])
+@login_required
+def assetDelete(id):
+
+
+    description = Description._get_Descriptions_byId(id=id)[0]
+
+    description.delete()
+
+    return '', 204
+
+
+
+@views.route('/assets/<id>/edit')
+@login_required
+def assetEdit(id):
+    vectorPAs = Description._get_uniqueValues(campo="padministration")
+    paList = []
+    for pas in vectorPAs:
+        key = pas["key"]
+
+        if key == "":
+            key = 'Unassigned'
+
+        paList.append(key)
+    #print(paList)
+
+    description = Description._get_Descriptions_byId(id=id)[0]
+
+    for itemUrl in description['urls']:
+        if itemUrl['language'] != 'Undefined':
+            itemUrl['langText'] = getLanguagesList()[itemUrl['language']]
+        else:
+            itemUrl['langText'] = "Undefined"
+
+
+    return render_template("instantiate.html", user=current_user, description=description, option='edit', publicsa=paList)
+
+@views.route('/assets/<id>/admin')
+@login_required
+def assetAdmin(id):
+    description = Description._get_Descriptions_byId(id=id)[0]
+
+    urlMainPage = [url['url']
+                   for url in description['urls'] if url['ismain'] == True][0]
+
+    categoria = request.args.get('category')
+
+    page = request.args.get("page", 1)
+    registroInicial = (int(page)-1)*10
+
+    if(categoria == None or categoria == 'all'):
+        categoria = ''
+
+    res = []
+    stats = []
+    numRes = 0
+    listUrlsPages = []
+    for itemUrl in description['urls']:
+        url = itemUrl['url']
+        listUrlsPages.append(url)
+
+        # Cargo las replies de cada annotacion:
+        stats = stats + \
+            Annotation.annotationStats(Annotation, uri=itemUrl['url'])
+
+    res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
+                                      'InProgress': True, 'Archived': False, 'Approved': False}, urls=listUrlsPages, category=categoria, notreply=True, page=page)
+    numRes = res['numRes']
+    res = res['annotations']
+
+    dictStats = {}
+    for itemStat in stats:
+        clave = itemStat['key']
+        val = itemStat['doc_count']
+        dictStats[clave] = val
+
+    for itemRes in res:
+        if itemRes['id'] in dictStats.keys():
+            itemRes['nroReplies'] = dictStats[itemRes['id']]
+        else:
+            itemRes['nroReplies'] = 0
+
+    page = request.args.get("page", 1)
+    pagesNumbers = math.ceil(numRes/10)
+
+    paginacion = {'page': page, 'pagesNumbers': pagesNumbers,
+                  'totalRegisters': numRes}
 
   
 
+    return render_template("descriptionAsset.html", user=current_user, description=description, anotations=res, categoryLabel=categoria, paginacion=paginacion, urlMainPage=urlMainPage)
+   # return 'la desc: '+category+'lauri is'+str(uri)
 
+@views.route('/assets/<descriptionId>/<annotatorId>')
+@login_required
+def assetSubject(descriptionId,annotatorId):
+    
+    description = Description._get_Descriptions_byId(id=descriptionId)[0]
 
-    return render_template("instantiate.html", user=current_user, publicsa=paList)
+    urlMainPage = [url['url']
+                   for url in description['urls'] if url['ismain'] == True][0]
 
+    annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
+
+    nroReplies = Annotation.count(
+        query={'idReplyRoot': annotatorId, 'category': 'reply'})
+    replies = Annotation.search(
+        query={'idReplyRoot': annotatorId, 'category': 'reply'}, limit=nroReplies)
+
+    nroRepliesOfAnnotation = nroReplies
     
 
+    return render_template("subjectAsset.html", user=current_user, annotation=annotation, description=description, categoryLabel=annotation['category'], replies=replies, nroReplies=nroRepliesOfAnnotation, urlMainPage=urlMainPage)
+   # return 'la desc: '+category+'lauri is'+str(uri)   
 
+#Builder:
+#return redirect(url_for("authInterlink.description", descriptionId=id))
 
 @views.route('/')
 def inicio():
@@ -183,7 +314,7 @@ def saveDescription():
     descriptionId = itemsDict.pop("descriptionId")
 
     interlinkIntegration=False
-    if 'interlinkerPlat' in itemsDict.keys():
+    if 'interlinkerPlataform' in itemsDict.keys():
         interlinkIntegration=True
 
     # Obtengo el valor de la administracion publica
@@ -373,7 +504,7 @@ def saveDescription():
             flash("No tienes permisos de moderador para editar esta descripción.", "info")
         
     if interlinkIntegration:
-        return redirect(url_for('authInterlink.description',descriptionId= newdescription.id ) )
+        return jsonify({'id':description['id']})
     else:
         return redirect(url_for('authInterlink.editDescription', descriptionId=description['id'], option='edit'))
 
