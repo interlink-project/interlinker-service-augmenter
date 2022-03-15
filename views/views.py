@@ -72,7 +72,7 @@ def inicio():
             domain = urlparse(key).netloc
             if not (domain in urlList):
                 urlList.append(domain)
-    print(urlList)
+    #print(urlList)
 
     vectorPAs = Description._get_uniqueValues(campo="padministration")
     paList = []
@@ -399,7 +399,7 @@ def claimModeration():
 
         # Now will send the email:
         msg = Message('The user '+firstName+' '+lastName+' ha realizado un claim to be a moderator.',
-                      sender='interlinkdeusto@gmail.com', recipients=['interlinkdeusto@gmail.com'])
+                      sender=current_user.email, recipients=['interlinkdeusto@gmail.com'])
 
         sites = " ".join(str(x) for x in urlList)
         claimInfo = "The user {} {} who is a {} ".format(
@@ -418,8 +418,8 @@ def claimModeration():
 
         fernet = Fernet(key)
         encMessage = fernet.encrypt(message.encode())
-        print("original string: ", message)
-        print("encrypted string: ", encMessage)
+        #print("original string: ", message)
+        #print("encrypted string: ", encMessage)
 
         textHref = settings.HOST+'/aproveModerator?datos=' + \
             encMessage.decode('ascii')
@@ -730,7 +730,7 @@ def augment(rutaPagina):
                 anotationTemp = soup.new_tag(
                     'link', href=css_url, rel="stylesheet")
                 headTag.append(anotationTemp)
-                print("Line{}: {}".format(count, css_url))
+                #print("Line{}: {}".format(count, css_url))
 
 
     #Obtengo el usuario Logueado o pongo anonimo:
@@ -744,9 +744,9 @@ def augment(rutaPagina):
                 newURLVal = urljoin(rutaPagina, hrefVal)
                 a_Link.attrs['href'] = url_for(
                     'views.augment', rutaPagina=newURLVal.lower())+'?description='+descriptionRef
-                print(a_Link)
+                #print(a_Link)
 
-    print("Total CSS insertados en the page:", len(css_files))
+    #print("Total CSS insertados en the page:", len(css_files))
 
     # Inserto las librerias del AnnotationJS
     # Creo los tags necesarios:
@@ -776,33 +776,39 @@ def augment(rutaPagina):
     try:
         headTag.append(metauserName)
     except:
-        print("Excepcion en Username")
-        logging.error("Da una excepcion en esta linea")
+        #print("Excepcion en Username")
+        #logging.error("Da una excepcion en esta linea")
+        pass
 
     try:
         headTag.append(anotationcss1)
     except:
-        print("Excepcion en ccs1")
+        #print("Excepcion en ccs1")
+        pass
 
     try:
         headTag.append(anotationcss2)
     except:
-        print("Excepcion en ccs1")
+        #print("Excepcion en ccs1")
+        pass
 
     try:
         headTag.append(anotationcss3)
     except:
-        print("Excepcion en ccs1")
+        #print("Excepcion en ccs1")
+        pass
 
     try:
         headTag.append(fontAwesome3)
     except:
-        print("Excepcion en ccs1")
+        #print("Excepcion en ccs1")
+        pass
 
     try:
         soup.html.head = headTag
     except:
-        print("Excepcion en ccs1")
+        #print("Excepcion en ccs1")
+        pass
 
     soup = obtenerReemplazarImagenes(rutaPagina, soup)
 
@@ -810,7 +816,8 @@ def augment(rutaPagina):
     try:
         bodyTag = soup.html.body
     except:
-        print("Excepcion en ccs1")
+        #print("Excepcion en ccs1")
+        pass
 
     jqueryScript1 = soup.new_tag(
         'script', src=url_for('static', filename='lib/jquery-1.9.1.js'))
@@ -860,7 +867,8 @@ def augment(rutaPagina):
         bodyTag.append(jqueryScript13)
         bodyTag.append(jqueryScript14)
     except:
-        print("Excepcion en ccs1")
+        #print("Excepcion en ccs1")
+        pass
 
     anotationIniScript = soup.new_tag('script')
     anotationInitScriptTemp = """ 
@@ -936,7 +944,8 @@ def augment(rutaPagina):
         bodyTag.wrap(soup.new_tag("div", id="contenidoAnotar"))
         soup.html.body = bodyTag
     except:
-        print("Excepcion en ccs1")
+        #print("Excepcion en ccs1")
+        pass
 
     headers = {'Content-Type': 'text/html',
                'x-annotator-auth-token': generate_token()}
@@ -974,13 +983,13 @@ def obtenerReemplazarImagenes(rutaPagina, soup):
         # finally, if the url is valid
         if is_valid(img_url):
             urls.append(img_url)
-    # print(urls)
+    # #print(urls)
 
     # Reemplazo las fuentes de las imagenes
     for img in soup.findAll('img'):
         for img_urlLine in urls:
             if img['src'] in img_urlLine:
-                print("Cambia "+img['src']+" por: "+img_urlLine)
+                #print("Cambia "+img['src']+" por: "+img_urlLine)
                 img['src'] = img_urlLine
                 break
 
