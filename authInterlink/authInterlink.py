@@ -400,7 +400,7 @@ def surveyLauchProcess():
 
         email = userEmail
         target_url = current_app.config['SURVEYINTERLINK_URL'] + \
-            "/assets/"+idAsset+"/view/"
+            "/assets/"+idAsset+"/view"
 
         newNotification = Notification(
             title=title,
