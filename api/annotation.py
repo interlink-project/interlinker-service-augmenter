@@ -206,7 +206,7 @@ class Annotation(es.Model):
             q['query']['bool']['must'].append(filtroUriSection)
                    
 
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.search(index="annotator",
@@ -248,7 +248,7 @@ class Annotation(es.Model):
             }
         }
         
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.search(index="annotator",
@@ -291,7 +291,7 @@ class Annotation(es.Model):
 
 
 
-        print(q)
+        #print(q)
 
 
         res = cls.es.conn.search(index="annotator",
@@ -331,7 +331,7 @@ class Annotation(es.Model):
 
 
 
-        print(q)
+        #print(q)
 
 
         res = cls.es.conn.search(index="annotator",
@@ -361,7 +361,7 @@ class Annotation(es.Model):
             }
         }
         
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.search(index="annotator",
@@ -417,7 +417,7 @@ class Annotation(es.Model):
         }
        
 
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.count(index="annotator",
@@ -529,8 +529,8 @@ class Annotation(es.Model):
 
                     
 
-        print('_get_by_multiple')
-        print(q)
+        #print('_get_by_multiple')
+        #print(q)
 
         res = cls.es.conn.search(index="annotator",
                                  doc_type=cls.__type__,
@@ -759,8 +759,8 @@ class Annotation(es.Model):
 
                     
 
-        print('_get_by_multiple')
-        print(q)
+        #print('_get_by_multiple')
+        #print(q)
 
         res = cls.es.conn.search(index="annotator",
                                  doc_type=cls.__type__,
@@ -868,8 +868,8 @@ class Annotation(es.Model):
                     if(key!='textoABuscar' and key!='page'and value!=''):
                         q['query']['bool']['must'].append(seccion)
 
-        print('_get_by_multipleCounts')
-        print(q)
+        #print('_get_by_multipleCounts')
+        #print(q)
 
         res = cls.es.conn.count(index="description",
                                  doc_type=cls.__type__,
@@ -910,7 +910,7 @@ class Annotation(es.Model):
             # Use the filtered query instead of the original
             query['query'] = filtered_query
         
-        print(query)
+        #print(query)
 
 
         res = super(Annotation, cls).search_raw(query=query, params=params,
@@ -979,7 +979,7 @@ class Annotation(es.Model):
         }
         }
 
-        print(q)
+        #print(q)
 
 
         res = cls.es.conn.search(index="annotator",
@@ -1002,7 +1002,7 @@ class Annotation(es.Model):
         }
         }
 
-        print(q)
+        #print(q)
 
 
         res = cls.es.conn.search(index="annotator",

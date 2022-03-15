@@ -73,7 +73,7 @@ def before_request():
 
 @store.after_request
 def after_request(response):
-    print("LLEga al AFTER REQUEST")
+    #print("LLEga al AFTER REQUEST")
     ac = 'Access-Control-'
     rh = response.headers
 
@@ -231,12 +231,12 @@ def saveSurvey(idAsset):
     
     URL = "http://survey/assets/"+idAsset
     
-    logging.info(URL)
+    #logging.info(URL)
     r = requests.get(url = URL)
-    logging.info(r)
+    #logging.info(r)
     data = r.json()
     
-    logging.info(data)
+    #logging.info(data)
 
     #Obtengo los datos del survey:
     description=data['description']
@@ -695,7 +695,7 @@ def search_annotations():
     if current_app.config.get('AUTHZ_ON'):
         # Pass the current user to do permission filtering on results
         kwargs['user'] = g.user
-    print(f' Kwargs: {kwargs}')
+    #print(f' Kwargs: {kwargs}')
     results = g.annotation_class.search(**kwargs)
     total = g.annotation_class.count(**kwargs)
 

@@ -64,8 +64,8 @@ def login():
         # return redirect(response.url)
         
         redirectToAuth=settings.AUTHINTERLINK_URL+'/login'+'?redirect_on_callback='+paginaRedirigir
-        logging.info('Pagina de login:')
-        logging.info(redirectToAuth)
+        #logging.info('Pagina de login:')
+        #logging.info(redirectToAuth)
         return redirect(redirectToAuth)
 
     unique_id = usuario["sub"]
@@ -112,8 +112,8 @@ def login():
 #                     'nonce': NONCE,
 #                     'response_type': 'code',
 #                     'response_mode': 'query'}
-#     logging.info('parametros de configuracion auth:')
-#     logging.info(query_params)
+#     #logging.info('parametros de configuracion auth:')
+#     #logging.info(query_params)
 
 
 #     # build request_uri
@@ -179,7 +179,7 @@ def dashboard():
             domain = urlparse(key).netloc
             if not (domain in urlList):
                 urlList.append(domain)
-    print(urlList)
+    #print(urlList)
 
     vectorPAs = Description._get_uniqueValues(campo="padministration")
     paList = []
@@ -190,7 +190,7 @@ def dashboard():
             key = 'Unassigned'
 
         paList.append(key)
-    print(paList)
+    #print(paList)
 
     textoABuscar = request.args.get("searchText")
     padministration = request.args.get("padministration")
@@ -265,7 +265,7 @@ def moderate():
             domain = urlparse(key).netloc
             if not (domain in urlList):
                 urlList.append(domain)
-    print(urlList)
+    #print(urlList)
 
     vectorPAs = Description._get_uniqueValues(campo="padministration")
     paList = []
@@ -276,7 +276,7 @@ def moderate():
             key = 'Unassigned'
 
         paList.append(key)
-    print(paList)
+    #print(paList)
 
     textoABuscar = request.args.get("searchText")
     padministration = request.args.get("padministration")
@@ -457,7 +457,7 @@ def genReport(descriptionId=None):
     name = datetime.datetime.now().strftime("%Y%m%dT%H%M%S")+"_reportFilled.docx"
     root = "app/Render/"+name
     
-    logging.info('The 1 root is:')
+    #logging.info('The 1 root is:')
     logging.error(root)
     
 
@@ -467,16 +467,16 @@ def genReport(descriptionId=None):
     #Fix the correct folder:
     root = "Render/"+name
 
-    logging.info('The 2 root is:')
+    #logging.info('The 2 root is:')
     logging.error(root)
 
     #Borro el archivo generado despues de que hago la descarga.
     @after_this_request
     def delete(response):
-        logging.info('root:')
+        #logging.info('root:')
         logging.error(root)
 
-        logging.info('The 3 root is:')
+        #logging.info('The 3 root is:')
         logging.error('app/'+root)
         
         os.remove('app/'+root)
@@ -564,7 +564,7 @@ def editDescription(descriptionId=None, option='Edit'):
             key = 'Unassigned'
 
         paList.append(key)
-    print(paList)
+    #print(paList)
 
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
 
@@ -714,10 +714,10 @@ def descriptionDetail():
             key = 'Unassigned'
 
         paList.append(key)
-    print(paList)
+    #print(paList)
 
-    logging.info('Me dice si el usuario es anonimo:')
-    logging.info(current_user.is_anonymous)
+    #logging.info('Me dice si el usuario es anonimo:')
+    #logging.info(current_user.is_anonymous)
 
     res = Annotation.search(query={'user': current_user.email})
 

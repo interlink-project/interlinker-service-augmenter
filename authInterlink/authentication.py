@@ -53,7 +53,7 @@ def get_current_user(request):
             return user_data
         return None
     except Exception as e:
-        print(str(e))
+       # print(str(e))
         return None
 
 

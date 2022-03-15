@@ -115,7 +115,7 @@ class Notification(es.Model):
         }
         }
 
-        print(q)
+        #print(q)
 
 
         res = cls.es.conn.search(index="notification",
@@ -143,7 +143,7 @@ class Notification(es.Model):
             }
         }
 
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.search(index="notification",
@@ -171,7 +171,7 @@ class Notification(es.Model):
             }
         }
 
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.search(index="notification",
@@ -217,7 +217,7 @@ class Notification(es.Model):
             }
         }
 
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.search(index="notification",

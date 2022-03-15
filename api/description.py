@@ -201,7 +201,7 @@ class Description(es.Model):
             "size": 0
         }
         
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.search(index="description",
@@ -268,7 +268,7 @@ class Description(es.Model):
         }
         }
 
-        print(q)
+        #print(q)
 
 
         res = cls.es.conn.search(index="description",
@@ -493,7 +493,7 @@ class Description(es.Model):
 
        
 
-        print(q)
+        #print(q)
 
 
         res = cls.es.conn.search(index="description",
@@ -535,7 +535,7 @@ class Description(es.Model):
             }
         }
 
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.count(index="description",
@@ -576,7 +576,7 @@ class Description(es.Model):
             }
         }
 
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.count(index="description",
@@ -614,7 +614,7 @@ class Description(es.Model):
         #Parametros de busqueda:
 
        
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.search(index="description",
@@ -651,7 +651,7 @@ class Description(es.Model):
         #Parametros de busqueda:
 
        
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.count(index="description",
@@ -701,8 +701,8 @@ class Description(es.Model):
          
             q['query']['bool']['must'].append(seccion)
 
-        print('_get_DescriptionsCounts')   
-        print(q)
+        #print('_get_DescriptionsCounts')   
+        #print(q)
 
         
 
@@ -861,8 +861,8 @@ class Description(es.Model):
 
     
 
-        print('_get_by_multiple')
-        print(q)
+        #print('_get_by_multiple')
+        #print(q)
 
         res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
@@ -950,8 +950,8 @@ class Description(es.Model):
                     if(key!='textoABuscar' and key!='page'and value!=''):
                         q['query']['bool']['must'].append(seccion)
 
-        print('_get_by_multipleCounts')
-        print(q)
+        #print('_get_by_multipleCounts')
+        #print(q)
 
         res = cls.es.conn.count(index="description",
                                  doc_type=cls.__type__,
@@ -1018,8 +1018,8 @@ class Description(es.Model):
             if(key!='textoABuscar' and key!='page' and value!=''):
                 q['query']['bool']['must'].append(seccion)
 
-        print('_searchAndFilters')   
-        print(q)
+        #print('_searchAndFilters')   
+        #print(q)
         
 
         res = cls.es.conn.search(index="description",

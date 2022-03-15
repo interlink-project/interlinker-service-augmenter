@@ -487,7 +487,7 @@ def claimModeration():
             #Borro el archivo generado despues de que hago la descarga.
             @after_this_request
             def delete(response):
-                logging.info('root:')
+                #logging.info('root:')
                 logging.error(filepathTemp)
                 
                 os.remove('app/'+filepathTemp)

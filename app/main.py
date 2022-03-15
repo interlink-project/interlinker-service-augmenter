@@ -52,7 +52,7 @@ def create_app():
 
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
-    print("Entra hasta aqui")
+    #print("Entra hasta aqui")
     app.config.from_object(settings)
 
     # We do need to set this one (the other settings have fine defaults)

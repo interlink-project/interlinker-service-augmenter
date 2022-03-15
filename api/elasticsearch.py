@@ -53,7 +53,7 @@ class ElasticSearch(object):
 
         if parsed.path:
             connargs['url_prefix'] = parsed.path
-        print(connargs)
+        #print(connargs)
         conn = elasticsearch.Elasticsearch(
             hosts=[connargs],
             connection_class=elasticsearch.Urllib3HttpConnection)
@@ -229,7 +229,7 @@ class _Model(dict):
 
         _add_updated(self)
 
-        print(body)
+        #print(body)
 
        
         op_type = 'index'

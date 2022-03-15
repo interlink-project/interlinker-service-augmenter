@@ -100,7 +100,7 @@ class Survey(es.Model):
         }
         }
 
-        print(q)
+        #print(q)
 
 
         res = cls.es.conn.search(index="survey",
@@ -142,7 +142,7 @@ class Survey(es.Model):
             }
         }
 
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.search(index="survey",
@@ -170,7 +170,7 @@ class Survey(es.Model):
             }
         }
 
-        print(q)
+        #print(q)
 
     
         res = cls.es.conn.search(index="survey",
@@ -256,7 +256,7 @@ class Survey(es.Model):
 
         q = super(Survey, cls)._build_query(query, offset, limit, sort, order)
         
-        print(str(q))
+        #print(str(q))
         
         # Create range query from before and/or after
         if before is not None or after is not None:

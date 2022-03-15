@@ -59,8 +59,8 @@ class Settings(BaseSettings):
     BASE_PATH: str
     DOMAIN: str
 
-    print('El dominio es')
-    print(os.getenv("DOMAIN"))
+    #print('El dominio es')
+    #print(os.getenv("DOMAIN"))
 
   
 
@@ -79,8 +79,8 @@ class Settings(BaseSettings):
         REDIRECT_SERVICEPEDIA: str = os.getenv(
             "PROTOCOL") + os.getenv("VIRTUAL_HOST") + os.getenv("BASE_PATH")
         
-    print(REDIRECT_URI)
-    print(REDIRECT_SERVICEPEDIA)
+    #print(REDIRECT_URI)
+    #print(REDIRECT_SERVICEPEDIA)
 
     USERINFO_URI: str = os.getenv("USERINFO_URI")
 
