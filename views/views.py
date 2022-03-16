@@ -593,7 +593,7 @@ def claimModeration():
         #print("original string: ", message)
         #print("encrypted string: ", encMessage)
 
-        textHref = settings.SURVEYINTERLINK_URL+'/aproveModerator?datos=' + \
+        textHref = settings.REDIRECT_SERVICEPEDIA+'/aproveModerator?datos=' + \
             encMessage.decode('ascii')
 
         msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
