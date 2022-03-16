@@ -98,7 +98,7 @@ Annotator.Plugin.Search = (function (_super) {
       //En el caso que sea la llamada desde el colaborative env:
       
       urlRef='';
-      if(integrationInterlinker){
+      if(integrationInterlinker=="True"){
         etiquetaBoton="Open in Servicepedia"
         urlRef=`${servicepediaPath}/assets/${descriptionRef}/admin`
       }else{

@@ -101,7 +101,7 @@ def assetView(id):
     urlMainPage = [url['url']
                    for url in description['urls'] if url['ismain'] == True][0]
 
-    return redirect(url_for("views.augment", rutaPagina=urlMainPage)+'?description='+id+'&integrationInterlinker=True')
+    return redirect(url_for("views.augment", rutaPagina=urlMainPage)+'?description='+id+"&integrationInterlinker='True'")
 
 
 @views.route('/assets/<id>', methods=["DELETE"])
@@ -838,7 +838,7 @@ def survey():
 
 # Cargo la pagina desde beautifulSoup y la muestro en pantalla
 @views.route("/augment/<path:rutaPagina>", methods=["GET", "POST"])
-def augment(rutaPagina,integrationInterlinker=False):
+def augment(rutaPagina,integrationInterlinker='False'):
 
     # En el caso que se tiene interes en una anotacion en particular
     argumentos = request.args.to_dict()
