@@ -760,7 +760,7 @@ def settingAppPage():
     return render_template("settings.html", user=current_user, results=results, anthony=anthony, notifications=listNotifications, notificationNum=numRes)
 
 
-@authInterlink.route("/oidc_callback")
+@authInterlink.route("/callback")
 def callback():
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 

@@ -564,14 +564,14 @@ def claimModeration():
         flash('Before requesting moderation privileges the descriptions must be created.')
         return authInterlink.moderate()
     else:
-
+        
         itemsDict['email'] = current_user.email
 
         dataClaimEncoded = urllib.parse.urlencode(itemsDict)
 
         # Now will send the email:
         msg = Message('The user '+firstName+' '+lastName+' ha realizado un claim to be a moderator.',
-                      sender=current_user.email, recipients=['interlinkdeusto@gmail.com'])
+                      sender='support@interlink-project.eu', recipients=['interlinkdeusto@gmail.com'])
 
         sites = " ".join(str(x) for x in urlList)
         claimInfo = "The user {} {} who is a {} ".format(
