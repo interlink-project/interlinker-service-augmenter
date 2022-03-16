@@ -838,7 +838,7 @@ def survey():
 
 # Cargo la pagina desde beautifulSoup y la muestro en pantalla
 @views.route("/augment/<path:rutaPagina>", methods=["GET", "POST"])
-def augment(rutaPagina):
+def augment(rutaPagina,integrationInterlinker=False):
 
     # En el caso que se tiene interes en una anotacion en particular
     argumentos = request.args.to_dict()
