@@ -279,7 +279,19 @@
 
                     const dataToSend = xhr.responseText
 
-                    sendMessage("asset_created", dataToSend, null, null, window.close)
+                    if (dataToSend.hasOwnProperty('error'))
+                    {
+                        
+                        alert(dataToSend.error);
+
+                    }else{
+                        if(dataToSend.hasOwnProperty('id') || dataToSend.hasOwnProperty('_id') ){
+                        
+                        sendMessage("asset_created", dataToSend, null, null, window.close);
+
+                        }
+
+                    }
 
                 
                 }

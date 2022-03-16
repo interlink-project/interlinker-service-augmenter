@@ -9,6 +9,7 @@ import uuid
 import os
 from docxtpl import DocxTemplate
 from flask import current_app, g
+from datetime import date
 
 from flask_babel import format_number, gettext, format_decimal, format_currency, format_percent
 
@@ -343,7 +344,9 @@ def survey():
     # Defino la direccion del SurveyHost
     surveyHost = current_app.config['SURVEYINTERLINK_URL']
 
-    return render_template("surveys.html", surveys=res, paginacion=paginacion, notifications=listNotifications, notificationNum=numRes, surveyHost=surveyHost)
+    today = date.today()
+
+    return render_template("surveys.html", surveys=res, paginacion=paginacion, notifications=listNotifications, notificationNum=numRes, surveyHost=surveyHost, now=today.strftime("%Y-%m-%d"))
 
 
 @authInterlink.route("/surveyInstantiator", methods=["POST"])
@@ -366,12 +369,11 @@ def obtainUsersEmail(listItemsBucket=[]):
 @authInterlink.route("/lauchSurvey", methods=["POST"])
 def surveyLauchProcess():
 
-    # Obtengo los valores del Survey:
+    # Obtengo los valores del Survey:SS
     selTargetUsers = request.form.get("selTargetList")
     listUsersArea = request.form.get("listUsersArea")
     is_optional = request.form.get("is_optional")
     ini_date = request.form.get("ini_date")
-    fin_date = request.form.get("fin_date")
     selEvent = request.form.get("selEvent")
 
     mandatory = True
