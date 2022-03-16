@@ -80,7 +80,7 @@ Annotator.Plugin.Search = (function (_super) {
       var servicepediaPath = document
         .getElementById("databackend")
         .getAttribute("servicepediapath");
-      
+
       var integrationInterlinker = document
         .getElementById("databackend")
         .getAttribute("integrationInterlinker");
@@ -99,15 +99,15 @@ Annotator.Plugin.Search = (function (_super) {
       
       urlRef='';
       if(integrationInterlinker=="True"){
-        etiquetaBoton="Open in Servicepedia"
-        urlRef=`${servicepediaPath}/assets/${descriptionRef}/admin`
+        etiquetaBoton="Admin";
+        urlRef=`${servicepediaPath}/assets/${descriptionRef}/admin`;
       }else{
-        urlRef=`${servicepediaPath}/description/${descriptionRef}`
+        urlRef=`${servicepediaPath}/description/${descriptionRef}`;
       }
 
       //Adding a input box for search
       $("li.filter-panel").before(
-        `<a class="btn annotator-panel-reset" id="botonBackServicepedia" href = "${servicepediaPath}/description/${descriptionRef}">
+        `<a class="btn annotator-panel-reset" id="botonBackServicepedia" href = "${urlRef}">
         ${etiquetaBoton}
         </a> 
         <div style="font-weight: 700;">
