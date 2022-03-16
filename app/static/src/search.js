@@ -82,7 +82,7 @@ Annotator.Plugin.Search = (function (_super) {
         .getAttribute("servicepediapath");
       
       var integrationInterlinker = document
-        .getElementById("integrationInterlinker")
+        .getElementById("databackend")
         .getAttribute("integrationInterlinker");
 
       var descriptionRef = document
