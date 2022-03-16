@@ -278,17 +278,17 @@
 
 
                     const dataToSend = xhr.responseText
+                    var jsonResponse = JSON.parse(dataToSend);
 
-                    if (dataToSend.hasOwnProperty('error'))
+                    if (jsonResponse.hasOwnProperty('error') || jsonResponse.hasOwnProperty('Errores'))
                     {
-                        
-                        alert(dataToSend.error);
+                        alert(jsonResponse);
 
                     }else{
-                        if(dataToSend.hasOwnProperty('id') || dataToSend.hasOwnProperty('_id') ){
+                        if(jsonResponse.hasOwnProperty('id') || jsonResponse.hasOwnProperty('_id') ){
                         
-                        sendMessage("asset_created", dataToSend, null, null, window.close);
-
+                        sendMessage("asset_created", jsonResponse, null, null, window.close);
+                        
                         }
 
                     }

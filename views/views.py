@@ -593,7 +593,7 @@ def claimModeration():
         #print("original string: ", message)
         #print("encrypted string: ", encMessage)
 
-        textHref = settings.HOST+'/aproveModerator?datos=' + \
+        textHref = settings.SURVEYINTERLINK_URL+'/aproveModerator?datos=' + \
             encMessage.decode('ascii')
 
         msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
@@ -783,7 +783,7 @@ def aprovarClaimsList():
             """<p style='font-size: 16px; letter-spacing: 1px; color: #ffffff;'>"""+msnItem+"""</p>"""
 
     msg = Message('Your claim has been resolved.',
-                  sender='interlinkdeusto@gmail.com', recipients=[usuarioModerator])
+                  sender='support@interlink-project.eu', recipients=[usuarioModerator])
 
     msg.html = """<td width='700' class='esd-container-frame' align='center' valign='top'> 
     <table cellpadding='0' cellspacing='0' width='100%' style='background-color: #515151; border-radius: 30px 36
