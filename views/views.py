@@ -101,7 +101,7 @@ def assetView(id):
     urlMainPage = [url['url']
                    for url in description['urls'] if url['ismain'] == True][0]
 
-    return redirect(url_for("views.augment", rutaPagina=urlMainPage)+'?description='+id)
+    return redirect(url_for("views.augment", rutaPagina=urlMainPage)+'?description='+id&integrationInterlinker=True)
 
 
 @views.route('/assets/<id>', methods=["DELETE"])
@@ -852,6 +852,9 @@ def augment(rutaPagina,integrationInterlinker=False):
 
     if('description' in argumentos.keys()):
         descriptionRef = argumentos.pop('description')
+    
+    if('integrationInterlinker' in argumentos.keys()):
+        integrationInterlinker = argumentos.pop('integrationInterlinker')
         
        
 
