@@ -80,6 +80,10 @@ Annotator.Plugin.Search = (function (_super) {
       var servicepediaPath = document
         .getElementById("databackend")
         .getAttribute("servicepediapath");
+      
+      var integrationInterlinker = document
+        .getElementById("integrationInterlinker")
+        .getAttribute("integrationInterlinker");
 
       var descriptionRef = document
         .getElementById("databackend")
@@ -90,6 +94,15 @@ Annotator.Plugin.Search = (function (_super) {
       var etiquetaBoton="<i class='fa fa-home'></i> Servicepedia";
       if(userlogged=="Anonymous"){
         etiquetaBoton="Log In";
+      }
+      //En el caso que sea la llamada desde el colaborative env:
+      
+      urlRef='';
+      if(integrationInterlinker){
+        etiquetaBoton="Open in Servicepedia"
+        urlRef=`${servicepediaPath}/assets/${descriptionRef}/admin`
+      }else{
+        urlRef=`${servicepediaPath}/description/${descriptionRef}`
       }
 
       //Adding a input box for search

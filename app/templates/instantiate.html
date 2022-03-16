@@ -282,7 +282,7 @@
 
                     if (jsonResponse.hasOwnProperty('error') || jsonResponse.hasOwnProperty('Errores'))
                     {
-                        alert(jsonResponse);
+                        alert( JSON.stringify(jsonResponse));
 
                     }else{
                         if(jsonResponse.hasOwnProperty('id') || jsonResponse.hasOwnProperty('_id') ){

@@ -943,7 +943,7 @@ def augment(rutaPagina,integrationInterlinker=False):
 
     descriptionRedirect=''
     metauserName = soup.new_tag(
-            'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=servicepediaPath,descriptionRef=descriptionRef, currentuser=usuarioActivo)
+            'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=servicepediaPath,descriptionRef=descriptionRef, currentuser=usuarioActivo,integrationInterlinker=integrationInterlinker)
 
     try:
         headTag.append(metauserName)
