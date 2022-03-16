@@ -229,7 +229,7 @@ def saveSurvey(idAsset):
 
     # api-endpoint
     
-    URL = "http://survey/assets/"+idAsset
+    URL = settings.SURVEYINTERLINK_URL+"/assets/"+idAsset
     
     #logging.info(URL)
     r = requests.get(url = URL)
