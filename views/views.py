@@ -54,6 +54,7 @@ from flask_login import (
     logout_user,
 )
 
+import ssl
 
 views = Blueprint('views', __name__, static_folder="./app/static",
                   template_folder="./app/templates")
@@ -869,14 +870,25 @@ def augment(rutaPagina,integrationInterlinker='False'):
 
 
     headersUserAgent = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
     }
 
+
+    #Fix ssl issues:
+    try:
+        _create_unverified_https_context = ssl._create_unverified_context
+    except AttributeError:
+        # Legacy Python that doesn't verify HTTPS certificates by default
+        pass
+    else:
+        # Handle target environment that doesn't support HTTPS verification
+        ssl._create_default_https_context = _create_unverified_https_context
+
     # Obtengo el codigo:
-    response = requests.get(rutaPagina, headers=headersUserAgent)
+    response = requests.get(rutaPagina, headers=headersUserAgent,verify=False)
     resp_Contenido = response.content
     # print(resp_Contenido.decode())
-    soup = BeautifulSoup(resp_Contenido, 'html.parser')
+    soup = BeautifulSoup(resp_Contenido, 'html5lib')
 
     # Quitamos los scripts:
     for data in soup(['script', 'pre', 'noscript']):

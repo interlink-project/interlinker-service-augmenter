@@ -445,7 +445,7 @@ def genReport(descriptionId=None):
     listAnnotationsApproved = Annotation._get_AnnotationsApproved_by_Urls(listUrls=description['urls'])
     listAnnotationsApproved= listAnnotationsApproved['annotations']
 
-    doc = DocxTemplate('app/static/servicepediaReport_template.docx')
+    doc = DocxTemplate(url_for('static', filename='servicepediaReport_template.docx'))
     context = { 'dateReport' : fechaActual, 
                 'description_title':description['title'],
                 'shortDescription':description['description'],
