@@ -107,7 +107,12 @@ block head %} {{ super() }}
           }
 
 
+           //Doy formato al texto:
+           let shortTitleItemDesc= dataItem.title;
 
+           if( shortTitleItemDesc.length>75 ){
+            shortTitleItemDesc=shortTitleItemDesc.substring(0, 75)+'...';
+           }
 
          
         
@@ -116,7 +121,7 @@ block head %} {{ super() }}
             ` 
             <tr>
               <td> ${dataItem.padministration} </td>
-              <td> ${dataItem.title} </td>
+              <td> ${shortTitleItemDesc} </td>
              
 
               <td  style="text-align: center;">
@@ -449,6 +454,16 @@ block head %} {{ super() }}
 
           <tr>
             <td>{{ description.padministration }}</td>
+
+          {% if description.title|length > 75 %}
+          {% set textoCortado= description.title[0:75] %}
+          <td>{{ textoCortado }}... </td>
+          {% else %}
+          <td>{{ description.title }}</td>
+          {% endif %}
+
+
+
             <td>{{ description.title }}</td>
             <td  style="text-align: center;">
 

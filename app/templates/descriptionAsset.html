@@ -120,7 +120,7 @@
         //Doy formato al texto:
         let shortTextItemDesc= dataItem.text.replace(/(<([^>]+)>)/gi, "");
 
-        if( len(shortTextItemDesc)>200 ){
+        if( shortTextItemDesc.length>200 ){
           shortTextItemDesc=shortTextItemDesc.substring(0, 200)+'...';
         }
 
