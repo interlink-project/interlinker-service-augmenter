@@ -116,6 +116,14 @@ block content %}
 
         dateUpdated = new Date(dataItem.created);
 
+          //Doy formato al texto:
+          let shortTextItemDesc= dataItem.text.replace(/(<([^>]+)>)/gi, "");
+
+          if( len(shortTextItemDesc)>200 ){
+            shortTextItemDesc=shortTextItemDesc.substring(0, 200)+'...';
+          }
+  
+
 
         //Defino los colores
 
@@ -185,7 +193,7 @@ block content %}
               </h5>
             </td>
             
-            <td> ${dataItem.text} </td>  
+            <td> ${shortTextItemDesc} </td>  
             <td> ${ISODateString(dateUpdated)} </td> 
             
             <td> 
@@ -511,12 +519,14 @@ block content %}
 
           </td>
 
-          {% if anotation.text|length > 200 %}
-          {% set soloTexto= anotation.text[0:200]|striptags%}
+          {% set soloTexto= anotation.text|striptags%}
+          {% if soloTexto|length > 200 %}
+          {% set soloTexto= anotation.text|striptags%}
           {% set textoCortado= soloTexto[0:200] %}
-          <td>{{ textoCortado|striptags}} </td>
+          <td>{{ textoCortado }}... </td>
           {% else %}
-          <td>{{ anotation.text[0:250]|striptags}} </td>
+          {% set soloTexto= anotation.text|striptags%}
+          <td>{{ soloTexto }} </td>
           {% endif %}
 
 
