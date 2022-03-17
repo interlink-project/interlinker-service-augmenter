@@ -56,6 +56,7 @@ from flask_login import (
 
 import ssl
 
+
 views = Blueprint('views', __name__, static_folder="./app/static",
                   template_folder="./app/templates")
 
@@ -887,6 +888,21 @@ def augment(rutaPagina,integrationInterlinker='False'):
     # Obtengo el codigo:
     response = requests.get(rutaPagina, headers=headersUserAgent,verify=False)
     resp_Contenido = response.content
+
+    #Valido si el sitio es sensible al Mayusculas y Minusculas.
+    isCaseSensitive=False
+    try:
+        reponseEspejo =requests.get(rutaPagina.upper(), headers=headersUserAgent,verify=False)
+        resp_Contenido2 = reponseEspejo.content
+        if len(resp_Contenido) ==len(resp_Contenido2):
+            isCaseSensitive=True
+    except AttributeError:
+        isCaseSensitive=True
+
+    
+
+
+
     # print(resp_Contenido.decode())
     soup = BeautifulSoup(resp_Contenido, 'html5lib')
 
@@ -927,11 +943,19 @@ def augment(rutaPagina,integrationInterlinker='False'):
     for a_Link in soup.find_all("a"):
         if a_Link.attrs.get("href"):
             hrefVal = a_Link.attrs.get("href")
-            if hrefVal.startswith('/'):
+            if hrefVal.startswith('/') :
                 newURLVal = urljoin(rutaPagina, hrefVal)
+
+                if isCaseSensitive:
+                    newURLVal=newURLVal.lower()
+
                 a_Link.attrs['href'] = url_for(
-                    'views.augment', rutaPagina=newURLVal.lower())+'?description='+descriptionRef
-                #print(a_Link)
+                    'views.augment', rutaPagina=newURLVal)+'?description='+descriptionRef
+
+            if hrefVal.startswith('https://') or hrefVal.startswith('http://') :
+    
+                a_Link.attrs['href'] = url_for(
+                    'views.augment', rutaPagina=hrefVal)+'?description='+descriptionRef
 
     #print("Total CSS insertados en the page:", len(css_files))
 

@@ -49,8 +49,11 @@
                 event.preventDefault();
                 event.stopPropagation();
                 var urltext =$('#oneUrl').val();
-                urltext = urltext.toLowerCase();
 
+                if (urltext.includes('//latvija.lv')){
+                    urltext = urltext.toLowerCase();
+                }
+                
 
                 function isValidURL(string) {
                     var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
@@ -130,7 +133,11 @@
                         //Agrego:
                         var contador=$('#urlList').children().length+1;
                         var urltext =$('#oneUrl').val();
-                        urltext= urltext.toLowerCase();
+
+                        if (urltext.includes('//latvija.lv')){
+                            urltext = urltext.toLowerCase();
+                        }
+          
 
                         var urlItems = urltext .split( '/' );
 
