@@ -101,7 +101,7 @@ def assetView(id):
     urlMainPage = [url['url']
                    for url in description['urls'] if url['ismain'] == True][0]
 
-    return redirect(url_for("views.augment", rutaPagina=urlMainPage)+'?description='+id+"&integrationInterlinker='True'")
+    return redirect(url_for("views.augment", rutaPagina=urlMainPage)+'?description='+id+"&integrationInterlinker=True")
 
 
 @views.route('/assets/<id>', methods=["DELETE"])
