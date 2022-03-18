@@ -953,7 +953,11 @@ def augment(rutaPagina,integrationInterlinker='False'):
                     'views.augment', rutaPagina=newURLVal)+'?description='+descriptionRef
 
             if hrefVal.startswith('https://') or hrefVal.startswith('http://') :
-    
+                
+                #If the external link is http I change them to https to visualited well
+                if settings.DOMAIN != 'localhost':
+                    hrefVal.replace("http://","https://")
+
                 a_Link.attrs['href'] = url_for(
                     'views.augment', rutaPagina=hrefVal)+'?description='+descriptionRef
 
