@@ -891,20 +891,20 @@ def augment(rutaPagina,integrationInterlinker='False'):
 
     #Valido si el sitio es sensible al Mayusculas y Minusculas.
     isCaseSensitive=False
-    try:
-        reponseEspejo =requests.get(rutaPagina.upper(), headers=headersUserAgent,verify=False)
-        resp_Contenido2 = reponseEspejo.content
-        if len(resp_Contenido) ==len(resp_Contenido2):
-            isCaseSensitive=True
-    except AttributeError:
+    if('latvija' in rutaPagina):
         isCaseSensitive=True
+    
+
 
     
 
 
 
     # print(resp_Contenido.decode())
-    soup = BeautifulSoup(resp_Contenido, 'html5lib')
+    #soup = BeautifulSoup(resp_Contenido, 'html5lib')
+    #soup = BeautifulSoup(resp_Contenido, 'lxml')
+    soup = BeautifulSoup(resp_Contenido, 'html.parser')
+    
 
     # Quitamos los scripts:
     for data in soup(['script', 'pre', 'noscript']):
@@ -923,7 +923,15 @@ def augment(rutaPagina,integrationInterlinker='False'):
     css_files = []
 
     count = 0
-    for css in soup.find_all("link"):
+
+    listCss = soup.find_all("link")
+
+    #Quito las referencias viejas al css
+
+    for a in soup.findAll('link', href=True):
+        a.extract()
+
+    for css in listCss:
         if css.attrs.get("href"):
             # if the link tag has the 'href' attribute
             css_url = urljoin(rutaPagina, css.attrs.get("href"))
@@ -947,7 +955,7 @@ def augment(rutaPagina,integrationInterlinker='False'):
                 newURLVal = urljoin(rutaPagina, hrefVal)
 
                 if isCaseSensitive:
-                    newURLVal=newURLVal.lower()
+                     newURLVal=newURLVal.lower()
 
                 a_Link.attrs['href'] = url_for(
                     'views.augment', rutaPagina=newURLVal)+'?description='+descriptionRef
@@ -987,6 +995,11 @@ def augment(rutaPagina,integrationInterlinker='False'):
     descriptionRedirect=''
     metauserName = soup.new_tag(
             'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=servicepediaPath,descriptionRef=descriptionRef, currentuser=usuarioActivo,integrationInterlinker=integrationInterlinker)
+
+    #Agrego codificacion a la pagina:
+
+  
+
 
     try:
         headTag.append(metauserName)
@@ -1189,24 +1202,25 @@ def obtenerReemplazarImagenes(rutaPagina, soup):
         # make the URL absolute by joining domain with the URL that is just extracted
         img_url = urljoin(rutaPagina, img_url)
 
-        try:
-            pos = img_url.index("?")
-            img_url = img_url[:pos]
-        except ValueError:
-            pass
+        # try:
+        #     pos = img_url.index("?")
+        #     img_url = img_url[:pos]
+        # except ValueError:
+        #     pass
 
         # finally, if the url is valid
-        if is_valid(img_url):
-            urls.append(img_url)
+        #if is_valid(img_url):
+        img.attrs['src'] = img_url
+        #urls.append(img_url)
     # #print(urls)
 
     # Reemplazo las fuentes de las imagenes
-    for img in soup.findAll('img'):
-        for img_urlLine in urls:
-            if img['src'] in img_urlLine:
-                #print("Cambia "+img['src']+" por: "+img_urlLine)
-                img['src'] = img_urlLine
-                break
+    # for img in soup.findAll('img'):
+    #     for img_urlLine in urls:
+    #         if img['src'] in img_urlLine:
+    #             #print("Cambia "+img['src']+" por: "+img_urlLine)
+    #             img['src'] = img_urlLine
+    #             break
 
     return soup
 
