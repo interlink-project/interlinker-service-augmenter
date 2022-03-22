@@ -6,6 +6,7 @@ import datetime
 TYPE = 'annotation'
 MAPPING = {
     'id': {'type': 'string', 'index': 'no'},
+    'descriptionid': {'type': 'string', 'index': 'no'},
     'annotator_schema_version': {'type': 'string'},
     'created': {'type': 'date'},
     'updated': {'type': 'date'},
@@ -158,11 +159,18 @@ class Annotation(es.Model):
 
     #Return the number of terms, questions and feedbacks
     def descriptionStats(cls,**kwargs):
+
         q = {
                 "query": {
                     "bool": {
-                        "must": []
-                    }
+                            "must": [
+                                {
+                                    "match": {
+                                        "descriptionId": kwargs.pop("descriptionId")
+                                    }
+                                }
+                            ]
+                        }
                 },
                 "aggs": {
                     "group_category": {
@@ -180,30 +188,32 @@ class Annotation(es.Model):
                 }
             }
 
-        
-        #Parametros de busqueda URI:
-        urls=kwargs.pop("uris")
 
-        filtroUriSection={
-            "bool": {
-                "should": []
-                }
-        }
-
-        existenUris=False
         
-        for url in urls:  
-            existenUris=True
-            seccionState =  {
-                "match":{
-                    "uri": url
-                    }
-                }
-
-            filtroUriSection['bool']['should'].append(seccionState)
         
-        if existenUris:    
-            q['query']['bool']['must'].append(filtroUriSection)
+        # #Parametros de busqueda URI:
+        # urls=kwargs.pop("uris")
+
+        # filtroUriSection={
+        #     "bool": {
+        #         "should": []
+        #         }
+        # }
+
+        # existenUris=False
+        
+        # for url in urls:  
+        #     existenUris=True
+        #     seccionState =  {
+        #         "match":{
+        #             "uri": url
+        #             }
+        #         }
+
+        #     filtroUriSection['bool']['should'].append(seccionState)
+        
+        # if existenUris:    
+        #     q['query']['bool']['must'].append(filtroUriSection)
                    
 
         #print(q)
@@ -233,14 +243,14 @@ class Annotation(es.Model):
                     "must": [
                         {
                             "match": {
-                                "uri": kwargs.pop("uri")
+                                "descriptionId": kwargs.pop("descriptionId")
                             }
                         }
                     ]
                 }
             },
             "aggs": {
-                "group_by_uri": {
+                "group_by_reproot": {
                     "terms": {
                         "field": "idReplyRoot"
                     }
@@ -256,8 +266,8 @@ class Annotation(es.Model):
                                  body=q)
 
 
-        if(len(res['aggregations']['group_by_uri']['buckets'])>0):
-            res=res['aggregations']['group_by_uri']['buckets']
+        if(len(res['aggregations']['group_by_reproot']['buckets'])>0):
+            res=res['aggregations']['group_by_reproot']['buckets']
         else:
             res=[]
                                  
@@ -630,7 +640,7 @@ class Annotation(es.Model):
         
         page=kwargs.pop("page")
         estados=kwargs.pop("estados")
-        urls=kwargs.pop("urls")
+        descriptionId=kwargs.pop("descriptionId")
         textoForSearch=kwargs.pop("textoABuscar")
         category=kwargs.pop("category")
         notreply=kwargs.pop("notreply")
@@ -675,21 +685,29 @@ class Annotation(es.Model):
                 }
         }
 
-        existenUris=False
+        # existenUris=False
         
-        for url in urls:  
-            existenUris=True    
-            seccionState =  {
-                "match":{
-                    "uri": url
-                    }
-                }
+        # for url in urls:  
+        #     existenUris=True    
+        #     seccionState =  {
+        #         "match":{
+        #             "uri": url
+        #             }
+        #         }
 
-            filtroUriSection['bool']['should'].append(seccionState)
+        #     filtroUriSection['bool']['should'].append(seccionState)
         
-        if existenUris:    
-            q['query']['bool']['must'].append(filtroUriSection)
-                   
+        # if existenUris:    
+        #     q['query']['bool']['must'].append(filtroUriSection)
+
+        #Filtro por descriptionId
+        sectSearchByDescriptionId={
+                    "match":{
+                        "descriptionId": descriptionId
+                        }
+                    }
+        q['query']['bool']['must'].append(sectSearchByDescriptionId)
+     
 
 
         #Parametro de busqueda por texto Box:

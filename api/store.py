@@ -459,7 +459,7 @@ def annotationsIndex():
         listUrl.append(url['url'])
     # Realizo la busqueda:
     annotations = Annotation._get_by_multiple(
-        Annotation, textoABuscar=textoABuscar, estados=estados, urls=listUrl, category=category, notreply=True, page=page, justMyContributions=justMyContributions,user=current_user.email)
+        Annotation, textoABuscar=textoABuscar, estados=estados, descriptionId=descriptionId, category=category, notreply=True, page=page, justMyContributions=justMyContributions,user=current_user.email)
 
     #nroRegistros= Annotation._get_by_multipleCounts(Annotation,textoABuscar=textoABuscar,estados=estados,url=descriptionUri,page=page)
     numRes = annotations['numRes']
@@ -467,9 +467,9 @@ def annotationsIndex():
 
     # Cargo las replies de cada annotacion:
     stats = []
-    for urlItem in descriptionActual['urls']:
-        stats = stats + \
-            Annotation.annotationStats(Annotation, uri=urlItem['url'])
+    # for urlItem in descriptionActual['urls']:
+    stats = stats + \
+        Annotation.annotationStats(Annotation, descriptionId=descriptionId)
 
     dictStats = {}
     for itemStat in stats:

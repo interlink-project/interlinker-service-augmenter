@@ -310,7 +310,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           "<textarea id='textareaReply-" +
             item.id +
             "'' class='panelTextAreaReply'>" +
-            "Texto to Reply..." +
+            "" +
             "</textarea>"
         );
 
@@ -350,16 +350,24 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       }
     };
 
+
+    
+
+
     AnnotatorViewer.prototype.tinymceActivation = function (selector) {
       tinymce.init({
         selector: selector,
-        plugins: "media image insertdatetime link paste",
+        height: 200,
+        resize: false,
+
+        plugins: "media image insertdatetime link",
         menubar: false,
         statusbar: false,
         toolbar_items_size: "small",
         extended_valid_elements: "",
+        paste_as_text: true,
         toolbar:
-          "undo redo bold italic alignleft aligncenter alignright alignjustify | link image media",
+          "undo redo link image media | bold italic alignleft aligncenter alignright alignjustify",
       });
     };
 
@@ -371,7 +379,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       );
       if (typeof this.annotator.plugins.RichEditor != "undefined") {
         current_annotation.text = tinymce.activeEditor.getContent();
-        tinymce.remove("#textarea-" + current_annotation.id);
+        //tinymce.remove("#textarea-" + current_annotation.id);
+        tinymce.EditorManager.remove('.editable');
+
         tinymce.activeEditor.setContent(current_annotation.text);
       } else {
         current_annotation.text = textarea.val();
@@ -394,7 +404,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       );
       if (typeof this.annotator.plugins.RichEditor != "undefined") {
         textReply = tinymce.activeEditor.getContent();
-        tinymce.remove("#textareaReply-" + current_annotation.id);
+        //tinymce.remove("#textareaReply-" + current_annotation.id);
+        tinymce.EditorManager.remove('.editable');
         tinymce.activeEditor.setContent(textReply);
       } else {
         textReply = textareaReply.val();
@@ -490,8 +501,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       if (current_annotation.text.length > 0) styleHeight = "";
 
       if (typeof this.annotator.plugins.RichEditor != "undefined") {
-        tinymce.remove("#textarea-" + current_annotation.id);
-
+        //tinymce.remove("#textarea-" + current_annotation.id);
+        tinymce.EditorManager.remove('.editable');
         var textAnnotation =
           '<div class="anotador_text" ' +
           styleHeight +
@@ -529,7 +540,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       if (current_annotation.text.length > 0) styleHeight = "";
 
       if (typeof this.annotator.plugins.RichEditor != "undefined") {
-        tinymce.remove("#textareaReply-" + current_annotation.id);
+        //tinymce.remove("#textareaReply-" + current_annotation.id);
+        tinymce.EditorManager.remove('.editable');
 
         var textAnnotation =
           '<div class="anotador_text" ' + styleHeight + ">" + "" + "</div>";
@@ -952,13 +964,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           "   (" +
           $.format.date(annotation.data_creacio, "MM/yyyy HH:mm") +
           ")" +
-          "</br>IdRef:" +
-          annotation.idAnotationReply.split("-")[1] +
-          "</br>IdRoot:" +
-          annotation.idReplyRoot +
-          "</br>" +
-          "Id:" +
-          annotation.id +
+          
           '<div style="width: 160px;height: 2px;border-bottom: 1px solid #d4d4d4;position: relative;" class="line"></div>' +
           "</div>" +
           '<div style="">' +
@@ -1031,10 +1037,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           ' anotator_color_box"></div>';
         annotation_layer +=
           '<div class="anotador_ident">' +
-          "Id:" +
-          annotation.id +
           "</div>" +
-          '<div style="width: 160px;height: 2px;border-bottom: 1px solid #d4d4d4;position: relative;" class="line"></div>' +
+          '<div style="width: 160px;height: 2px;max-width: 2px !important;border-bottom: 1px solid #d4d4d4;position: relative;" class="line"></div>' +
           '<div class="anotador_text">' +
           textAnnotation +
           "</div>" +
@@ -1066,11 +1070,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         '<label class="checkbox-inline"><input type="checkbox" id="type_own" rel="me"/>My annotations</label><label class="checkbox-inline">  <input type="checkbox" id="type_share" rel="shared"/>Shared</label>';
 
       var annotation_layer =
-        '<div  class="annotations-list-uoc" style="background-color:#ddd;"><div id="annotations-panel"><span class="rotate" title="' +
+        '<div  class="annotations-list-uoc" ><div id="annotations-panel"><span class="rotate etiquetaSolapa" title="' +
         i18n_dict.view_annotations +
         " " +
         i18n_dict.pdf_resum +
-        '" style="padding:5px;background-color:#ddd;position: absolute; top:10em;left: -50px; width: 155px; height: 110px;cursor:pointer">' +
+        '" >' +
         i18n_dict.view_annotations +
         '<span class="label-counter" style="padding:0.2em 0.3em;float:right" id="count-anotations">0</span></span></div><div id="anotacions-uoc-panel" style="height:80%"><ul class="container-anotacions"><li class="filter-panel">' +
         checboxes +

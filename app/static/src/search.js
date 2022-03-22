@@ -91,7 +91,7 @@ Annotator.Plugin.Search = (function (_super) {
 
       
       var userlogged = sessionStorage.getItem("user")
-      var etiquetaBoton="<i class='fa fa-home'></i> Servicepedia";
+      var etiquetaBoton="<i class='fa fa-home'></i>Admin Panel";
       if(userlogged=="Anonymous"){
         etiquetaBoton="Log In";
       }
@@ -99,7 +99,7 @@ Annotator.Plugin.Search = (function (_super) {
       
       urlRef='';
       if(integrationInterlinker=="True"){
-        etiquetaBoton="Admin";
+        etiquetaBoton="Admin Panel";
         urlRef=`${servicepediaPath}/assets/${descriptionRef}/admin`;
       }else{
         urlRef=`${servicepediaPath}/description/${descriptionRef}`;
@@ -107,10 +107,17 @@ Annotator.Plugin.Search = (function (_super) {
 
       //Adding a input box for search
       $("li.filter-panel").before(
-        `<a class="btn annotator-panel-reset" id="botonBackServicepedia" href = "${urlRef}">
-        ${etiquetaBoton}
-        </a> 
-        <div style="font-weight: 700;">
+        `
+        
+        <a href = "${urlRef}" width='500px'><input type="button"  style="background-image: url('${servicepediaPath}/static/logo_augmenter_allw.png');background-size: 75%;width:90%;height:75px " class="botonIcon" /></a>
+        <br/>                    
+        
+        <div style="text-align: right;margin-right: 10%;" >
+          <a class="returnAdmin"  id="botonBackServicepedia" style="font-size: 14px;padding-left:5px" href = "${urlRef}">
+          ${etiquetaBoton}
+          </a> 
+        </div>
+        <div style="font-weight: 700;padding-bottom:10px;">
           <span id="usuarioConectado"></span> is connected.</div>   
           <input class="search" id="search" type="text" results />
         <a class="annotator-panel-reset" href="#clear">Reset</a>`

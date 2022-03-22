@@ -173,7 +173,7 @@ def assetAdmin(id):
             Annotation.annotationStats(Annotation, uri=itemUrl['url'])
 
     res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
-                                      'InProgress': True, 'Archived': False, 'Approved': False}, urls=listUrlsPages, category=categoria, notreply=True, page=page)
+                                      'InProgress': True, 'Archived': False, 'Approved': False}, descriptionId=description['id'], category=categoria, notreply=True, page=page)
     numRes = res['numRes']
     res = res['annotations']
 
@@ -898,8 +898,14 @@ def augment(rutaPagina,integrationInterlinker='False'):
 
     
 
+    import codecs
 
-
+    try:
+        resp_Contenido = codecs.decode(resp_Contenido, 'utf-8')
+    except:
+        print('Trato de cargar con utf-8')
+    
+    
     # print(resp_Contenido.decode())
     #soup = BeautifulSoup(resp_Contenido, 'html5lib')
     #soup = BeautifulSoup(resp_Contenido, 'lxml')
@@ -924,6 +930,23 @@ def augment(rutaPagina,integrationInterlinker='False'):
 
     count = 0
 
+    #Quito las propagandas de la pagina:
+
+    listDiv = soup.find_all("div")
+    for div in listDiv:
+        if div.attrs!=None:
+            if div.attrs.get("class"):
+                if any('header-ad' in x for x in div.attrs['class']):
+                    div.decompose()
+                    break
+                if any('ad-' in x for x in div.attrs['class']):
+                    div.decompose()
+                    break
+
+
+
+
+
     listCss = soup.find_all("link")
 
     #Quito las referencias viejas al css
@@ -936,12 +959,16 @@ def augment(rutaPagina,integrationInterlinker='False'):
             # if the link tag has the 'href' attribute
             css_url = urljoin(rutaPagina, css.attrs.get("href"))
             if "css" in css_url:
-                count += 1
-                css_files.append(css_url)
-                anotationTemp = soup.new_tag(
-                    'link', href=css_url, rel="stylesheet")
-                headTag.append(anotationTemp)
-                #print("Line{}: {}".format(count, css_url))
+                if not(css_url.endswith('print.css')):
+                    count += 1
+                    css_files.append(css_url)
+                    anotationTemp = soup.new_tag(
+                        'link', href=css_url, rel="stylesheet")
+                    headTag.append(anotationTemp)
+                    #print("Line{}: {}".format(count, css_url))
+            else:
+                headTag.append(css)
+
 
 
     #Obtengo el usuario Logueado o pongo anonimo:
@@ -998,6 +1025,9 @@ def augment(rutaPagina,integrationInterlinker='False'):
 
     #Agrego codificacion a la pagina:
 
+    metatag = soup.new_tag('meta')
+    metatag.attrs['charset'] = 'utf-8'
+    headTag.append(metatag)
   
 
 
@@ -1139,12 +1169,13 @@ def augment(rutaPagina,integrationInterlinker='False'):
             //const uriAdressBase = uriAdress.split('#')[0];
 
             //Dejo unicamente la primera parte del uri
-            uriAdressBase = '"""+rutaPagina+"""';     
+            uriAdressBase = '"""+rutaPagina+"""'; 
+            descriptionId = '"""+descriptionRef+"""'    
 
             console.log(uriAdressBase)
             $('body').annotator().annotator('addPlugin', 'Store',{
-                        annotationData: {uri:uriAdressBase},
-                        loadFromSearch: {uri:uriAdressBase}
+                        annotationData: {uri:uriAdressBase,descriptionId:descriptionId},
+                        loadFromSearch: {uri:uriAdressBase,descriptionId:descriptionId}
                         }
             );
 
@@ -1194,10 +1225,18 @@ def obtenerReemplazarImagenes(rutaPagina, soup):
     # De la misma forma busco todas las imagenes:
     urls = []
     for img in soup.find_all("img"):
+        
         img_url = img.attrs.get("src")
-        if not img_url:
-            # if img does not contain src attribute, just skip
-            continue
+        img_url_datOr = img.attrs.get("data-original")
+        
+        if img_url_datOr:
+            img_url = img.attrs.get("data-original")
+            del img["data-original"]
+
+        else:
+            if not img_url:
+                # if img does not contain src attribute, just skip
+                continue
 
         # make the URL absolute by joining domain with the URL that is just extracted
         img_url = urljoin(rutaPagina, img_url)

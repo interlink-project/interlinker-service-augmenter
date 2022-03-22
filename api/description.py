@@ -366,7 +366,7 @@ class Description(es.Model):
                 listUrl.append(url['url'])
 
             # Cargo datos estadisticos de las descripciones
-            resCategory = Annotation.descriptionStats(Annotation, uris=listUrl)
+            resCategory = Annotation.descriptionStats(Annotation, descriptionId=itemDesc['id'])
 
             nroFeedbacks = 0
             nroQuestions = 0

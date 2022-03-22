@@ -511,20 +511,23 @@ def description(descriptionId=None):
     if(categoria == None or categoria == 'all'):
         categoria = ''
 
-    res = []
+    
     stats = []
-    numRes = 0
-    listUrlsPages = []
-    for itemUrl in description['urls']:
-        url = itemUrl['url']
-        listUrlsPages.append(url)
+    # listUrlsPages = []
+    # for itemUrl in description['urls']:
+    #     url = itemUrl['url']
+    #     listUrlsPages.append(url)
 
         # Cargo las replies de cada annotacion:
-        stats = stats + \
-            Annotation.annotationStats(Annotation, uri=itemUrl['url'])
-
+    stats = stats + \
+        Annotation.annotationStats(Annotation, descriptionId=description['id'])
+    
+    
+    res = []
     res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
-                                      'InProgress': True, 'Archived': False, 'Approved': False}, urls=listUrlsPages, category=categoria, notreply=True, page=page)
+                                      'InProgress': True, 'Archived': False, 'Approved': False}, descriptionId=description['id'], category=categoria, notreply=True, page=page)
+
+    numRes = 0
     numRes = res['numRes']
     res = res['annotations']
 

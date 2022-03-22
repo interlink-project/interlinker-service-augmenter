@@ -27,12 +27,19 @@ __extends(RichEditor, _super);
   RichEditor.prototype.options = {
     tinymce:{
       selector: "li.annotator-item textarea",
-      plugins: "media image insertdatetime link paste",
+      height: 200,
+      plugins: "media image insertdatetime link",
+      
+      resize: false,
+      
       menubar: false,
       statusbar: false,
       toolbar_items_size: 'small',
       extended_valid_elements : "",
-         toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | link image media pastetext",
+
+      paste_as_text: true,
+  
+      toolbar: "undo redo link image media | bold italic alignleft aligncenter alignright alignjustify",
     }
   };
 
