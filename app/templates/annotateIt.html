@@ -1,88 +1,90 @@
 {% extends "templateV2.html" %} {% block title %} Servicepedia {% endblock %} {% block
-content %}
-
-<div>
-  <form class="form-inline my-2 my-lg-0" action="/registrar" method="POST">
-
-
-
-
-    <div class="grid-container">
-
-      <div class="row" style="padding: 10px;">
-        <h4> Register a new description</h4>
-      </div>
-      <div class="row">
-        <div class="form-floating">
-          <input class="form-control" id="title" name="createTitle" placeholder="createTitle">
-          <label for="floatingInput">Title</label>
+  content %}
+  
+  <div>
+    <form class="form-inline my-2 my-lg-0" action="/registrar" method="POST">
+  
+  
+  
+  
+      <div class="grid-container">
+  
+        <div class="row" style="padding: 10px;">
+          <h4> Register a new description</h4>
         </div>
-      </div>
-
-      <div class="row">
-
-        <div class="form-floating mb-3">
-          <textarea class="form-control" placeholder="Description" name="createDescription" id="createDescription"
-            style="min-height: 150px;"></textarea>
-          <label for="floatingTextarea">Description</label>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-6">
-          <div class="form-floating mb-3">
-            <input class="form-control" name="createKeywords" id="createKeywords" placeholder="Keywords">
-            <label for="floatingInput">Keywords</label>
+        <div class="row">
+          <div class="form-floating">
+            <input class="form-control" id="title" name="createTitle" placeholder="createTitle">
+            <label for="floatingInput">Title</label>
           </div>
         </div>
-      </div>
-
-      <div class="row">
-        <div class="col-8">
-          <div class="input-group mb-3">
-            <div class="input-group-append">
-              <label class="input-group-text" for="inputGroupSelect02">Category</label>
+  
+        <div class="row">
+  
+          <div class="form-floating mb-3">
+            <textarea class="form-control" placeholder="Description" name="createDescription" id="createDescription"
+              style="min-height: 150px;"></textarea>
+            <label for="floatingTextarea">Description</label>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-6">
+            <div class="form-floating mb-3">
+              <input class="form-control" name="createKeywords" id="createKeywords" placeholder="Keywords">
+              <label for="floatingInput">Keywords</label>
             </div>
-            <select class="custom-select" name="createPA" id="createPA" style="min-width: 30vw;">
-              <option selected></option>
-              {% for itemPA in publicsa %}
-              <option value='{{ itemPA }}'>{{ itemPA }}</option>
-              {% endfor %}
-            </select>
-
-          </div>
-
-        </div>
-      </div>
-      <div class="row">
-      
-        <div class="col-4">
-          <div class="form-floating mb-3">
-            <input class="form-control" name="addNewPA" id="addNewPA" placeholder="AddNew">
-            <label for="floatingInput">Type the new category Name</label>
           </div>
         </div>
-
+  
+        <div class="row">
+          <div class="col-8">
+            <div class="input-group mb-3">
+              <div class="input-group-append">
+                <label class="input-group-text" for="inputGroupSelect02">Public Administration</label>
+              </div>
+              <select class="custom-select" name="createPA" id="createPA" style="min-width: 30vw;">
+                <option selected></option>
+                {% for itemPA in publicsa %}
+                <option value='{{ itemPA }}'>{{ itemPA }}</option>
+                {% endfor %}
+              </select>
+  
+            </div>
+  
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2" style="align-content: center;justify-content: center;">
+            Add New Public Administration:
+          </div>
+          <div class="col-4">
+            <div class="form-floating mb-3">
+              <input class="form-control" name="addNewPA" id="addNewPA" placeholder="AddNew">
+              <label for="floatingInput">Public Administration Name</label>
+            </div>
+          </div>
+  
+        </div>
+  
       </div>
-
-    </div>
-
-
-
-    <div class="item1"><input type="url" name="nm" id="createWebsiteUrl" style="width: 100%;margin:10px 10px 10px 0px;"
-        class="form-control mr-sm-4" placeholder="Enter the public service Website address." /></div>
-    <div class="item2"><input type="hidden" name="usr" id="userId" value="{{ user.email }}"
-        style="width: 200px;margin:0px 10px 10px 0px;" class="form-control mr-sm-4" placeholder="User." readonly />
-    </div>
-    <div class="item2"><button class="btn btn-secondary my-2 my-sm-0" type="submit">
-        Create
-      </button></div>
-</div>
-
-
-</form>
-</div>
-
-
-
-{% endblock %}
+  
+  
+  
+      <div class="item1"><input type="url" name="nm" id="createWebsiteUrl" style="width: 100%;margin:10px 10px 10px 0px;"
+          class="form-control mr-sm-4" placeholder="Enter the public service Website address." /></div>
+      <div class="item2"><input type="hidden" name="usr" id="userId" value="{{ user.email }}"
+          style="width: 200px;margin:0px 10px 10px 0px;" class="form-control mr-sm-4" placeholder="User." readonly />
+      </div>
+      <div class="item2"><button class="btn btn-secondary my-2 my-sm-0" type="submit">
+          Create
+        </button></div>
+  </div>
+  
+  
+  </form>
+  </div>
+  
+  
+  
+  {% endblock %}

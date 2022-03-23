@@ -316,30 +316,7 @@ class Description(es.Model):
             nroRegistros = descriptions['numRes']
             
             if(nroRegistros>0):
-                for descriptionFound in descriptionsModerator['descriptions']:
-
-                    #descriptionFound = descriptions['descriptions'][0]
-
-                    #Si la descripcion ya ha sido agregada entonces no debe agregarse :
-                    existsDescr=False
-                    for itemDescript in listDescription:
-                        if(itemDescript['id']==descriptionFound['id']):
-                            existsDescr=True
-                            break
-                    if not existsDescr:
-                        listDescription.append(descriptionFound)
-
-        # Now I obtain all descriptions where I am moderator
-
-        #Apply filters and the search options
-        descriptionsModerator = Description._get_by_multiple(textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain,isModerator=True, page="all",user=user)
-
-        nroRegistros = descriptionsModerator['numRes']
-        
-        if(nroRegistros>0):
-            for descriptionFound in descriptionsModerator['descriptions']:
-
-                #descriptionFound = descriptionsModerator['descriptions'][0]
+                descriptionFound = descriptions['descriptions'][0]
 
                 #Si la descripcion ya ha sido agregada entonces no debe agregarse :
                 existsDescr=False
@@ -349,6 +326,25 @@ class Description(es.Model):
                         break
                 if not existsDescr:
                     listDescription.append(descriptionFound)
+
+        # Now I obtain all descriptions where I am moderator
+
+        #Apply filters and the search options
+        descriptionsModerator = Description._get_by_multiple(textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain,isModerator=True, page="all",user=user)
+
+        nroRegistros = descriptionsModerator['numRes']
+        
+        if(nroRegistros>0):
+            descriptionFound = descriptionsModerator['descriptions'][0]
+
+            #Si la descripcion ya ha sido agregada entonces no debe agregarse :
+            existsDescr=False
+            for itemDescript in listDescription:
+                if(itemDescript['id']==descriptionFound['id']):
+                    existsDescr=True
+                    break
+            if not existsDescr:
+                listDescription.append(descriptionFound)
         
 
         registroInicial=kwargs.pop("registroInicial")
@@ -774,10 +770,10 @@ class Description(es.Model):
 
         q['query']=searchScope
 
-        #Filter by Category:
+        #Filter by Public administration:
         padminitration=kwargs.pop("padministration")
 
-        #Filter by Category:
+        #Filter by Public administration:
         if padminitration!='' and padminitration!=None:
             q['query']['bool']['must'].append({
                                                 "match":{

@@ -6,7 +6,7 @@ import datetime
 TYPE = 'annotation'
 MAPPING = {
     'id': {'type': 'string', 'index': 'no'},
-    'descriptionId': {'type': 'string', 'index': 'no'},
+    'descriptionid': {'type': 'string', 'index': 'no'},
     'annotator_schema_version': {'type': 'string'},
     'created': {'type': 'date'},
     'updated': {'type': 'date'},
@@ -290,9 +290,9 @@ class Annotation(es.Model):
                 }
             },
             "aggs": {
-                "group_by_descriptionId": {
+                "group_by_uri": {
                     "terms": {
-                        "field": "descriptionId"
+                        "field": "uri"
                     }
                 }
             },
@@ -309,8 +309,8 @@ class Annotation(es.Model):
                                  body=q)
 
 
-        if(len(res['aggregations']['group_by_descriptionId']['buckets'])>0):
-            res=res['aggregations']['group_by_descriptionId']['buckets']
+        if(len(res['aggregations']['group_by_uri']['buckets'])>0):
+            res=res['aggregations']['group_by_uri']['buckets']
         else:
             res=[]
 

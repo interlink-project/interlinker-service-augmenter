@@ -78,8 +78,6 @@ def instantiateInterlinker():
 
         paList.append(key)
     #print(paList)
-    if not ( 'Global' in paList ):
-        paList.insert(0, 'Global')
 
     return render_template("instantiate.html", user=current_user, publicsa=paList,servicepediaUrl=settings.REDIRECT_SERVICEPEDIA)
 
@@ -134,8 +132,6 @@ def assetEdit(id):
 
         paList.append(key)
     #print(paList)
-    if not ( 'Global' in paList ):
-        paList.insert(0, 'Global')
 
     description = Description._get_Descriptions_byId(id=id)[0]
 
@@ -254,8 +250,6 @@ def inicio():
 
         paList.append(key)
     print(paList)
-    if not ( 'Global' in paList ):
-        paList.insert(0, 'Global')
 
     textoABuscar = request.args.get("searchText")
     padministration = request.args.get("padministration")
@@ -369,8 +363,27 @@ def saveDescription():
         # Si el campo de lista esta vacio miro el campo url
         flash("It is needed to add at least one URL of description.", "info")
         return jsonify({"error": "It is needed to add at least one URL of description"})
-   
+
+    # Busco si alguno de los URLS ya ha sido incluido en existe:
+    existePreviamente = False
+    listErrorDescriptionSameUrl = []
+    for itemUrl in listadoUrlNuevo:
+        editDescripcion = Description._get_Descriptions_byURI(url=itemUrl)
+        if len(editDescripcion) != 0:
+            existePreviamente = True
+            nombreDesc = editDescripcion[0]['title']
+            textoError = 'Error: La descripcion '+nombreDesc+' contiene la url:'+itemUrl
+            listErrorDescriptionSameUrl.append(textoError)
+
     if descriptionId == '':
+
+        # Si existe una descripcion con alguna de las descripciones presentar error creacion
+        if existePreviamente:
+            listErroresDes = " "
+            listErroresDes.join(listErrorDescriptionSameUrl)
+            flash("One or some of the urls had been used in another description." +
+                  listErroresDes, "info")
+            return jsonify({'Errores': listErroresDes})
 
         # Create:
         perms = {'read': ['group:__world__']}
@@ -417,12 +430,9 @@ def saveDescription():
 
             newdescription.save(index="description")
             description = newdescription
-            #flash("Record created successfully.", "info")
+            flash("Record created successfully.", "info")
 
-            #Redirecciono a la descripcion creada:
-            return redirect(url_for('authInterlink.description', descriptionId=description['id']))
-
-
+            
 
             
                

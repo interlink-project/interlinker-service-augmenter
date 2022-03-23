@@ -1,389 +1,445 @@
 {% extends "template_Interlinker.html" %} {% block title %} Servicepedia {% endblock %} {% block
-    content %}
-  
-  <script>
-    function registrarLike(
-      event,
-      like = "1",
-      annotationId = "",
-      objtype = "annotation.like"
-    ) {
-      if (event.type == "click") {
-        stateToChange = like;
-        commentsChangeState = "";
-  
-        if (annotationId != "") {
-          descriptionID = '{{description.id}}'
-          urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='like' ) }}`;
-          urlPost = urlPost.replace("DESCRIPTIONID",descriptionID);
-          urlPost = urlPost.replace("ANNOTATIONID",annotationId);
-  
-          
-          //Para el caso que sea un reply
-          function successSearch(data) {
-            let nroLikes = data["like"];
-            let nroDislikes = data["dislike"];
-  
-            if (data["category"] == "reply") {
-              $("#repLike-" + annotationId).text(nroLikes);
-              $("#repDislike-" + annotationId).text(nroDislikes);
-            } else {
-              $("#currentAnnotationLikes").text(nroLikes);
-              $("#currentAnnotationDislikes").text(nroDislikes);
-            }
-            $("#notificationAcceptBtn").hide();
-            $("#notificationBox").modal("hide");
+  content %}
+
+<script>
+  function registrarLike(
+    event,
+    like = "1",
+    annotationId = "",
+    objtype = "annotation.like"
+  ) {
+    if (event.type == "click") {
+      stateToChange = like;
+      commentsChangeState = "";
+
+      if (annotationId != "") {
+        descriptionID = '{{description.id}}'
+        urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='like' ) }}`;
+        urlPost = urlPost.replace("DESCRIPTIONID",descriptionID);
+        urlPost = urlPost.replace("ANNOTATIONID",annotationId);
+
+        
+        //Para el caso que sea un reply
+        function successSearch(data) {
+          let nroLikes = data["like"];
+          let nroDislikes = data["dislike"];
+
+          if (data["category"] == "reply") {
+            $("#repLike-" + annotationId).text(nroLikes);
+            $("#repDislike-" + annotationId).text(nroDislikes);
+          } else {
+            $("#currentAnnotationLikes").text(nroLikes);
+            $("#currentAnnotationDislikes").text(nroDislikes);
           }
+          $("#notificationAcceptBtn").hide();
+          $("#notificationBox").modal("hide");
         }
-  
-        $.ajax({
-          method: "POST",
-          url: urlPost,
-          contentType: "application/json;charset=UTF-8",
-          data: JSON.stringify({
-            stateToChange: stateToChange,
-            commentsChangeState: commentsChangeState,
-            objtype: objtype,
-          }),
-        }).done(successSearch);
       }
+
+      $.ajax({
+        method: "POST",
+        url: urlPost,
+        contentType: "application/json;charset=UTF-8",
+        data: JSON.stringify({
+          stateToChange: stateToChange,
+          commentsChangeState: commentsChangeState,
+          objtype: objtype,
+        }),
+      }).done(successSearch);
     }
-  
-    function registrarEstadoAnnotation(
-      event,
-      annotationState = "0",
-      annotationId = "",
-      objtype = "annotation_state"
-    ) {
-      if (event.type == "click") {
-        //  Muestro el panel de ingreso de razon:
-        var myModal = new bootstrap.Modal(
-          document.getElementById("notificationBox"),
-          {}
-        );
-        $("#notificationBoxLabel").text("Information");
-        $("#notificationBody").text("");
-        $("#notificationBody").append(
-          "<div class='mb-3'> <label for='commentsChangeState' class='form-label'> Please enter comments on your decision. </label>      <textarea class='form-control' id='commentsChangeState' rows='3'></textarea>    </div>"
-        );
-  
-        $("#notificationBody").append(
-          "<input type='hidden' name='stateToChange' id='stateToChange' value='" +
-            annotationState +
-            "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
-        );
-  
-        $("#notificationBody").append(
-          "<input type='hidden' name='annotationId' id='annotationId' value='" +
-            annotationId +
-            "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
-        );
-  
-        $("#notificationBody").append(
-          "<input type='hidden' name='objtype' id='objtype' value='" +
-            objtype +
-            "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
-        );
-  
-        $("#notificationAcceptBtn").text("Accept");
-        $("#notificationAcceptBtn").show();
-        //$('#notificationAcceptBtn').hide();
-  
-        $("#createUrl").val("");
-        myModal.show();
-      }
+  }
+
+  function registrarEstadoAnnotation(
+    event,
+    annotationState = "0",
+    annotationId = "",
+    objtype = "annotation_state"
+  ) {
+    if (event.type == "click") {
+      //  Muestro el panel de ingreso de razon:
+      var myModal = new bootstrap.Modal(
+        document.getElementById("notificationBox"),
+        {}
+      );
+      $("#notificationBoxLabel").text("Information");
+      $("#notificationBody").text("");
+      $("#notificationBody").append(
+        "<div class='mb-3'> <label for='commentsChangeState' class='form-label'> Please enter comments on your decision. </label>      <textarea class='form-control' id='commentsChangeState' rows='3'></textarea>    </div>"
+      );
+
+      $("#notificationBody").append(
+        "<input type='hidden' name='stateToChange' id='stateToChange' value='" +
+          annotationState +
+          "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
+      );
+
+      $("#notificationBody").append(
+        "<input type='hidden' name='annotationId' id='annotationId' value='" +
+          annotationId +
+          "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
+      );
+
+      $("#notificationBody").append(
+        "<input type='hidden' name='objtype' id='objtype' value='" +
+          objtype +
+          "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
+      );
+
+      $("#notificationAcceptBtn").text("Accept");
+      $("#notificationAcceptBtn").show();
+      //$('#notificationAcceptBtn').hide();
+
+      $("#createUrl").val("");
+      myModal.show();
     }
-  
-    function getStateText(val) {
-      res = "";
-      switch (val) {
-        case 0:
-          res = "In Progress";
-          break;
-        case 1:
-          res = "Archived";
-          break;
-        case 2:
-          res = "Approved";
-          break;
-        case 3:
-          res = "Banned";
-          break;
-        default:
-          res = "Nan";
-      }
-      return res;
+  }
+
+  function getStateText(val) {
+    res = "";
+    switch (val) {
+      case 0:
+        res = "In Progress";
+        break;
+      case 1:
+        res = "Archived";
+        break;
+      case 2:
+        res = "Approved";
+        break;
+      case 3:
+        res = "Banned";
+        break;
+      default:
+        res = "Nan";
     }
-  
-    //Defino el evento de accept del modal: (En este caso submit a form)
-    $("#notificationAcceptBtn").click(function () {
-      annotationId = $("#annotationId").val();
-      stateToChange = $("#stateToChange").val();
-      objtype = $("#objtype").val();
-      commentsChangeState = $("#commentsChangeState").val();
-  
-      //window.location='/subjectPage/{{ description.id}}/{{ annotation.id}}/state?state='+stateToChange
-      if (commentsChangeState != "") {
-        if (annotationId != "") {
-  
-          descriptionID = '{{description.id}}'
-          urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='state' ) }}`;
-          urlPost = urlPost.replace("DESCRIPTIONID",descriptionID);
-          urlPost = urlPost.replace("ANNOTATIONID",annotationId);
-  
-          //Para el caso que sea un reply
-          function successSearch(data) {
-            let nuevoEstado = data["state"];
-            $("#repState-" + annotationId).text(nuevoEstado);
-  
-            //Muestro solamente cuando esta prohibido
-            if (nuevoEstado == 3) {
-              $("#repStateText-" + annotationId).text(getStateText(nuevoEstado));
-            } else {
-              $("#repStateText-" + annotationId).text("");
-            }
-  
-            $("#notificationAcceptBtn").hide();
-            $("#notificationBox").modal("hide");
+    return res;
+  }
+
+  //Defino el evento de accept del modal: (En este caso submit a form)
+  $("#notificationAcceptBtn").click(function () {
+    annotationId = $("#annotationId").val();
+    stateToChange = $("#stateToChange").val();
+    objtype = $("#objtype").val();
+    commentsChangeState = $("#commentsChangeState").val();
+
+    //window.location='/subjectPage/{{ description.id}}/{{ annotation.id}}/state?state='+stateToChange
+    if (commentsChangeState != "") {
+      if (annotationId != "") {
+
+        descriptionID = '{{description.id}}'
+        urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='state' ) }}`;
+        urlPost = urlPost.replace("DESCRIPTIONID",descriptionID);
+        urlPost = urlPost.replace("ANNOTATIONID",annotationId);
+
+        //Para el caso que sea un reply
+        function successSearch(data) {
+          let nuevoEstado = data["state"];
+          $("#repState-" + annotationId).text(nuevoEstado);
+
+          //Muestro solamente cuando esta prohibido
+          if (nuevoEstado == 3) {
+            $("#repStateText-" + annotationId).text(getStateText(nuevoEstado));
+          } else {
+            $("#repStateText-" + annotationId).text("");
           }
-        } else {
-  
-  
-          urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='state' ) }}`;
-          urlPost = urlPost.replace("DESCRIPTIONID",'{{ description.id}}');
-          urlPost = urlPost.replace("ANNOTATIONID",'{{ annotation.id}}');
-  
-          //Para el caso que es una anotacion base
-          function successSearch(data) {
-            let nuevoEstado = data["state"];
-            $("#currentStateAnnotation").text(nuevoEstado);
-            $("#currentStateAnnotationText").text(getStateText(nuevoEstado));
-            $("#notificationAcceptBtn").hide();
-            $("#notificationBox").modal("hide");
-          }
+
+          $("#notificationAcceptBtn").hide();
+          $("#notificationBox").modal("hide");
         }
-  
-        $.ajax({
-          method: "POST",
-          url: urlPost,
-          contentType: "application/json;charset=UTF-8",
-          data: JSON.stringify({
-            stateToChange: stateToChange,
-            commentsChangeState: commentsChangeState,
-            objtype: objtype,
-          }),
-        }).done(successSearch);
       } else {
-        $("#notificationBody").append(
-          "<p style='color:red;'>* A comment is required</p>"
-        );
+
+
+        urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='state' ) }}`;
+        urlPost = urlPost.replace("DESCRIPTIONID",'{{ description.id}}');
+        urlPost = urlPost.replace("ANNOTATIONID",'{{ annotation.id}}');
+
+        //Para el caso que es una anotacion base
+        function successSearch(data) {
+          let nuevoEstado = data["state"];
+          $("#currentStateAnnotation").text(nuevoEstado);
+          $("#currentStateAnnotationText").text(getStateText(nuevoEstado));
+          $("#notificationAcceptBtn").hide();
+          $("#notificationBox").modal("hide");
+        }
       }
-    });
-  </script>
-  
-  
-  
-  <hr />
-  
-  <div style="display: block">
-    <div class="row">
-      <div class="col-12" style="text-align: center;margin-top: 4px;display: inline-flex;">
-        <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='{{ url_for('views.assetAdmin',id= description['id'] ) }}';" style="padding: -2px;margin:0px;border: 0px;margin-right: 5px;" >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
-          </svg>
-  
-        </button>
-        <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
-        <span id="descriptionUri" hidden>{{description['url']}}</span>
-        <span id="descriptionId" hidden>{{description['id']}}</span>
-  
-      </div>
-      
-    </div>
-  
-  </div>
-  
-  <hr />
-  
-  
-  
-  
-  {% set ns = namespace(ismoderator=false) %} {% for moderator in
-  description.moderators %} {% if user.email == moderator.email %} {% set
-  ns.ismoderator = true %} {% endif %} {% endfor %}
-  
+
+      $.ajax({
+        method: "POST",
+        url: urlPost,
+        contentType: "application/json;charset=UTF-8",
+        data: JSON.stringify({
+          stateToChange: stateToChange,
+          commentsChangeState: commentsChangeState,
+          objtype: objtype,
+        }),
+      }).done(successSearch);
+    } else {
+      $("#notificationBody").append(
+        "<p style='color:red;'>* A comment is required</p>"
+      );
+    }
+  });
+</script>
+
+
+
+<hr />
+
+<div style="display: block">
   <div class="row">
-    <div class="col-6">
-      <h5>
-        {{ annotation['category'][0]|upper }}{{ annotation['category'][1:] }}/{{
-        annotation['id'] }} (
-        <span hidden id="currentStateAnnotation">{{annotation['state']}}</span>
-        <span id="currentStateAnnotationText"
-          >{{annotation['state']|estadosAnnotation}}</span
-        >
-        )
-      </h5>
+    <div class="col-12" style="text-align: center;margin-top: 4px;display: inline-flex;">
+      <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='{{ url_for('views.assetAdmin',id= description['id'] ) }}';" style="padding: -2px;margin:0px;border: 0px;margin-right: 5px;" >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-left-square" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm11.5 5.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"></path>
+        </svg>
+
+      </button>
+      <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
+      <span id="descriptionUri" hidden>{{description['url']}}</span>
+      <span id="descriptionId" hidden>{{description['id']}}</span>
+
     </div>
-    <div class="col-6">
+    
+  </div>
+
+</div>
+
+<hr />
+
+
+
+
+{% set ns = namespace(ismoderator=false) %} {% for moderator in
+description.moderators %} {% if user.email == moderator.email %} {% set
+ns.ismoderator = true %} {% endif %} {% endfor %}
+
+<div class="row">
+  <div class="col-6">
+    <h5>
+      {{ annotation['category'][0]|upper }}{{ annotation['category'][1:] }}/{{
+      annotation['id'] }} (
+      <span hidden id="currentStateAnnotation">{{annotation['state']}}</span>
+      <span id="currentStateAnnotationText"
+        >{{annotation['state']|estadosAnnotation}}</span
+      >
+      )
+    </h5>
+  </div>
+  <div class="col-6">
+    <div
+      class="container"
+      style="
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 10px;
+      "
+    >
       <div
-        class="container"
         style="
-          display: flex;
-          flex-direction: row;
-          justify-content: flex-end;
-          gap: 10px;
+          min-width: 50px;
+          max-width: 50px;
+          text-align: center;
+          justify-content: center;
+          border-radius: 5px;
+          border: 1px solid rgb(94, 94, 94, 20%);
         "
       >
-        <div
-          style="
-            min-width: 50px;
-            max-width: 50px;
-            text-align: center;
-            justify-content: center;
-            border-radius: 5px;
-            border: 1px solid rgb(94, 94, 94, 20%);
-          "
-        >
-          {{ nroReplies }} <br />
-          REPLY
-        </div>
-        <!--       <div
-          style="
-            min-width: 50px;
-            max-width: 50px;
-            text-align: center;
-            justify-content: center;
-            border-radius: 5px;
-            border: 1px solid rgb(94, 94, 94, 20%);
-          "
-        >
-          15 VIEWS
-        </div>
-        <div
-          style="
-            min-width: 50px;
-            max-width: 50px;
-            text-align: center;
-            justify-content: center;
-            border-radius: 5px;
-            border: 1px solid rgb(94, 94, 94, 20%);
-          "
-        >
-          5 VOTES
-        </div> -->
+        {{ nroReplies }} <br />
+        REPLY
       </div>
+      <!--       <div
+        style="
+          min-width: 50px;
+          max-width: 50px;
+          text-align: center;
+          justify-content: center;
+          border-radius: 5px;
+          border: 1px solid rgb(94, 94, 94, 20%);
+        "
+      >
+        15 VIEWS
+      </div>
+      <div
+        style="
+          min-width: 50px;
+          max-width: 50px;
+          text-align: center;
+          justify-content: center;
+          border-radius: 5px;
+          border: 1px solid rgb(94, 94, 94, 20%);
+        "
+      >
+        5 VOTES
+      </div> -->
     </div>
   </div>
-  
-  <div class="row" style="padding-left: 10px">
-    <h6>Content:</h6>
-  
-    <div
-      class="row"
-      style="
-        position: relative;
-        background-color: #fff1f1;
-        border-radius: 10px;
-        margin: 10px;
-      "
-    >
-      <div style="position: relative; top: -10px">
-        <div
-          style="top: -10px; display: flex; justify-content: flex-end; gap: 10px"
-        >
-          <button
-            type="button"
-            class="btn btn-success"
-            onclick="registrarLike(event,like='1',annotationId='{{ annotation.id }}',objtype='annotation_like' )"
-          >
-            <i class="bi bi-hand-thumbs-up"></i>
-            <span id="currentAnnotationLikes">{{ annotation['like']}}</span>
-          </button>
-          <button
-            type="button"
-            class="btn btn-danger"
-            onclick="registrarLike(event,like='-1',annotationId='{{ annotation.id }}',objtype='annotation_like' ) "
-          >
-            <i class="bi bi-hand-thumbs-down"></i>
-            <span id="currentAnnotationDislikes">{{ annotation['dislike']}}</span>
-          </button>
-        </div>
-      </div>
-  
-      <p style="padding: 10px; padding-top: 0px">
-        {{ annotation['text']|striptags }}
-      </p>
-    </div>
-    <div class="row" id="quoteTexto">
-      <div style="display: flex; justify-content: flex-end">
-        <p><cite>" {{ annotation['quote']|striptags }} "</cite></p>
-      </div>
-    </div>
-  </div>
-  
-  <div class="col" style="padding-left: 20px; padding-bottom: 10px">
-    <div
-      class="row"
-      style="
-        gap: 10px;
-        background: rgba(201, 229, 255, 0.658);
-        border-radius: 5px;
-        margin-bottom: 10px;
-        padding-top: 3px;
-      "
-    >
-      <div class="col-3">
-        <h6>Keywords:</h6>
-      </div>
-  
-      <div class="col-8">
-        {{description['keywords'][0]|upper}}{{description['keywords'][1:]|
-        replace(" ", ", ")}}
-      </div>
-    </div>
-  
-    <div
-      class="row"
-      style="
-        gap: 10px;
-        background: rgba(201, 229, 255, 0.658);
-        border-radius: 5px;
-        padding-top: 3px;
-      "
-    >
-      <div class="col-3">
-        <h6>Category:</h6>
-      </div>
-  
-      <div class="col-8">{{description['padministration']}}</div>
-    </div>
-  </div>
-  
-  <hr />
-  
-  {% macro muestraReplies(reply,separador) -%} {% set separador = '. '+separador
-  +'. ' %} {% for replyRep in replies |sort( attribute="data_creacio") %} {% if
-  replyRep.category == 'reply' and
-  replyRep.idAnotationReply=='annotation-'+reply.id %}
-  
+</div>
+
+<div class="row" style="padding-left: 10px">
+  <h6>Content:</h6>
+
   <div
     class="row"
     style="
-      background-color: #e7fff1;
+      position: relative;
+      background-color: #fff1f1;
       border-radius: 10px;
       margin: 10px;
-      align-items: center;
     "
   >
+    <div style="position: relative; top: -10px">
+      <div
+        style="top: -10px; display: flex; justify-content: flex-end; gap: 10px"
+      >
+        <button
+          type="button"
+          class="btn btn-success"
+          onclick="registrarLike(event,like='1',annotationId='{{ annotation.id }}',objtype='annotation_like' )"
+        >
+          <i class="bi bi-hand-thumbs-up"></i>
+          <span id="currentAnnotationLikes">{{ annotation['like']}}</span>
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          onclick="registrarLike(event,like='-1',annotationId='{{ annotation.id }}',objtype='annotation_like' ) "
+        >
+          <i class="bi bi-hand-thumbs-down"></i>
+          <span id="currentAnnotationDislikes">{{ annotation['dislike']}}</span>
+        </button>
+      </div>
+    </div>
+
+    <p style="padding: 10px; padding-top: 0px">
+      {{ annotation['text']|striptags }}
+    </p>
+  </div>
+  <div class="row" id="quoteTexto">
+    <div style="display: flex; justify-content: flex-end">
+      <p><cite>" {{ annotation['quote']|striptags }} "</cite></p>
+    </div>
+  </div>
+</div>
+
+<div class="col" style="padding-left: 20px; padding-bottom: 10px">
+  <div
+    class="row"
+    style="
+      gap: 10px;
+      background: rgba(201, 229, 255, 0.658);
+      border-radius: 5px;
+      margin-bottom: 10px;
+      padding-top: 3px;
+    "
+  >
+    <div class="col-3">
+      <h6>Keywords:</h6>
+    </div>
+
+    <div class="col-8">
+      {{description['keywords'][0]|upper}}{{description['keywords'][1:]|
+      replace(" ", ", ")}}
+    </div>
+  </div>
+
+  <div
+    class="row"
+    style="
+      gap: 10px;
+      background: rgba(201, 229, 255, 0.658);
+      border-radius: 5px;
+      padding-top: 3px;
+    "
+  >
+    <div class="col-3">
+      <h6>Public Administration:</h6>
+    </div>
+
+    <div class="col-8">{{description['padministration']}}</div>
+  </div>
+</div>
+
+<hr />
+
+{% macro muestraReplies(reply,separador) -%} {% set separador = '. '+separador
++'. ' %} {% for replyRep in replies |sort( attribute="data_creacio") %} {% if
+replyRep.category == 'reply' and
+replyRep.idAnotationReply=='annotation-'+reply.id %}
+
+<div
+  class="row"
+  style="
+    background-color: #e7fff1;
+    border-radius: 10px;
+    margin: 10px;
+    align-items: center;
+  "
+>
+  <div class="col-10">
+    {{separador}}
+    <i
+      class="bi bi-arrow-return-right"
+      style="font-weight: bold; width: fit-content"
+    ></i>
+    {% set userName = replyRep.user.split('@')[0] %}
+
+    <span style="font-weight: bold; width: fit-content">
+      <span id="repState-{{ replyRep.id }}" hidden>{{replyRep.state}}</span>
+      {% if replyRep.state==3 %}
+      <span id="repStateText-{{ replyRep.id }}"
+        >({{replyRep.state|estadosAnnotation}})</span
+      >
+      {% endif %} {{ userName[0] |upper}}{{ userName[1:]}}
+    </span>
+    at {{ replyRep.created|datetimeformat() }}.
+
+    <span style="font-weight: lighter; width: fit-content">
+      {{ replyRep.text|striptags}}</span
+    >
+  </div>
+
+  <div class="col-2" style="display: flex; justify-content: flex-end">
+    <div class="input-group mb-3">
+      <button
+        class="btn btn-outline-secondary bi-hand-thumbs-up"
+        type="button"
+        onclick="registrarLike(event,like='1',annotationId='{{ replyRep.id }}',objtype='annotation.like' ) "
+      >
+        <span id="repLike-{{ replyRep.id }}">{{ replyRep['like']}}</span>
+      </button>
+      <button
+        class="btn btn-outline-secondary bi-hand-thumbs-down"
+        type="button"
+        onclick="registrarLike(event,like='-1',annotationId='{{ replyRep.id }}',objtype='annotation.like' ) "
+      >
+        <span id="repDislike-{{ replyRep.id }}">{{ replyRep['dislike']}}</span>
+      </button>
+      {% if ns.ismoderator is true %}
+      <button
+        class="btn btn-outline-secondary bi-trash"
+        onclick="registrarEstadoAnnotation(event,annotationState=3, annotationId='{{ replyRep.id }}',objtype='annotation_state')"
+        type="button"
+      ></button>
+      {% endif%}
+    </div>
+  </div>
+</div>
+
+{{ muestraReplies(replyRep,separador)}} {% endif %} {% endfor %} {%- endmacro
+-%}
+
+<div class="container">
+  {% for replyRep in replies |sort( attribute="data_creacio")|selectattr("uri",
+  "equalto", annotation.uri) %} {% if replyRep.category == 'reply' and
+  replyRep.idAnotationReply== 'annotation-'+annotation.id %}
+  <div
+    class="row"
+    style="background-color: #e7fff1; border-radius: 10px; margin: 10px"
+  >
     <div class="col-10">
-      {{separador}}
-      <i
-        class="bi bi-arrow-return-right"
-        style="font-weight: bold; width: fit-content"
-      ></i>
       {% set userName = replyRep.user.split('@')[0] %}
-  
+
       <span style="font-weight: bold; width: fit-content">
         <span id="repState-{{ replyRep.id }}" hidden>{{replyRep.state}}</span>
         {% if replyRep.state==3 %}
@@ -393,27 +449,32 @@
         {% endif %} {{ userName[0] |upper}}{{ userName[1:]}}
       </span>
       at {{ replyRep.created|datetimeformat() }}.
-  
-      <span style="font-weight: lighter; width: fit-content">
-        {{ replyRep.text|striptags}}</span
+
+      <span style="font-weight: lighter; width: fit-content"
+        >{{ replyRep.text|striptags}}</span
       >
     </div>
-  
-    <div class="col-2" style="display: flex; justify-content: flex-end">
+
+    <div
+      class="col-2"
+      style="position: relative; padding-top: 5px; padding-bottom: 0px"
+    >
       <div class="input-group mb-3">
         <button
           class="btn btn-outline-secondary bi-hand-thumbs-up"
           type="button"
-          onclick="registrarLike(event,like='1',annotationId='{{ replyRep.id }}',objtype='annotation.like' ) "
+          onclick="registrarLike(event,like='1',annotationId='{{ replyRep.id }}',objtype='annotation_like' )"
         >
           <span id="repLike-{{ replyRep.id }}">{{ replyRep['like']}}</span>
         </button>
         <button
           class="btn btn-outline-secondary bi-hand-thumbs-down"
           type="button"
-          onclick="registrarLike(event,like='-1',annotationId='{{ replyRep.id }}',objtype='annotation.like' ) "
+          onclick="registrarLike(event,like='-1',annotationId='{{ replyRep.id }}',objtype='annotation_like' )"
         >
-          <span id="repDislike-{{ replyRep.id }}">{{ replyRep['dislike']}}</span>
+          <span id="repDislike-{{ replyRep.id }}"
+            >{{ replyRep['dislike']}}</span
+          >
         </button>
         {% if ns.ismoderator is true %}
         <button
@@ -425,123 +486,61 @@
       </div>
     </div>
   </div>
-  
-  {{ muestraReplies(replyRep,separador)}} {% endif %} {% endfor %} {%- endmacro
-  -%}
-  
-  <div class="container">
-    {% for replyRep in replies |sort( attribute="data_creacio")|selectattr("uri",
-    "equalto", annotation.uri) %} {% if replyRep.category == 'reply' and
-    replyRep.idAnotationReply== 'annotation-'+annotation.id %}
-    <div
-      class="row"
-      style="background-color: #e7fff1; border-radius: 10px; margin: 10px"
-    >
-      <div class="col-10">
-        {% set userName = replyRep.user.split('@')[0] %}
-  
-        <span style="font-weight: bold; width: fit-content">
-          <span id="repState-{{ replyRep.id }}" hidden>{{replyRep.state}}</span>
-          {% if replyRep.state==3 %}
-          <span id="repStateText-{{ replyRep.id }}"
-            >({{replyRep.state|estadosAnnotation}})</span
-          >
-          {% endif %} {{ userName[0] |upper}}{{ userName[1:]}}
-        </span>
-        at {{ replyRep.created|datetimeformat() }}.
-  
-        <span style="font-weight: lighter; width: fit-content"
-          >{{ replyRep.text|striptags}}</span
-        >
-      </div>
-  
-      <div
-        class="col-2"
-        style="position: relative; padding-top: 5px; padding-bottom: 0px"
-      >
-        <div class="input-group mb-3">
-          <button
-            class="btn btn-outline-secondary bi-hand-thumbs-up"
-            type="button"
-            onclick="registrarLike(event,like='1',annotationId='{{ replyRep.id }}',objtype='annotation_like' )"
-          >
-            <span id="repLike-{{ replyRep.id }}">{{ replyRep['like']}}</span>
-          </button>
-          <button
-            class="btn btn-outline-secondary bi-hand-thumbs-down"
-            type="button"
-            onclick="registrarLike(event,like='-1',annotationId='{{ replyRep.id }}',objtype='annotation_like' )"
-          >
-            <span id="repDislike-{{ replyRep.id }}"
-              >{{ replyRep['dislike']}}</span
-            >
-          </button>
-          {% if ns.ismoderator is true %}
-          <button
-            class="btn btn-outline-secondary bi-trash"
-            onclick="registrarEstadoAnnotation(event,annotationState=3, annotationId='{{ replyRep.id }}',objtype='annotation_state')"
-            type="button"
-          ></button>
-          {% endif%}
-        </div>
-      </div>
-    </div>
-    {% set separador = '' %} {{ muestraReplies(replyRep,separador)}} {% endif %}
-    {% endfor %}
-  </div>
-  
-  <hr />
-  
-  <div class="row" style="padding: 15px">
-    <div
-      style="
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-        align-items: center;
-        text-align: center;
-        justify-content: center;
-      "
-    >
-      {% if ns.ismoderator is true %}
-      <div class="btn-group" role="group" aria-label="opciones">
-  
-      
-      <button
-        type="button"
-        class="btn bi-archive border btn-danger"
-        onclick="registrarEstadoAnnotation(event,annotationState=1,annotationId='',objtype='annotation_state')"
-      >
-        Archive
-      </button>
-      <button
-        type="button"
-        class="btn bi-clock border btn-success"
-        onclick="registrarEstadoAnnotation(event,annotationState=0,annotationId='',objtype='annotation_state')"
-      >
-        In Progress
-      </button>
-      <button
-        type="button"
-        class="btn bi-check-circle border btn-primary"
-        onclick="registrarEstadoAnnotation(event,annotationState=2,annotationId='',objtype='annotation_state')"
-      >
-        Approve
-      </button>
-  
-    </div>
-      {% endif %}
-    <div class="btn-group" role="group" aria-label="doctext">
-      <button
+  {% set separador = '' %} {{ muestraReplies(replyRep,separador)}} {% endif %}
+  {% endfor %}
+</div>
+
+<hr />
+
+<div class="row" style="padding: 15px">
+  <div
+    style="
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+    "
+  >
+    {% if ns.ismoderator is true %}
+    <div class="btn-group" role="group" aria-label="opciones">
+
+    
+    <button
       type="button"
-      class="btn bi-blockquote-left border btn-secondary"
-      hidden="true"
-      >
-        See in Text
-      </button>
-    </div>
+      class="btn bi-archive border btn-danger"
+      onclick="registrarEstadoAnnotation(event,annotationState=1,annotationId='',objtype='annotation_state')"
+    >
+      Archive
+    </button>
+    <button
+      type="button"
+      class="btn bi-clock border btn-success"
+      onclick="registrarEstadoAnnotation(event,annotationState=0,annotationId='',objtype='annotation_state')"
+    >
+      In Progress
+    </button>
+    <button
+      type="button"
+      class="btn bi-check-circle border btn-primary"
+      onclick="registrarEstadoAnnotation(event,annotationState=2,annotationId='',objtype='annotation_state')"
+    >
+      Approve
+    </button>
+
   </div>
-  
-  <hr />
-  {% endblock %}
-  
+    {% endif %}
+  <div class="btn-group" role="group" aria-label="doctext">
+    <button
+    type="button"
+    class="btn bi-blockquote-left border btn-secondary"
+    hidden="true"
+    >
+      See in Text
+    </button>
+  </div>
+</div>
+
+<hr />
+{% endblock %}
