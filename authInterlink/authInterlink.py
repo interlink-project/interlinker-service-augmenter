@@ -191,6 +191,9 @@ def dashboard():
             key = 'Unassigned'
 
         paList.append(key)
+
+    if not ( 'Global' in paList ):
+        paList.insert(0, 'Global')
     #print(paList)
 
     textoABuscar = request.args.get("searchText")
@@ -277,6 +280,8 @@ def moderate():
             key = 'Unassigned'
 
         paList.append(key)
+    if not ( 'Global' in paList ):
+        paList.insert(0, 'Global')
     #print(paList)
 
     textoABuscar = request.args.get("searchText")
@@ -569,6 +574,8 @@ def editDescription(descriptionId=None, option='Edit'):
             key = 'Unassigned'
 
         paList.append(key)
+    if not ( 'Global' in paList ):
+        paList.insert(0, 'Global')
     #print(paList)
 
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
@@ -581,7 +588,7 @@ def editDescription(descriptionId=None, option='Edit'):
 
 # Cargo las Notificaciones
     listNotifications, numRes = cargarNotifications()
-    return render_template("descriptionDetail.html", user=current_user, description=description, option=option, publicsa=paList, notifications=listNotifications, notificationNum=numRes)
+    return render_template("descriptionDetail.html", user=current_user, description=description, option=option, publicsa=paList, notifications=listNotifications, notificationNum=numRes,noShowMenEmpty=True)
 
 
 @authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>',)
@@ -719,6 +726,9 @@ def descriptionDetail():
             key = 'Unassigned'
 
         paList.append(key)
+        
+    if not ( 'Global' in paList ):
+        paList.insert(0, 'Global')
     #print(paList)
 
     #logging.info('Me dice si el usuario es anonimo:')

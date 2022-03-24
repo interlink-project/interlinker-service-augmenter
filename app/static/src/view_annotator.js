@@ -427,7 +427,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       anotacionReply.id = this.uniqId();
       anotacionReply.text = textReply;
       anotacionReply.idAnotationReply = anotation_reference;
-      anotacionReply.user = "Me";
+      anotacionReply.user = "MeAnotator";
       anotacionReply.category = "reply";
 
       /* Guardo tambien el valor del annotation-root si existe,
@@ -1067,7 +1067,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
     AnnotatorViewer.prototype.createAnnotationPanel = function (annotation) {
       var checboxes =
-        '<label class="checkbox-inline"><input type="checkbox" id="type_own" rel="me"/>My annotations</label><label class="checkbox-inline">  <input type="checkbox" id="type_share" rel="shared"/>Shared</label>';
+        '<label class="checkbox-inline"><input type="checkbox" id="type_own" rel="meAnotator"/>My annotations</label><label class="checkbox-inline">  <input type="checkbox" id="type_share" rel="shared"/>Shared</label>';
 
       var annotation_layer =
         '<div  class="annotations-list-uoc" ><div id="annotations-panel"><span class="rotate etiquetaSolapa" title="' +
@@ -1087,7 +1087,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       annotation
     ) {
       var anotation_reference = null;
-      var data_owner = "me";
+      var data_owner = "meAnotator";
       var data_type = "";
       var myAnnotation = false;
 
@@ -1115,7 +1115,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       var currentUser = sessionStorage.getItem("user");
 
       if (annotation.user == currentUser) {
-        data_owner = "me";
+        data_owner = "meAnotator";
       } else {
         data_owner = "";
       }

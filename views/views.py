@@ -78,6 +78,8 @@ def instantiateInterlinker():
 
         paList.append(key)
     #print(paList)
+    if not ( 'Global' in paList ):
+        paList.insert(0, 'Global')
 
     return render_template("instantiate.html", user=current_user, publicsa=paList,servicepediaUrl=settings.REDIRECT_SERVICEPEDIA)
 
@@ -132,6 +134,8 @@ def assetEdit(id):
 
         paList.append(key)
     #print(paList)
+    if not ( 'Global' in paList ):
+        paList.insert(0, 'Global')
 
     description = Description._get_Descriptions_byId(id=id)[0]
 
@@ -251,6 +255,9 @@ def inicio():
         paList.append(key)
     print(paList)
 
+    if not ( 'Global' in paList ):
+        paList.insert(0, 'Global')
+
     textoABuscar = request.args.get("searchText")
     padministration = request.args.get("padministration")
     domain = request.args.get("domain")
@@ -365,25 +372,9 @@ def saveDescription():
         return jsonify({"error": "It is needed to add at least one URL of description"})
 
     # Busco si alguno de los URLS ya ha sido incluido en existe:
-    existePreviamente = False
-    listErrorDescriptionSameUrl = []
-    for itemUrl in listadoUrlNuevo:
-        editDescripcion = Description._get_Descriptions_byURI(url=itemUrl)
-        if len(editDescripcion) != 0:
-            existePreviamente = True
-            nombreDesc = editDescripcion[0]['title']
-            textoError = 'Error: La descripcion '+nombreDesc+' contiene la url:'+itemUrl
-            listErrorDescriptionSameUrl.append(textoError)
+
 
     if descriptionId == '':
-
-        # Si existe una descripcion con alguna de las descripciones presentar error creacion
-        if existePreviamente:
-            listErroresDes = " "
-            listErroresDes.join(listErrorDescriptionSameUrl)
-            flash("One or some of the urls had been used in another description." +
-                  listErroresDes, "info")
-            return jsonify({'Errores': listErroresDes})
 
         # Create:
         perms = {'read': ['group:__world__']}
@@ -430,16 +421,13 @@ def saveDescription():
 
             newdescription.save(index="description")
             description = newdescription
-            flash("Record created successfully.", "info")
+            #flash("Record created successfully.", "info")
 
-            
+            #Redirecciono a la descripcion creada:
+            return redirect(url_for('authInterlink.description', descriptionId=description['id']))
 
-            
-               
-                    
+                 
        
-
-
 
     else:
 
@@ -936,13 +924,78 @@ def augment(rutaPagina,integrationInterlinker='False'):
     for div in listDiv:
         if div.attrs!=None:
             if div.attrs.get("class"):
-                if any('header-ad' in x for x in div.attrs['class']):
-                    div.decompose()
-                    break
-                if any('ad-' in x for x in div.attrs['class']):
-                    div.decompose()
-                    break
+                classesStr=div.attrs['class']
+                
+                for itemClass in classesStr:
+                
+                    if 'header-ad' in itemClass:
+                        div.decompose()
+                        break
+                    if 'ad-' in itemClass:
+                        div.decompose()
+                        break
+                    if 'advertising' in itemClass:
+                        div.decompose()
+                        break
+                
+              
 
+
+                
+    #Special configuration for a page:
+    #-------------------------------------------------
+    listCssToAvoid=[]
+    #The guardian:
+    listCssToAvoid.append('print.css')
+    listCssToAvoid.append('.js')
+
+
+    #Lista de atributos que deben cambiar de nombre:
+    #Reemplazo del tag video el attributo data-src por src
+    REPLACEMENTS = [('video','src','data-src'), # video.data-src -> src
+                    ('video','autoplay',''),
+                    ('figure','src','data-bg'),
+                    ('img','src','data-src')]
+
+    #Busca y reemplaza
+    def replace_tags(soup, replacements=REPLACEMENTS):
+        for tag, new_attribs, old_attibute in replacements:
+            for node in soup.find_all(tag):
+                if old_attibute=='':
+                    node[new_attribs]=None
+                if old_attibute in node.attrs:
+                    node[new_attribs]=node[old_attibute]   
+                    del node[old_attibute]     
+        return soup
+
+    soup=replace_tags(soup,REPLACEMENTS)
+
+    #Reemplazo la fuente del picture
+    listPictures= soup.find_all('picture')
+    
+    contado=0
+    for node in listPictures:
+        try:
+            if node.img['src'] != None:
+                if node.img['src'].startswith('data:image'):
+                    if node.source != None:
+                        if 'srcset' in node.source.attrs:
+                            del node.img['src']
+                            node.img['src']=node.source.attrs['srcset']
+                            contado=contado+1
+                            #print(''+str(contado))
+                            #print(node)
+        except:
+            continue                    
+
+    #Reemplazo la fuente del picture
+    listFigures= soup.find_all('figure')
+    
+    for node in listFigures:
+        if 'data-bg' in node.attrs :
+            node['src']=node.attrs['data-bg'] 
+            del node['data-bg'] 
+        node.name='img'
 
 
 
@@ -955,11 +1008,36 @@ def augment(rutaPagina,integrationInterlinker='False'):
         a.extract()
 
     for css in listCss:
+
         if css.attrs.get("href"):
+
+            if css.attrs.get("rel"):
+                print(css.attrs.get("rel"))
+                if "shortcut" in css.attrs.get("rel")  or "apple-touch-icon" in css.attrs.get("rel") or "alternate" in css.attrs.get("rel") :
+                    css.decompose()
+                    continue
+            if css.attrs.get("as"):
+                if css.attrs.get("as") == "script" or css.attrs.get("as") == "font":
+                    css.decompose()
+                    continue
+
             # if the link tag has the 'href' attribute
             css_url = urljoin(rutaPagina, css.attrs.get("href"))
             if "css" in css_url:
-                if not(css_url.endswith('print.css')):
+
+               
+
+                #Busco una coincidencia:
+                esIndeseable=False
+                for terminacionCss in listCssToAvoid:
+                    if terminacionCss in css_url:
+                        
+                        esIndeseable=True
+                        break
+
+
+
+                if not(esIndeseable):
                     count += 1
                     css_files.append(css_url)
                     anotationTemp = soup.new_tag(
@@ -968,6 +1046,9 @@ def augment(rutaPagina,integrationInterlinker='False'):
                     #print("Line{}: {}".format(count, css_url))
             else:
                 headTag.append(css)
+
+
+
 
 
 
@@ -1161,7 +1242,7 @@ def augment(rutaPagina,integrationInterlinker='False'):
                         }
             );
             $('body').annotator().annotator('addPlugin', 'AnnotatorViewer');
-            $('body').annotator().annotator("addPlugin", "Touch");
+            
 
 
  

@@ -316,16 +316,18 @@ class Description(es.Model):
             nroRegistros = descriptions['numRes']
             
             if(nroRegistros>0):
-                descriptionFound = descriptions['descriptions'][0]
+                #descriptionFound = descriptions['descriptions'][0]
 
-                #Si la descripcion ya ha sido agregada entonces no debe agregarse :
-                existsDescr=False
-                for itemDescript in listDescription:
-                    if(itemDescript['id']==descriptionFound['id']):
-                        existsDescr=True
-                        break
-                if not existsDescr:
-                    listDescription.append(descriptionFound)
+                for descriptionFound in descriptions['descriptions']:
+
+                    #Si la descripcion ya ha sido agregada entonces no debe agregarse :
+                    existsDescr=False
+                    for itemDescript in listDescription:
+                        if(itemDescript['id']==descriptionFound['id']):
+                            existsDescr=True
+                            break
+                    if not existsDescr:
+                        listDescription.append(descriptionFound)
 
         # Now I obtain all descriptions where I am moderator
 
@@ -335,16 +337,18 @@ class Description(es.Model):
         nroRegistros = descriptionsModerator['numRes']
         
         if(nroRegistros>0):
-            descriptionFound = descriptionsModerator['descriptions'][0]
+            #descriptionFound = descriptionsModerator['descriptions'][0]
 
-            #Si la descripcion ya ha sido agregada entonces no debe agregarse :
-            existsDescr=False
-            for itemDescript in listDescription:
-                if(itemDescript['id']==descriptionFound['id']):
-                    existsDescr=True
-                    break
-            if not existsDescr:
-                listDescription.append(descriptionFound)
+            for descriptionFound in descriptionsModerator['descriptions']:
+
+                #Si la descripcion ya ha sido agregada entonces no debe agregarse :
+                existsDescr=False
+                for itemDescript in listDescription:
+                    if(itemDescript['id']==descriptionFound['id']):
+                        existsDescr=True
+                        break
+                if not existsDescr:
+                    listDescription.append(descriptionFound)
         
 
         registroInicial=kwargs.pop("registroInicial")
@@ -770,10 +774,10 @@ class Description(es.Model):
 
         q['query']=searchScope
 
-        #Filter by Public administration:
+        #Filter by Category:
         padminitration=kwargs.pop("padministration")
 
-        #Filter by Public administration:
+        #Filter by Category:
         if padminitration!='' and padminitration!=None:
             q['query']['bool']['must'].append({
                                                 "match":{

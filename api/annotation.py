@@ -292,7 +292,7 @@ class Annotation(es.Model):
             "aggs": {
                 "group_by_uri": {
                     "terms": {
-                        "field": "uri"
+                        "field": "descriptionid"
                     }
                 }
             },
