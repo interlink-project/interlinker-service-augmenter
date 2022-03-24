@@ -424,7 +424,10 @@ def saveDescription():
             #flash("Record created successfully.", "info")
 
             #Redirecciono a la descripcion creada:
-            return redirect(url_for('authInterlink.description', descriptionId=description['id']))
+            if interlinkIntegration:
+                return jsonify({'id':description['id']})
+            else:
+                return redirect(url_for('authInterlink.description', descriptionId=description['id']))
 
                  
        
