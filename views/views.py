@@ -174,7 +174,7 @@ def assetAdmin(id):
 
         # Cargo las replies de cada annotacion:
         stats = stats + \
-            Annotation.annotationStats(Annotation, uri=itemUrl['url'])
+            Annotation.annotationStats(Annotation, descriptionId=description['id'])
 
     res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
                                       'InProgress': True, 'Archived': False, 'Approved': False}, descriptionId=description['id'], category=categoria, notreply=True, page=page)
