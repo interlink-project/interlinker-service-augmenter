@@ -879,23 +879,51 @@ def augment(rutaPagina, integrationInterlinker='False'):
     #soup = BeautifulSoup(resp_Contenido, 'html5lib')
     #soup = BeautifulSoup(resp_Contenido, 'lxml')
 
-    if 'morelab' in rutaPagina:
-        soup = BeautifulSoup(resp_Contenido, 'html5lib')
-    else:
-        soup = BeautifulSoup(resp_Contenido, 'html.parser')
-
-    # Quitamos los scripts:
-    for data in soup(['script', 'pre', 'noscript']):
-        # Remove tags
-        data.decompose()
-
+    soup = BeautifulSoup(resp_Contenido, 'html.parser')
     # print(soup.decode)
-
     try:
         headTag = soup.html.head
     except:
         headTag = soup.html
      # Inserto las librerias de css de la pagina:
+
+    # Nuevamente valido la codificacion:
+    # If html.parse no funciona trato con la lib html5lib:
+    if headTag == None:
+        # I try another codec:
+        soup = BeautifulSoup(resp_Contenido, 'html5lib')
+        # print(soup.decode)
+        try:
+            headTag = soup.html.head
+        except:
+            headTag = soup.html
+
+    listScript = soup.find_all('script')
+    listScriptRelatedEstilos = []
+    logging.info('Los script son:')
+
+    for itemScript in listScript:
+        if itemScript.attrs.get("src"):
+            if 'bootstrap' in itemScript.attrs.get("src"):
+                completeSrc = urljoin(rutaPagina, itemScript.attrs.get("src"))
+                listScriptRelatedEstilos.append(completeSrc)
+                logging.info(completeSrc)
+            if 'moment' in itemScript.attrs.get("src"):
+                completeSrc = urljoin(rutaPagina, itemScript.attrs.get("src"))
+                listScriptRelatedEstilos.append(completeSrc)
+                logging.info(completeSrc)
+            if 'jquery' in itemScript.attrs.get("src"):
+                completeSrc = urljoin(rutaPagina, itemScript.attrs.get("src"))
+                listScriptRelatedEstilos.append(completeSrc)
+                logging.info(completeSrc)
+
+    logging.info('Los script Seleccionados:')
+    logging.info(listScriptRelatedEstilos)
+    logging.info('')
+
+    # Quitamos los scripts:
+    for data in soup(['script', 'pre', 'noscript']):
+        data.decompose()
 
     # 1 Obtengo los archivos css
     css_files = []
@@ -1151,6 +1179,13 @@ def augment(rutaPagina, integrationInterlinker='False'):
         'static', filename='src/categories.js'))
     jqueryScript11 = soup.new_tag(
         'script', src=url_for('static', filename='src/search.js'))
+
+    # Agrego librerias de estilos para funcionalidad (bootstrap)
+    for itemScript in listScriptRelatedEstilos:
+        logging.info('El estilo que trato de cargar es:')
+        logging.info(itemScript)
+        jsEstilosPage = soup.new_tag('script', src=itemScript)
+        bodyTag.append(jsEstilosPage)
 
     try:
         bodyTag.append(jqueryScript1)
