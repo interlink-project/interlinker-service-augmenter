@@ -1252,6 +1252,13 @@ def augment(rutaPagina,integrationInterlinker='False'):
 
     internacii18nScript = soup.new_tag(
         'script', src=url_for('static', filename='lib/gettext.js'))
+
+    # Agrego librerias de estilos para funcionalidad (bootstrap)
+    for itemScript in listScriptRelatedEstilos:
+        logging.info('El estilo que trato de cargar es:')
+        logging.info(itemScript)
+        jsEstilosPage = soup.new_tag('script', src=itemScript)
+        bodyTag.append(jsEstilosPage)
   
 
     try:
