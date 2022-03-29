@@ -418,7 +418,7 @@
                 {% if description is defined %}
                 <h4> Edit a description</h4>
                 {% else %}
-                <h4> Create a New Description</h4>
+                <h4> Create a {{ _('New Description') }}</h4>
                 {% endif %}
             </div>
             <div class="row">
@@ -478,7 +478,7 @@
                 <div class="col-12">
                     <div class="input-group mb-3">
                         <div class="input-group-append">
-                            <label class="input-group-text" for="inputGroupSelect02">Category</label>
+                            <label class="input-group-text" for="inputGroupSelect02">{{ _('Category') }}</label>
                         </div>
 
                         {% if description is defined %}
@@ -555,7 +555,7 @@
              
             {% endif %}
         {% endif %}
-        > Your url list is empty. </span>
+        > {{ _('Your url list is empty') }}. </span>
 
         <div class="row" style="padding-left: 30px;">
             <div class="vertical-input-group"  id="urlList">

@@ -12,7 +12,16 @@ var i18n_dict = {
                 "doesnot_suport"           : "Sorry your current browser does not support the Annotator",
                 "Edit"                     : "Edit",
                 "Delete"                   : "Delete",
-                "share"                    : "Shared",
+                "Reply"                    : "Reply",
+                "share"                    : "share",
                 "confirm_delete"           : "Do you want to delete this annotation?",
-                "Reply"                    : "Reply"
+                "is_connected"             : " is connected",
+                "admin_panel"              : " Admin Panel",
+                "my_annotations"           : "My annotations",
+                "Shared"                   : "Shared",
+                "Reset"                    : "Reset",
+                "log_in"                   : "Log In",
+                "Feedback"                 : "Feedback",
+                "Question"                 : "Question",
+                "Term"                     : "Term"
         };

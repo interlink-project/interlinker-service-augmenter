@@ -8,10 +8,21 @@ var i18n_dict = {
                 "edit_annotation"          : "Permite que la anotación sea <strong>editada</strong> por todos",
                 "No Comment"               : "Sin comentarios",
                 "Summary"                  : "Resumen",
-                "view_annotations"         : "Ver anotacionse",
+                "view_annotations"         : "Ver anotaciones",
                 "doesnot_suport"           : "El navegador actual no soporta anotaciones.",
                 "Edit"                     : "Editar",
                 "Delete"                   : "Borrar",
-                "Reply"                    : "Reply"
+                "Reply"                    : "Replicar",
+                "share"                    : "compartir",
+                "confirm_delete"           : "¿Quieres borrar esta anotación?",
+                "is_connected"             : " esta conectado",
+                "admin_panel"              : " Panel de administración",
+                "my_annotations"           : "Mis anotaciones",
+                "Shared"                   : "Compartidas",
+                "Reset"                    : "Limpiar",
+                "log_in"                   : "Iniciar Sesión",
+                "Feedback"                 : "Contribución",
+                "Question"                 : "Pregunta",
+                "Term"                     : "Término"
               
         };

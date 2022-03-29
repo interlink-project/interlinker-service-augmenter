@@ -758,8 +758,6 @@ def settingAppPage():
 
     results = []
 
-    anthony = gettext('Anthony')
-
     us_num = format_number(1099)
     results.append(us_num)
 
@@ -772,7 +770,7 @@ def settingAppPage():
     # Cargo las Notificaciones
     listNotifications, numRes = cargarNotifications()
 
-    return render_template("settings.html", user=current_user, results=results, anthony=anthony, notifications=listNotifications, notificationNum=numRes)
+    return render_template("settings.html", user=current_user, results=results, notifications=listNotifications, notificationNum=numRes)
 
 
 @authInterlink.route("/callback")

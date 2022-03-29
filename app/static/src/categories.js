@@ -187,6 +187,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         i = 1;
         for (cat in _categories) {
           if (i > 1) checked = "";
+
+          txtCat='No especificado'
+          if(cat == 'feedback'){
+            txtCat=i18n_dict.Feedback
+          }else if (cat == 'question') {
+            txtCat=i18n_dict.Question
+          }else if (cat == 'term') {
+            txtCat=i18n_dict.Term
+          }
+
+
+
           var radio =
             "<input id='" +
             cat +
@@ -204,7 +216,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
             '" style="vertical-align: middle;text-transform:capitalize;"><div class="' +
             _categories[cat] +
             ' square" style="display:inline-block;height:15px;width:30px;margin-top:3px;margin-bottom:3px;margin-rigth:5px;vertical-align:middle"></div><span style="margin-left:5px">' +
-            $.i18n._(cat) +
+            txtCat +
             "</span></label><br/>";
           i = i + 1;
           _radioGroup.append(radio);
@@ -258,7 +270,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         .html(
           '<span class="annotator-hl-' +
             annotation.category +
-            '">' +
+            '"> :)' +
             $.i18n._(annotation.category).toUpperCase() +
             "</span>"
         )

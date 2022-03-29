@@ -235,7 +235,7 @@
             style="align-content: center; justify-content: center; display: flex;align-items: center;"
           >
             <img src="{{url_for('static', filename='surveyIcon.png')}}" style="width:40px ;" alt="Activities">
-            <h4 style="padding-left: 25px;">List of Surveys:</h4>
+            <h4 style="padding-left: 25px;">{{ _('List of Surveys') }}:</h4>
       
           </div>
     
@@ -253,12 +253,12 @@
                     <thead>
                         <tr>
                             
-                            <th scope="col-1">Id</th>
-                            <th scope="col-4">Title</th>
-                            <th scope="col-7">Description</th>
-                            <th scope="col-7">Settings</th>
-                            <th scope="col-7">Launch</th>
-                            <th scope="col-7">Answers</th>
+                            <th scope="col-1">{{ _('Id') }}</th>
+                            <th scope="col-4">{{ _('Title') }}</th>
+                            <th scope="col-7">{{ _('Description') }}</th>
+                            <th scope="col-7">{{ _('Settings') }}</th>
+                            <th scope="col-7">{{ _('Launch') }}</th>
+                            <th scope="col-7">{{ _('Answers') }}</th>
                             
                         </tr>
                     </thead>
@@ -285,20 +285,20 @@
                             
                             <td>
                                
-                                <a onclick="openEditSurvey(this);return false;"  href="{{ surveyHost }}/assets/{{ survey.idAsset }}/view" class="btn btn-outline-secondary" style="max-width: 70px;" title="Edit" ><i class="bi bi-tools " style="width:100px;"></i></a>
+                                <a onclick="openEditSurvey(this);return false;"  href="{{ surveyHost }}/assets/{{ survey.idAsset }}/view" class="btn btn-outline-secondary" style="margin-left: 20%;margin-right: 20%;" title="{{ _('Edit') }}" ><i class="bi bi-tools " style="width:100px;"></i></a>
                                 
                             </td>
                             <td>
                                
  
 
-                                <a onclick="showPublishOps(event)" asset="{{ survey.idAsset }}"  surveytitle="{{ survey.title }}" surveydescription="{{ survey.description }}" title="Answers" ><input type="button" asset="{{ survey.idAsset }}"  surveytitle="{{ survey.title }}" surveydescription="{{ survey.description }}" style="background-image: url('{{url_for('static', filename='rocket.png')}}'); " class="botonIcon" /></a>
+                                <a onclick="showPublishOps(event)" asset="{{ survey.idAsset }}"  surveytitle="{{ survey.title }}" surveydescription="{{ survey.description }}" title="{{ _('Launch') }}" ><input type="button" asset="{{ survey.idAsset }}"  surveytitle="{{ survey.title }}" surveydescription="{{ survey.description }}" style="background-image: url('{{url_for('static', filename='rocket.png')}}'); " class="botonIcon" /></a>
                             </td>
                             <td>
                                
                           
                                               
-                                <a style="margin-top:-10px;"  href="{{ surveyHost }}/assets/{{ survey.idAsset }}/answers" title="Answers" ><input type="button" style="background-image: url('{{url_for('static', filename='answers.png')}}'); " class="botonIcon" /></a>
+                                <a style="margin-top:-10px;"  href="{{ surveyHost }}/assets/{{ survey.idAsset }}/answers" title="{{ _('Answers') }}" ><input type="button" style="background-image: url('{{url_for('static', filename='answers.png')}}'); " class="botonIcon" /></a>
                             </td>
     
                             
@@ -307,7 +307,7 @@
                         {% endfor %}
                     </tbody>
                 </table>
-                <h6 id="searchStats">Total found : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span id='page'>{{paginacion.page}}</span> of <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> Pages).</h6>
+                <h6 id="searchStats">{{ _('Total found') }} : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span id='page'>{{paginacion.page}}</span> {{ _('of') }} <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> {{ _('Pages') }}).</h6>
         
     
                 <div
@@ -369,7 +369,7 @@
                
                 <div class="row" style="align-content: center; justify-content: center;">
                     <div class="col" style="align-content: center; justify-content: center;">
-                        <button onclick="openNewWindow(event)" href="{{ surveyHost }}/assets/instantiate"  class="btn btn-secondary" style="margin: 1px;margin-left: 5px;" >Create a new survey</button>
+                        <button onclick="openNewWindow(event)" href="{{ surveyHost }}/assets/instantiate"  class="btn btn-secondary" style="margin: 1px;margin-left: 5px;" >{{ _('Create a new survey') }}</button>
 
                     </div>
                 </div>

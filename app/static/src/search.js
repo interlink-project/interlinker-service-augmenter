@@ -91,20 +91,27 @@ Annotator.Plugin.Search = (function (_super) {
 
       
       var userlogged = sessionStorage.getItem("user")
-      var etiquetaBoton="<i class='fa fa-home'></i>Admin Panel";
+
+      adminPanelTxt= i18n_dict.admin_panel;
+      logIntxt= i18n_dict.log_in;
+
+
+      var etiquetaBoton=`<i class='fa fa-home'></i> ${adminPanelTxt}`;
       if(userlogged=="Anonymous"){
-        etiquetaBoton="Log In";
+        etiquetaBoton=logIntxt;
       }
       //En el caso que sea la llamada desde el colaborative env:
       
       urlRef='';
       if(integrationInterlinker=="True"){
-        etiquetaBoton="Admin Panel";
+        etiquetaBoton=adminPanelTxt;
         urlRef=`${servicepediaPath}/assets/${descriptionRef}/admin`;
       }else{
         urlRef=`${servicepediaPath}/description/${descriptionRef}`;
       }
 
+      estaConectadoTxt= i18n_dict.is_connected;
+      resetTxt= i18n_dict.Reset;
       //Adding a input box for search
       $("li.filter-panel").before(
         `
@@ -118,9 +125,9 @@ Annotator.Plugin.Search = (function (_super) {
           </a> 
         </div>
         <div style="font-weight: 700;padding-bottom:10px;">
-          <span id="usuarioConectado"></span> is connected.</div>   
+          <span id="usuarioConectado"></span> ${estaConectadoTxt}.</div>   
           <input class="search" id="search" type="text" results />
-        <a class="annotator-panel-reset" href="#clear">Reset</a>`
+        <a class="annotator-panel-reset" href="#clear">${resetTxt}</a>`
       );
       //servicepediaPath = servicepediaPath.replace(/^http:\/\//i, "https://");
 

@@ -1,3 +1,4 @@
+from locale import getlocale
 import logging
 import jwt
 import datetime
@@ -61,7 +62,7 @@ views = Blueprint('views', __name__, static_folder="./app/static",
                   template_folder="./app/templates")
 
 
-# Integrations Roots:
+#Integrations Roots:
 
 
 @views.route('/assets/instantiate')
@@ -77,19 +78,18 @@ def instantiateInterlinker():
             key = 'Unassigned'
 
         paList.append(key)
-    # print(paList)
-    if not ('Global' in paList):
+    #print(paList)
+    if not ( 'Global' in paList ):
         paList.insert(0, 'Global')
 
-    return render_template("instantiate.html", user=current_user, publicsa=paList, servicepediaUrl=settings.REDIRECT_SERVICEPEDIA)
-
+    return render_template("instantiate.html", user=current_user, publicsa=paList,servicepediaUrl=settings.REDIRECT_SERVICEPEDIA)
 
 @views.route('/assets/<id>')
 @login_required
 def assetData(id):
 
     descriptiondata = Description._get_Descriptions_byId(id=id)[0]
-    logging.info('La informacion del asset es:' + id)
+    logging.info('La informacion del asset es:' +id )
     logging.info(descriptiondata)
     return jsonify(
         name=descriptiondata['title'],
@@ -113,11 +113,13 @@ def assetView(id):
 @login_required
 def assetDelete(id):
 
+
     description = Description._get_Descriptions_byId(id=id)[0]
 
     description.delete()
 
     return '', 204
+
 
 
 @views.route('/assets/<id>/edit')
@@ -132,8 +134,8 @@ def assetEdit(id):
             key = 'Unassigned'
 
         paList.append(key)
-    # print(paList)
-    if not ('Global' in paList):
+    #print(paList)
+    if not ( 'Global' in paList ):
         paList.insert(0, 'Global')
 
     description = Description._get_Descriptions_byId(id=id)[0]
@@ -144,8 +146,8 @@ def assetEdit(id):
         else:
             itemUrl['langText'] = "Undefined"
 
-    return render_template("instantiate.html", user=current_user, description=description, option='edit', publicsa=paList)
 
+    return render_template("instantiate.html", user=current_user, description=description, option='edit', publicsa=paList)
 
 @views.route('/assets/<id>/admin')
 @login_required
@@ -173,8 +175,7 @@ def assetAdmin(id):
 
         # Cargo las replies de cada annotacion:
         stats = stats + \
-            Annotation.annotationStats(
-                Annotation, descriptionId=description['id'])
+            Annotation.annotationStats(Annotation, descriptionId=description['id'])
 
     res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
                                       'InProgress': True, 'Archived': False, 'Approved': False}, descriptionId=description['id'], category=categoria, notreply=True, page=page)
@@ -199,14 +200,15 @@ def assetAdmin(id):
     paginacion = {'page': page, 'pagesNumbers': pagesNumbers,
                   'totalRegisters': numRes}
 
+  
+
     return render_template("descriptionAsset.html", user=current_user, description=description, anotations=res, categoryLabel=categoria, paginacion=paginacion, urlMainPage=urlMainPage)
    # return 'la desc: '+category+'lauri is'+str(uri)
 
-
 @views.route('/assets/<descriptionId>/<annotatorId>')
 @login_required
-def assetSubject(descriptionId, annotatorId):
-
+def assetSubject(descriptionId,annotatorId):
+    
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
 
     urlMainPage = [url['url']
@@ -220,13 +222,13 @@ def assetSubject(descriptionId, annotatorId):
         query={'idReplyRoot': annotatorId, 'category': 'reply'}, limit=nroReplies)
 
     nroRepliesOfAnnotation = nroReplies
+    
 
     return render_template("subjectAsset.html", user=current_user, annotation=annotation, description=description, categoryLabel=annotation['category'], replies=replies, nroReplies=nroRepliesOfAnnotation, urlMainPage=urlMainPage)
-   # return 'la desc: '+category+'lauri is'+str(uri)
+   # return 'la desc: '+category+'lauri is'+str(uri)   
 
-# Builder:
-# return redirect(url_for("authInterlink.description", descriptionId=id))
-
+#Builder:
+#return redirect(url_for("authInterlink.description", descriptionId=id))
 
 @views.route('/')
 def inicio():
@@ -241,7 +243,7 @@ def inicio():
             domain = urlparse(key).netloc
             if not (domain in urlList):
                 urlList.append(domain)
-    # print(urlList)
+    #print(urlList)
 
     vectorPAs = Description._get_uniqueValues(campo="padministration")
     paList = []
@@ -254,7 +256,7 @@ def inicio():
         paList.append(key)
     print(paList)
 
-    if not ('Global' in paList):
+    if not ( 'Global' in paList ):
         paList.insert(0, 'Global')
 
     textoABuscar = request.args.get("searchText")
@@ -287,13 +289,13 @@ def inicio():
     if not current_user.is_anonymous:
         # Cargo las Notificaciones
         listNotifications = Notification._get_Notification_byModerCategory(
-            category="survey", user=current_user.email)
-
+            category="survey",user=current_user.email)
+    
         numRes = listNotifications['numRes']
         listNotifications = listNotifications['notifications']
-    else:
-        numRes = 0
-        listNotifications = []
+    else: 
+        numRes=0
+        listNotifications=[]
 
     return render_template("home.html", descriptions=res, urls=urlList, publicsa=paList, paginacion=paginacion, notifications=listNotifications, notificationNum=numRes)
 
@@ -312,16 +314,18 @@ def saveDescription():
     logging.info('Los datos a guardar son:')
     logging.info(request.form)
     itemsDict = request.form.to_dict()
-
+    
+    
+    
     title = itemsDict.pop("createTitle")
     description = itemsDict.pop("createDescription")
     keywords = itemsDict.pop("createKeywords")
     userNombre = itemsDict.pop("usr")
     descriptionId = itemsDict.pop("descriptionId")
 
-    interlinkIntegration = False
+    interlinkIntegration=False
     if 'interlinkerPlataform' in itemsDict.keys():
-        interlinkIntegration = True
+        interlinkIntegration=True
 
     # Obtengo el valor de la administracion publica
     try:
@@ -370,6 +374,7 @@ def saveDescription():
 
     # Busco si alguno de los URLS ya ha sido incluido en existe:
 
+
     if descriptionId == '':
 
         # Create:
@@ -401,28 +406,32 @@ def saveDescription():
 
         else:
 
-            # Agrego al usuario creador como moderador.
-            # Le permito ser moderador por 30 dias.
+            #Agrego al usuario creador como moderador.
+            #Le permito ser moderador por 30 dias.
             from datetime import timedelta
-            initDate = datetime.datetime.now(iso8601.iso8601.UTC).isoformat()
-            endDate = (datetime.datetime.now(iso8601.iso8601.UTC) +
-                       timedelta(days=30)).isoformat()
+            initDate=datetime.datetime.now(iso8601.iso8601.UTC).isoformat()
+            endDate=(datetime.datetime.now(iso8601.iso8601.UTC)+ timedelta(days=30)).isoformat()
 
             newdescription['moderators'].append({
                 "created": initDate,
                 "expire": endDate,
                 "email": current_user.email
             })
+            
+
 
             newdescription.save(index="description")
             description = newdescription
             #flash("Record created successfully.", "info")
 
-            # Redirecciono a la descripcion creada:
+            #Redirecciono a la descripcion creada:
             if interlinkIntegration:
-                return jsonify({'id': description['id']})
+                return jsonify({'id':description['id']})
             else:
                 return redirect(url_for('authInterlink.description', descriptionId=description['id']))
+
+                 
+       
 
     else:
 
@@ -487,9 +496,9 @@ def saveDescription():
         else:
             description = editDescripcion
             flash("No tienes permisos de moderador para editar esta descripción.", "info")
-
+        
     if interlinkIntegration:
-        return jsonify({'id': description['id']})
+        return jsonify({'id':description['id']})
     else:
         return redirect(url_for('authInterlink.editDescription', descriptionId=description['id'], option='edit'))
 
@@ -549,7 +558,7 @@ def claimModeration():
         flash('Before requesting moderation privileges the descriptions must be created.')
         return authInterlink.moderate()
     else:
-
+        
         itemsDict['email'] = current_user.email
 
         dataClaimEncoded = urllib.parse.urlencode(itemsDict)
@@ -631,21 +640,22 @@ def claimModeration():
             filepathTemp = "app/Render/"+filename
             uploaded_file.save(filepathTemp)
 
+            
             filepathTemp = "Render/"+filename
             # Lo adjunto al email
             with current_app.open_resource(filepathTemp) as fp:
                 msg.attach(filename, 'application/pdf', fp.read())
 
             # Lo borro del disco
+            
+            #os.remove(filepathTemp)
 
-            # os.remove(filepathTemp)
-
-            # Borro el archivo generado despues de que hago la descarga.
+            #Borro el archivo generado despues de que hago la descarga.
             @after_this_request
             def delete(response):
-                # logging.info('root:')
+                #logging.info('root:')
                 logging.error(filepathTemp)
-
+                
                 os.remove('app/'+filepathTemp)
                 return response
 
@@ -653,6 +663,10 @@ def claimModeration():
         mail.send(msg)
 
         flash("The moderation request has been send.", "info")
+
+
+        
+
 
         return authInterlink.moderate()
 
@@ -818,7 +832,7 @@ def survey():
 
 # Cargo la pagina desde beautifulSoup y la muestro en pantalla
 @views.route("/augment/<path:rutaPagina>", methods=["GET", "POST"])
-def augment(rutaPagina, integrationInterlinker='False'):
+def augment(rutaPagina,integrationInterlinker='False'):
 
     # En el caso que se tiene interes en una anotacion en particular
     argumentos = request.args.to_dict()
@@ -832,9 +846,11 @@ def augment(rutaPagina, integrationInterlinker='False'):
 
     if('description' in argumentos.keys()):
         descriptionRef = argumentos.pop('description')
-
+    
     if('integrationInterlinker' in argumentos.keys()):
         integrationInterlinker = argumentos.pop('integrationInterlinker')
+        
+       
 
     # Obtengo el usuario de session
     # Lo pongo en la session de cookie local:
@@ -845,11 +861,13 @@ def augment(rutaPagina, integrationInterlinker='False'):
     else:
         userId = 'Anonymous'
 
+
     headersUserAgent = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'
     }
 
-    # Fix ssl issues:
+
+    #Fix ssl issues:
     try:
         _create_unverified_https_context = ssl._create_unverified_context
     except AttributeError:
@@ -860,13 +878,17 @@ def augment(rutaPagina, integrationInterlinker='False'):
         ssl._create_default_https_context = _create_unverified_https_context
 
     # Obtengo el codigo:
-    response = requests.get(rutaPagina, headers=headersUserAgent, verify=False)
+    response = requests.get(rutaPagina, headers=headersUserAgent,verify=False)
     resp_Contenido = response.content
 
-    # Valido si el sitio es sensible al Mayusculas y Minusculas.
-    isCaseSensitive = False
+    #Valido si el sitio es sensible al Mayusculas y Minusculas.
+    isCaseSensitive=False
     if('latvija' in rutaPagina):
-        isCaseSensitive = True
+        isCaseSensitive=True
+    
+
+
+    
 
     import codecs
 
@@ -874,13 +896,21 @@ def augment(rutaPagina, integrationInterlinker='False'):
         resp_Contenido = codecs.decode(resp_Contenido, 'utf-8')
     except:
         print('Trato de cargar con utf-8')
-
+    
+    
     # print(resp_Contenido.decode())
     #soup = BeautifulSoup(resp_Contenido, 'html5lib')
     #soup = BeautifulSoup(resp_Contenido, 'lxml')
-
     soup = BeautifulSoup(resp_Contenido, 'html.parser')
+    
+
+    # Quitamos los scripts:
+    # for data in soup(['script', 'pre', 'noscript']):
+    #     # Remove tags
+    #     data.decompose()
+
     # print(soup.decode)
+
     try:
         headTag = soup.html.head
     except:
@@ -930,16 +960,16 @@ def augment(rutaPagina, integrationInterlinker='False'):
 
     count = 0
 
-    # Quito las propagandas de la pagina:
+    #Quito las propagandas de la pagina:
 
     listDiv = soup.find_all("div")
     for div in listDiv:
-        if div.attrs != None:
+        if div.attrs!=None:
             if div.attrs.get("class"):
-                classesStr = div.attrs['class']
-
+                classesStr=div.attrs['class']
+                
                 for itemClass in classesStr:
-
+                
                     if 'header-ad' in itemClass:
                         div.decompose()
                         break
@@ -949,38 +979,42 @@ def augment(rutaPagina, integrationInterlinker='False'):
                     if 'advertising' in itemClass:
                         div.decompose()
                         break
+                
+              
 
-    # Special configuration for a page:
-    # -------------------------------------------------
-    listCssToAvoid = []
-    # The guardian:
+
+                
+    #Special configuration for a page:
+    #-------------------------------------------------
+    listCssToAvoid=[]
+    #The guardian:
     listCssToAvoid.append('print.css')
     listCssToAvoid.append('.js')
 
-    # Lista de atributos que deben cambiar de nombre:
-    # Reemplazo del tag video el attributo data-src por src
-    REPLACEMENTS = [('video', 'src', 'data-src'),  # video.data-src -> src
-                    ('video', 'autoplay', ''),
-                    ('figure', 'src', 'data-bg'),
-                    ('img', 'src', 'data-src')]
+    #Lista de atributos que deben cambiar de nombre:
+    #Reemplazo del tag video el attributo data-src por src
+    REPLACEMENTS = [('video','src','data-src'), # video.data-src -> src
+                    ('video','autoplay',''),
+                    ('figure','src','data-bg'),
+                    ('img','src','data-src')]
 
-    # Busca y reemplaza
+    #Busca y reemplaza
     def replace_tags(soup, replacements=REPLACEMENTS):
         for tag, new_attribs, old_attibute in replacements:
             for node in soup.find_all(tag):
-                if old_attibute == '':
-                    node[new_attribs] = None
+                if old_attibute=='':
+                    node[new_attribs]=None
                 if old_attibute in node.attrs:
-                    node[new_attribs] = node[old_attibute]
-                    del node[old_attibute]
+                    node[new_attribs]=node[old_attibute]   
+                    del node[old_attibute]     
         return soup
 
-    soup = replace_tags(soup, REPLACEMENTS)
+    soup=replace_tags(soup,REPLACEMENTS)
 
-    # Reemplazo la fuente del picture
-    listPictures = soup.find_all('picture')
-
-    contado = 0
+    #Reemplazo la fuente del picture
+    listPictures= soup.find_all('picture')
+    
+    contado=0
     for node in listPictures:
         try:
             if node.img['src'] != None:
@@ -988,25 +1022,28 @@ def augment(rutaPagina, integrationInterlinker='False'):
                     if node.source != None:
                         if 'srcset' in node.source.attrs:
                             del node.img['src']
-                            node.img['src'] = node.source.attrs['srcset']
-                            contado = contado+1
-                            # print(''+str(contado))
-                            # print(node)
+                            node.img['src']=node.source.attrs['srcset']
+                            contado=contado+1
+                            #print(''+str(contado))
+                            #print(node)
         except:
-            continue
+            continue                    
 
-    # Reemplazo la fuente del picture
-    listFigures = soup.find_all('figure')
-
+    #Reemplazo la fuente del picture
+    listFigures= soup.find_all('figure')
+    
     for node in listFigures:
-        if 'data-bg' in node.attrs:
-            node['src'] = node.attrs['data-bg']
-            del node['data-bg']
-        node.name = 'img'
+        if 'data-bg' in node.attrs :
+            node['src']=node.attrs['data-bg'] 
+            del node['data-bg'] 
+        node.name='img'
+
+
+
 
     listCss = soup.find_all("link")
 
-    # Quito las referencias viejas al css
+    #Quito las referencias viejas al css
 
     for a in soup.findAll('link', href=True):
         a.extract()
@@ -1017,7 +1054,7 @@ def augment(rutaPagina, integrationInterlinker='False'):
 
             if css.attrs.get("rel"):
                 print(css.attrs.get("rel"))
-                if "shortcut" in css.attrs.get("rel") or "apple-touch-icon" in css.attrs.get("rel") or "alternate" in css.attrs.get("rel"):
+                if "shortcut" in css.attrs.get("rel")  or "apple-touch-icon" in css.attrs.get("rel") or "alternate" in css.attrs.get("rel") :
                     css.decompose()
                     continue
             if css.attrs.get("as"):
@@ -1029,13 +1066,17 @@ def augment(rutaPagina, integrationInterlinker='False'):
             css_url = urljoin(rutaPagina, css.attrs.get("href"))
             if "css" in css_url:
 
-                # Busco una coincidencia:
-                esIndeseable = False
+               
+
+                #Busco una coincidencia:
+                esIndeseable=False
                 for terminacionCss in listCssToAvoid:
                     if terminacionCss in css_url:
-
-                        esIndeseable = True
+                        
+                        esIndeseable=True
                         break
+
+
 
                 if not(esIndeseable):
                     count += 1
@@ -1047,27 +1088,32 @@ def augment(rutaPagina, integrationInterlinker='False'):
             else:
                 headTag.append(css)
 
-    # Obtengo el usuario Logueado o pongo anonimo:
 
-    usuarioActivo = current_user.email if not current_user.is_anonymous else 'Anonymous'
+
+
+
+
+    #Obtengo el usuario Logueado o pongo anonimo:
+
+    usuarioActivo=current_user.email if not current_user.is_anonymous else 'Anonymous' 
 
     for a_Link in soup.find_all("a"):
         if a_Link.attrs.get("href"):
             hrefVal = a_Link.attrs.get("href")
-            if hrefVal.startswith('/'):
+            if hrefVal.startswith('/') :
                 newURLVal = urljoin(rutaPagina, hrefVal)
 
                 if isCaseSensitive:
-                    newURLVal = newURLVal.lower()
+                     newURLVal=newURLVal.lower()
 
                 a_Link.attrs['href'] = url_for(
                     'views.augment', rutaPagina=newURLVal)+'?description='+descriptionRef
 
-            if hrefVal.startswith('https://') or hrefVal.startswith('http://'):
-
-                # If the external link is http I change them to https to visualited well
+            if hrefVal.startswith('https://') or hrefVal.startswith('http://') :
+                
+                #If the external link is http I change them to https to visualited well
                 if settings.DOMAIN != 'localhost':
-                    hrefVal.replace("http://", "https://")
+                    hrefVal.replace("http://","https://")
 
                 a_Link.attrs['href'] = url_for(
                     'views.augment', rutaPagina=hrefVal)+'?description='+descriptionRef
@@ -1087,21 +1133,34 @@ def augment(rutaPagina, integrationInterlinker='False'):
     fontAwesome3 = soup.new_tag(
         'link', href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css", rel="stylesheet")
 
+    import flask_babel
+    idiomaBabel = flask_babel.get_locale().language
+
+    #Para la internacionalizacion:
+    internacii18nLink = soup.new_tag(
+        'link', href=url_for('static', filename='/locale/'+idiomaBabel+'/annotator.po'),type="application/x-po",  rel="gettext")
+
+
+
+
     servicepediaPath = settings.REDIRECT_SERVICEPEDIA
 
     if not (settings.DOMAIN == "localhost"):
         servicepediaPath = servicepediaPath.replace(
             "http://", "https://")
 
-    descriptionRedirect = ''
-    metauserName = soup.new_tag(
-        'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=servicepediaPath, descriptionRef=descriptionRef, currentuser=usuarioActivo, integrationInterlinker=integrationInterlinker)
 
-    # Agrego codificacion a la pagina:
+    descriptionRedirect=''
+    metauserName = soup.new_tag(
+            'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=servicepediaPath,descriptionRef=descriptionRef, currentuser=usuarioActivo,integrationInterlinker=integrationInterlinker)
+
+    #Agrego codificacion a la pagina:
 
     metatag = soup.new_tag('meta')
     metatag.attrs['charset'] = 'utf-8'
     headTag.append(metatag)
+  
+
 
     try:
         headTag.append(metauserName)
@@ -1134,6 +1193,13 @@ def augment(rutaPagina, integrationInterlinker='False'):
         #print("Excepcion en ccs1")
         pass
 
+
+    try:
+        headTag.append(internacii18nLink)
+    except:
+        #print("Excepcion en ccs1")
+        pass
+
     try:
         soup.html.head = headTag
     except:
@@ -1151,26 +1217,24 @@ def augment(rutaPagina, integrationInterlinker='False'):
 
     jqueryScript1 = soup.new_tag(
         'script', src=url_for('static', filename='lib/jquery-1.9.1.js'))
-    jqueryScript2 = soup.new_tag(
-        'script', src=url_for('static', filename='lib/annotator-full.1.2.9/annotator-full.min.js'))
     jqueryScript3 = soup.new_tag(
         'script', src=url_for('static', filename='lib/jquery-i18n-master/jquery.i18n.min.js'))
+    jqueryScript7 = soup.new_tag(
+        'script', src=url_for('static', filename='locale/'+idiomaBabel+'/annotator.js'))
+    jqueryScript2 = soup.new_tag(
+        'script', src=url_for('static', filename='lib/annotator-full.1.2.9/annotator-full.min.js'))
+
     jqueryScript4 = soup.new_tag(
         'script', src=url_for('static', filename='lib/jquery.dateFormat.js'))
     jqueryScript5 = soup.new_tag(
         'script', src=url_for('static', filename='lib/jquery.slimscroll.js'))
 
-    jqueryScript12 = soup.new_tag(
-        'script', src=url_for('static', filename='locale/en/annotator.js'))
-    jqueryScript13 = soup.new_tag(
-        'script', src=url_for('static', filename='lib/tinymce/tinymce.min.js'))
-    jqueryScript14 = soup.new_tag('script', src=url_for(
-        'static', filename='src/richEditor.js'))
+
+
 
     jqueryScript6 = soup.new_tag(
         'script', src=url_for('static', filename='lib/lunr.js-0.5.7/lunr.min.js'))
-    jqueryScript7 = soup.new_tag(
-        'script', src=url_for('static', filename='locale/en/annotator.js'))
+
     jqueryScript8 = soup.new_tag(
         'script', src=url_for('static', filename='lib/annotator.touch.js'))
     jqueryScript9 = soup.new_tag('script', src=url_for(
@@ -1180,29 +1244,37 @@ def augment(rutaPagina, integrationInterlinker='False'):
     jqueryScript11 = soup.new_tag(
         'script', src=url_for('static', filename='src/search.js'))
 
-    # Agrego librerias de estilos para funcionalidad (bootstrap)
-    for itemScript in listScriptRelatedEstilos:
-        logging.info('El estilo que trato de cargar es:')
-        logging.info(itemScript)
-        jsEstilosPage = soup.new_tag('script', src=itemScript)
-        bodyTag.append(jsEstilosPage)
+    jqueryScript13 = soup.new_tag(
+        'script', src=url_for('static', filename='lib/tinymce/tinymce.min.js'))
+    jqueryScript14 = soup.new_tag('script', src=url_for(
+        'static', filename='src/richEditor.js'))
+
+
+    internacii18nScript = soup.new_tag(
+        'script', src=url_for('static', filename='lib/gettext.js'))
+  
 
     try:
         bodyTag.append(jqueryScript1)
-        bodyTag.append(jqueryScript2)
         bodyTag.append(jqueryScript3)
+        bodyTag.append(internacii18nScript)
+        bodyTag.append(jqueryScript7)
+        bodyTag.append(jqueryScript2)
+        
         bodyTag.append(jqueryScript4)
         bodyTag.append(jqueryScript5)
         bodyTag.append(jqueryScript6)
-        bodyTag.append(jqueryScript7)
+        
         bodyTag.append(jqueryScript8)
         bodyTag.append(jqueryScript9)
         bodyTag.append(jqueryScript10)
         bodyTag.append(jqueryScript11)
 
-        bodyTag.append(jqueryScript12)
+        #bodyTag.append(jqueryScript12)
         bodyTag.append(jqueryScript13)
         bodyTag.append(jqueryScript14)
+
+ 
     except:
         #print("Excepcion en ccs1")
         pass
@@ -1212,7 +1284,7 @@ def augment(rutaPagina, integrationInterlinker='False'):
      
     jQuery(function ($) {
 
-            
+              
         
             $.i18n.load(i18n_dict);
             // Customise the default plugin options with the third argument.
@@ -1304,10 +1376,10 @@ def obtenerReemplazarImagenes(rutaPagina, soup):
     # De la misma forma busco todas las imagenes:
     urls = []
     for img in soup.find_all("img"):
-
+        
         img_url = img.attrs.get("src")
         img_url_datOr = img.attrs.get("data-original")
-
+        
         if img_url_datOr:
             img_url = img.attrs.get("data-original")
             del img["data-original"]
@@ -1327,9 +1399,9 @@ def obtenerReemplazarImagenes(rutaPagina, soup):
         #     pass
 
         # finally, if the url is valid
-        # if is_valid(img_url):
+        #if is_valid(img_url):
         img.attrs['src'] = img_url
-        # urls.append(img_url)
+        #urls.append(img_url)
     # #print(urls)
 
     # Reemplazo las fuentes de las imagenes

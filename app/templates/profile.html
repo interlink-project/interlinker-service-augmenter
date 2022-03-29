@@ -2,8 +2,8 @@
 
 {% block content %}
 <div>
-    <h2>My Profile</h2>
-    <p>Hello, <span>{{ user.email }}</span>. Below is yout profile information.
+    <h2>{{ _('My Profile') }}</h2>
+    <p>{{ _('Hello') }}, <span>{{ user.email }}</span>. {{ _('Below is your profile information') }}.
     </p>
 
 </div>
@@ -11,14 +11,14 @@
 <table class="table table-striped">
     <thead>
     <tr>
-        <th>Description</th>
-        <th>Value</th>
+        <th>{{ _('Description') }}</th>
+        <th>{{ _('Value') }}</th>
     </tr>
     </thead>
     <tbody>
     {% for key, claim in user.claims() %}
     <tr>
-        <td>{{ key }}</td>
+        <td>{{ key[0] | upper}}{{ key[1:]}}</td>
         <td id="claim-{{ key }}">
             {{ claim }}
         </td>

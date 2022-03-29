@@ -125,7 +125,7 @@ def create_app():
         # header the browser transmits.  We support de/fr/en in this
         # example.  The best match wins.
 
-        return request.accept_languages.best_match(['es', 'en', 'lv'])
+        return request.accept_languages.best_match(['en','lv','es','it'])
 
         # return 'en'
 

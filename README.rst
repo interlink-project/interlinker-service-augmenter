@@ -7,7 +7,7 @@ The functionality can roughly be separated in the follow parts:
 1. A Flask blueprint for a web server that exposes an HTTP API to the annotation
    storage. 
 
-2. An web application which enables the logged user to insert, delete and reply annotations of public service descriptions.
+2. An web application which enables the logged user to insert, delete and reply annotations of descriptions.
 
 Getting going
 -------------
@@ -59,7 +59,7 @@ The API access point can be found in:
 Website APP
 -----------
 
-The website app allow to annotate website public service descriptions.
+The website app allow to annotate website descriptions.
 
 Running tests
 -------------

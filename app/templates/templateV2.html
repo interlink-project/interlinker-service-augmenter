@@ -135,8 +135,8 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
             
             {% if current_user.is_authenticated %}
-            <a href="{{ url_for('views.inicio') }}" style="justify-content: center;align-self: center; text-align: center;">Hot List</a >
-            <a href="{{ url_for('authInterlink.dashboard') }}"  style="justify-content: center;align-self: center; text-align: center;">My Activity</a >
+            <a href="{{ url_for('views.inicio') }}" style="justify-content: center;align-self: center; text-align: center;">{{ _('Hot List') }}</a >
+            <a href="{{ url_for('authInterlink.dashboard') }}"  style="justify-content: center;align-self: center; text-align: center;">{{ _('My Activity') }}</a >
             {% endif %}
             <!--
             
@@ -222,19 +222,19 @@
 
             
             <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1"   data-popper-placement="bottom-end" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(-110px, 34px);">
-                <li><a class="dropdown-item" href="{{ url_for('authInterlink.descriptionDetail') }}">New Description</a></li>
-                <li><a class="dropdown-item" href="{{ url_for('authInterlink.moderate') }}">Roles</a></li>
-                <li><a class="dropdown-item" href="{{ url_for('authInterlink.profile') }}">Profile</a></li>
-                <li><a class="dropdown-item" href="{{ url_for('authInterlink.survey') }}">Surveys</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('authInterlink.descriptionDetail') }}">{{ _('New Description') }}</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('authInterlink.moderate') }}">{{ _('Roles') }}</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('authInterlink.profile') }}">{{ _('Profile') }}</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('authInterlink.survey') }}">{{ _('Surveys') }}</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{{ url_for("authInterlink.logout") }}">Sign out</a></li>
+                <li><a class="dropdown-item" href="{{ url_for("authInterlink.logout") }}">{{ _('Sign out') }}</a></li>
             </ul>
             </div>
           
 
           {% else %}
           <form class="d-flex" method="get" action="{{ url_for("authInterlink.login") }}" style="text-align: right; ">
-            <button type="submit" class="btn btn-secondary btn-lg bi-person-circle "> Login</button>
+            <button type="submit" class="btn btn-secondary btn-lg bi-person-circle "> {{ _('Login') }}</button>
           </form>
       
 
@@ -271,7 +271,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="notificationBox2Label">List of notifications</h5>
+                    <h5 class="modal-title" id="notificationBox2Label">{{ _('List of notifications') }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="notificationBody2">
@@ -279,7 +279,7 @@
 
                    
                     {% if notifications |length == 0 %}
-                      Your notification list is empty.
+                      {{ _('Your notification list is empty') }}.
 
                     {% endif %} 
                     {% for notification in notifications %}
@@ -291,7 +291,7 @@
                       </div>
 
                                 
-                      <a onclick="openViewSurvey(this); return false;"  href="{{ notification.target_url }}"  class="btn btn-outline-success btn-lg " style="color:black;" tabindex="-1" role="button" >Rellenar</a>
+                      <a onclick="openViewSurvey(this); return false;"  href="{{ notification.target_url }}"  class="btn btn-outline-success btn-lg " style="color:black;" tabindex="-1" role="button" >{{ _('Rellenar') }}</a>
                     </li>
                     
                     {% endfor %}
@@ -300,7 +300,7 @@
                   </ol>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Close') }}</button>
                 </div>
             </div>
         </div>
@@ -320,8 +320,8 @@
                     ...
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="notificationAcceptBtn">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Close') }}</button>
+                    <button type="button" class="btn btn-primary" id="notificationAcceptBtn">{{ _('Save changes') }}</button>
                 </div>
             </div>
         </div>

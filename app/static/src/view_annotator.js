@@ -280,10 +280,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         var control_buttons = $(
           annotationCSSReference + "> .annotator-textarea-controls"
         );
-        $('<a href="#save" class="annotator-panel-save">Save</a>')
+
+       saveTxt= i18n_dict.Save;
+       cancelTxt= i18n_dict.Cancel;
+        
+
+        $(`<a href="#save" class="annotator-panel-save">${saveTxt}</a>`)
           .appendTo(control_buttons)
           .bind("click", { annotation: item }, this.onSavePanel);
-        $('<a href="#cancel" class="annotator-panel-cancel">Cancel</a>')
+        $(`<a href="#cancel" class="annotator-panel-cancel">${cancelTxt}</a>`)
           .appendTo(control_buttons)
           .bind("click", { annotation: item }, this.onCancelPanel);
       }
@@ -341,10 +346,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         var control_buttons = $(
           annotationCSSReference + "> .annotator-textarea-controls"
         );
-        $('<a href="#save" class="annotator-panel-save">Save</a>')
+
+        saveTxt= i18n_dict.Save;
+        cancelTxt= i18n_dict.Cancel;
+
+        $(`<a href="#save" class="annotator-panel-save">${saveTxt}</a>`)
           .appendTo(control_buttons)
           .bind("click", { annotation: item }, this.onSavePanelReply);
-        $('<a href="#cancel" class="annotator-panel-cancel">Cancel</a>')
+        $(`<a href="#cancel" class="annotator-panel-cancel">${cancelTxt}</a>`)
           .appendTo(control_buttons)
           .bind("click", { annotation: item }, this.onCancelPanelReply);
       }
@@ -898,12 +907,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           .getAttribute("basepath");
 
         var edit_icon = "";
+        editTxt= i18n_dict.Edit;
         if (updatePermission) {
           edit_icon =
             '<img src="' +
             pathOrigen +
             '/static/src/img/edit-icon.png"  ' +
-            'class="annotator-viewer-edit" title="Edit" style="float:right;margin-top:3px"/>';
+            `class="annotator-viewer-edit" title="${editTxt}" style="float:right;margin-top:3px"/>`;
         }
 
         delete_icon = delete_icon + edit_icon;
@@ -1066,8 +1076,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     };
 
     AnnotatorViewer.prototype.createAnnotationPanel = function (annotation) {
+
+      myAnotationTxt=i18n_dict.my_annotations;
+      sharedTxt=i18n_dict.Shared;
+
       var checboxes =
-        '<label class="checkbox-inline"><input type="checkbox" id="type_own" rel="meAnotator"/>My annotations</label><label class="checkbox-inline">  <input type="checkbox" id="type_share" rel="shared"/>Shared</label>';
+      `<label class="checkbox-inline"><input type="checkbox" id="type_own" rel="meAnotator"/>${myAnotationTxt}</label><label class="checkbox-inline">  <input type="checkbox" id="type_share" rel="shared"/>${sharedTxt}</label>`;
 
       var annotation_layer =
         '<div  class="annotations-list-uoc" ><div id="annotations-panel"><span class="rotate etiquetaSolapa" title="' +

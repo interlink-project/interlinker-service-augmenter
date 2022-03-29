@@ -136,7 +136,7 @@
                         var labelMain='';
 
                         if(contador==1){
-                            labelMain='Main';
+                            labelMain="{{ _('Main') }}";
                         }else{
                             labelMain='-';    
                         }
@@ -151,7 +151,7 @@
     
                             <input type="url" class="form-control" value='${urltext}' name="url_${contador}" id="url_${contador}" placeholder="Link">
                            
-                            <label class="input-group-text" for="url_${contador}">Language:</label>
+                            <label class="input-group-text" for="url_${contador}">{{ _('Language') }}:</label>
                             
                              <select class="form-select" name="sel_${contador}" id="sel_${contador}" aria-label="Language" style="max-width:20vw;max-height: 60vh;overflow-y: auto;" required> 
                                     <option value="">Specify a language.</option>  
@@ -342,9 +342,9 @@
 
             <div class="row" style="padding: 10px;">
                 {% if description is defined %}
-                <h4> Edit a description</h4>
+                <h4> {{ _('Edit a description') }}</h4>
                 {% else %}
-                <h4> Register a new description</h4>
+                <h4> {{ _('Register a new description') }}</h4>
                 {% endif %}
             </div>
             <div class="row">
@@ -356,9 +356,9 @@
                     {% else %}
                     <input type="text" class="form-control" id="title" name="createTitle" placeholder="createTitle" required>
                     {% endif %}
-                    <label for="floatingInput">Title</label>
-                    <div class="valid-feedback">Username field is valid!</div>
-                    <div class="invalid-feedback">Username field cannot be blank!</div>
+                    <label for="floatingInput">{{ _('Title') }}</label>
+                    <div class="valid-feedback">{{ _('Title field is valid!') }}</div>
+                    <div class="invalid-feedback">{{ _('Title field cannot be blank!') }}</div>
 
                     
                 </div>
@@ -376,7 +376,7 @@
                         id="createDescription" style="min-height: 150px;" required></textarea>
                     {% endif %}
 
-                    <label for="floatingTextarea">Description</label>
+                    <label for="floatingTextarea">{{ _('Description') }}</label>
                 </div>
             </div>
 
@@ -386,16 +386,16 @@
 
                         {% if description is defined %}
                         <input class="form-control" name="createKeywords" value="{{description.keywords}}"
-                            id="createKeywords" placeholder="Keywords" required>
+                            id="createKeywords" placeholder="{{ _('Keywords') }}" required>
                         {% else %}
-                        <input class="form-control" name="createKeywords" id="createKeywords" placeholder="Keywords" required>
+                        <input class="form-control" name="createKeywords" id="createKeywords" placeholder="{{ _('Keywords') }}" required>
                         {% endif %}
 
 
 
 
 
-                        <label for="floatingInput">Keywords</label>
+                        <label for="floatingInput">{{ _('Keywords') }}</label>
                     </div>
                 </div>
             </div>
@@ -404,7 +404,7 @@
                 <div class="col-12">
                     <div class="input-group mb-3">
                         <div class="input-group-append">
-                            <label class="input-group-text" for="inputGroupSelect02">Category</label>
+                            <label class="input-group-text" for="inputGroupSelect02">{{ _('Category') }}</label>
                         </div>
 
                         {% if description is defined %}
@@ -432,7 +432,7 @@
                             aria-expanded="false"
                             aria-controls="collapseExample"
                             onclick="muestraIngresarPA(event)"
-                            title="Add new category."
+                            title="{{ _('Add new category') }}."
                         >
                     </div>
                     
@@ -443,7 +443,7 @@
             <div class="collapse" id="addPublicAdministration">
                 <div class="input-group mb-3" style="padding-left: 50px;">
                     
-                    <input class="form-control" name="addNewPA" id="addNewPA" placeholder="Enter the name of the new category." disabled=true required>      
+                    <input class="form-control" name="addNewPA" id="addNewPA" placeholder="{{ _('Enter the name of the new category') }}." disabled=true required>      
                     
                 </div>
             </div>
@@ -456,15 +456,15 @@
         <div class="row">
             <div class="col-10">
                 <div class="input-group mb-3">
-                    <label class="input-group-text" for="oneUrl">Website pages:</label>
+                    <label class="input-group-text" for="oneUrl">{{ _('Website pages') }}:</label>
             
-                    <input type="text" class="form-control" id="oneUrl" name="oneUrl" placeholder="Url Page"
+                    <input type="text" class="form-control" id="oneUrl" name="oneUrl" placeholder="{{ _('Url Page') }}"
                         aria-label="Url Page" onkeydown="checkIfExistOneURL(event)" onfocusout="checkIfExistOneURL(event)" >
                     
                 </div>
             </div>
             <div class="col-2">
-                <button class="btn btn-secondary" id="inputGroupFileAddon04"  onclick="agregarUrl(event)">Add</button>
+                <button class="btn btn-secondary" id="inputGroupFileAddon04"  onclick="agregarUrl(event)">{{ _('Add') }}</button>
 
             </div>
             
@@ -481,7 +481,7 @@
              
             {% endif %}
         {% endif %}
-        > Your url list is empty. </span>
+        > {{ _('Your url list is empty') }}. </span>
 
         <div class="row" style="padding-left: 30px;">
             <div class="vertical-input-group"  id="urlList">
@@ -493,7 +493,7 @@
                         <input class="btn-check ismain" type="radio"  onchange="setMainUrl(event)"  name="MainUrlRadio" value="url_{{loop.index}}" id="ismain_{{loop.index}}"  autocomplete="off">
                         <label class="btn btn-outline-primary" for="ismain_{{loop.index}}">
                             {% if urlItem.ismain %}
-                                Main Page
+                            {{ _('Main Page') }}
                                 {% else %}
                                 -
                             {% endif %}
@@ -501,12 +501,12 @@
                         
                         </label><br>
 
-                        <input type="url" class="form-control" value='{{urlItem.url}}' name="url_{{loop.index}}" id="url_{{loop.index}}" placeholder="Link">
+                        <input type="url" class="form-control" value='{{urlItem.url}}' name="url_{{loop.index}}" id="url_{{loop.index}}" placeholder="{{ _('Link') }}">
                        
                         
                        
-                        <label class="input-group-text" for="url_{{loop.index}}">Language:</label>
-                        <input type="text" style="max-width:20vw;text-align: center;" class="form-control" value='{{urlItem.langText}}' code='{{urlItem.language}}' name="sel_{{loop.index}}" id="sel_{{loop.index}}" placeholder="Language">  
+                        <label class="input-group-text" for="url_{{loop.index}}">{{ _('Language') }}:</label>
+                        <input type="text" style="max-width:20vw;text-align: center;" class="form-control" value='{{urlItem.langText}}' code='{{urlItem.language}}' name="sel_{{loop.index}}" id="sel_{{loop.index}}" placeholder="{{ _('Language') }}">  
                         <input id="langCode_{{loop.index}}" name="langCode_{{loop.index}}" type="hidden" value='{{urlItem.language}}'>
 
                         <button class="bi-x" onclick="removerUrl(event)" ></button> 
@@ -536,15 +536,15 @@
 
                 <button class="btn btn-secondary" id="btnSubmitDescription" style="width: 200px;"  type="submit" >
                     {% if description is defined %}
-                    Edit
+                    {{ _('Edit') }}
                     {% else %}
-                    Create
+                    {{ _('Create') }}
                     {% endif %}
                 </button>
             
                 <a  href="{{ url_for('authInterlink.dashboard') }}"   style="width: 200px;padding-left: 10px;margin-left: 10px;" 
                     class="btn btn-secondary active"  >
-                    Cancel
+                   {{ _('Cancel') }} 
                 </a>   
     
               

@@ -342,12 +342,12 @@
             id="searchBox"
             class="form-control me-2"
             type="search"
-            placeholder="Search"
+            placeholder="{{ _('Text to search') }}"
             aria-label="Search"
             onkeydown="searchText(event)"
           />
           <button class="btn btn-outline-secondary" onclick="searchText(event)">
-            Search
+            {{ _('Search') }}
           </button>
           <button
             class="btn btn-outline-dark"
@@ -371,7 +371,7 @@
           aria-controls="collapseExample"
           onclick="createNew(event)"
         >
-          Create New
+          {{ _('Create New') }}
         </button>
       </div>
     </div>
@@ -386,7 +386,7 @@
           style="display: flex; align-content: center; justify-content: center"
         >
           <select class="form-control" id="padministration">
-            <option selected>Category</option>
+            <option selected>{{ _('Category') }}</option>
             {% for itemPA in publicsa %}
   
             <option>{{ itemPA }}</option>
@@ -399,7 +399,7 @@
           style="display: flex; align-content: center; justify-content: center"
         >
           <select class="form-control cl-3" id="domain">
-            <option selected>Domain</option>
+            <option selected>{{ _('Domain') }}</option>
   
             {% for itemUrl in urls %}
   
@@ -429,7 +429,7 @@
           style="width: 60px"
           alt="Activities"
         />
-        <h4 style="padding-left: 20px">Your recent activity</h4>
+        <h4 style="padding-left: 20px">{{_('Your recent activity')}}</h4>
       </div>
     </div>
     <hr />
@@ -441,12 +441,12 @@
         <table class="table" style="height: auto">
           <thead>
             <tr>
-              <th scope="col-2">Category</th>
-              <th scope="col-3">Title</th>
-              <th scope="col-2" style="text-align: center;">Progress</th>
-              <th scope="col-2"  style="text-align: center;">Updated Date</th>
-              <th scope="col-1"  style="text-align: center;max-width: 5px;">Setting</th>
-              <th scope="col-1"  style="text-align: center;">Access</th>
+              <th scope="col-2">{{ _('Category') }}</th>
+              <th scope="col-3">{{ _('Title') }}</th>
+              <th scope="col-2" style="text-align: center;">{{ _('Progress') }}</th>
+              <th scope="col-2"  style="text-align: center;">{{ _('Updated Date') }}</th>
+              <th scope="col-1"  style="text-align: center;max-width: 5px;">{{ _('Setting') }}</th>
+              <th scope="col-1"  style="text-align: center;">{{ _('Access') }}</th>
             </tr>
           </thead>
           <tbody id="tablaDescriptions">
@@ -601,10 +601,10 @@
                 <button type="button" class="btn btn-primary"
                   alt="All"
       
-                  title="All"
+                  title="{{ _('All') }}"
                   onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}';"
                 
-                >All</button>
+                >{{ _('All') }}</button>
               </div>
   
               </td>
@@ -616,12 +616,12 @@
           </tbody>
         </table>
         <h6 id="searchStats">
-          Total found :
+          {{ _('Total found') }} :
           <span id="totalRegisters">{{paginacion.totalRegisters}}</span>, (<span
             id="page"
             >{{paginacion.page}}</span
           >
-          of <span id="pagesNumbers">{{paginacion.pagesNumbers}}</span> Pages).
+          of <span id="pagesNumbers">{{paginacion.pagesNumbers}}</span> {{ _('Pages') }}).
         </h6>
       </div>
   

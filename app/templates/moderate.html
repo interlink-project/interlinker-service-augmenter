@@ -276,7 +276,7 @@ block head %} {{ super() }}
         style="align-content: center; justify-content: center; display: flex;align-items: center;"
       >
         <img src="{{url_for('static', filename='moderator.png')}}" style="width:40px ;" alt="Activities">
-        <h4 style="padding-left: 25px;">You are the moderator of:</h4>
+        <h4 style="padding-left: 25px;">{{ _('You are the moderator of') }}:</h4>
   
       </div>
 
@@ -294,11 +294,11 @@ block head %} {{ super() }}
                 <thead>
                     <tr>
                         
-                        <th scope="col-3">Title</th>
-                        <th scope="col-2" >Period</th>
-                        <th scope="col-2" style="text-align: center;">Edit</th>
+                        <th scope="col-3">{{ _('Title') }}</th>
+                        <th scope="col-2" >{{ _('Period') }}</th>
+                        <th scope="col-2" style="text-align: center;">{{ _('Edit') }}</th>
                         
-                        <th scope="col-1" style="text-align: center;">Access</th>
+                        <th scope="col-1" style="text-align: center;">{{ _('Access') }}</th>
                        
                     </tr>
                 </thead>
@@ -326,13 +326,13 @@ block head %} {{ super() }}
 
                         </td>
                         <td>
-                            <a title="Edit Metadata"  href="{{ url_for('authInterlink.editDescription',descriptionId= description.id , option= 'edit') }}" class="btn btn-outline-secondary" style="max-width: 70px;" ><i class="bi bi-tools " style="width:100px;"></i></a>
+                            <a title="{{ _('Edit') }}"  href="{{ url_for('authInterlink.editDescription',descriptionId= description.id , option= 'edit') }}" class="btn btn-outline-secondary" style="margin: 0% 20% 0% 20%;" ><i class="bi bi-tools " style="width:100px;"></i></a>
 
                         </td>
                         <td>
                                     
                             
-                            <a title="Access" href="{{ url_for('authInterlink.description',descriptionId='') }}{{ description.id }}" class="btn btn-outline-secondary" style="max-width: 70px;"><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
+                            <a title="{{ _('Access') }}" href="{{ url_for('authInterlink.description',descriptionId='') }}{{ description.id }}" class="btn btn-outline-secondary" style="margin: 0% 20% 0% 20%;"><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
              
                         </td>
 
@@ -342,7 +342,7 @@ block head %} {{ super() }}
                     {% endfor %}
                 </tbody>
             </table>
-            <h6 id="searchStats">Total found : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span id='page'>{{paginacion.page}}</span> of <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> Pages).</h6>
+            <h6 id="searchStats">{{ _('Total found') }} : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span id='page'>{{paginacion.page}}</span> {{ _('of') }} <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> {{ _('Pages') }}).</h6>
     
 
             <div
@@ -372,7 +372,7 @@ block head %} {{ super() }}
        <!--  <div class="container">
             <div class="row">
                 <div class="col" style="align-content: center; justify-content: center; display: flex">
-                    <h4>Edit information of a registered public service description:</h4>
+                    <h4>Edit information of a registered description:</h4>
                 </div>
             </div>
         </div>
@@ -400,7 +400,7 @@ block head %} {{ super() }}
 <div class="container">
     <div class="row">
         <div class="col" style="align-content: left; justify-content: left; display: flex">
-            <h5>Claim the moderation of a public service description:</h5>
+            <h5>{{ _('Claim the moderation of a description') }}:</h5>
             <button
                 class="btn bi-plus-circle"
                 type="button"
@@ -427,25 +427,25 @@ block head %} {{ super() }}
             <div class="grid-container">
 
                 <div class="row" style="padding: 10px;">
-                    <h4> Moderator Information</h4>
+                    <h4> {{ _('Moderator Information') }}</h4>
                 </div>
                 <div class="row">
                     <div class="form-floating">
                         <input class="form-control" id="firstName" name="firstName" placeholder="firstName" required>
-                        <label for="floatingInput">First Name</label>
+                        <label for="floatingInput">{{ _('First Name') }}</label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-floating">
                         <input class="form-control" id="lastName" name="lastName" placeholder="lastName" required>
-                        <label for="floatingInput">Last Name</label>
+                        <label for="floatingInput">{{ _('Last Name') }}</label>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="form-floating">
                         <input class="form-control" id="userPosition" name="userPosition" placeholder="userPosition" required>
-                        <label for="floatingInput">Position</label>
+                        <label for="floatingInput">{{ _('Position') }}</label>
                     </div>
                 </div>
 
@@ -454,14 +454,14 @@ block head %} {{ super() }}
                     <div class="form-floating mb-3">
                         <textarea class="form-control" placeholder="userMotivations" name="userMotivations"
                             id="userMotivations" style="min-height: 150px;" required></textarea>
-                        <label for="floatingTextarea">User Motivations:</label>
+                        <label for="floatingTextarea">{{ _('User Motivations') }}:</label>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="input-group mb-3">
                         <input type="file" class="form-control" name="archivoIdentificacion"  accept=".pdf" id="archivoIdentificacion" multiple>
-                        <label class="input-group-text" for="archivoIdentificacion">Documentation that proves your identity</label>
+                        <label class="input-group-text" for="archivoIdentificacion">{{ _('Documentation that proves your identity') }}</label>
                     </div>
 
                 </div>
@@ -469,12 +469,12 @@ block head %} {{ super() }}
                 <div class="row">
                     <div class="input-group mb-3">
                         <label class="input-group-text" for="oneUrl">
-                            Description finder :</label>
+                            {{ _('Description finder') }} :</label>
                 
                         <input type="text" class="form-control" id="oneUrl" name="oneUrl" placeholder="http://www.website.com/page.html"
                             aria-label="Url Page" onkeydown="validarURL(event)" onfocusout="validarURL(event)" >
                         <button class="btn btn-outline-secondary" id="inputGroupFileAddon04"  onclick="agregarUrl(event)">
-                            Search</button>
+                            {{ _('Search') }}</button>
 
                     </div>
                 </div>
@@ -487,8 +487,8 @@ block head %} {{ super() }}
 
                 <hr />
                 <div class="row" style="align-content: center; justify-content: center;">
-                    <div class="col" style="align-content: center; justify-content: center;">
-                        <button type="submit" class="btn btn-secondary">Claim Moderation Privilages</button>
+                    <div class="col" style="align-content: center; justify-content: center;text-align: center;">
+                        <button type="submit" class="btn btn-secondary">{{ _('Claim Moderation Privilages') }}</button>
 
                     </div>
                 </div>
