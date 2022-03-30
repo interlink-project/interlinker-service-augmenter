@@ -12,7 +12,7 @@ from flask import current_app, g
 from datetime import date
 
 from flask_babel import format_number, gettext, format_decimal, format_currency, format_percent
-
+from flask_babel import _
 
 from flask import Flask, render_template, redirect, request, url_for, session
 from flask_login import (
@@ -457,7 +457,19 @@ def genReport(descriptionId=None):
                 'annotations':listAnnotationsApproved ,
                 'qent':'false',
                 'tent':'false',
-                'fent':'false'
+                'fent':'false',
+                'reportTitle':_('DESCRIPTION REPORT'),
+                'shortDescriptionlbl':_('Short Description'),
+                'term': _('TERM'),
+                'question':_('QUESTION'),
+                'feedback':_('FEEDBACK'),
+                'posted_by':_('Posted by'),
+                'websitepage':_('Website Page'),
+                'openingtext':_('Opening Text'),
+                'referencetext':_('Reference Text'),
+                'closingstatement':_('Closing Statement'),
+                'date':_('Date')
+
                 }
     doc.render(context)
 

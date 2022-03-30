@@ -254,7 +254,7 @@ def inicio():
             key = 'Unassigned'
 
         paList.append(key)
-    print(paList)
+    #print(paList)
 
     if not ( 'Global' in paList ):
         paList.insert(0, 'Global')
@@ -1053,7 +1053,7 @@ def augment(rutaPagina,integrationInterlinker='False'):
         if css.attrs.get("href"):
 
             if css.attrs.get("rel"):
-                print(css.attrs.get("rel"))
+                #print(css.attrs.get("rel"))
                 if "shortcut" in css.attrs.get("rel")  or "apple-touch-icon" in css.attrs.get("rel") or "alternate" in css.attrs.get("rel") :
                     css.decompose()
                     continue

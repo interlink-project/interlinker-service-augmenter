@@ -140,13 +140,21 @@
 
         //Doy formato a la ruta:
         ruta = dataItem.uri.split('/');
-        ruta = ruta[ruta.length - 1]
+        ruta = ruta[ruta.length - 1];
 
+        let txtCategory='';
+        if (dataItem.category == 'feedback'){
+          txtCategory="{{ _('feedback')}}";
+        }else if (dataItem.category == 'question'){
+          txtCategory="{{ _('question')}}";
+        }else if (dataItem.category == 'term'){
+          txtCategory="{{ _('term')}}";
+        }
 
         if (dataItem.state == 1) { // Archived
-          botonCategory = '<button class="btn btn-light"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;" > <span style="position: relative;top: -5px;text-decoration: line-through;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+          botonCategory = '<button class="btn btn-light"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;" > <span style="position: relative;top: -5px;text-decoration: line-through;text-transform: capitalize;">' + txtCategory + '</span> </button> </td>';
           sectionCategoria = ' <tr style="color: rgba(141, 140, 140, 0.774);"> <td style="font-weight:bold;"> ' + botonCategory + ' </td>';
-          stateText = 'Archived';
+          stateText = "{{ _('Archived') }}";
         } else if (dataItem.state == 2) { //Approved
 
            if (dataItem.category == 'question') {
@@ -161,13 +169,13 @@
             }
 
 
-          botonCategory = '<button class="btn ' + stylebtn + '"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;font-weight: bold;background-color:rgba(' + questColor + ',1);border-color:rgba(' + questColor + ',0.9);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+          botonCategory = '<button class="btn ' + stylebtn + '"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;font-weight: bold;background-color:rgba(' + questColor + ',1);border-color:rgba(' + questColor + ',0.9);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + txtCategory + '</span> </button> </td>';
           sectionCategoria = ' <tr style="font-weight: bold;"> <td style="color:#FFFFFF;"> ' + botonCategory + ' </td>';
-          stateText = 'Approved';
+          stateText = "{{ _('Approved') }}";
         } else if (dataItem.state == 0) { //In Progress
-          botonCategory = '<button class="btn "  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;background-color:rgba(' + questColor + ',1);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+          botonCategory = '<button class="btn "  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;background-color:rgba(' + questColor + ',1);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + txtCategory + '</span> </button> </td>';
           sectionCategoria = ' <tr style="color: rgba(0, 0, 0, 0.774);"> <td style="font-weight:bold;"> ' + botonCategory + ' </td>';
-          stateText = 'In Progress';
+          stateText = "{{ _('In Progress') }}";
         }
 
         urlRef = `{{ url_for('views.assetSubject',descriptionId= 'DESCRIPTIONID',annotatorId='ANNOTATIONID') }}`;
@@ -250,12 +258,16 @@
 <div style="display: block">
   <div class="row">
     <div class="col-8" style="text-align: center;margin-top: 4px;display: inline-flex;">
-      <a href="{{ url_for('views.augment',rutaPagina=urlMainPage) }}?description={{description['id']}}&integrationInterlinker=True" class="bi bi-eye"
-        style="zoom: 2;-moz-transform: scale(2);padding: 0rem;margin-right: 0.2em;color: rgb(0, 72, 100);"></a>
+      
+     <button type="button" id="enlaceAugment" class="btn btn-outline-secondary position-relative  bi-eye" 
+      style="border-color: gainsboro;border:0px;padding: 0px 5px 0px 5px !important;zoom: 2;-moz-transform: scale(2);padding: 0rem;margin-right: 0.2em;" 
+      onclick="window.location.href='{{ url_for('views.augment',rutaPagina=urlMainPage) }}?description={{description['id']}}';" >
+              </button>
 
-      <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
+       <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
       <span id="descriptionUri" hidden>{{description['url']}}</span>
       <span id="descriptionId" hidden>{{description['id']}}</span>
+
 
     </div>
     <div class="col-4">
@@ -267,7 +279,7 @@
 
 
 
-        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
           {% if categoryLabel == 'feedback'%}
           <input type="radio" class="btn-check" name="rbFeedback" id="rbFeedback" autocomplete="off"
             onclick="selectCategory(event);" checked>
@@ -276,7 +288,7 @@
             onclick="selectCategory(event);">
           {% endif %}
 
-          <label class="btn btn-outline-primary" for="rbFeedback">Feedback</label>
+          <label class="btn btn-outline-primary" for="rbFeedback">{{ _('Feedback') }}</label>
 
           {% if categoryLabel == 'term'%}
           <input type="radio" class="btn-check" name="rbTerm" id="rbTerm" onclick="selectCategory(event);"
@@ -286,7 +298,7 @@
             autocomplete="off">
           {% endif %}
 
-          <label class="btn btn-outline-primary" for="rbTerm">Term</label>
+          <label class="btn btn-outline-primary" for="rbTerm">{{ _('Term') }}</label>
           {% if categoryLabel == 'question'%}
           <input type="radio" class="btn-check" name="rbQuestion" id="rbQuestion" onclick="selectCategory(event);"
             autocomplete="off" checked>
@@ -294,7 +306,7 @@
           <input type="radio" class="btn-check" name="rbQuestion" id="rbQuestion" onclick="selectCategory(event);"
             autocomplete="off">
           {% endif %}
-          <label class="btn btn-outline-primary" for="rbQuestion">Question</label>
+          <label class="btn btn-outline-primary" for="rbQuestion">{{ _('Question') }}</label>
           <div class="vr" style="padding-right: 3px;"></div>
 
           {% if categoryLabel == 'all'%}
@@ -304,7 +316,7 @@
           <input type="radio" class="btn-check" name="rbAll" id="rbAll" onclick="selectCategory(event);"
             autocomplete="off">
           {% endif %}
-          <label class="btn btn-outline-primary" for="rbAll">All</label>
+          <label class="btn btn-outline-primary" for="rbAll">{{ _('All') }}</label>
         </div>
 
         <button type="button" title="{{ _('Report') }}" class="btn btn-outline-secondary" onclick="window.location.href='{{ url_for('authInterlink.genReport',descriptionId= description['id'] ) }}';" style="padding: -2px;margin:0px;margin-left=5px;border: 0px;margin-right: 5px;" >
@@ -332,9 +344,9 @@
 <div class="row">
 
   <div class="col-4" style="display: flex;flex-direction: row;">
-    <input id="searchBox" class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+    <input id="searchBox" class="form-control me-2" type="search" placeholder="{{ _('Search') }}" aria-label="Search"
       onkeydown="searchTextEnter(event)" style="min-width: 200px;" />
-    <button class="btn btn-outline-secondary" onclick="searchText(event)">Search</button>
+    <button class="btn btn-outline-secondary" onclick="searchText(event)">{{ _('Search') }}</button>
 
     
 
@@ -346,27 +358,27 @@
 
       <div class="form-check" style="padding-right: 10px;">
         <input class="form-check-input" type="checkbox" id="checkMyContributions" onchange="filterState(event)" >
-        <label class="form-check-label" for="checkMyContributions">My Contributions</label>
+        <label class="form-check-label" for="checkMyContributions">{{ _('My Contributions') }}</label>
       </div>
 
     </div>
   </div>
 
-  <div class="col-4">
+   <div class="col-4">
     <div style="display: flex; flex-direction: row-reverse;">
 
 
       <div class="form-check form-switch" style="padding-right: 10px;">
         <input class="form-check-input" type="checkbox" id="checkInProgress" onchange="filterState(event)" checked>
-        <label class="form-check-label" for="checkInProgress">In Progress</label>
+        <label class="form-check-label" for="checkInProgress">{{ _('In Progress') }}</label>
       </div>
       <div class="form-check form-switch" style="padding-right: 10px;">
         <input class="form-check-input" type="checkbox" id="checkArchived" onchange="filterState(event)" >
-        <label class="form-check-label" for="checkArchived">Archived</label>
+        <label class="form-check-label" for="checkArchived">{{ _('Archived') }}</label>
       </div>
       <div class="form-check form-switch" style="padding-right: 10px;">
         <input class="form-check-input" type="checkbox" id="checkApproved" onchange="filterState(event)" >
-        <label class="form-check-label" for="checkApproved">Approved</label>
+        <label class="form-check-label" for="checkApproved">{{ _('Approved') }}</label>
       </div>
 
 
@@ -384,12 +396,13 @@
   <thead>
     <tr>
       <th scope="col-1">{{ _('Category') }}</th>
-      <th scope="col-1" style="text-align: center;">Page</th>
-      <th scope="col-2" style="text-align: center;">State</th>
-      <th scope="col-2" style="text-align: center;">Nro Replies</th>
-      <th scope="col-2" style="min-width: 200px;">Description</th>
-      <th scope="col-2" style="text-align: center;">Update Date</th>
-      <th scope="col-2" style="text-align: center;">Option</th>
+      <th scope="col-1" style="text-align: center;">{{ _('Page') }}</th>
+      <th scope="col-2" style="text-align: center;">{{ _('State') }}</th>
+      <th scope="col-2" style="text-align: center;">{{ _('Nro Replies') }}</th>
+      <th scope="col-2" style="min-width: 200px;">{{ _('Description') }}</th>
+      <th scope="col-2" style="text-align: center;">{{ _('Update Date') }}</th>
+      <th scope="col-2" style="text-align: center;">{{ _('Option') }}</th>
+
 
     </tr>
   </thead>
@@ -479,11 +492,29 @@
 
               {% if anotation.state == 1 %}
               <span style="position: relative;top: -5px;text-decoration: line-through;">
-                {{ anotation.category[0]|upper }}{{ anotation.category[1:] }}
+ 
+                  {% if anotation.category == 'feedback'  %}
+                    {{ _('Feedback') }}
+                  {% elif anotation.category == 'term' %}
+                    {{ _('Term') }}
+                  {% elif anotation.category == 'question' %}
+                  {{ _('Question') }}
+                  {% endif %}
+
+
               </span>
               {% else %}
               <span style="position: relative;top: -5px;">
-                {{ anotation.category[0]|upper }}{{ anotation.category[1:] }}
+
+                {% if anotation.category == 'feedback'  %}
+                  {{ _('Feedback') }}
+                {% elif anotation.category == 'term' %}
+                  {{ _('Term') }}
+                {% elif anotation.category == 'question' %}
+                {{ _('Question') }}
+                {% endif %}
+
+                
               </span>
               {% endif%}
 
@@ -494,7 +525,7 @@
           <td style="text-align: left;">
             {% set uriPath = anotation.uri.split('/') %}
             
-            <a href="{{ url_for('views.augment',rutaPagina='')}}{{anotation.uri}}?description={{ description.id }}&integrationInterlinker=True">/{{ uriPath[-1:] |join('')}}</a>
+            <a href="{{ url_for('views.augment',rutaPagina='')}}{{anotation.uri}}?description={{ description.id }}">/{{ uriPath[-1:] |join('')}}</a>
           </td>
 
           <td style="text-align: center;">
@@ -535,7 +566,7 @@
           <td style="text-align: center;">{{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
           <td>
             <a href="{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}" class="btn btn-outline-secondary"
-              style="max-width: 70px;"><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
+              style="margin: 0% 20% 0% 20%;min-width: 70px;"><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
 
           </td>
 
@@ -545,8 +576,8 @@
   </tbody>
 </table>
 
-<h6 id="searchStats">Total found : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span
-    id='page'>{{paginacion.page}}</span> of <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> Pages).</h6>
+<h6 id="searchStats">{{ _('Total found') }} : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span
+    id='page'>{{paginacion.page}}</span> {{ _('of') }} <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> {{ _('Pages') }}).</h6>
 
 
 <div class="container" style="align-content: center; justify-content: center; display: flex">

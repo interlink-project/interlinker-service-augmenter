@@ -98,13 +98,13 @@
     res = "";
     switch (val) {
       case 0:
-        res = "In Progress";
+        res = "{{ _('In Progress') }}";
         break;
       case 1:
-        res = "Archived";
+        res = "{{ _('Archived') }}";
         break;
       case 2:
-        res = "Approved";
+        res = "{{ _('Approved') }}";
         break;
       case 3:
         res = "Banned";
@@ -175,7 +175,7 @@
       }).done(successSearch);
     } else {
       $("#notificationBody").append(
-        "<p style='color:red;'>* A comment is required</p>"
+        "<p style='color:red;'>* {{ _('A final comment is required') }}</p>"
       );
     }
   });

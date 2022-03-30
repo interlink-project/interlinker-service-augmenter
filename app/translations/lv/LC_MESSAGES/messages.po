@@ -421,3 +421,77 @@ msgstr "Saglabāt izmaiņas"
 #: templates/surveys.html:372
 msgid "Create a new survey"
 msgstr "Izveidot jaunu aptauju "
+
+#: instantiate.html:180
+msgid "Malformed URL"
+msgstr "URL ir nepareizā formātā. Piemēram: https://www.domain.com/ "
+
+
+#: instantiate.html:198
+msgid "At least one Url most be added"
+msgstr "Sarakstam ir jāpievieno vismaz viens derīgs URL"
+
+
+#: instantiate.html:271
+msgid "Can not add the description, the description is already in the list"
+msgstr "Šis apraksts jau ir sarakstā"
+
+#: subjectAsset.html:178
+msgid "A final comment is required"
+msgstr "Nepieciešams pēdējais komentārs"
+
+#: templates
+msgid "feedback"
+msgstr "atsauksmes"
+
+#: templates
+msgid "term"
+msgstr "jēdziens"
+
+#: templates
+msgid "question"
+msgstr "jautājums"
+
+#: Report
+msgid "DESCRIPTION REPORT"
+msgstr "APRAKSTS ZIŅOJUMS"
+
+#: Report
+msgid "Short Description"
+msgstr "Īss apraksts"
+
+#: Report
+msgid "TERM"
+msgstr "JĒDZIENS"
+
+#: Report
+msgid "QUESTION"
+msgstr "JAUTĀJUMS"
+
+#: Report
+msgid "FEEDBACK"
+msgstr "ATSAUKSMES"
+
+#: Report
+msgid "Posted by"
+msgstr "Ievietoja"
+
+#: Report
+msgid "Website Page"
+msgstr "Vietnes lapa"
+
+#: Report
+msgid "Opening Text"
+msgstr "Atvēršanas teksts"
+
+#: Report
+msgid "Reference Text"
+msgstr "Atsauces teksts"
+
+#: Report
+msgid "Closing Statement"
+msgstr "Noslēguma paziņojums"
+
+#: Report
+msgid "Date"
+msgstr "Datums"

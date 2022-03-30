@@ -142,11 +142,19 @@ block content %}
         ruta = dataItem.uri.split('/');
         ruta = ruta[ruta.length - 1]
 
+        let txtCategory='';
+        if (dataItem.category == 'feedback'){
+          txtCategory="{{ _('feedback')}}";
+        }else if (dataItem.category == 'question'){
+          txtCategory="{{ _('question')}}";
+        }else if (dataItem.category == 'term'){
+          txtCategory="{{ _('term')}}";
+        }
 
         if (dataItem.state == 1) { // Archived
-          botonCategory = '<button class="btn btn-light"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;" > <span style="position: relative;top: -5px;text-decoration: line-through;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+          botonCategory = '<button class="btn btn-light"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;" > <span style="position: relative;top: -5px;text-decoration: line-through;text-transform: capitalize;">' + txtCategory + '</span> </button> </td>';
           sectionCategoria = ' <tr style="color: rgba(141, 140, 140, 0.774);"> <td style="font-weight:bold;"> ' + botonCategory + ' </td>';
-          stateText = 'Archived';
+          stateText = "{{ _('Archived') }}";
         } else if (dataItem.state == 2) { //Approved
 
            if (dataItem.category == 'question') {
@@ -161,13 +169,13 @@ block content %}
             }
 
 
-          botonCategory = '<button class="btn ' + stylebtn + '"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;font-weight: bold;background-color:rgba(' + questColor + ',1);border-color:rgba(' + questColor + ',0.9);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+          botonCategory = '<button class="btn ' + stylebtn + '"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;font-weight: bold;background-color:rgba(' + questColor + ',1);border-color:rgba(' + questColor + ',0.9);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + txtCategory + '</span> </button> </td>';
           sectionCategoria = ' <tr style="font-weight: bold;"> <td style="color:#FFFFFF;"> ' + botonCategory + ' </td>';
-          stateText = 'Approved';
+          stateText = "{{ _('Approved') }}";
         } else if (dataItem.state == 0) { //In Progress
-          botonCategory = '<button class="btn "  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;background-color:rgba(' + questColor + ',1);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + dataItem.category + '</span> </button> </td>';
+          botonCategory = '<button class="btn "  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;background-color:rgba(' + questColor + ',1);" > <span style="position: relative;top: -5px;text-transform: capitalize;">' + txtCategory + '</span> </button> </td>';
           sectionCategoria = ' <tr style="color: rgba(0, 0, 0, 0.774);"> <td style="font-weight:bold;"> ' + botonCategory + ' </td>';
-          stateText = 'In Progress';
+          stateText = "{{ _('In Progress') }}";
         }
 
         urlRef = `{{ url_for('authInterlink.subjectPage',descriptionId= 'DESCRIPTIONID',annotatorId='ANNOTATIONID') }}`;

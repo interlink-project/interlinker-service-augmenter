@@ -177,7 +177,7 @@
 
                     }
                 }else{
-                    alert('Malformed URL');
+                    alert("{{ _('Malformed URL') }}");
                 }
                 
             }
@@ -195,7 +195,7 @@
                 listrl= document.getElementById("urlList");
     
                 if(inputUrl.value=="" && listrl.childElementCount==0){
-                    $("#oneUrlVal").text("* At least one Url most be added.")
+                    $("#oneUrlVal").text("* {{ _('At least one Url most be added') }}.")
                 }else{
                     $("#oneUrlVal").text("");
                 }
@@ -211,7 +211,7 @@
             btnSubmit = document.getElementById("btnSubmitDescription");
             OpcionRegistro=btnSubmit.innerText
 
-            if(OpcionRegistro=='Create'){
+            if(OpcionRegistro=="{{ _('Create') }}"){
             
 
             var code = event.keyCode || event.which;
@@ -267,10 +267,10 @@
                     if(existe){
                         //Muestro error
                          var myModal = new bootstrap.Modal(document.getElementById('notificationBox'),{});
-                        $('#notificationBoxLabel').text("Information")
-                        $('#notificationBody').text("Esta descripcion ya se encuentra en el listado.")
-                        $('#notificationAcceptBtn').text("Accept")
-                        $('#notificationAcceptBtn').hide();
+                         $('#notificationBoxLabel').text("{{ _('Information') }}")
+                         $('#notificationBody').text("{{ _('Can not add the description, the description is already in the list') }}.")
+                         $('#notificationAcceptBtn').text("{{ _('Accept') }}")
+                         $('#notificationAcceptBtn').hide();
                         myModal.show();
 
                     }else{

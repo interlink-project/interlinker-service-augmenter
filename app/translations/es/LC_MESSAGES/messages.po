@@ -419,3 +419,80 @@ msgstr "Guardar cambios"
 #: templates/surveys.html:372
 msgid "Create a new survey"
 msgstr "Crear una encuesta nueva "
+
+
+#: instantiate.html:180
+msgid "Malformed URL"
+msgstr "El Url tiene un formato equivocado. Ejemplo: https://www.domain.com/ "
+
+#: instantiate.html:198
+msgid "At least one Url most be added."
+msgstr "Por lo menos una dirección Url valida debe ser agregada al listado. "
+
+#: isntantiate.html:271
+msgid "Can not add the description, the description is already in the list"
+msgstr "Esta descripcion ya se encuentra en el listado"
+
+#: subjectAsset.html:178
+msgid "A final comment is required"
+msgstr "Se requiere un comentario final."
+
+#: templates
+msgid "feedback"
+msgstr "contribución"
+
+#: templates
+msgid "term"
+msgstr "término"
+
+#: templates
+msgid "question"
+msgstr "pregunta"
+
+#: Report
+msgid "DESCRIPTION REPORT"
+msgstr "REPORTE DE DESCRIPCIÓN"
+
+#: Report
+msgid "Short Description"
+msgstr "Breve descripción"
+
+#: Report
+msgid "TERM"
+msgstr "TÉRMINO"
+
+#: Report
+msgid "QUESTION"
+msgstr "PREGUNTA"
+
+#: Report
+msgid "FEEDBACK"
+msgstr "CONTRIBUCIÓN"
+
+#: Report
+msgid "Posted by"
+msgstr "Publicado por"
+
+#: Report
+msgid "Website Page"
+msgstr "Página web"
+
+#: Report
+msgid "Opening Text"
+msgstr "Texto de apertura"
+
+#: Report
+msgid "Reference Text"
+msgstr "Texto de referencia"
+
+#: Report
+msgid "Closing Statement"
+msgstr "Declaración de cierre"
+
+#: Report
+msgid "Date"
+msgstr "Fecha"
+
+
+
+

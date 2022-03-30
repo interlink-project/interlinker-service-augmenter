@@ -61,10 +61,10 @@
         document.getElementById("notificationBox"),
         {}
       );
-      $("#notificationBoxLabel").text("Information");
+      $("#notificationBoxLabel").text("{{ _('Information') }}");
       $("#notificationBody").text("");
       $("#notificationBody").append(
-        "<div class='mb-3'> <label for='commentsChangeState' class='form-label'> Please enter comments on your decision. </label>      <textarea class='form-control' id='commentsChangeState' rows='3'></textarea>    </div>"
+        "<div class='mb-3'> <label for='commentsChangeState' class='form-label'> {{ _('Please enter comments on your decision') }}. </label>      <textarea class='form-control' id='commentsChangeState' rows='3'></textarea>    </div>"
       );
 
       $("#notificationBody").append(
@@ -85,7 +85,7 @@
           "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
       );
 
-      $("#notificationAcceptBtn").text("Accept");
+      $("#notificationAcceptBtn").text("{{ _('Accept') }}");
       $("#notificationAcceptBtn").show();
       //$('#notificationAcceptBtn').hide();
 
@@ -98,13 +98,13 @@
     res = "";
     switch (val) {
       case 0:
-        res = "In Progress";
+        res = "{{ _('In Progress') }}";
         break;
       case 1:
-        res = "Archived";
+        res = "{{ _('Archived') }}";
         break;
       case 2:
-        res = "Approved";
+        res = "{{ _('Approved') }}";
         break;
       case 3:
         res = "Banned";
@@ -175,7 +175,7 @@
       }).done(successSearch);
     } else {
       $("#notificationBody").append(
-        "<p style='color:red;'>* A comment is required</p>"
+        "<p style='color:red;'>* {{ _('A final comment is required') }</p>"
       );
     }
   });
@@ -216,7 +216,15 @@ ns.ismoderator = true %} {% endif %} {% endfor %}
 <div class="row">
   <div class="col-6">
     <h5>
-      {{ annotation['category'][0]|upper }}{{ annotation['category'][1:] }}/{{
+      <b>
+      {% if annotation['category'] == 'feedback'  %}
+        {{ _('Feedback') }}
+      {% elif annotation['category'] == 'term' %}
+        {{ _('Term') }}
+      {% elif annotation['category'] == 'question' %}
+      {{ _('Question') }}
+      {% endif %}
+       id: </b>  {{
       annotation['id'] }} (
       <span hidden id="currentStateAnnotation">{{annotation['state']}}</span>
       <span id="currentStateAnnotationText"
@@ -244,8 +252,8 @@ ns.ismoderator = true %} {% endif %} {% endfor %}
           padding: 0 5px 0 5px;
         "
       >
-        {{ nroReplies }} <br />
-        REPLY
+      {{ nroReplies }} <br />
+      {{ _('REPLY')}}
       </div>
       <!--       <div
         style="
@@ -276,7 +284,7 @@ ns.ismoderator = true %} {% endif %} {% endfor %}
 </div>
 
 <div class="row" style="padding-left: 10px">
-  <h6>Content:</h6>
+  <h6>{{ _('Content') }}:</h6>
 
   <div
     class="row"
@@ -332,9 +340,9 @@ ns.ismoderator = true %} {% endif %} {% endfor %}
       padding-top: 3px;
     "
   >
-    <div class="col-3">
-      <h6>Keywords:</h6>
-    </div>
+  <div class="col-3">
+    <h6>{{ _('Keywords') }}:</h6>
+  </div>
 
     <div class="col-8">
       {{description['keywords'][0]|upper}}{{description['keywords'][1:]|
@@ -502,31 +510,31 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
       justify-content: center;
     "
   >
-    {% if ns.ismoderator is true %}
-    <div class="btn-group" role="group" aria-label="opciones">
+  {% if ns.ismoderator is true %}
+  <div class="btn-group" role="group" aria-label="opciones">
 
-    
-    <button
-      type="button"
-      class="btn bi-archive border btn-danger"
-      onclick="registrarEstadoAnnotation(event,annotationState=1,annotationId='',objtype='annotation_state')"
-    >
-      Archive
-    </button>
-    <button
-      type="button"
-      class="btn bi-clock border btn-success"
-      onclick="registrarEstadoAnnotation(event,annotationState=0,annotationId='',objtype='annotation_state')"
-    >
-      In Progress
-    </button>
-    <button
-      type="button"
-      class="btn bi-check-circle border btn-primary"
-      onclick="registrarEstadoAnnotation(event,annotationState=2,annotationId='',objtype='annotation_state')"
-    >
-      Approve
-    </button>
+  
+  <button
+    type="button"
+    class="btn bi-archive border btn-danger"
+    onclick="registrarEstadoAnnotation(event,annotationState=1,annotationId='',objtype='annotation_state')"
+  >
+    {{ _('Archive') }}
+  </button>
+  <button
+    type="button"
+    class="btn bi-clock border btn-success"
+    onclick="registrarEstadoAnnotation(event,annotationState=0,annotationId='',objtype='annotation_state')"
+  >
+  {{ _('In Progress') }} 
+  </button>
+  <button
+    type="button"
+    class="btn bi-check-circle border btn-primary"
+    onclick="registrarEstadoAnnotation(event,annotationState=2,annotationId='',objtype='annotation_state')"
+  >
+  {{ _('Approve') }} 
+  </button>
 
   </div>
     {% endif %}
