@@ -261,7 +261,8 @@
       
      <button type="button" id="enlaceAugment" class="btn btn-outline-secondary position-relative  bi-eye" 
       style="border-color: gainsboro;border:0px;padding: 0px 5px 0px 5px !important;zoom: 2;-moz-transform: scale(2);padding: 0rem;margin-right: 0.2em;" 
-      onclick="window.location.href='{{ url_for('views.augment',rutaPagina=urlMainPage) }}?description={{description['id']}}';" >
+      
+      onclick="window.location.href='{{ url_for('views.augment',rutaPagina=urlMainPage) }}?description={{description['id']}}&integrationInterlinker=True';" >
               </button>
 
        <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
@@ -525,7 +526,7 @@
           <td style="text-align: left;">
             {% set uriPath = anotation.uri.split('/') %}
             
-            <a href="{{ url_for('views.augment',rutaPagina='')}}{{anotation.uri}}?description={{ description.id }}">/{{ uriPath[-1:] |join('')}}</a>
+            <a href="{{ url_for('views.augment',rutaPagina='')}}{{anotation.uri}}?description={{ description.id }}&integrationInterlinker=True">/{{ uriPath[-1:] |join('')}}</a>
           </td>
 
           <td style="text-align: center;">
