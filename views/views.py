@@ -969,7 +969,9 @@ def augment(rutaPagina, integrationInterlinker='False'):
     REPLACEMENTS = [('video', 'src', 'data-src'),  # video.data-src -> src
                     ('video', 'autoplay', ''),
                     ('figure', 'src', 'data-bg'),
-                    ('img', 'src', 'data-src')]
+                    ('img', 'src', 'data-src'),
+                    ('img', 'src', 'data-lazy-src')
+                    ]
 
     # Busca y reemplaza
     def replace_tags(soup, replacements=REPLACEMENTS):
@@ -1024,6 +1026,7 @@ def augment(rutaPagina, integrationInterlinker='False'):
 
             if css.attrs.get("rel"):
                 # print(css.attrs.get("rel"))
+                # or "dns-prefetch" in css.attrs.get("rel") or "preconnect" in css.attrs.get("rel"):
                 if "shortcut" in css.attrs.get("rel") or "apple-touch-icon" in css.attrs.get("rel") or "alternate" in css.attrs.get("rel"):
                     css.decompose()
                     continue

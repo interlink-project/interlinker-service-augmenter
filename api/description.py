@@ -1,4 +1,4 @@
-from api import es,authz
+from api import es, authz
 import datetime
 
 from api.annotation import Annotation
@@ -31,17 +31,17 @@ MAPPING = {
         "properties": {
             "email": {"type": "string"},
             "createdat": {
-                    "type": "date",
-                    "format": "dateOptionalTime"
-                },
+                "type": "date",
+                "format": "dateOptionalTime"
+            },
             "expire": {
-                    "type": "date",
-                    "format": "dateOptionalTime"
-                }
+                "type": "date",
+                "format": "dateOptionalTime"
+            }
         }
     },
 
-    
+
     "padministration": {
         "type": "string",
         "index": "not_analyzed"
@@ -51,31 +51,31 @@ MAPPING = {
         "type": "string",
         "index": "not_analyzed"
     },
-    
-     "urls": {
+
+    "urls": {
         "type": "nested",
         "properties": {
             "createdate": {
-                    "type": "date",
-                    "format": "dateOptionalTime"
-                },
+                "type": "date",
+                "format": "dateOptionalTime"
+            },
             "ismain": {
-                        "type" : "boolean"},
+                "type": "boolean"},
             "url": {
-                    "type": "string",
-                    "index": "not_analyzed"
-                },
+                "type": "string",
+                "index": "not_analyzed"
+            },
             "language": {
-                    "type": "string",
-                    "index": "not_analyzed"
-                },
+                "type": "string",
+                "index": "not_analyzed"
+            },
             "email": {"type": "string"},
         }
     },
 
     'created': {'type': 'date'},
     'updated': {'type': 'date'},
-    
+
     'permissions': {
         'index_name': 'permission',
         'properties': {
@@ -96,189 +96,164 @@ class Description(es.Model):
     __type__ = TYPE
     __mapping__ = MAPPING
 
-
     @classmethod
     def _get_all(cls):
         """
         Returns a list of all descriptions 
         """
-        q= {
-        "sort": [
-            {
-            "updated": {
-                "order": "desc",
-                "ignore_unmapped": True
-            }
-            }
-        ],
-        "from": 0,
-        "size": PAGGINATION_SIZE,
-        "query": {
-            "bool": {
-            "must": [
+        q = {
+            "sort": [
                 {
-                "match_all": {}
-                }
-            ]
-            }
-        }
-        }
-        res = cls.es.conn.search(index="description",
-                                 doc_type=cls.__type__,
-                                 body=q)
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-
-    @classmethod
-    def _get_by_title(cls,searchText="",padministration='',domain=''):
-        
-
-
-        q= {
-        "query": {
-            "prefix":{
-                "title":searchText
-                }
-            }
-        }
-
-        
-
-        res = cls.es.conn.search(index="description",
-                                 doc_type=cls.__type__,
-                                 body=q)
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-
-
-    @classmethod
-    def _get_uniqueValues(cls,campo=""):
-        
-
-
-        q= {
-                "aggs": {
-                    "group_by_url": {
-                        "terms": {
-                            "field": campo
-                        }
+                    "updated": {
+                        "order": "desc",
+                        "ignore_unmapped": True
                     }
-                },
-                "size": 0
+                }
+            ],
+            "from": 0,
+            "size": PAGGINATION_SIZE,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match_all": {}
+                        }
+                    ]
+                }
+            }
+        }
+        res = cls.es.conn.search(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+    @classmethod
+    def _get_by_title(cls, searchText="", padministration='', domain=''):
+
+        q = {
+            "query": {
+                "prefix": {
+                    "title": searchText
+                }
+            }
         }
 
-        
+        res = cls.es.conn.search(index="description",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+    @classmethod
+    def _get_uniqueValues(cls, campo=""):
+
+        q = {
+            "aggs": {
+                "group_by_url": {
+                    "terms": {
+                        "field": campo
+                    }
+                }
+            },
+            "size": 0
+        }
 
         res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
                                  body=q)
 
-        resultadosDistintos=res["aggregations"]["group_by_url"]["buckets"]
-        
+        resultadosDistintos = res["aggregations"]["group_by_url"]["buckets"]
 
         print(resultadosDistintos)
 
         return resultadosDistintos
 
+    # Get users that has participated as Moderator of a Description
 
-    #Get users that has participated as Moderator of a Description
     @classmethod
-    def currentActiveUsersModerators(cls,**kwargs):
-        q={
-            "aggs" : {
-                    "moderators" : {
-                        "nested" : {
-                            "path" : "moderators"
-                        },
-                        "aggs" : {
-                            "group_by_user": {
-                                "terms": {
-                                    "field": "moderators.email"
-                                }
+    def currentActiveUsersModerators(cls, **kwargs):
+        q = {
+            "aggs": {
+                "moderators": {
+                    "nested": {
+                        "path": "moderators"
+                    },
+                    "aggs": {
+                        "group_by_user": {
+                            "terms": {
+                                "field": "moderators.email"
                             }
-
                         }
+
                     }
-                },
+                }
+            },
             "size": 0
         }
-        
-        #print(q)
 
-    
+        # print(q)
+
         res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
                                  body=q)
 
-
-        if(len(res['aggregations']['moderators']['group_by_user']['buckets'])>0):
-            res=res['aggregations']['moderators']['group_by_user']['buckets']
+        if(len(res['aggregations']['moderators']['group_by_user']['buckets']) > 0):
+            res = res['aggregations']['moderators']['group_by_user']['buckets']
         else:
-            res=[]
-        
-        return res
+            res = []
 
+        return res
 
     @classmethod
     def _get_uniqueValuesUrl(cls):
-        
-        q= {
-            "aggs" : {
-                        "urls" : {
-                            "nested" : {
-                                "path" : "urls"
-                            },
-                            "aggs" : {
-                                "group_by_url": {
-                                    "terms": {
-                                        "field": "urls.url"
-                                    }
-                                }
 
+        q = {
+            "aggs": {
+                "urls": {
+                    "nested": {
+                        "path": "urls"
+                    },
+                    "aggs": {
+                        "group_by_url": {
+                            "terms": {
+                                "field": "urls.url"
                             }
                         }
-                    },
+
+                    }
+                }
+            },
             "size": 0
         }
-
-        
 
         res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
                                  body=q)
 
-        resultadosDistintos=res["aggregations"]["urls"]["group_by_url"]["buckets"]
-        
+        resultadosDistintos = res["aggregations"]["urls"]["group_by_url"]["buckets"]
 
         print(resultadosDistintos)
 
         return resultadosDistintos
 
-
-    
-
-
     @classmethod
-    def _get_Descriptions_byId(cls,**kwargs):
-        
-        q= {
-            
+    def _get_Descriptions_byId(cls, **kwargs):
+
+        q = {
+
             "query": {
-            "terms": {
-            "_id":[kwargs.pop("id")]
+                "terms": {
+                    "_id": [kwargs.pop("id")]
+                }
             }
         }
-        }
 
-        #print(q)
-
+        # print(q)
 
         res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
                                  body=q)
 
         return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-
-
-
 
     """
     totalRegistros = 0
@@ -292,75 +267,73 @@ class Description(es.Model):
             textoABuscar=textoABuscar, padministration=padministration, url=domain)
     """
 
-
     @classmethod
-    def _getDescriptionsUser_Stats_onSearch(cls,**kwargs):
+    def _getDescriptionsUser_Stats_onSearch(cls, **kwargs):
 
-        user=kwargs.pop("user")
+        user = kwargs.pop("user")
 
-        #Obtengo todas las anotaciones del usuario
-        listAnnotations=Annotation._get_Annotations_by_User(user=user)
+        # Obtengo todas las anotaciones del usuario
+        listAnnotations = Annotation._get_Annotations_by_User(user=user)
 
-        textoABuscar=kwargs.pop("textoABuscar")
-        padministration=kwargs.pop("padministration")
-        domain=kwargs.pop("domain")
+        textoABuscar = kwargs.pop("textoABuscar")
+        padministration = kwargs.pop("padministration")
+        domain = kwargs.pop("domain")
 
         # Now I obtain all descriptions related with this annotations
-        listDescription=[]
+        listDescription = []
         for urlItem in listAnnotations:
-            url=urlItem['key']
+            url = urlItem['key']
 
-            #Apply filters and the search options
-            descriptions = Description._get_by_multiple(textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain, page="all",urlFixed=url)
+            # Apply filters and the search options
+            descriptions = Description._get_by_multiple(
+                textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain, page="all", urlFixed=url)
 
             nroRegistros = descriptions['numRes']
-            
-            if(nroRegistros>0):
+
+            if(nroRegistros > 0):
                 #descriptionFound = descriptions['descriptions'][0]
 
                 for descriptionFound in descriptions['descriptions']:
 
-                    #Si la descripcion ya ha sido agregada entonces no debe agregarse :
-                    existsDescr=False
+                    # Si la descripcion ya ha sido agregada entonces no debe agregarse :
+                    existsDescr = False
                     for itemDescript in listDescription:
-                        if(itemDescript['id']==descriptionFound['id']):
-                            existsDescr=True
+                        if(itemDescript['id'] == descriptionFound['id']):
+                            existsDescr = True
                             break
                     if not existsDescr:
                         listDescription.append(descriptionFound)
 
         # Now I obtain all descriptions where I am moderator
 
-        #Apply filters and the search options
-        descriptionsModerator = Description._get_by_multiple(textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain,isModerator=True, page="all",user=user)
+        # Apply filters and the search options
+        descriptionsModerator = Description._get_by_multiple(
+            textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain, isModerator=True, page="all", user=user)
 
         nroRegistros = descriptionsModerator['numRes']
-        
-        if(nroRegistros>0):
+
+        if(nroRegistros > 0):
             #descriptionFound = descriptionsModerator['descriptions'][0]
 
             for descriptionFound in descriptionsModerator['descriptions']:
 
-                #Si la descripcion ya ha sido agregada entonces no debe agregarse :
-                existsDescr=False
+                # Si la descripcion ya ha sido agregada entonces no debe agregarse :
+                existsDescr = False
                 for itemDescript in listDescription:
-                    if(itemDescript['id']==descriptionFound['id']):
-                        existsDescr=True
+                    if(itemDescript['id'] == descriptionFound['id']):
+                        existsDescr = True
                         break
                 if not existsDescr:
                     listDescription.append(descriptionFound)
-        
 
-        registroInicial=kwargs.pop("registroInicial")
-        listDescription[registroInicial:registroInicial+10]
+        registroInicial = kwargs.pop("registroInicial")
 
+        # Guardo el numero total de descriptions found:
+        numTotalOfDescFound = len(listDescription)
 
-        #Guardo el numero total de descriptions found:
-        numTotalOfDescFound=len(listDescription)
+        res = listDescription
 
-        res=listDescription
-
-        #Include Stats to show in the dashboard:
+        # Include Stats to show in the dashboard:
         # Cargo los números de anotaciones por categoria
         for itemDesc in res:
 
@@ -370,7 +343,8 @@ class Description(es.Model):
                 listUrl.append(url['url'])
 
             # Cargo datos estadisticos de las descripciones
-            resCategory = Annotation.descriptionStats(Annotation, descriptionId=itemDesc['id'])
+            resCategory = Annotation.descriptionStats(
+                Annotation, descriptionId=itemDesc['id'])
 
             nroFeedbacks = 0
             nroQuestions = 0
@@ -449,34 +423,30 @@ class Description(es.Model):
             itemDesc['progressQues'] = progressQues
 
             textoStats = ("<b>Feedback ("+str(nroFeedApproved)+"/"+str(nroFeedApproved+nroFeedProgress)+")</b> : "+str(round(progressFeed))+"% <br>" +
-                        "<b>Terms ("+str(nroTermApproved)+"/"+str(nroTermApproved+nroTermProgress)+")</b>: "+str(round(progressTerm))+"% <br>" +
-                        "<b>Questions ("+str(nroQuesApproved)+"/"+str(nroQuesApproved+nroQuesProgress)+")</b>: "+str(round(progressQues))+"% <br>")
+                          "<b>Terms ("+str(nroTermApproved)+"/"+str(nroTermApproved+nroTermProgress)+")</b>: "+str(round(progressTerm))+"% <br>" +
+                          "<b>Questions ("+str(nroQuesApproved)+"/"+str(nroQuesApproved+nroQuesProgress)+")</b>: "+str(round(progressQues))+"% <br>")
 
             itemDesc['textoStats'] = textoStats
 
             progressTotalApproved = nroFeedApproved + nroTermApproved + nroQuesApproved
             progressTotalInProgress = nroFeedProgress + nroTermProgress + nroQuesProgress
             progressTotal = ((progressTotalApproved * 100) / (progressTotalInProgress +
-                            progressTotalApproved)) if (progressTotalInProgress + progressTotalApproved) != 0 else 0
+                                                              progressTotalApproved)) if (progressTotalInProgress + progressTotalApproved) != 0 else 0
 
             itemDesc['progressTotal'] = round(progressTotal)
 
-        resultado={'descriptions':res,'numRes':numTotalOfDescFound}
+        res = res[registroInicial:registroInicial+10]
+
+        resultado = {'descriptions': res, 'numRes': numTotalOfDescFound}
 
         return resultado
 
-
-
-
-  
-
     @classmethod
-    def _get_Descriptions_byURI(cls,**kwargs):
-        #Search for the description that include this url in the urls set.
-   
-  
-        q= {
-        
+    def _get_Descriptions_byURI(cls, **kwargs):
+        # Search for the description that include this url in the urls set.
+
+        q = {
+
             "query": {
                 "nested": {
                     "path": "urls",
@@ -495,10 +465,7 @@ class Description(es.Model):
             }
         }
 
-       
-
-        #print(q)
-
+        # print(q)
 
         res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
@@ -506,16 +473,15 @@ class Description(es.Model):
 
         return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
 
+    def _get_checkPermisos_byURI(cls, **kwargs):
 
-    def _get_checkPermisos_byURI(cls,**kwargs):
-
-        q= {
+        q = {
             "query": {
                 "bool": {
                     "must": [
                         {
                             "match": {
-                                "url":kwargs.pop("url")
+                                "url": kwargs.pop("url")
                             }
                         },
                         {
@@ -539,24 +505,23 @@ class Description(es.Model):
             }
         }
 
-        #print(q)
+        # print(q)
 
-    
         res = cls.es.conn.count(index="description",
-                                 doc_type=cls.__type__,
-                                 body=q)
-    
+                                doc_type=cls.__type__,
+                                body=q)
+
         return res['count']
 
-    def _get_checkPermisos_byId(cls,**kwargs):
+    def _get_checkPermisos_byId(cls, **kwargs):
 
-        q= {
+        q = {
             "query": {
                 "bool": {
                     "must": [
                         {
                             "match": {
-                                "_id":kwargs.pop("id")
+                                "_id": kwargs.pop("id")
                             }
                         },
                         {
@@ -580,160 +545,143 @@ class Description(es.Model):
             }
         }
 
-        #print(q)
+        # print(q)
 
-    
         res = cls.es.conn.count(index="description",
-                                 doc_type=cls.__type__,
-                                 body=q)
-    
+                                doc_type=cls.__type__,
+                                body=q)
+
         return res['count']
 
-
     @classmethod
-    def _get_Descript_byModerEmail(cls,**kwargs):
-       
+    def _get_Descript_byModerEmail(cls, **kwargs):
 
-        q= {
-                
-                "query": {
-                    "nested": {
-                        "path": "moderators",
-                        "query": {
+        q = {
+
+            "query": {
+                "nested": {
+                    "path": "moderators",
+                    "query": {
                             "bool": {
                                 "must": [
                                     {
                                         "match": {
-                                            
-                                            "moderators.email": kwargs.pop("email") 
+
+                                            "moderators.email": kwargs.pop("email")
                                         }
                                     }
                                 ]
                             }
-                        }
                     }
                 }
             }
+        }
 
-        #Parametros de busqueda:
+        # Parametros de busqueda:
 
-       
-        #print(q)
+        # print(q)
 
-    
         res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
                                  body=q)
         return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
 
-       
     @classmethod
-    def _get_Descript_byModerEmailCounts(cls,**kwargs):
-       
+    def _get_Descript_byModerEmailCounts(cls, **kwargs):
 
-        q= {
-                
-                "query": {
-                    "nested": {
-                        "path": "moderators",
-                        "query": {
+        q = {
+
+            "query": {
+                "nested": {
+                    "path": "moderators",
+                    "query": {
                             "bool": {
                                 "must": [
                                     {
                                         "match": {
-                                            
-                                            "moderators.email": kwargs.pop("email") 
+
+                                            "moderators.email": kwargs.pop("email")
                                         }
                                     }
                                 ]
                             }
-                        }
                     }
-                }
-            }
-
-        #Parametros de busqueda:
-
-       
-        #print(q)
-
-    
-        res = cls.es.conn.count(index="description",
-                                 doc_type=cls.__type__,
-                                 body=q)
-    
-        return res['count']
-
-    @classmethod
-    def _get_DescriptionsCounts(cls,**kwargs):
-        
-
-        q= {
-            "query": {
-                "bool": {
-                "must":[
-                {
-                "prefix":{
-                    "title":kwargs.pop("textoABuscar")
-                    }
-                },
-                {
-                "prefix":{
-                    "url":kwargs.pop("url")
-                    }
-                }
-                ]
                 }
             }
         }
 
-        #Parametros de busqueda:
+        # Parametros de busqueda:
+
+        # print(q)
+
+        res = cls.es.conn.count(index="description",
+                                doc_type=cls.__type__,
+                                body=q)
+
+        return res['count']
+
+    @classmethod
+    def _get_DescriptionsCounts(cls, **kwargs):
+
+        q = {
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "prefix": {
+                                "title": kwargs.pop("textoABuscar")
+                            }
+                        },
+                        {
+                            "prefix": {
+                                "url": kwargs.pop("url")
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+
+        # Parametros de busqueda:
 
         i = 0
-      
+
         for key, value in kwargs.items():
             i += 1
 
-            
-            seccion =  {
-                "match":{
+            seccion = {
+                "match": {
                     key: value
-                    }
-
                 }
 
-         
+            }
+
             q['query']['bool']['must'].append(seccion)
 
-        #print('_get_DescriptionsCounts')   
-        #print(q)
-
-        
-
-        
+        # print('_get_DescriptionsCounts')
+        # print(q)
 
         res = cls.es.conn.count(index="description",
-                                 doc_type=cls.__type__,
-                                 body=q)
+                                doc_type=cls.__type__,
+                                body=q)
         return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
 
     @classmethod
-    def _get_by_multiple(cls,**kwargs):
+    def _get_by_multiple(cls, **kwargs):
 
-        #Base filter parameters
-        page=kwargs.get("page")
-        
-        if page=='all':
-            initReg=0
-            numRegxConsulta=10000
-        else:    
-            initReg=(int(page)-1)*10
-            numRegxConsulta=PAGGINATION_SIZE
+        # Base filter parameters
+        page = kwargs.get("page")
 
-        
-        q= {
+        if page == 'all':
+            initReg = 0
+            numRegxConsulta = 10000
+        else:
+            initReg = (int(page)-1)*10
+            numRegxConsulta = PAGGINATION_SIZE
+
+        q = {
             "sort": [
-                    {
+                {
                     "updated": {
                         "order": "desc",
                         "ignore_unmapped": True
@@ -744,76 +692,73 @@ class Description(es.Model):
             "size": numRegxConsulta
         }
 
+        # Filter by searchBox
+        textoBusqueda = kwargs.pop("textoABuscar")
+        if textoBusqueda == '' or textoBusqueda == None:
+            searchScope = {
 
-        #Filter by searchBox
-        textoBusqueda=kwargs.pop("textoABuscar")
-        if textoBusqueda=='' or textoBusqueda==None :
-            searchScope={
-                       
-                        "bool": {
-                            "must":[
-                            
-                            ]
-                        }
-                       
-                        }
+                "bool": {
+                    "must": [
+
+                    ]
+                }
+
+            }
         else:
-            searchScope={
-                       
-                        "bool": {
-                            "must":[
-                                {
-                                "match":{
-                                    "title":textoBusqueda
-                                    }
-                                }
-                            ]
+            searchScope = {
+
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "title": textoBusqueda
+                            }
                         }
-                       
-                        }
+                    ]
+                }
 
-        q['query']=searchScope
+            }
 
-        #Filter by Category:
-        padminitration=kwargs.pop("padministration")
+        q['query'] = searchScope
 
-        #Filter by Category:
-        if padminitration!='' and padminitration!=None:
+        # Filter by Category:
+        padminitration = kwargs.pop("padministration")
+
+        # Filter by Category:
+        if padminitration != '' and padminitration != None:
             q['query']['bool']['must'].append({
-                                                "match":{
-                                                    "padministration":padminitration
-                                                    }
-                                                })
-        
-        #Filter by URl:
-        if 'urlFixed' in kwargs:
-            urlFixed=kwargs.pop("urlFixed")
+                "match": {
+                    "padministration": padminitration
+                }
+            })
 
-            if urlFixed!='' and urlFixed!=None:
+        # Filter by URl:
+        if 'urlFixed' in kwargs:
+            urlFixed = kwargs.pop("urlFixed")
+
+            if urlFixed != '' and urlFixed != None:
                 q['query']['bool']['must'].append(
-                {
-                    "nested": {
-                        "path": "urls",
-                        "query": {
-                            "bool": {
-                                "must": [
-                                    {
-                                        "match": {
-                                            "urls.url": urlFixed
+                    {
+                        "nested": {
+                            "path": "urls",
+                            "query": {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "match": {
+                                                "urls.url": urlFixed
+                                            }
                                         }
-                                    }
-                                ]
+                                    ]
+                                }
                             }
                         }
                     }
-                }
-            )
-            
-            
+                )
 
-        #Filter by Domain
-        urlPrefix=kwargs.pop("urlPrefix")
-        if urlPrefix!=''  and urlPrefix!=None:
+        # Filter by Domain
+        urlPrefix = kwargs.pop("urlPrefix")
+        if urlPrefix != '' and urlPrefix != None:
             q['query']['bool']['must'].append(
                 {
                     "nested": {
@@ -838,165 +783,157 @@ class Description(es.Model):
                 }
             )
 
-        #Filter by Moderator
+        # Filter by Moderator
         if 'isModerator' in kwargs:
-            ismoderator=kwargs.pop("isModerator")
+            ismoderator = kwargs.pop("isModerator")
             if ismoderator != None:
-                if ismoderator==True:
-                    userEmail=kwargs.pop("user")
+                if ismoderator == True:
+                    userEmail = kwargs.pop("user")
                     q['query']['bool']['must'].append(
-                    {
-                        "nested": {
-                            "path": "moderators",
-                            "query": {
-                                "bool": {
-                                    "must": [
-                                        {
-                                            "match": {
-                                                "moderators.email": userEmail
+                        {
+                            "nested": {
+                                "path": "moderators",
+                                "query": {
+                                    "bool": {
+                                        "must": [
+                                            {
+                                                "match": {
+                                                    "moderators.email": userEmail
+                                                }
                                             }
-                                        }
-                                    ]
+                                        ]
+                                    }
                                 }
                             }
                         }
-                    }
-                )
+                    )
 
-    
-
-        #print('_get_by_multiple')
-        #print(q)
+        # print('_get_by_multiple')
+        # print(q)
 
         res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
                                  body=q)
 
+        descriptions = [cls(d['_source'], id=d['_id'])
+                        for d in res['hits']['hits']]
+        numRes = res['hits']['total']
 
-        descriptions=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
-
-        resultado={'descriptions':descriptions,'numRes':numRes}
+        resultado = {'descriptions': descriptions, 'numRes': numRes}
         return resultado
 
-
-        
     @classmethod
-    def _get_by_multipleCounts(cls,**kwargs):
-        
-    
-      
-        q= {
+    def _get_by_multipleCounts(cls, **kwargs):
+
+        q = {
             "query": {
-            "bool": {
-            "must":[
-            {
-            "prefix":{
-                "title":kwargs.get("textoABuscar")
+                "bool": {
+                    "must": [
+                        {
+                            "prefix": {
+                                "title": kwargs.get("textoABuscar")
+                            }
+                        }
+                    ]
                 }
             }
-            ]
-            }
-        }
         }
 
-        #Parametros de busqueda:
+        # Parametros de busqueda:
 
         i = 0
-      
+
         for key, value in kwargs.items():
             i += 1
 
-            if(key=='url'):
+            if(key == 'url'):
 
-                preUrl={"bool": {
-                "should":[
-                ]
+                preUrl = {"bool": {
+                    "should": [
+                    ]
                 }}
 
-                seccion1 =  {
-                    "prefix":{
+                seccion1 = {
+                    "prefix": {
                         key: 'http://'+value
-                        }
-
                     }
+
+                }
                 preUrl['bool']['should'].append(seccion1)
-                seccion2 =  {
-                    "prefix":{
+                seccion2 = {
+                    "prefix": {
                         key: 'https://'+value
-                        }
-
                     }
+
+                }
                 preUrl['bool']['should'].append(seccion2)
                 q['query']['bool']['must'].append(preUrl)
 
-            else:    
-                if value=='Unassigned':
-                    value=''
+            else:
+                if value == 'Unassigned':
+                    value = ''
 
-                    seccion =  {
-                        "match":{
+                    seccion = {
+                        "match": {
                             key: value
-                            }
-
                         }
 
-                    if(key!='textoABuscar' and key!='page'):
+                    }
+
+                    if(key != 'textoABuscar' and key != 'page'):
                         q['query']['bool']['must'].append(seccion)
                 else:
-                    seccion =  {
-                        "match":{
+                    seccion = {
+                        "match": {
                             key: value
-                            }
-
                         }
 
-                    if(key!='textoABuscar' and key!='page'and value!=''):
+                    }
+
+                    if(key != 'textoABuscar' and key != 'page' and value != ''):
                         q['query']['bool']['must'].append(seccion)
 
-        #print('_get_by_multipleCounts')
-        #print(q)
+        # print('_get_by_multipleCounts')
+        # print(q)
 
         res = cls.es.conn.count(index="description",
-                                 doc_type=cls.__type__,
-                                 body=q)
-    
+                                doc_type=cls.__type__,
+                                body=q)
+
         return res['count']
 
-
     @classmethod
-    def _searchAndFilters(cls,**kwargs):
-        
-        page=kwargs.get("page")
-        initReg=(int(page)-1)*10
-        q= {
+    def _searchAndFilters(cls, **kwargs):
+
+        page = kwargs.get("page")
+        initReg = (int(page)-1)*10
+        q = {
             "sort": [
                 {
-                "updated": {
-                    "order": "desc",
-                    "ignore_unmapped": True
-                }
+                    "updated": {
+                        "order": "desc",
+                        "ignore_unmapped": True
+                    }
                 }
             ],
             "from": initReg,
             "size": PAGGINATION_SIZE,
             "query": {
-            "bool": {
-            "must":[
-            {
-            "prefix":{
-                "title":kwargs.get("textoABuscar")
+                "bool": {
+                    "must": [
+                        {
+                            "prefix": {
+                                "title": kwargs.get("textoABuscar")
+                            }
+                        }
+                    ]
                 }
             }
-            ]
-            }
-        }
         }
 
-        #Parametros de busqueda:
+        # Parametros de busqueda:
 
         i = 0
-
 
         """ "query": {
                 "query_string":{
@@ -1007,30 +944,26 @@ class Description(es.Model):
                 }
         } """
 
-      
         for key, value in kwargs.items():
             i += 1
 
-            
-            seccion =  {
-                "match":{
+            seccion = {
+                "match": {
                     key: value
-                    }
-
                 }
 
-            if(key!='textoABuscar' and key!='page' and value!=''):
+            }
+
+            if(key != 'textoABuscar' and key != 'page' and value != ''):
                 q['query']['bool']['must'].append(seccion)
 
-        #print('_searchAndFilters')   
-        #print(q)
-        
+        # print('_searchAndFilters')
+        # print(q)
 
         res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
                                  body=q)
         return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-
 
     def save(self, *args, **kwargs):
         _add_default_permissions(self)
@@ -1039,58 +972,47 @@ class Description(es.Model):
         # the document modeled already. If we don't we'll create a new one
         # If we do then we'll merge the supplied links into it.
 
-        
-
         super(Description, self).save(*args, **kwargs)
 
-
-
-
- 
-
-
     def updateFields(self, *args, **kwargs):
-        #_add_default_permissions(self)
+        # _add_default_permissions(self)
 
         # If the annotation includes document metadata look to see if we have
         # the document modeled already. If we don't we'll create a new one
         # If we do then we'll merge the supplied links into it.
 
-        
         q = {
-                "doc" : {
-                "title":self.title,
-                "description":self.description,
-                "keywords":self.keywords,
-                "padministration":self.padministration,
-                "urls":self['urls'],
-                "updated":datetime.datetime.now().replace(microsecond=0).isoformat()
-                }
-            } 
+            "doc": {
+                "title": self.title,
+                "description": self.description,
+                "keywords": self.keywords,
+                "padministration": self.padministration,
+                "urls": self['urls'],
+                "updated": datetime.datetime.now().replace(microsecond=0).isoformat()
+            }
+        }
 
-        super(Description, self).updateFields(body=q,*args, **kwargs)
-
+        super(Description, self).updateFields(body=q, *args, **kwargs)
 
     def updateModerators(self, *args, **kwargs):
-        #_add_default_permissions(self)
+        # _add_default_permissions(self)
 
         # If the annotation includes document metadata look to see if we have
         # the document modeled already. If we don't we'll create a new one
         # If we do then we'll merge the supplied links into it.
 
-        
         q = {
-                "doc" : {
-                "moderators":self['moderators'],
-                "updated":datetime.datetime.now().replace(microsecond=0).isoformat()
-                }
-            } 
+            "doc": {
+                "moderators": self['moderators'],
+                "updated": datetime.datetime.now().replace(microsecond=0).isoformat()
+            }
+        }
 
-        super(Description, self).updateFields(body=q,*args, **kwargs)
+        super(Description, self).updateFields(body=q, *args, **kwargs)
 
     @classmethod
     def search_raw(cls, query=None, params=None, raw_result=False,
-                   user=None, authorization_enabled=None,index='description'):
+                   user=None, authorization_enabled=None, index='description'):
         """Perform a raw Elasticsearch query
 
         Any ElasticsearchExceptions are to be caught by the caller.
@@ -1121,8 +1043,8 @@ class Description(es.Model):
             # Use the filtered query instead of the original
             query['query'] = filtered_query
 
-        res = super(Description, cls).search_raw(index=index,query=query, params=params,
-                                                raw_result=raw_result)
+        res = super(Description, cls).search_raw(index=index, query=query, params=params,
+                                                 raw_result=raw_result)
         return res
 
     @classmethod
@@ -1136,10 +1058,11 @@ class Description(es.Model):
         after = query.pop('after', None)
         before = query.pop('before', None)
 
-        q = super(Description, cls)._build_query(query, offset, limit, sort, order)
-        
+        q = super(Description, cls)._build_query(
+            query, offset, limit, sort, order)
+
         print(str(q))
-        
+
         # Create range query from before and/or after
         if before is not None or after is not None:
             clauses = q['query']['bool']['must']
@@ -1155,8 +1078,6 @@ class Description(es.Model):
             if before is not None:
                 created_range['range']['created']['lt'] = before
             clauses.append(created_range)
-
-        
 
         return q
 

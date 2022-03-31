@@ -43,16 +43,18 @@ tok2 = uuid.uuid4()
 APP_STATE = tok1.hex
 NONCE = tok2.hex
 
+
 @authInterlink.route("/login")
 def login():
 
-    #LLamo al componente de authentication para verificar que existe un usuario en session
-    usuario=get_current_user(request)
+    # LLamo al componente de authentication para verificar que existe un usuario en session
+    usuario = get_current_user(request)
 
-    #If the user is not logged in call a log in method of ath
-    if usuario==None:
+    # If the user is not logged in call a log in method of ath
+    if usuario == None:
 
-        paginaRedirigir=settings.REDIRECT_SERVICEPEDIA+url_for('authInterlink.dashboard')
+        paginaRedirigir = settings.REDIRECT_SERVICEPEDIA + \
+            url_for('authInterlink.dashboard')
 
         # url = 'http://localhost:8929'+'/login'
         # user_agent = {'User-agent': 'Mozilla/5.0'}
@@ -63,10 +65,11 @@ def login():
         # print(response.status_code)
 
         # return redirect(response.url)
-        
-        redirectToAuth=settings.AUTHINTERLINK_URL+'/login'+'?redirect_on_callback='+paginaRedirigir
+
+        redirectToAuth = settings.AUTHINTERLINK_URL + \
+            '/login'+'?redirect_on_callback='+paginaRedirigir
         #logging.info('Pagina de login:')
-        #logging.info(redirectToAuth)
+        # logging.info(redirectToAuth)
         return redirect(redirectToAuth)
 
     unique_id = usuario["sub"]
@@ -85,7 +88,7 @@ def login():
 
     session.pop('_flashes', None)
 
-     # la pagina que se pretende ingresar es:
+    # la pagina que se pretende ingresar es:
     paginaNext = ''
     if 'next' in session.keys():
         paginaNext = session['next']
@@ -94,8 +97,6 @@ def login():
         return redirect(paginaNext)
     else:
         return redirect(url_for("authInterlink.dashboard"))
-
-
 
 
 # @authInterlink.route("/loginDaniel")
@@ -130,14 +131,11 @@ def login():
 @login_required
 def logout():
 
-    #Quito el usuario loggeado del componente auth
+    # Quito el usuario loggeado del componente auth
 
-
-    #Quito el usuario de la session de flask
+    # Quito el usuario de la session de flask
     logout_user()
-    
-   
-    
+
     # #response = redirect(config["end_session_endpoint"])
     # payload = {'id_token_hint': session['id_token'],
     #            'post_logout_redirect_uri': settings.REDIRECT_SERVICEPEDIA+"/home",
@@ -154,11 +152,9 @@ def logout():
     # # return render_template("home.html")
     # # Por ahora queda asi.
     # return redirect(current_app.config["END_SESSION_ENDPOINT"])
-    paginaToRedirect=settings.REDIRECT_SERVICEPEDIA+url_for('views.inicio')
+    paginaToRedirect = settings.REDIRECT_SERVICEPEDIA+url_for('views.inicio')
 
     return redirect(settings.AUTHINTERLINK_URL+'/logout'+'?redirect_on_callback='+paginaToRedirect)
-
-
 
 
 @authInterlink.route("/about")
@@ -180,7 +176,7 @@ def dashboard():
             domain = urlparse(key).netloc
             if not (domain in urlList):
                 urlList.append(domain)
-    #print(urlList)
+    # print(urlList)
 
     vectorPAs = Description._get_uniqueValues(campo="padministration")
     paList = []
@@ -192,9 +188,9 @@ def dashboard():
 
         paList.append(key)
 
-    if not ( 'Global' in paList ):
+    if not ('Global' in paList):
         paList.insert(0, 'Global')
-    #print(paList)
+    # print(paList)
 
     textoABuscar = request.args.get("searchText")
     padministration = request.args.get("padministration")
@@ -205,13 +201,19 @@ def dashboard():
 
     totalRegistros = 0
 
-    res=Description._getDescriptionsUser_Stats_onSearch(textoABuscar=textoABuscar, padministration=padministration, domain=domain, registroInicial=registroInicial,user=current_user.email)
+    res = Description._getDescriptionsUser_Stats_onSearch(
+        textoABuscar=textoABuscar, padministration=padministration, domain=domain, registroInicial=registroInicial, user=current_user.email)
 
     totalRegistros = res['numRes']
     res = res['descriptions']
-    
 
-    
+    logging.info('El registro inicial es')
+    logging.info(registroInicial)
+    logging.info('Num of registers obtained')
+    logging.info(len(res))
+
+    logging.info('El numero de registro es ')
+    logging.info(totalRegistros)
 
     pagesNumbers = math.ceil(totalRegistros/10)
 
@@ -269,7 +271,7 @@ def moderate():
             domain = urlparse(key).netloc
             if not (domain in urlList):
                 urlList.append(domain)
-    #print(urlList)
+    # print(urlList)
 
     vectorPAs = Description._get_uniqueValues(campo="padministration")
     paList = []
@@ -280,9 +282,9 @@ def moderate():
             key = 'Unassigned'
 
         paList.append(key)
-    if not ( 'Global' in paList ):
+    if not ('Global' in paList):
         paList.insert(0, 'Global')
-    #print(paList)
+    # print(paList)
 
     textoABuscar = request.args.get("searchText")
     padministration = request.args.get("padministration")
@@ -358,7 +360,7 @@ def survey():
 def surveyInstantiator():
 
     # Redirecciono al editor:
-    #return redirect(current_app.config['SURVEYINTERLINK_URL']+"/assets/"+"instantiate")
+    # return redirect(current_app.config['SURVEYINTERLINK_URL']+"/assets/"+"instantiate")
     return redirect(settings.SURVEYINTERLINK_URL+"/assets/"+"instantiate")
 
 
@@ -437,78 +439,72 @@ def advanceSearch():
 
     return render_template("advanceSearch.html", user=current_user, anotations=res)
 
+
 @authInterlink.route('/genReport/<string:descriptionId>',)
 def genReport(descriptionId=None):
 
-    #Obtain description data:
+    # Obtain description data:
 
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
     fechaActual = datetime.datetime.now()
     fechaActual = fechaActual.strftime("%d/%m/%y")
 
-    #Obtain approved annotations of a description data:
-    listAnnotationsApproved = Annotation._get_AnnotationsApproved_by_Urls(listUrls=description['urls'])
-    listAnnotationsApproved= listAnnotationsApproved['annotations']
+    # Obtain approved annotations of a description data:
+    listAnnotationsApproved = Annotation._get_AnnotationsApproved_by_Urls(
+        listUrls=description['urls'])
+    listAnnotationsApproved = listAnnotationsApproved['annotations']
 
     doc = DocxTemplate('app/static/servicepediaReport_template.docx')
-    context = { 'dateReport' : fechaActual, 
-                'description_title':description['title'],
-                'shortDescription':description['description'],
-                'annotations':listAnnotationsApproved ,
-                'qent':'false',
-                'tent':'false',
-                'fent':'false',
-                'reportTitle':_('DESCRIPTION REPORT'),
-                'shortDescriptionlbl':_('Short Description'),
-                'term': _('TERM'),
-                'question':_('QUESTION'),
-                'feedback':_('FEEDBACK'),
-                'posted_by':_('Posted by'),
-                'websitepage':_('Website Page'),
-                'openingtext':_('Opening Text'),
-                'referencetext':_('Reference Text'),
-                'closingstatement':_('Closing Statement'),
-                'date':_('Date')
+    context = {'dateReport': fechaActual,
+               'description_title': description['title'],
+               'shortDescription': description['description'],
+               'annotations': listAnnotationsApproved,
+               'qent': 'false',
+               'tent': 'false',
+               'fent': 'false',
+               'reportTitle': _('DESCRIPTION REPORT'),
+               'shortDescriptionlbl': _('Short Description'),
+               'term': _('TERM'),
+               'question': _('QUESTION'),
+               'feedback': _('FEEDBACK'),
+               'posted_by': _('Posted by'),
+               'websitepage': _('Website Page'),
+               'openingtext': _('Opening Text'),
+               'referencetext': _('Reference Text'),
+               'closingstatement': _('Closing Statement'),
+               'date': _('Date')
 
-                }
+               }
     doc.render(context)
 
     name = datetime.datetime.now().strftime("%Y%m%dT%H%M%S")+"_reportFilled.docx"
     root = "app/Render/"+name
-    
+
     #logging.info('The 1 root is:')
     logging.error(root)
-    
 
     doc.save(root)
-    
-    
-    #Fix the correct folder:
+
+    # Fix the correct folder:
     root = "Render/"+name
 
     #logging.info('The 2 root is:')
     logging.error(root)
 
-    #Borro el archivo generado despues de que hago la descarga.
+    # Borro el archivo generado despues de que hago la descarga.
     @after_this_request
     def delete(response):
-        #logging.info('root:')
+        # logging.info('root:')
         logging.error(root)
 
         #logging.info('The 3 root is:')
         logging.error('app/'+root)
-        
+
         os.remove('app/'+root)
         return response
 
-    return send_file(root,name,as_attachment=True,
-                                    attachment_filename=os.path.basename(name))
-
-
-
-
-
-
+    return send_file(root, name, as_attachment=True,
+                     attachment_filename=os.path.basename(name))
 
 
 @authInterlink.route('/description/<string:descriptionId>',)
@@ -528,18 +524,16 @@ def description(descriptionId=None):
     if(categoria == None or categoria == 'all'):
         categoria = ''
 
-    
     stats = []
     # listUrlsPages = []
     # for itemUrl in description['urls']:
     #     url = itemUrl['url']
     #     listUrlsPages.append(url)
 
-        # Cargo las replies de cada annotacion:
+    # Cargo las replies de cada annotacion:
     stats = stats + \
         Annotation.annotationStats(Annotation, descriptionId=description['id'])
-    
-    
+
     res = []
     res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
                                       'InProgress': True, 'Archived': False, 'Approved': False}, descriptionId=description['id'], category=categoria, notreply=True, page=page)
@@ -586,9 +580,9 @@ def editDescription(descriptionId=None, option='Edit'):
             key = 'Unassigned'
 
         paList.append(key)
-    if not ( 'Global' in paList ):
+    if not ('Global' in paList):
         paList.insert(0, 'Global')
-    #print(paList)
+    # print(paList)
 
     description = Description._get_Descriptions_byId(id=descriptionId)[0]
 
@@ -600,7 +594,7 @@ def editDescription(descriptionId=None, option='Edit'):
 
 # Cargo las Notificaciones
     listNotifications, numRes = cargarNotifications()
-    return render_template("descriptionDetail.html", user=current_user, description=description, option=option, publicsa=paList, notifications=listNotifications, notificationNum=numRes,noShowMenEmpty=True)
+    return render_template("descriptionDetail.html", user=current_user, description=description, option=option, publicsa=paList, notifications=listNotifications, notificationNum=numRes, noShowMenEmpty=True)
 
 
 @authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>',)
@@ -738,13 +732,13 @@ def descriptionDetail():
             key = 'Unassigned'
 
         paList.append(key)
-        
-    if not ( 'Global' in paList ):
+
+    if not ('Global' in paList):
         paList.insert(0, 'Global')
-    #print(paList)
+    # print(paList)
 
     #logging.info('Me dice si el usuario es anonimo:')
-    #logging.info(current_user.is_anonymous)
+    # logging.info(current_user.is_anonymous)
 
     res = Annotation.search(query={'user': current_user.email})
 
@@ -854,8 +848,8 @@ def callback():
 def cargarNotifications():
     # Cargo las Notificaciones
     listNotifications = Notification._get_Notification_byModerCategory(
-        category="survey",user=current_user.email)
-  
+        category="survey", user=current_user.email)
+
     numRes = listNotifications['numRes']
     listNotifications = listNotifications['notifications']
     return listNotifications, numRes

@@ -12,7 +12,6 @@ class Settings(BaseSettings):
     AUTHINTERLINK_URL: str = os.getenv("AUTHINTERLINK_URL")
     PORT: str = os.getenv("PORT")
     HOST: str = os.getenv("HOST", "0.0.0.0")
-    
 
     DEBUG: bool = os.getenv("DEBUG")
     SECRET_KEY: str = os.getenv("SECRET_KEY")
@@ -60,27 +59,25 @@ class Settings(BaseSettings):
     DOMAIN: str
 
     #print('El dominio es')
-    #print(os.getenv("DOMAIN"))
+    # print(os.getenv("DOMAIN"))
 
-  
-
-    if(os.getenv("DOMAIN")== 'localhost'):
-    #Local Development
+    if(os.getenv("DOMAIN") == 'localhost'):
+        # Local Development
         REDIRECT_URI: str = os.getenv(
             "PROTOCOL") + os.getenv("DOMAIN") + os.getenv("BASE_PATH") + "/oidc_callback"
 
         REDIRECT_SERVICEPEDIA: str = os.getenv(
             "PROTOCOL") + os.getenv("DOMAIN") + os.getenv("BASE_PATH")
     else:
-    #Server will include https and the correct domain name
+        # Server will include https and the correct domain name
         REDIRECT_URI: str = os.getenv(
             "PROTOCOL") + os.getenv("VIRTUAL_HOST") + os.getenv("BASE_PATH") + "/oidc_callback"
 
         REDIRECT_SERVICEPEDIA: str = os.getenv(
             "PROTOCOL") + os.getenv("VIRTUAL_HOST") + os.getenv("BASE_PATH")
-        
-    #print(REDIRECT_URI)
-    #print(REDIRECT_SERVICEPEDIA)
+
+    # print(REDIRECT_URI)
+    # print(REDIRECT_SERVICEPEDIA)
 
     USERINFO_URI: str = os.getenv("USERINFO_URI")
 

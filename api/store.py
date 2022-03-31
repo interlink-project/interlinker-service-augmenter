@@ -193,10 +193,12 @@ def surveysIndex():
         user = None
 
     surveys = Survey._get_all()
-    
+
     return jsonify(surveys['surveys'])
 
 # READ
+
+
 @store.route('/surveys/<docid>')
 def read_survey(docid):
     survey = Survey.fetch(docid, index='survey')
@@ -228,20 +230,19 @@ def completeaSurvey(idAsset):
 def saveSurvey(idAsset):
 
     # api-endpoint
-    
-    URL = settings.SURVEYINTERLINK_URL+"/assets/"+idAsset
-    
-    #logging.info(URL)
-    r = requests.get(url = URL)
-    #logging.info(r)
-    data = r.json()
-    
-    #logging.info(data)
 
-    #Obtengo los datos del survey:
-    description=data['description']
+    URL = settings.SURVEYINTERLINK_URL+"/assets/"+idAsset
+
+    # logging.info(URL)
+    r = requests.get(url=URL)
+    # logging.info(r)
+    data = r.json()
+
+    # logging.info(data)
+
+    # Obtengo los datos del survey:
+    description = data['description']
     title = data['name']
-    
 
     # Create a new survey:
 
@@ -254,6 +255,7 @@ def saveSurvey(idAsset):
     newSurvey.save(index="survey")
 
     return redirect(url_for('views.survey'))
+
 
 @store.route('/updateSurvey')
 def updateSurvey():
@@ -441,7 +443,7 @@ def annotationsIndex():
     stateArchived = estados['Archived']
     stateApproved = estados['Approved']
 
-    justMyContributions=False
+    justMyContributions = False
     if "justMyContributions" in params:
         justMyContributions = params.get("justMyContributions")
 
@@ -459,7 +461,7 @@ def annotationsIndex():
         listUrl.append(url['url'])
     # Realizo la busqueda:
     annotations = Annotation._get_by_multiple(
-        Annotation, textoABuscar=textoABuscar, estados=estados, descriptionId=descriptionId, category=category, notreply=True, page=page, justMyContributions=justMyContributions,user=current_user.email)
+        Annotation, textoABuscar=textoABuscar, estados=estados, descriptionId=descriptionId, category=category, notreply=True, page=page, justMyContributions=justMyContributions, user=current_user.email)
 
     #nroRegistros= Annotation._get_by_multipleCounts(Annotation,textoABuscar=textoABuscar,estados=estados,url=descriptionUri,page=page)
     numRes = annotations['numRes']
@@ -484,7 +486,9 @@ def annotationsIndex():
 
     return jsonify({'annotations': annotations, 'nroRegistros': numRes})
 
-#READ
+# READ
+
+
 @store.route('/descriptions')
 def descriptionsShow():
     if current_app.config.get('AUTHZ_ON'):
@@ -494,10 +498,12 @@ def descriptionsShow():
         user = None
 
     descriptions = Description._get_all()
-    
+
     return jsonify(descriptions)
 
 # INDEX
+
+
 @store.route('/descriptions', methods=["POST"])
 def descriptionsIndex():
 
@@ -506,7 +512,7 @@ def descriptionsIndex():
     textoABuscar = params.get("textoABuscar")
     if(textoABuscar == None):
         textoABuscar = ""
-    
+
     padministration = params.get("padministration")
     if(padministration == None):
         padministration = ""
@@ -518,26 +524,23 @@ def descriptionsIndex():
     page = params.get("page")
     if(page == None):
         page = "1"
-    
+
     byuser = params.get("byuser")
-    if(byuser == None or byuser =='False'):
+    if(byuser == None or byuser == 'False'):
         descriptions = Description._get_by_multiple(
             textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain, page=page)
     else:
 
-        registroInicial=(page-1)*10+1
+        registroInicial = (int(page)-1)*10+1
 
         descriptions = Description._getDescriptionsUser_Stats_onSearch(
-            textoABuscar=textoABuscar, padministration=padministration, domain=domain, registroInicial=registroInicial,user=current_user.email)
-
-
+            textoABuscar=textoABuscar, padministration=padministration, domain=domain, registroInicial=registroInicial, user=current_user.email)
 
     nroRegistros = descriptions['numRes']
     descriptions = descriptions['descriptions']
     #nroRegistros= Description._get_by_multipleCounts(textoABuscar=textoABuscar,padministration=padministration,urlPrefix=domain)
 
     return jsonify({'descriptions': descriptions, 'nroRegistros': nroRegistros})
-
 
 
 @store.route('/description/<path:urlDescription>', methods=["POST"])
@@ -735,7 +738,7 @@ def search_annotations_raw():
 @store.route('/user', methods=['GET'])
 def getUser():
 
-    usuarioActivo=current_user.email if not current_user.is_anonymous else 'Anonymous' 
+    usuarioActivo = current_user.email if not current_user.is_anonymous else 'Anonymous'
 
     return jsonify(usuarioActivo)
 
