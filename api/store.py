@@ -523,7 +523,7 @@ def descriptionsIndex():
 
     page = params.get("page")
     if(page == None):
-        page = "1"
+        page = 1
 
     byuser = params.get("byuser")
     if(byuser == None or byuser == 'False'):
@@ -531,7 +531,10 @@ def descriptionsIndex():
             textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain, page=page)
     else:
 
-        registroInicial = (int(page)-1)*10+1
+        registroInicial = (int(page)-1)*10
+
+        logging.info(
+            'El registro inicial (/description post) es:'+str(registroInicial))
 
         descriptions = Description._getDescriptionsUser_Stats_onSearch(
             textoABuscar=textoABuscar, padministration=padministration, domain=domain, registroInicial=registroInicial, user=current_user.email)

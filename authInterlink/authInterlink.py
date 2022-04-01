@@ -261,61 +261,26 @@ def access(iduser, uemail):
 @login_required
 def moderate():
 
-    # Cargo los combos:
-
-    vectorUrls = Description._get_uniqueValues(campo="url")
-    urlList = []
-    for urls in vectorUrls:
-        key = urls["key"]
-        if(key != ""):
-            domain = urlparse(key).netloc
-            if not (domain in urlList):
-                urlList.append(domain)
-    # print(urlList)
-
-    vectorPAs = Description._get_uniqueValues(campo="padministration")
-    paList = []
-    for pas in vectorPAs:
-        key = pas["key"]
-
-        if key == "":
-            key = 'Unassigned'
-
-        paList.append(key)
-    if not ('Global' in paList):
-        paList.insert(0, 'Global')
-    # print(paList)
-
     textoABuscar = request.args.get("searchText")
-    padministration = request.args.get("padministration")
-    domain = request.args.get("domain")
 
     page = request.args.get("page", 1)
     registroInicial = (int(page)-1)*10
 
-    totalRegistros = 0
-    if(textoABuscar == None or textoABuscar == ''):
-        res = Description.search(offset=registroInicial)
-        totalRegistros = Description.count()
-    else:
-        res = Description._get_Descriptions(
-            textoABuscar=textoABuscar, padministration=padministration, url=domain, offset=registroInicial)
-        totalRegistros = Description._get_DescriptionsCounts(
-            textoABuscar=textoABuscar, padministration=padministration, url=domain)
+    res = Description._get_Descript_byModerEmail(
+        email=current_user.email, page=page)
 
-    res = Description._get_Descript_byModerEmail(email=current_user.email)
-    totalRegistros = Description._get_Descript_byModerEmailCounts(
-        email=current_user.email)
+    totalRegistros = res['numRes']
+    res = res['descriptions']
 
     pagesNumbers = math.ceil(totalRegistros/10)
 
     paginacion = {'page': page, 'pagesNumbers': pagesNumbers, 'totalRegisters': totalRegistros,
-                  'searchBox': textoABuscar, 'padministration': padministration, 'url': domain}
+                  'searchBox': textoABuscar}
 
     # Cargo las Notificaciones
     listNotifications, numRes = cargarNotifications()
 
-    return render_template("moderate.html", descriptions=res, urls=urlList, publicsa=paList, paginacion=paginacion, notifications=listNotifications, notificationNum=numRes)
+    return render_template("moderate.html", descriptions=res, paginacion=paginacion, notifications=listNotifications, notificationNum=numRes)
 
 
 @authInterlink.route("/survey")

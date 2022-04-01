@@ -1,3 +1,4 @@
+from flask import current_app
 from api import es, authz
 import datetime
 
@@ -331,6 +332,9 @@ class Description(es.Model):
         # Guardo el numero total de descriptions found:
         numTotalOfDescFound = len(listDescription)
 
+        current_app.logger.info(
+            'Guardo el numero total de descriptions found:'+str(numTotalOfDescFound))
+
         res = listDescription
 
         # Include Stats to show in the dashboard:
@@ -435,7 +439,20 @@ class Description(es.Model):
 
             itemDesc['progressTotal'] = round(progressTotal)
 
-        res = res[registroInicial:registroInicial+10]
+        current_app.logger.info(
+            'Los valores de res son :'+str(len(res)))
+
+        limitefinal = registroInicial+10
+        if(limitefinal > len(res)):
+            limitefinal = len(res)
+
+        res = res[registroInicial:limitefinal]
+
+        current_app.logger.info(
+            'Corto el listado en :'+str(registroInicial)+' ->'+str(limitefinal))
+
+        current_app.logger.info(
+            'Los valores de res despues filtrado :'+str(len(res)))
 
         resultado = {'descriptions': res, 'numRes': numTotalOfDescFound}
 
@@ -556,8 +573,17 @@ class Description(es.Model):
     @classmethod
     def _get_Descript_byModerEmail(cls, **kwargs):
 
-        q = {
+        page = kwargs.get("page")
 
+        if page == 'all':
+            initReg = 0
+            numRegxConsulta = 10000
+        else:
+            initReg = (int(page)-1)*10
+            numRegxConsulta = PAGGINATION_SIZE
+
+        q = {
+            "from": initReg,
             "query": {
                 "nested": {
                     "path": "moderators",
@@ -584,7 +610,13 @@ class Description(es.Model):
         res = cls.es.conn.search(index="description",
                                  doc_type=cls.__type__,
                                  body=q)
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+
+        descriptions = [cls(d['_source'], id=d['_id'])
+                        for d in res['hits']['hits']]
+        numRes = res['hits']['total']
+
+        resultado = {'descriptions': descriptions, 'numRes': numRes}
+        return resultado
 
     @classmethod
     def _get_Descript_byModerEmailCounts(cls, **kwargs):
