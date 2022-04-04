@@ -493,6 +493,23 @@ msgstr "Declaración de cierre"
 msgid "Date"
 msgstr "Fecha"
 
+#: templates/descriptionDetail.html:
+msgid "Would you like to a annotate a single page or a portal?"
+msgstr "Te gustaría anotar una página o un portal con múltiples páginas?"
+
+#: templates/descriptionDetail.html:
+msgid "Single Page"
+msgstr "Una página"
+
+#: templates/descriptionDetail.html:
+msgid "Portal"
+msgstr "Un portal"
+
+#: templates/descriptionDetail.html:
+msgid "It is only possible to add a URL, in case the description is of a single page"
+msgstr "Solamente es posible agregar un URL, en el caso de descripciones de una página."
+
+
 
 
 

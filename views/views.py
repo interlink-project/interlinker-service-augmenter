@@ -320,6 +320,13 @@ def saveDescription():
     userNombre = itemsDict.pop("usr")
     descriptionId = itemsDict.pop("descriptionId")
 
+    # Obtengo la opcion de tipo de Description
+    is_portal = False
+    if 'is_portal' in itemsDict.keys():
+        is_portal = itemsDict.pop("is_portal")
+        if is_portal == 'true':
+            is_portal = True
+
     interlinkIntegration = False
     if 'interlinkerPlataform' in itemsDict.keys():
         interlinkIntegration = True
@@ -373,7 +380,10 @@ def saveDescription():
 
     if descriptionId == '':
 
+        # ---------------------------------------------------------------------
         # Create:
+        # ---------------------------------------------------------------------
+
         perms = {'read': ['group:__world__']}
         moderat = []
 
@@ -392,7 +402,7 @@ def saveDescription():
         newdescription = Description(title=title, description=description,
                                      keywords=keywords, moderators=moderat,
                                      padministration=publicAdmin,
-                                     permissions=perms, urls=urls
+                                     permissions=perms, urls=urls, is_portal=is_portal
                                      )
 
         if(title == "" or description == "" or publicAdmin == ""):
@@ -415,6 +425,10 @@ def saveDescription():
                 "email": current_user.email
             })
 
+            # Guardo el tipo de portal
+            newdescription['is_portal'] = is_portal
+
+            # Actualizo la description
             newdescription.save(index="description")
             description = newdescription
             #flash("Record created successfully.", "info")
@@ -426,15 +440,18 @@ def saveDescription():
                 return redirect(url_for('authInterlink.description', descriptionId=description['id']))
 
     else:
-
+        # ---------------------------------------------------------------------
+        # Update:
+        # ---------------------------------------------------------------------
         editDescripcion = Description._get_Descriptions_byId(id=descriptionId)[
             0]
-        # Update:
+
         editDescripcion.title = title
         editDescripcion.description = description
         editDescripcion.keywords = keywords
         editDescripcion.padministration = publicAdmin
         editDescripcion.updated = todayDateTime
+        editDescripcion.is_portal = is_portal
 
         listUrlUpdate = editDescripcion['urls']
         listModificado = editDescripcion['urls']
@@ -825,6 +842,7 @@ def augment(rutaPagina, integrationInterlinker='False'):
     argumentos = request.args.to_dict()
     anotationSel = ''
     descriptionRef = ''
+    descripcionSel = None
 
     scriptToFocusParragraph = ''
     if('annotationSel' in argumentos.keys()):
@@ -833,6 +851,10 @@ def augment(rutaPagina, integrationInterlinker='False'):
 
     if('description' in argumentos.keys()):
         descriptionRef = argumentos.pop('description')
+        descripcionSel = Description._get_Descriptions_byId(id=descriptionRef)[
+            0]
+    if('integrated' in argumentos.keys()):
+        integrationInterlinker = argumentos.pop('integrated')
 
     if('integrationInterlinker' in argumentos.keys()):
         integrationInterlinker = argumentos.pop('integrationInterlinker')
@@ -1064,23 +1086,50 @@ def augment(rutaPagina, integrationInterlinker='False'):
     for a_Link in soup.find_all("a"):
         if a_Link.attrs.get("href"):
             hrefVal = a_Link.attrs.get("href")
-            if hrefVal.startswith('/'):
-                newURLVal = urljoin(rutaPagina, hrefVal)
+            if descripcionSel['is_portal'] == 'false':
+                # Quito los enlaces
+
+                newURLVal = rutaPagina
 
                 if isCaseSensitive:
                     newURLVal = newURLVal.lower()
 
-                a_Link.attrs['href'] = url_for(
-                    'views.augment', rutaPagina=newURLVal)+'?description='+descriptionRef
+                urlLink = url_for(
+                    'views.augment', rutaPagina=newURLVal)+'?description='+descriptionRef+'&integrated='+integrationInterlinker
+                a_Link.attrs['href'] = urlLink
+                a_Link.attrs['integrated'] = integrationInterlinker
+                a_Link.attrs['is_portal'] = 'false'
+                a_Link.attrs['onclick'] = "navegatetoPage(event)"
 
-            if hrefVal.startswith('https://') or hrefVal.startswith('http://'):
+            else:
 
-                # If the external link is http I change them to https to visualited well
-                if settings.DOMAIN != 'localhost':
-                    hrefVal.replace("http://", "https://")
+                # Pongo los enlaces
 
-                a_Link.attrs['href'] = url_for(
-                    'views.augment', rutaPagina=hrefVal)+'?description='+descriptionRef
+                if hrefVal.startswith('/'):
+                    newURLVal = urljoin(rutaPagina, hrefVal)
+
+                    if isCaseSensitive:
+                        newURLVal = newURLVal.lower()
+
+                    urlLink = url_for(
+                        'views.augment', rutaPagina=newURLVal)+'?description='+descriptionRef+'&integrated='+integrationInterlinker
+                    a_Link.attrs['href'] = urlLink
+                    a_Link.attrs['integrated'] = integrationInterlinker
+                    a_Link.attrs['is_portal'] = 'true'
+                    a_Link.attrs['onclick'] = "navegatetoPage(event)"
+
+                if hrefVal.startswith('https://') or hrefVal.startswith('http://'):
+
+                    # If the external link is http I change them to https to visualited well
+                    if settings.DOMAIN != 'localhost':
+                        hrefVal.replace("http://", "https://")
+
+                    urlLink = url_for(
+                        'views.augment', rutaPagina=hrefVal)+'?description='+descriptionRef+'&integrated='+integrationInterlinker
+                    a_Link.attrs['href'] = urlLink
+                    a_Link.attrs['integrated'] = integrationInterlinker
+                    a_Link.attrs['is_portal'] = 'true'
+                    a_Link.attrs['onclick'] = "navegatetoPage(event)"
 
     #print("Total CSS insertados en the page:", len(css_files))
 
@@ -1112,7 +1161,7 @@ def augment(rutaPagina, integrationInterlinker='False'):
 
     descriptionRedirect = ''
     metauserName = soup.new_tag(
-        'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=servicepediaPath, descriptionRef=descriptionRef, currentuser=usuarioActivo, integrationInterlinker=integrationInterlinker)
+        'meta', id='databackend', basepath=settings.BASE_PATH, servicepediapath=servicepediaPath, descriptionRef=descriptionRef, currentuser=usuarioActivo, integrationInterlinker=integrationInterlinker, is_portal=descripcionSel['is_portal'])
 
     # Agrego codificacion a la pagina:
 
@@ -1206,6 +1255,35 @@ def augment(rutaPagina, integrationInterlinker='False'):
     internacii18nScript = soup.new_tag(
         'script', src=url_for('static', filename='lib/gettext.js'))
 
+    # Agrego las librerias personalizadas:
+
+    # Defino la funcion de navegacion entre enlaces:
+    #  Muestro un mensaje que es una pagina única
+    onclickLinkScript = soup.new_tag('script')
+    onclickLinkTemp = """ 
+    function navegatetoPage(event) {
+        if(event.type=='click'){
+        event.preventDefault();
+        integrated = event.target.getAttribute('integrated');
+        is_portal = event.target.getAttribute('is_portal');
+        var href = event.currentTarget.href;
+        
+        if (is_portal == 'false'){
+            alert('This description is a single page, can´t navegate to other pages.');
+            return false;
+        }
+        
+        
+        sessionStorage.setItem("integrated",integrated);
+        window.location = href;
+        }
+    }
+
+    """
+
+    onclickLinkScript.string = onclickLinkTemp
+    bodyTag.append(onclickLinkScript)
+
     # Agrego librerias de estilos para funcionalidad (bootstrap)
     for itemScript in listScriptRelatedEstilos:
         logging.info('El estilo que trato de cargar es:')
@@ -1216,6 +1294,7 @@ def augment(rutaPagina, integrationInterlinker='False'):
     try:
         bodyTag.append(jqueryScript1)
         bodyTag.append(jqueryScript3)
+
         bodyTag.append(internacii18nScript)
         bodyTag.append(jqueryScript7)
         bodyTag.append(jqueryScript2)

@@ -64,14 +64,13 @@ def create_app():
 
     with app.test_request_context():
         try:
-            
-            #Borro todos las tablas:
-            # annotation.Annotation.drop_all()
-            # notification.Notification.drop_all(index="notification")
-            # survey.Survey.drop_all(index="survey")
-            # description.Description.drop_all(index="description")
-            # document.Document.drop_all()
 
+            # Borro todos las tablas:
+            annotation.Annotation.drop_all()
+            notification.Notification.drop_all(index="notification")
+            survey.Survey.drop_all(index="survey")
+            description.Description.drop_all(index="description")
+            document.Document.drop_all()
 
             # Creo los indices necesarios:
             annotation.Annotation.create_all()
@@ -125,7 +124,7 @@ def create_app():
         # header the browser transmits.  We support de/fr/en in this
         # example.  The best match wins.
 
-        return request.accept_languages.best_match(['en','lv','es','it'])
+        return request.accept_languages.best_match(['en', 'lv', 'es', 'it'])
 
         # return 'en'
 

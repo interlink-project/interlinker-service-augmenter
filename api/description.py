@@ -48,6 +48,11 @@ MAPPING = {
         "index": "not_analyzed"
     },
 
+    "is_portal": {
+        "type": "boolean",
+        "index": "not_analyzed"
+    },
+
     "url": {
         "type": "string",
         "index": "not_analyzed"
@@ -1020,6 +1025,7 @@ class Description(es.Model):
                 "keywords": self.keywords,
                 "padministration": self.padministration,
                 "urls": self['urls'],
+                "is_portal": self.is_portal,
                 "updated": datetime.datetime.now().replace(microsecond=0).isoformat()
             }
         }

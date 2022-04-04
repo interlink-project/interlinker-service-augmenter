@@ -495,3 +495,21 @@ msgstr "Noslēguma paziņojums"
 #: Report
 msgid "Date"
 msgstr "Datums"
+
+
+#: templates/descriptionDetail.html:
+msgid "Would you like to a annotate a single page or a portal?"
+msgstr "Vai vēlaties anotēt vienu lapu vai portālu?"
+
+
+#: templates/descriptionDetail.html:
+msgid "Single Page"
+msgstr "Viena tīmekļa lapa"
+
+#: templates/descriptionDetail.html:
+msgid "Portal"
+msgstr "Uz vietni"
+
+#: templates/descriptionDetail.html:
+msgid "It is only possible to add a URL, in case the description is of a single page"
+msgstr "Ir iespējams pievienot tikai URL, ja apraksts ir par vienu lapu."

@@ -89,38 +89,51 @@ Annotator.Plugin.Search = (function (_super) {
         .getElementById("databackend")
         .getAttribute("descriptionRef");
 
-      
-      var userlogged = sessionStorage.getItem("user")
+      var is_portal = document
+        .getElementById("databackend")
+        .getAttribute("is_portal");
 
-      adminPanelTxt= i18n_dict.admin_panel;
-      logIntxt= i18n_dict.log_in;
+      var userlogged = sessionStorage.getItem("user");
 
+      adminPanelTxt = i18n_dict.admin_panel;
+      logIntxt = i18n_dict.log_in;
 
-      var etiquetaBoton=`<i class='fa fa-home'></i> ${adminPanelTxt}`;
-      if(userlogged=="Anonymous"){
-        etiquetaBoton=logIntxt;
+      var etiquetaBoton = `<i class='fa fa-home'></i> ${adminPanelTxt}`;
+      if (userlogged == "Anonymous") {
+        etiquetaBoton = logIntxt;
       }
       //En el caso que sea la llamada desde el colaborative env:
-      
-      urlRef='';
-      if(integrationInterlinker=="True"){
-        etiquetaBoton=adminPanelTxt;
-        urlRef=`${servicepediaPath}/assets/${descriptionRef}/admin`;
-      }else{
-        urlRef=`${servicepediaPath}/description/${descriptionRef}`;
+
+      urlRef = "";
+      let logoViewer = "logo_servicepedia.png";
+      isHidden = "";
+
+      if (integrationInterlinker == "True") {
+        logoViewer = "logo_augmenter_allw.png";
+        etiquetaBoton = adminPanelTxt;
+        urlRef = `${servicepediaPath}/assets/${descriptionRef}/admin`;
+
+        //En el caso que no sea portal no mostrar el enlace al admin panel
+        if (is_portal == "false") {
+          $("#logoViewer").removeAttr("href");
+          urlRef = "";
+          isHidden = "hidden";
+        }
+      } else {
+        urlRef = `${servicepediaPath}/description/${descriptionRef}`;
       }
 
-      estaConectadoTxt= i18n_dict.is_connected;
-      resetTxt= i18n_dict.Reset;
+      estaConectadoTxt = i18n_dict.is_connected;
+      resetTxt = i18n_dict.Reset;
       //Adding a input box for search
       $("li.filter-panel").before(
         `
         
-        <a href = "${urlRef}" width='500px'><input type="button"  style="background-image: url('${servicepediaPath}/static/logo_augmenter_allw.png');background-size: 75%;width:90%;height:75px " class="botonIcon" /></a>
+        <a id='logoViewer' href = "${urlRef}" width='500px'><input type="button"  style="background-image: url('${servicepediaPath}/static/${logoViewer}');background-size: 75%;width:90%;height:75px " class="botonIcon" /></a>
         <br/>                    
         
         <div style="text-align: right;margin-right: 10%;" >
-          <a class="returnAdmin"  id="botonBackServicepedia" style="font-size: 14px;padding-left:5px" href = "${urlRef}">
+          <a class="returnAdmin"  id="botonBackServicepedia" style="font-size: 14px;padding-left:5px" href = "${urlRef}" ${isHidden}>
           ${etiquetaBoton}
           </a> 
         </div>
@@ -142,7 +155,7 @@ Annotator.Plugin.Search = (function (_super) {
           $("#usuarioConectado").html(data);
 
           if (data == "Anonymous") {
-            newUrl = servicepediaPath + "/description/"+descriptionRef;
+            newUrl = servicepediaPath + "/description/" + descriptionRef;
             $("#botonBackServicepedia").attr("href", newUrl);
           }
         },
