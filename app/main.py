@@ -66,11 +66,11 @@ def create_app():
         try:
 
             # Borro todos las tablas:
-            annotation.Annotation.drop_all()
-            notification.Notification.drop_all(index="notification")
-            survey.Survey.drop_all(index="survey")
-            description.Description.drop_all(index="description")
-            document.Document.drop_all()
+            # annotation.Annotation.drop_all()
+            # notification.Notification.drop_all(index="notification")
+            # survey.Survey.drop_all(index="survey")
+            # description.Description.drop_all(index="description")
+            # document.Document.drop_all()
 
             # Creo los indices necesarios:
             annotation.Annotation.create_all()
