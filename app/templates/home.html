@@ -61,8 +61,14 @@
 
           dateUpdated = new Date(dataItem.created);
 
+          linkDescription = "{{ url_for('authInterlink.description',descriptionId= 'DESCRIPTIONID') }}"
+          linkDescription = linkDescription.replace("DESCRIPTIONID",dataItem.id);
+
+          linktoDescriptionAdmin= "{{ url_for('views.augment',rutaPagina='+dataItem.url+') }}?description='DESCRIPTIONID'"                                    
+          linktoDescriptionAdmin = linktoDescriptionAdmin.replace("DESCRIPTIONID",dataItem.id);
           
-          $('#tablaDescriptions').append(' <tr> <td style="font-weight:bold;"> '+contador+' </td> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td> '+ISODateString(dateUpdated)+' </td> <td> {% if current_user.is_authenticated %} <a href="{{ url_for('authInterlink.description',descriptionId= '+dataItem.id+') }}" class="btn btn-outline-secondary" style="margin-left: 30%;margin-right: 30%;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% else %} <a href="{{ url_for('views.augment',rutaPagina='+dataItem.url+') }}?description='+dataItem.id+'"  class="btn btn-outline-secondary" style="margin-left: 30%;margin-right: 30%;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% endif %} </td></tr>')
+          $('#tablaDescriptions').append(`<tr> <td style="font-weight:bold;"> ${contador} </td> <td> ${dataItem.padministration} </td> <td> ${dataItem.title} </td>  <td> ${ISODateString(dateUpdated)} </td> <td> {% if current_user.is_authenticated %} <a href="${linkDescription}" class="btn btn-outline-secondary" style="margin-left: 30%;margin-right: 30%;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% else %} <a href="${linktoDescriptionAdmin}"  class="btn btn-outline-secondary" style="margin-left: 30%;margin-right: 30%;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% endif %} </td></tr>`);
+          //$('#tablaDescriptions').append(' <tr> <td style="font-weight:bold;"> '+contador+' </td> <td> '+dataItem.padministration+' </td> <td> '+dataItem.title+' </td>  <td> '+ISODateString(dateUpdated)+' </td> <td> {% if current_user.is_authenticated %} <a href="{{ url_for('authInterlink.description',descriptionId= '+dataItem.id+') }}" class="btn btn-outline-secondary" style="margin-left: 30%;margin-right: 30%;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% else %} <a href="{{ url_for('views.augment',rutaPagina='+dataItem.url+') }}?description='+dataItem.id+'"  class="btn btn-outline-secondary" style="margin-left: 30%;margin-right: 30%;" ><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a> {% endif %} </td></tr>')
         }
       
         $('#totalRegisters').text(numeroReg);
