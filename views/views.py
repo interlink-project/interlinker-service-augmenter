@@ -898,6 +898,39 @@ def augment(rutaPagina, integrationInterlinker='False'):
     except:
         print('Trato de cargar con utf-8')
 
+    # If the page is a single page try to load code:
+    # Working with React Pages.
+    if False:
+        from selenium.webdriver.chrome.options import Options
+        from selenium import webdriver
+        import time
+
+        DRIVER_PATH = "/chromedriver/chromedriver"
+
+        options = Options()
+        options.headless = True
+        # overcome limited resource problems
+        options.accept_insecure_certs = True
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--no-sandbox")
+        options.add_argument("start-maximized")
+
+        driver = webdriver.Chrome(options=options, executable_path=DRIVER_PATH)
+
+        driver.delete_all_cookies()
+        driver.implicitly_wait(15)
+        driver.maximize_window()
+
+        url = rutaPagina
+
+        driver.get(url)
+        time.sleep(5)  # Let the user actually see something!
+
+        pageSource = driver.find_element_by_xpath(
+            "//*").get_attribute("outerHTML")
+
+        resp_Contenido = pageSource
+
     # print(resp_Contenido.decode())
     #soup = BeautifulSoup(resp_Contenido, 'html5lib')
     #soup = BeautifulSoup(resp_Contenido, 'lxml')
