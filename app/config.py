@@ -64,14 +64,14 @@ class Settings(BaseSettings):
     if(os.getenv("DOMAIN") == 'localhost'):
         # Local Development
         REDIRECT_URI: str = os.getenv(
-            "PROTOCOL") + os.getenv("DOMAIN") + os.getenv("BASE_PATH") + "/oidc_callback"
+            "PROTOCOL") + os.getenv("DOMAIN") + os.getenv("BASE_PATH") + "/callback"
 
         REDIRECT_SERVICEPEDIA: str = os.getenv(
             "PROTOCOL") + os.getenv("DOMAIN") + os.getenv("BASE_PATH")
     else:
         # Server will include https and the correct domain name
         REDIRECT_URI: str = os.getenv(
-            "PROTOCOL") + os.getenv("VIRTUAL_HOST") + os.getenv("BASE_PATH") + "/oidc_callback"
+            "PROTOCOL") + os.getenv("VIRTUAL_HOST") + os.getenv("BASE_PATH") + "/callback"
 
         REDIRECT_SERVICEPEDIA: str = os.getenv(
             "PROTOCOL") + os.getenv("VIRTUAL_HOST") + os.getenv("BASE_PATH")
