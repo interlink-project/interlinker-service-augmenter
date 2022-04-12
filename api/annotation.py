@@ -903,6 +903,62 @@ class Annotation(es.Model):
         
         return resultado
 
+    @classmethod
+    def _deleteReplies(cls,**kwargs):
+        anotation=kwargs.get("annotation")
+        
+        listChildrenRep=[]
+        listChildrenRep = cls.getReplies(cls,anotation['id'],listChildrenRep)
+
+        #Delete all 
+        for idReply in listChildrenRep:
+            annotation = cls.fetch(idReply)
+            annotation.delete()
+
+        return 'borraTodosHijos'
+    
+
+
+    def getReplies(cls,annotationId,listChildrenRep):
+  
+        q={
+            "query": {
+                "bool": {
+                "must": [
+                    {
+                        "match":{
+                        "category":"reply"
+                        }
+                    }
+                    ,
+                    {
+                        "match":{
+                        "idAnotationReply":"annotation-"+annotationId
+                        }
+                    }
+                    
+                ]
+                }
+            }
+        }
+
+        res = cls.es.conn.search(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        numRes=res['hits']['total']
+
+        resultado={'annotations':annotations,'numRes':numRes}
+
+        if (numRes>0):
+            children = resultado['annotations']
+
+            for itemAnnotation in children:
+                listChildrenRep.append(itemAnnotation['id'])
+                listChildrenRep=cls.getReplies(cls,itemAnnotation['id'],listChildrenRep)
+
+
+        return listChildrenRep
 
 
         

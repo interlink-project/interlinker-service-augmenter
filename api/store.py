@@ -671,7 +671,13 @@ def delete_annotation(docid):
     if hasattr(g, 'before_annotation_delete'):
         g.before_annotation_delete(annotation)
 
+    
+    #Borro todas las replies
+    Annotation._deleteReplies(annotation=annotation)
+
+    #Booro la annotation.
     annotation.delete()
+
 
     if hasattr(g, 'after_annotation_delete'):
         g.after_annotation_delete(annotation)
