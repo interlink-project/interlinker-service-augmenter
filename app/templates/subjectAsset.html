@@ -425,7 +425,7 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
       {% if ns.ismoderator is true %}
       <button
         class="btn btn-outline-secondary bi-trash"
-        onclick="registrarEstadoAnnotation(event,annotationState=3, annotationId='{{ replyRep.id }}',objtype='annotation_state')"
+        onclick="registrarEstadoAnnotation(event,annotationState=1, annotationId='{{ replyRep.id }}',objtype='annotation_state')"
         type="button"
       ></button>
       {% endif%}
@@ -486,7 +486,7 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
         {% if ns.ismoderator is true %}
         <button
           class="btn btn-outline-secondary bi-trash"
-          onclick="registrarEstadoAnnotation(event,annotationState=3, annotationId='{{ replyRep.id }}',objtype='annotation_state')"
+          onclick="registrarEstadoAnnotation(event,annotationState=1, annotationId='{{ replyRep.id }}',objtype='annotation_state')"
           type="button"
         ></button>
         {% endif%}
