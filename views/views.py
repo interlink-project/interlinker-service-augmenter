@@ -1391,12 +1391,13 @@ def augment(rutaPagina, integrationInterlinker='False'):
 
             //Dejo unicamente la primera parte del uri
             uriAdressBase = '"""+rutaPagina+"""'; 
-            descriptionId = '"""+descriptionRef+"""'    
+            descriptionId = '"""+descriptionRef+"""';
+            state = 1;   //No mostrar los archivados
 
             console.log(uriAdressBase)
             $('body').annotator().annotator('addPlugin', 'Store',{
-                        annotationData: {uri:uriAdressBase,descriptionId:descriptionId},
-                        loadFromSearch: {uri:uriAdressBase,descriptionId:descriptionId}
+                        annotationData: {uri:uriAdressBase,descriptionId:descriptionId,not_state:state},
+                        loadFromSearch: {uri:uriAdressBase,descriptionId:descriptionId,not_state:state}
                         }
             );
 

@@ -501,20 +501,26 @@ def genReport(descriptionId=None):
 
     txtRaiz=''
     protocoltxt='http://'
-    if(settings.DOMAIN == "localhost"):
-        doc = DocxTemplate('static/servicepediaReport_template.docx')
-    else:
-        doc = DocxTemplate('app/static/servicepediaReport_template.docx')
-        txtRaiz='app/'
-        protocoltxt='https://'
+    # if(settings.DOMAIN == "localhost"):
+    #     doc = DocxTemplate('static/servicepediaReport_template.docx')
+    # else:
+    
+    doc = DocxTemplate('app/static/servicepediaReport_template.docx')
+    txtRaiz='app/'
+    protocoltxt='https://'
     
     #Agrego los hyperlinks (con el formato adecuado):
     for itemAnnotation in listAnnotationsApproved:
         enlaceTemp=itemAnnotation['uri']
-        enlaceTemptoPage= protocoltxt+settings.DOMAIN+'/augment/'+enlaceTemp+'?description='+descriptionId
-
+        enlaceTemptoPage= settings.REDIRECT_SERVICEPEDIA+'/augment/'+enlaceTemp+'?description='+descriptionId
+        
         rt = RichText('')
-        rt.add(enlaceTemp,url_id=doc.build_url_id(enlaceTemptoPage))
+
+        import urllib.parse
+        linkEncoded = urllib.parse.quote(enlaceTemptoPage)
+
+
+        rt.add(enlaceTemp,url_id=doc.build_url_id(linkEncoded))
         itemAnnotation['enlaceRich']=rt
 
     

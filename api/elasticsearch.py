@@ -257,6 +257,23 @@ def make_model(es):
 
 
 def _build_query(query, offset, limit, sort, order):
+
+    listqueryMust={}
+    listqueryNotMust={}
+
+    for attr, value in query.items():
+        print(attr, '=', value)
+        if (attr.startswith('not_')):
+            listqueryNotMust[attr[4:]]=value
+        else:
+            listqueryMust[attr]=value
+
+    
+    not_match_clauses= [{'match': {k: v}} for k, v in iteritems(listqueryNotMust)]
+
+    match_clauses = [{'match': {k: v}} for k, v in iteritems(listqueryMust)]
+
+
     # Create a match query for each keyword
     match_clauses = [{'match': {k: v}} for k, v in iteritems(query)]
 
@@ -278,7 +295,7 @@ def _build_query(query, offset, limit, sort, order):
         }}],
         'from': max(0, offset),
         'size': min(RESULTS_MAX_SIZE, max(0, limit)),
-        'query': {'bool': {'must': match_clauses}}
+        'query': {'bool': {'must': match_clauses,'must_not':not_match_clauses}}
     }
 
 
