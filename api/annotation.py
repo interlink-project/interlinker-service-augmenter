@@ -635,6 +635,88 @@ class Annotation(es.Model):
         return resultado
 
 
+    @classmethod
+    def _get_AnnotationsApproved_by_DescriptionIds(cls,**kwargs):
+        descriptionId=kwargs.pop('descriptionId')
+
+        q= {
+            "sort": [
+                {
+                "category": {
+                    "order": "desc",
+                    "ignore_unmapped": True
+                }
+                }
+            ],
+            "from": 0,
+            "size": 10000,
+            "query": {
+                "bool": {
+                "must":[]
+                }
+            }
+        }
+
+        #Que tengan una de las siguientes URIS:
+        filtroUriSection={
+            "bool": {
+                "should": []
+                }
+        }
+
+        #Filtro por descriptionIds
+        seccionDescId =  {
+            "match":{
+                "descriptionId": descriptionId
+                }
+            }    
+        q['query']['bool']['must'].append(seccionDescId)
+
+        # Not replies:
+        sectCategory={
+                    "match":{
+                        "category": "reply"
+                        }
+                    }
+
+        q['query']['bool']['must_not']=[]
+        q['query']['bool']['must_not'].append(sectCategory)
+
+
+        #Solamente los que tienen estados approvados (state=2)
+        valueState=2 
+                
+        seccionState =  {
+            "match":{
+                "state": valueState
+                }
+            }
+
+        
+        q['query']['bool']['must'].append(seccionState)
+
+        print(q)
+        
+        #Run the query:
+
+        res = cls.es.conn.search(index="annotator",
+                                 doc_type=cls.__type__,
+                                 body=q)
+        annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        numRes=res['hits']['total']
+
+
+        #Re formateo los campos text por que tienen tags y deben ser solamente textos.
+
+        for annotation in annotations:
+            soup=BeautifulSoup(annotation['text'], features="html.parser")
+            annotation['text']= soup.get_text()
+
+
+        resultado={'annotations':annotations,'numRes':numRes}
+        return resultado
+
+
 
     def _get_by_multiple(cls,**kwargs):
         
@@ -648,8 +730,14 @@ class Annotation(es.Model):
         justMyContributions=False
         user=''
 
-        initReg=(int(page)-1)*10
-        pgsize=PAGGINATION_SIZE
+        if page== 'all':
+            initReg=0
+            pgsize=10000
+        
+        else:
+            initReg=(int(page)-1)*10
+            pgsize=PAGGINATION_SIZE
+        
 
         if 'justMyContributions' in kwargs:
             justMyContributions=kwargs.pop("justMyContributions")
@@ -789,8 +877,13 @@ class Annotation(es.Model):
         resultado={'annotations':annotations,'numRes':numRes}
 
         #Redefino los valores de paginacion:
-        initReg=(int(page)-1)*10
-        pgsize=PAGGINATION_SIZE
+        if page == 'all':
+            initReg=0
+            pgsize=10000
+
+        else:
+            initReg=(int(page)-1)*10
+            pgsize=PAGGINATION_SIZE
 
         # Filtro unicamente las que he contribuido
         listAnnotations = []

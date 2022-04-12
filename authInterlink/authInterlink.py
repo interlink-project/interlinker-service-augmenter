@@ -7,7 +7,7 @@ from urllib.parse import urljoin, urlparse
 import datetime
 import uuid
 import os
-from docxtpl import DocxTemplate
+from docxtpl import DocxTemplate, RichText
 from flask import current_app, g
 from datetime import date
 
@@ -495,12 +495,31 @@ def genReport(descriptionId=None):
     fechaActual = fechaActual.strftime("%d/%m/%y")
 
     # Obtain approved annotations of a description data:
-    listAnnotationsApproved = Annotation._get_AnnotationsApproved_by_Urls(
-        listUrls=description['urls'])
+    listAnnotationsApproved = Annotation._get_AnnotationsApproved_by_DescriptionIds(
+        descriptionId=descriptionId)
     listAnnotationsApproved = listAnnotationsApproved['annotations']
 
-    doc = DocxTemplate('app/static/servicepediaReport_template.docx')
-    context = {'dateReport': fechaActual,
+    txtRaiz=''
+    protocoltxt='http://'
+    if(settings.DOMAIN == "localhost"):
+        doc = DocxTemplate('static/servicepediaReport_template.docx')
+    else:
+        doc = DocxTemplate('app/static/servicepediaReport_template.docx')
+        txtRaiz='app/'
+        protocoltxt='https://'
+    
+    #Agrego los hyperlinks (con el formato adecuado):
+    for itemAnnotation in listAnnotationsApproved:
+        enlaceTemp=itemAnnotation['uri']
+        enlaceTemptoPage= protocoltxt+settings.DOMAIN+'/augment/'+enlaceTemp+'?description='+descriptionId
+
+        rt = RichText('')
+        rt.add(enlaceTemp,url_id=doc.build_url_id(enlaceTemptoPage))
+        itemAnnotation['enlaceRich']=rt
+
+    
+    context = {
+               'dateReport': fechaActual,
                'description_title': description['title'],
                'shortDescription': description['description'],
                'annotations': listAnnotationsApproved,
@@ -523,7 +542,7 @@ def genReport(descriptionId=None):
     doc.render(context)
 
     name = datetime.datetime.now().strftime("%Y%m%dT%H%M%S")+"_reportFilled.docx"
-    root = "app/Render/"+name
+    root = txtRaiz+"Render/"+name
 
     #logging.info('The 1 root is:')
     logging.error(root)
@@ -543,9 +562,9 @@ def genReport(descriptionId=None):
         logging.error(root)
 
         #logging.info('The 3 root is:')
-        logging.error('app/'+root)
+        logging.error(txtRaiz+root)
 
-        os.remove('app/'+root)
+        os.remove(txtRaiz+root)
         return response
 
     return send_file(root, name, as_attachment=True,
@@ -653,10 +672,19 @@ def subjectPage(descriptionId=None, annotatorId=None):
 
     annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
 
-    nroReplies = Annotation.count(
-        query={'idReplyRoot': annotatorId, 'category': 'reply'})
-    replies = Annotation.search(
-        query={'idReplyRoot': annotatorId, 'category': 'reply'}, limit=nroReplies)
+    #Obtengo los replies de esta annotacion.
+
+
+    res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
+                                      'InProgress': True, 'Archived': False, 'Approved': True}, descriptionId=descriptionId, category='reply', notreply=False, page='all')
+
+    nroReplies=res['numRes']
+    replies=res['annotations']
+
+    # nroReplies = Annotation.count(
+    #     query={'idReplyRoot': annotatorId, 'category': 'reply'})
+    # replies = Annotation.search(
+    #     query={'idReplyRoot': annotatorId, 'category': 'reply'}, limit=nroReplies)
 
     nroRepliesOfAnnotation = nroReplies
     #nroRepliesOfAnnotation = Annotation.count(query={ '_id': description['id'] ,'category':'reply','idReplyRoot':annotatorId  })
