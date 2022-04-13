@@ -246,7 +246,17 @@ class Annotation(es.Model):
                                 "descriptionId": kwargs.pop("descriptionId")
                             }
                         }
-                    ]
+                        
+                    ],
+                    "must_not": [
+                        {
+                            "match": {
+                                "state": 1
+                            }
+                        }
+                        
+                    ],
+
                 }
             },
             "aggs": {
@@ -917,6 +927,22 @@ class Annotation(es.Model):
 
         return 'borraTodosHijos'
     
+    @classmethod
+    def _changeStateReplies(cls,**kwargs):
+        anotation=kwargs.get("annotation")
+        newstate=kwargs.get("newstate")
+        
+        listChildrenRep=[]
+        listChildrenRep = cls.getReplies(cls,anotation['id'],listChildrenRep)
+
+        #Delete all 
+        for idReply in listChildrenRep:
+            annotation = cls.fetch(idReply)
+            annotation['state'] = int(newstate)
+            annotation.updateState()
+
+        return 'Cambia todos los hijos a este estado.'
+    
 
 
     def getReplies(cls,annotationId,listChildrenRep):
@@ -959,6 +985,7 @@ class Annotation(es.Model):
 
 
         return listChildrenRep
+
 
 
         

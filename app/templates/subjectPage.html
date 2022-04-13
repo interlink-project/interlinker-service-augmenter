@@ -64,7 +64,7 @@
       $("#notificationBoxLabel").text("{{ _('Information') }}");
       $("#notificationBody").text("");
       $("#notificationBody").append(
-        "<div class='mb-3'> <label for='commentsChangeState' class='form-label'> {{ _('Please enter comments on your decision') }}. </label>      <textarea class='form-control' id='commentsChangeState' rows='3'></textarea>    </div>"
+        "<div class='mb-3'> <label for='commentsChangeState' class='form-label'> {{ _('Are you sure to archive this branch?') }}, {{ _('Please enter comments on your decision') }}. </label>      <textarea class='form-control' id='commentsChangeState' rows='3'></textarea>    </div>"
       );
 
       $("#notificationBody").append(
@@ -145,7 +145,7 @@
 
           $("#notificationAcceptBtn").hide();
           $("#notificationBox").modal("hide");
-          document.location.reload(true);
+          document.location.reload(true)
         }
       } else {
 
@@ -161,8 +161,7 @@
           $("#currentStateAnnotationText").text(getStateText(nuevoEstado));
           $("#notificationAcceptBtn").hide();
           $("#notificationBox").modal("hide");
-          
-          document.location.reload(true);
+          document.location.reload(true)
         }
       }
 

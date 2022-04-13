@@ -257,6 +257,7 @@ def make_model(es):
 
 
 def _build_query(query, offset, limit, sort, order):
+    # Create a match query for each keyword
 
     listqueryMust={}
     listqueryNotMust={}
@@ -273,9 +274,6 @@ def _build_query(query, offset, limit, sort, order):
 
     match_clauses = [{'match': {k: v}} for k, v in iteritems(listqueryMust)]
 
-
-    # Create a match query for each keyword
-    match_clauses = [{'match': {k: v}} for k, v in iteritems(query)]
 
     if len(match_clauses) == 0:
         # Elasticsearch considers an empty conjunction to be false..

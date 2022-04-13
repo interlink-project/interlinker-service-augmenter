@@ -738,6 +738,10 @@ def changeAnnotation(descriptionId=None, annotatorId=None, option=None):
             "user": current_user.email
         })
 
+        #Actualizo el estado a todos los comentarios de la branch:
+        #Pongo a todos los replies archivados (State=1)
+
+        annotation._changeStateReplies(annotation=annotation,newstate=1) 
         annotation['state'] = int(newstate)
         annotation.updateState()
 
