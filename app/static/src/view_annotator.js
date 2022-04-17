@@ -281,9 +281,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           annotationCSSReference + "> .annotator-textarea-controls"
         );
 
-       saveTxt= i18n_dict.Save;
-       cancelTxt= i18n_dict.Cancel;
-        
+        saveTxt = i18n_dict.Save;
+        cancelTxt = i18n_dict.Cancel;
 
         $(`<a href="#save" class="annotator-panel-save">${saveTxt}</a>`)
           .appendTo(control_buttons)
@@ -347,8 +346,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           annotationCSSReference + "> .annotator-textarea-controls"
         );
 
-        saveTxt= i18n_dict.Save;
-        cancelTxt= i18n_dict.Cancel;
+        saveTxt = i18n_dict.Save;
+        cancelTxt = i18n_dict.Cancel;
 
         $(`<a href="#save" class="annotator-panel-save">${saveTxt}</a>`)
           .appendTo(control_buttons)
@@ -358,10 +357,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           .bind("click", { annotation: item }, this.onCancelPanelReply);
       }
     };
-
-
-    
-
 
     AnnotatorViewer.prototype.tinymceActivation = function (selector) {
       tinymce.init({
@@ -389,7 +384,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       if (typeof this.annotator.plugins.RichEditor != "undefined") {
         current_annotation.text = tinymce.activeEditor.getContent();
         //tinymce.remove("#textarea-" + current_annotation.id);
-        tinymce.EditorManager.remove('.editable');
+        tinymce.EditorManager.remove(".editable");
 
         tinymce.activeEditor.setContent(current_annotation.text);
       } else {
@@ -414,7 +409,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       if (typeof this.annotator.plugins.RichEditor != "undefined") {
         textReply = tinymce.activeEditor.getContent();
         //tinymce.remove("#textareaReply-" + current_annotation.id);
-        tinymce.EditorManager.remove('.editable');
+        tinymce.EditorManager.remove(".editable");
         tinymce.activeEditor.setContent(textReply);
       } else {
         textReply = textareaReply.val();
@@ -511,7 +506,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
       if (typeof this.annotator.plugins.RichEditor != "undefined") {
         //tinymce.remove("#textarea-" + current_annotation.id);
-        tinymce.EditorManager.remove('.editable');
+        tinymce.EditorManager.remove(".editable");
         var textAnnotation =
           '<div class="anotador_text" ' +
           styleHeight +
@@ -550,7 +545,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
       if (typeof this.annotator.plugins.RichEditor != "undefined") {
         //tinymce.remove("#textareaReply-" + current_annotation.id);
-        tinymce.EditorManager.remove('.editable');
+        tinymce.EditorManager.remove(".editable");
 
         var textAnnotation =
           '<div class="anotador_text" ' + styleHeight + ">" + "" + "</div>";
@@ -849,72 +844,65 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         }*/
       });
       if (annotation.id != null) {
-        
         //Antes de quitar esta annotation tengo que quitar todas las anotaciones hijas
-        listAnnotationsTags=$(".container-anotacions").find(".annotator-marginviewer-element");
-        
-        
+        listAnnotationsTags = $(".container-anotacions").find(
+          ".annotator-marginviewer-element"
+        );
 
-        function getReplies(idAnnotation,listReplies){
+        function getReplies(idAnnotation, listReplies) {
           //Obtengo los hijos
-          listHijos=[];
-          for (let i = 0; i < listAnnotationsTags.length; i++){
-            itemTag=listAnnotationsTags[i];
-            
-            let hijoTag=itemTag['children'][0];
-            existeContainerReply=false;
-            if('flex-replyContainer' == hijoTag['className']){
-              existeContainerReply=true;
-            }
-            
-            if(existeContainerReply){
+          var listHijos = [];
+          for (let i = 0; i < listAnnotationsTags.length; i++) {
+            itemTag = listAnnotationsTags[i];
 
-              annotationId=itemTag.getAttribute('id');
-              annotationRef=hijoTag.getAttribute('idannotationref');
-              
-              if(annotationRef==annotationId){
-                listhijos.push(annotationId);
+            let hijoTag = itemTag["children"][0];
+            existeContainerReply = false;
+            if ("flex-replyContainer" == hijoTag["className"]) {
+              existeContainerReply = true;
+            }
+
+            if (existeContainerReply) {
+              annotationId = itemTag.getAttribute("id");
+              annotationRef = hijoTag.getAttribute("idannotationref");
+
+              if (annotationRef == "annotation-" + idAnnotation) {
+                listHijos.push(annotationId);
               }
-
             }
-            
           }
-          
-          
-          if(listHijos.length >0){
 
+          if (listHijos.length > 0) {
             listReplies.push(listHijos);
-            
+
             //Recorro cada hijo buscando relacionados:
 
-            for (itemHijo in listHijos){
-              listReplies=getReplies(itemHijo,listReplies)
+            for (itemHijo in listHijos) {
+              itemValue = listHijos[itemHijo];
 
+              if (itemValue === undefined) {
+              } else {
+                idHijo = itemValue.substring(11, itemValue.length);
+
+                listReplies = getReplies(idHijo, listReplies);
+              }
             }
-
           }
 
-
-          return listReplies;
-
+          return listReplies.flat();
         }
-
 
         //Remuevo todos los hijos
         //Obtengo hijos
-        var listReplies=[]
-        listReplies=getReplies(annotation.id,listReplies)
+        var listReplies = [];
+        listReplies = getReplies(annotation.id, listReplies);
+
         //Quito todos los hijos relacionados de la lista
-        for(itemReply in listReplies){
-          $("li").remove("#annotation-" + itemReply);
+        for (itemReply in listReplies) {
+          itemValor = listReplies[itemReply];
+          $("li").remove("#" + itemValor);
         }
 
-
         $("li").remove("#annotation-" + annotation.id);
-
-
-
-
       }
       $("#count-anotations").text(
         $(".container-anotacions").find(".annotator-marginviewer-element")
@@ -972,7 +960,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           .getAttribute("basepath");
 
         var edit_icon = "";
-        editTxt= i18n_dict.Edit;
+        editTxt = i18n_dict.Edit;
         if (updatePermission) {
           edit_icon =
             '<img src="' +
@@ -1035,11 +1023,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           '<div style="">' +
           '<span style="font-weight: 700;">' +
           annotation.user.split("@", 1) +
+          " id: " +
+          annotation.id +
+          " aRep: " +
+          annotation.idAnotationReply +
           "</span>" +
           "   (" +
           $.format.date(annotation.data_creacio, "MM/yyyy HH:mm") +
           ")" +
-          
           '<div style="width: 160px;height: 2px;border-bottom: 1px solid #d4d4d4;position: relative;" class="line"></div>' +
           "</div>" +
           '<div style="">' +
@@ -1062,7 +1053,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           "</div>" +
           "</div>";
         var annotation_layer =
-          '<div class="flex-replyContainer" idannotationref="'+ annotation.idAnotationReply+'">' +
+          '<div class="flex-replyContainer" idannotationref="' +
+          annotation.idAnotationReply +
+          '">' +
           annotation_layer1 +
           '<div class="annotator-marginviewer-footer">' +
           shared_annotation +
@@ -1141,12 +1134,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     };
 
     AnnotatorViewer.prototype.createAnnotationPanel = function (annotation) {
+      myAnotationTxt = i18n_dict.my_annotations;
+      sharedTxt = i18n_dict.Shared;
 
-      myAnotationTxt=i18n_dict.my_annotations;
-      sharedTxt=i18n_dict.Shared;
-
-      var checboxes =
-      `<label class="checkbox-inline"><input type="checkbox" id="type_own" rel="meAnotator"/>${myAnotationTxt}</label><label class="checkbox-inline">  <input type="checkbox" id="type_share" rel="shared"/>${sharedTxt}</label>`;
+      var checboxes = `<label class="checkbox-inline"><input type="checkbox" id="type_own" rel="meAnotator"/>${myAnotationTxt}</label><label class="checkbox-inline">  <input type="checkbox" id="type_share" rel="shared"/>${sharedTxt}</label>`;
 
       var annotation_layer =
         '<div  class="annotations-list-uoc" ><div id="annotations-panel"><span class="rotate etiquetaSolapa" title="' +
