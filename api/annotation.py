@@ -302,7 +302,7 @@ class Annotation(es.Model):
             "aggs": {
                 "group_by_uri": {
                     "terms": {
-                        "field": "descriptionid"
+                        "field": "uri"
                     }
                 }
             },
@@ -944,7 +944,7 @@ class Annotation(es.Model):
         return 'Cambia todos los hijos a este estado.'
     
 
-
+    #Obtengo solamente los reply que no han sido archivados.
     def getReplies(cls,annotationId,listChildrenRep):
   
         q={
@@ -963,7 +963,15 @@ class Annotation(es.Model):
                         }
                     }
                     
-                ]
+                ],
+                "must_not": [
+                        {
+                            "match": {
+                                "state": 1
+                            }
+                        }
+                        
+                    ]
                 }
             }
         }

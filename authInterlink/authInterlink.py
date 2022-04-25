@@ -606,7 +606,7 @@ def description(descriptionId=None):
 
     res = []
     res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
-                                      'InProgress': True, 'Archived': False, 'Approved': False}, descriptionId=description['id'], category=categoria, notreply=True, page=page)
+                                      'InProgress': True, 'Archived': False, 'Approved': True}, descriptionId=description['id'], category=categoria, notreply=True, page=page)
 
     numRes = 0
     numRes = res['numRes']
@@ -741,7 +741,7 @@ def changeAnnotation(descriptionId=None, annotatorId=None, option=None):
         #Actualizo el estado a todos los comentarios de la branch:
         #Pongo a todos los replies archivados (State=1)
 
-        annotation._changeStateReplies(annotation=annotation,newstate=1) 
+        annotation._changeStateReplies(annotation=annotation,newstate=newstate) 
         annotation['state'] = int(newstate)
         annotation.updateState()
 

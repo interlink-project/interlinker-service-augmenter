@@ -276,10 +276,10 @@ class Description(es.Model):
     @classmethod
     def _getDescriptionsUser_Stats_onSearch(cls, **kwargs):
 
-        user = kwargs.pop("user")
+        user_email = kwargs.pop("user")
 
         # Obtengo todas las anotaciones del usuario
-        listAnnotations = Annotation._get_Annotations_by_User(user=user)
+        listAnnotations = Annotation._get_Annotations_by_User(user=user_email)
 
         textoABuscar = kwargs.pop("textoABuscar")
         padministration = kwargs.pop("padministration")
@@ -314,7 +314,7 @@ class Description(es.Model):
 
         # Apply filters and the search options
         descriptionsModerator = Description._get_by_multiple(
-            textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain, isModerator=True, page="all", user=user)
+            textoABuscar=textoABuscar, padministration=padministration, urlPrefix=domain, isModerator=True, page="all", user=user_email)
 
         nroRegistros = descriptionsModerator['numRes']
 
