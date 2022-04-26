@@ -1158,6 +1158,18 @@ textAreaEditor.replaceWith(anotacio_capa);
           '<div class="' +
           anotation_color +
           ' anotator_color_box"></div>';
+
+        var annotation_stateCode = annotation.state;
+        var annotation_stateSpan='';
+        if(annotation_stateCode==2){
+          annotation_stateSpan='<span class="' +
+          class_label +
+          '" style="color:#98218c;">' +
+          'Aprobado' +
+          "</span>";
+        } 
+      
+
         annotation_layer +=
           '<div class="anotador_ident">' +
           "</div>" +
@@ -1169,11 +1181,13 @@ textAreaEditor.replaceWith(anotacio_capa);
           $.format.date(annotation.data_creacio, "dd/MM/yyyy HH:mm:ss") +
           '</div><div class="annotator-marginviewer-quote">' +
           annotation.quote +
-          '</div><div class="annotator-marginviewer-footer"><span class="' +
+          '</div><div class="annotator-marginviewer-footer">'+
+          '<span class="' +
           class_label +
           '">' +
           annotation.user.split("@", 1) +
           "</span>" +
+          annotation_stateSpan +
           shared_annotation +
           delete_icon +
           reply_icon +
