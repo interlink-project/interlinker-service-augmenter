@@ -1,3 +1,4 @@
+from operator import add
 from app.config import settings
 import logging
 from flask import Blueprint, jsonify, flash, send_file, send_from_directory, after_this_request
@@ -484,6 +485,18 @@ def advanceSearch():
 
     return render_template("advanceSearch.html", user=current_user, anotations=res)
 
+def addFormatConversation(listAnnotationsApproved,rootAnnotationId,level=0):
+    listFormatoCorrecto=[]
+    #recorro todas las anotaciones base
+    for itemAnnotation in listAnnotationsApproved:
+        if (itemAnnotation['idAnotationReply']=='annotation-'+rootAnnotationId):
+            itemAnnotation['level']=level
+            listFormatoCorrecto.append(itemAnnotation)
+            
+            listFormatoCorrecto.extend(addFormatConversation(listAnnotationsApproved,itemAnnotation['id'],level+1))
+
+    return listFormatoCorrecto
+
 
 @authInterlink.route('/genReport/<string:descriptionId>',)
 def genReport(descriptionId=None):
@@ -510,10 +523,27 @@ def genReport(descriptionId=None):
         listreplies=[]
         for itemReply in replies:
             if(itemReply['idReplyRoot'] == itemAnnotationApproved['id']):
+                
+                raw_html=itemReply['text']
+                from bs4 import BeautifulSoup
+                cleantext = BeautifulSoup(raw_html, "lxml").text
+                itemReply['text']=cleantext
+
+                userEmail=itemReply['user']
+                userlabel=userEmail.split('@',1)
+                itemReply['userlabel']=userlabel[0]
+
                 listreplies.append(itemReply)
+
+        listreplies=listreplies[::-1]
+        #Doy el formato indicado:
+        listreplies = addFormatConversation(listAnnotationsApproved=listreplies,rootAnnotationId=itemAnnotationApproved['id'])
+
         #Agrego todos los replies al listado
-        #itemAnnotationApproved['replies']=listreplies   
-        itemAnnotationApproved['replies']=[]  
+        itemAnnotationApproved['replies']=listreplies   
+        #itemAnnotationApproved['replies']=[]  
+    
+    
 
     txtRaiz=''
     protocoltxt='http://'
@@ -524,7 +554,7 @@ def genReport(descriptionId=None):
     doc = DocxTemplate('app/static/servicepediaReport_template.docx')
     txtRaiz='app/'
     protocoltxt='https://'
-    
+
     #Agrego los hyperlinks (con el formato adecuado):
     for itemAnnotation in listAnnotationsApproved:
         enlaceTemp=itemAnnotation['uri']
