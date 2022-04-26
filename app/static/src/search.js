@@ -93,7 +93,11 @@ Annotator.Plugin.Search = (function (_super) {
         .getElementById("databackend")
         .getAttribute("is_portal");
 
-      var userlogged = sessionStorage.getItem("user");
+      //var userlogged = sessionStorage.getItem("user");
+
+      var userlogged = document
+        .getElementById("databackend")
+        .getAttribute("currentuser");
 
       adminPanelTxt = i18n_dict.admin_panel;
       logIntxt = i18n_dict.log_in;

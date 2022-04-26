@@ -976,7 +976,12 @@ textAreaEditor.replaceWith(anotacio_capa);
 
       //Verifico los permisos:
 
-      var currentUser = sessionStorage.getItem("user");
+     // var currentUser = sessionStorage.getItem("user");
+
+      var currentUser = document
+        .getElementById("databackend")
+        .getAttribute("currentuser");
+
       //alert(currentUser);
 
       updatePermission = annotation.permissions.update.includes(currentUser);
@@ -1232,7 +1237,11 @@ textAreaEditor.replaceWith(anotacio_capa);
         myAnnotation = true;
       }
 
-      var currentUser = sessionStorage.getItem("user");
+      //var currentUser = sessionStorage.getItem("user");
+
+      var currentUser = document
+        .getElementById("databackend")
+        .getAttribute("currentuser");
 
       if (annotation.user == currentUser) {
         data_owner = "meAnotator";
