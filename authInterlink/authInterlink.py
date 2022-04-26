@@ -499,6 +499,22 @@ def genReport(descriptionId=None):
         descriptionId=descriptionId)
     listAnnotationsApproved = listAnnotationsApproved['annotations']
 
+    #Obtengo todos los replies de esta description:
+    res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
+                                        'InProgress': True, 'Archived': False, 'Approved': True}, descriptionId=descriptionId, category='reply', notreply=False, page='all')
+    replies=res['annotations']
+        
+
+    #Obtengo todas las replies approved:
+    for itemAnnotationApproved in  listAnnotationsApproved:
+        listreplies=[]
+        for itemReply in replies:
+            if(itemReply['idReplyRoot'] == itemAnnotationApproved['id']):
+                listreplies.append(itemReply)
+        #Agrego todos los replies al listado
+        #itemAnnotationApproved['replies']=listreplies   
+        itemAnnotationApproved['replies']=[]  
+
     txtRaiz=''
     protocoltxt='http://'
     # if(settings.DOMAIN == "localhost"):

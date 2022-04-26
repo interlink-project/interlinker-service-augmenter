@@ -834,10 +834,8 @@ def survey():
     return render_template("survey.html")
 
 
-# Cargo la pagina desde beautifulSoup y la muestro en pantalla
-@views.route("/augment/<path:rutaPagina>", methods=["GET", "POST"])
-def augment(rutaPagina, integrationInterlinker='False'):
 
+def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     # En el caso que se tiene interes en una anotacion en particular
     argumentos = request.args.to_dict()
     anotationSel = ''
@@ -1427,11 +1425,31 @@ def augment(rutaPagina, integrationInterlinker='False'):
     except:
         #print("Excepcion en ccs1")
         pass
+    return soup
+
+# Cargo la pagina desde beautifulSoup y la muestro en pantalla
+@views.route("/augment/<path:rutaPagina>", methods=["GET", "POST"])
+def augment(rutaPagina, integrationInterlinker='False'):
+
+    soup=mostrarPagina(rutaPagina,integrationInterlinker)
 
     headers = {'Content-Type': 'text/html',
                'x-annotator-auth-token': generate_token()}
 
     return make_response(soup.prettify(), 200, headers)
+
+# Cargo la pagina desde beautifulSoup y la muestro en pantalla
+@views.route("/augments/<path:rutaPagina>", methods=["GET", "POST"])
+@login_required
+def augments(rutaPagina, integrationInterlinker='False'):
+    
+    soup=mostrarPagina(rutaPagina,integrationInterlinker)
+
+    headers = {'Content-Type': 'text/html',
+               'x-annotator-auth-token': generate_token()}
+
+    return make_response(soup.prettify(), 200, headers)
+
 
 
 def generate_token():

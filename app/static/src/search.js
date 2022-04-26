@@ -99,9 +99,7 @@ Annotator.Plugin.Search = (function (_super) {
       logIntxt = i18n_dict.log_in;
 
       var etiquetaBoton = `<i class='fa fa-home'></i> ${adminPanelTxt}`;
-      if (userlogged == "Anonymous") {
-        etiquetaBoton = logIntxt;
-      }
+      
       //En el caso que sea la llamada desde el colaborative env:
 
       urlRef = "";
@@ -121,6 +119,12 @@ Annotator.Plugin.Search = (function (_super) {
         }
       } else {
         urlRef = `${servicepediaPath}/description/${descriptionRef}`;
+      }
+
+      if (userlogged == "Anonymous") {
+        etiquetaBoton = logIntxt;
+        urlRef = window.location.href;
+        urlRef = urlRef.replace('/augment/', '/augments/')
       }
 
       estaConectadoTxt = i18n_dict.is_connected;
@@ -155,7 +159,10 @@ Annotator.Plugin.Search = (function (_super) {
           $("#usuarioConectado").html(data);
 
           if (data == "Anonymous") {
-            newUrl = servicepediaPath + "/description/" + descriptionRef;
+            //newUrl = servicepediaPath + "/description/" + descriptionRef;
+            
+            newUrl = window.location.href;
+            newUrl = newUrl.replace('/augment/', '/augments/')
             $("#botonBackServicepedia").attr("href", newUrl);
           }
         },
