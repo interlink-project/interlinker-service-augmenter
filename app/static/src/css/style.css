@@ -227,7 +227,11 @@ body {
   float: left !important;
   height: 12px !important;
   margin-bottom: 4px !important;
-  width: 99% !important;
+  width: 85% !important;
+}
+
+.anotator_chevron_button {
+  height: 10px !important;
 }
 
 div.annotations-list-uoc {

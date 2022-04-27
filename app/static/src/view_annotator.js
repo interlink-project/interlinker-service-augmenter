@@ -57,9 +57,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       annotationDeleted: "onAnnotationDeleted",
       annotationReply: "onAnnotationReply",
       annotationUpdated: "onAnnotationUpdated",
+      annotationCollapse: "onAnnotationCollapse",
       ".annotator-viewer-delete click": "onDeleteClick",
       ".annotator-viewer-edit click": "onEditClick",
       ".annotator-viewer-reply click": "onReplyClick",
+      ".annotator-viewer-collapse click": "onCollapseClick",
       ".annotator-viewer-delete mouseover": "onDeleteMouseover",
       ".annotator-viewer-delete mouseout": "onDeleteMouseout",
       ".annotator-viewer-reply mouseover": "onReplyMouseover",
@@ -86,6 +88,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       this.onReplyMouseover = __bind(this.onReplyMouseover, this);
       this.onReplyMouseout = __bind(this.onReplyMouseout, this);
 
+      this.onCollapseClick = __bind(this.onCollapseClick, this);
       this.onCancelPanel = __bind(this.onCancelPanel, this);
       this.onSavePanel = __bind(this.onSavePanel, this);
 
@@ -155,6 +158,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       return this.onButtonClick(event, "reply");
     };
 
+    AnnotatorViewer.prototype.onCollapseClick = function (event) {
+      event.stopPropagation();
+      this.click;
+      
+      return this.onButtonClick(event, "collapse");
+    };
+
     AnnotatorViewer.prototype.onEditClick = function (event) {
       event.stopPropagation();
       return this.onButtonClick(event, "edit");
@@ -168,6 +178,157 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         .getElementById("databackend")
         .getAttribute("servicepediapath");
 
+        
+
+
+      if (type == "collapse") {
+          //Obtengo el codigo de la annotation root to collapse
+          anotationTagId=item[0]['id'];
+
+          
+          //Pongo la imagen en el boton de compresion
+          itemTagAnnotBtn=$(event.target);
+
+          valueTempVal=itemTagAnnotBtn[0]['attributes'][4];
+          
+          if (valueTempVal !== undefined){
+
+          iconoBtn=itemTagAnnotBtn[0]['attributes'][4]['value'].split(" ")[1];
+        
+            if(iconoBtn == "bi-chevron-up"){
+              newcontent='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"></path></svg>';
+              itemTagAnnotBtn.empty().append(newcontent);
+
+              itemTagAnnotBtn[0]['attributes'][4]['value']='bi bi-chevron-down'
+            }
+            else{
+              newcontent='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"></path></svg>';
+              itemTagAnnotBtn.empty().append(newcontent);
+
+              itemTagAnnotBtn[0]['attributes'][4]['value']='bi bi-chevron-up'
+            }
+         
+          }
+          
+     
+
+          
+
+          //Obtengo todos los replies de este tag
+
+          function getReplies(idAnnotation, listReplies) {
+            //Obtengo los hijos
+            var listHijos = [];
+            var listAnnotationsTags=$("li.annotator-marginviewer-element");
+            for (let i = 0; i < listAnnotationsTags.length; i++) {
+              itemTag = listAnnotationsTags[i];
+  
+              let hijoTag = itemTag["children"][0];
+              existeContainerReply = false;
+              if ("flex-replyContainer" == hijoTag["className"]) {
+                existeContainerReply = true;
+              }
+  
+              if (existeContainerReply) {
+                annotationId = itemTag.getAttribute("id");
+                annotationRef = hijoTag.getAttribute("idannotationref");
+  
+                if (annotationRef == idAnnotation) {
+                  listHijos.push(annotationId);
+                }
+              }
+            }
+  
+            if (listHijos.length > 0) {
+              listReplies.push(listHijos);
+  
+              //Recorro cada hijo buscando relacionados:
+  
+              for (itemHijo in listHijos) {
+                itemValue = listHijos[itemHijo];
+  
+                if (itemValue === undefined) {
+                } else {
+                  idHijo = itemValue;
+  
+                  listReplies = getReplies(idHijo, listReplies);
+                }
+              }
+            }
+  
+            return listReplies.flat();
+          }
+
+          //Remuevo todos los hijos
+          //Obtengo hijos
+          var listReplies = [];
+          listReplies = getReplies(anotationTagId, listReplies);
+
+          
+
+          for (const key in listReplies) {
+            tagAnnot = document.getElementById(listReplies[key]);
+
+            //componentTagConflict= $("li.annotator-marginviewer-element"+'#'+listReplies[key]);
+              
+
+
+            if (tagAnnot.hidden == true) {
+              
+              tagAnnot.hidden = false;
+              
+              //With Jquery
+              $("li.annotator-marginviewer-element"+'#'+listReplies[key]).addClass("found");
+              $("li.annotator-marginviewer-element"+'#'+listReplies[key]).show();
+            
+            } else {
+  
+              tagAnnot.hidden = true;
+              
+              //With Jquery
+              $("li.annotator-marginviewer-element"+'#'+listReplies[key]).removeClass("found");
+              $("li.annotator-marginviewer-element"+'#'+listReplies[key]).hide();
+            }
+
+          }
+
+
+          //Obtengo el listado de todos los tags de anotaciones
+          // var listaAnnotations=$("li.annotator-marginviewer-element");
+          // for (const key in listaAnnotations) {
+
+          //   tagAnnot=document.getElementById(listaAnnotations[key].getAttribute('id'));
+
+          //   if (tagAnnot.hasAttribute('idlink')){
+
+          //     itemAnnotationId=listaAnnotations[key].getAttribute('idlink');
+          //     if(itemAnnotationId==anotationTagId){
+
+          //       tagAnnot=document.getElementById(listaAnnotations[key].getAttribute('id'));
+                
+
+          //       if(tagAnnot.hidden == true){
+          //         tagAnnot.hidden = false;
+          //       }else{
+          //         tagAnnot.hidden = true;
+          //       }
+                
+            
+          //     }
+
+          //   }
+          // }
+
+/*
+if(divreply.is(":hidden")){
+        divreply.attr('hidden', false);
+      }
+*/
+
+          return item.data("annotation");
+      }
+      
+      
       if (type == "delete") {
         return this.annotator.deleteAnnotation(item.data("annotation"));
       }
@@ -453,6 +614,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         .getAttribute("currentuser");
       anotacionReply.user = currentuser;
 
+      anotacionReply.permissions.delete=[currentuser];
 
       anotacionReply.category = "reply";
 
@@ -968,6 +1130,11 @@ textAreaEditor.replaceWith(anotacio_capa);
       );
     };
 
+    AnnotatorViewer.prototype.onAnnotationCollapse = function (annotation) {
+      alert('Aqui si llego');
+    };
+
+
     AnnotatorViewer.prototype.mascaraAnnotation = function (annotation) {
       if (!annotation.data_creacio) annotation.data_creacio = $.now();
 
@@ -1157,7 +1324,10 @@ textAreaEditor.replaceWith(anotacio_capa);
           '<div class="annotator-marginviewer-text">' +
           '<div class="' +
           anotation_color +
-          ' anotator_color_box"></div>';
+          ' anotator_color_box"> '+
+          '</div>'+
+          '<button type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"></path></svg></button>'
+          ;
 
         var annotation_stateCode = annotation.state;
         var annotation_stateSpan='';
@@ -1226,12 +1396,14 @@ textAreaEditor.replaceWith(anotacio_capa);
       annotation
     ) {
       var anotation_reference = null;
+      var anotation_link = null;
       var data_owner = "meAnotator";
       var data_type = "";
       var myAnnotation = false;
 
       if (annotation.id != null) {
         anotation_reference = "annotation-" + annotation.id;
+        anotation_link = annotation.idAnotationReply;
       } else {
         annotation.id = this.uniqId();
         //We need to add this id to the text anotation
@@ -1270,7 +1442,11 @@ textAreaEditor.replaceWith(anotacio_capa);
         data_owner +
         '" id="' +
         anotation_reference +
-        '">' +
+        '"'+
+        '" idlink="' +
+        anotation_link +
+        '"'+
+        '>' +
         this.mascaraAnnotation(annotation) +
         "</li>";
       var malert = i18n_dict.anotacio_lost;
