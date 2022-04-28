@@ -179,7 +179,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         .getAttribute("servicepediapath");
 
         
-
+      var opcionCollapse="expandir";
 
       if (type == "collapse") {
           //Obtengo el codigo de la annotation root to collapse
@@ -200,6 +200,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
               itemTagAnnotBtn.empty().append(newcontent);
 
               itemTagAnnotBtn[0]['attributes'][4]['value']='bi bi-chevron-down'
+              opcionCollapse="colapsar";
             }
             else{
               newcontent='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"></path></svg>';
@@ -271,9 +272,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
             //componentTagConflict= $("li.annotator-marginviewer-element"+'#'+listReplies[key]);
               
+            if (opcionCollapse=="expandir"){
 
-
-            if (tagAnnot.hidden == true) {
+           // if (tagAnnot.hidden == true) {
+            
+            iconoBtn=tagAnnot.getAttribute('class').value;// [0]['attributes'][4]['value'].split(" ")[1];
               
               tagAnnot.hidden = false;
               
@@ -1029,6 +1032,93 @@ textAreaEditor.replaceWith(anotacio_capa);
         $(".container-anotacions").find(".annotator-marginviewer-element")
           .length
       );
+      
+      //Agrego los numeros de rep a los nodos:
+      
+      //Obtengo todas las anotaciones
+      const listAnnotationsTags = $(".container-anotacions").find(
+        ".annotator-marginviewer-element"
+      );
+
+ 
+      var listIds = [];
+      for (let i = 0; i < listAnnotationsTags.length; i++) {
+        itemTag = listAnnotationsTags[i];
+        annotationId = itemTag.getAttribute("id");
+        listIds.push(annotationId);
+      }
+
+
+
+      function getReplies(idAnnotation, listReplies) {
+        //Obtengo los hijos
+        var listHijos = [];
+        for (let i = 0; i < listAnnotationsTags.length; i++) {
+          itemTag = listAnnotationsTags[i];
+
+          let hijoTag = itemTag["children"][0];
+          existeContainerReply = false;
+          if ("flex-replyContainer" == hijoTag["className"]) {
+            existeContainerReply = true;
+          }
+
+          if (existeContainerReply) {
+            annotationId = itemTag.getAttribute("id");
+            annotationRef = hijoTag.getAttribute("idannotationref");
+
+            if (annotationRef ==  idAnnotation) {
+              listHijos.push(annotationId);
+            }
+          }
+        }
+
+        if (listHijos.length > 0) {
+          listReplies.push(listHijos);
+
+          //Recorro cada hijo buscando relacionados:
+
+          for (itemHijo in listHijos) {
+            itemValue = listHijos[itemHijo];
+
+            if (itemValue === undefined) {
+            } else {
+              idHijo = itemValue.substring(11, itemValue.length);
+
+              listReplies = getReplies(idHijo, listReplies);
+            }
+          }
+        }
+
+        return listReplies.flat();
+      }
+
+
+
+      listIds.forEach(function (item, index) {
+        
+        var listReplies = [];
+
+        listHijos = getReplies(item, listReplies);
+        idAnnotation=item.substring(11);
+        if (listHijos.length > 0) {
+        
+          $('#nrep-'+idAnnotation).prepend('('+listHijos.length+')');
+          
+        }else{
+         
+          $('#nrep-'+idAnnotation).hide();
+         
+        }
+
+      });
+      
+
+     
+
+        
+      
+
+
     };
 
     AnnotatorViewer.prototype.onAnnotationDeleted = function (annotation) {
@@ -1267,6 +1357,10 @@ textAreaEditor.replaceWith(anotacio_capa);
           );
 
         var annotation_layer1 =
+          '<div id="cont-'+annotation.id+'"  style="display:grid;align-self:end;min-height:18px;grid-template-columns: repeat(1,2fr);width:50px;min-width: 50px;background-color: #f5f5f5;">'+
+          //'<span id="nrep-'+annotation.id+'"> </span>' +
+          '<button  id="nrep-'+annotation.id+'" type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"></path></svg></button> '+
+          '</div>'+
           '<div class="flex-replyBox">' +
           //'<div style="border-radius: 3px;flex-basis:3px;background-color:#d4d4d4;width:3.58px;" ></div>'+
           textoLineasNiveles +
@@ -1275,7 +1369,7 @@ textAreaEditor.replaceWith(anotacio_capa);
           "</div>" +
           "</div>";
         var annotation_layer =
-          '<div class="flex-replyContainer" idannotationref="' +
+          '<div class="flex-replyContainer" style="background-color: #f5f5f5;" idannotationref="' +
           annotation.idAnotationReply +
           '">' +
           annotation_layer1 +
@@ -1322,11 +1416,10 @@ textAreaEditor.replaceWith(anotacio_capa);
       } else {
         var annotation_layer =
           '<div class="annotator-marginviewer-text">' +
-          '<div class="' +
-          anotation_color +
-          ' anotator_color_box"> '+
-          '</div>'+
-          '<button type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"></path></svg></button>'
+          '<div  style="display: flex;width:100%;min-width:100%;">'+
+            '<div class="' + anotation_color +' anotator_color_box"> '+'</div>'+
+            '<button id="nrep-'+annotation.id+'" type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"></path></svg></button>'+
+          '</div>'
           ;
 
         var annotation_stateCode = annotation.state;

@@ -86,7 +86,7 @@ body {
 .flex-replyBox{
   display:flex;
   background-color: #f5f5f5;
-  padding: 10px;
+  padding-left: 10px;
   /*border:1px solid gray;*/
   align-items: stretch;
   
@@ -227,7 +227,7 @@ body {
   float: left !important;
   height: 12px !important;
   margin-bottom: 4px !important;
-  width: 85% !important;
+  width: 83% !important;
 }
 
 .anotator_chevron_button {
