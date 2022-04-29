@@ -181,35 +181,33 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         
       var opcionCollapse="expandir";
 
+      //Iconos de expand and collapse
+      const labelExpand='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg>';
+      const labelCollapse='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path></svg>';
+                
+
       if (type == "collapse") {
           //Obtengo el codigo de la annotation root to collapse
           anotationTagId=item[0]['id'];
 
-          
-          //Pongo la imagen en el boton de compresion
-          itemTagAnnotBtn=$(event.target);
+          justId=anotationTagId.substring(11);
+          let codText=$('#nrep-'+justId).attr("class");
+          let result = codText.includes('isexpand');
 
-          valueTempVal=itemTagAnnotBtn[0]['attributes'][4];
-          
-          if (valueTempVal !== undefined){
+          if(result){
+            opcionCollapse="colapsar";
+            $('#nrep-'+justId).empty().append(labelCollapse);
+            $('#nrep-'+justId).addClass('iscollapsed');
+            $('#nrep-'+justId).removeClass('isexpand');
 
-          iconoBtn=itemTagAnnotBtn[0]['attributes'][4]['value'].split(" ")[1];
-        
-            if(iconoBtn == "bi-chevron-up"){
-              newcontent='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"></path></svg>';
-              itemTagAnnotBtn.empty().append(newcontent);
-
-              itemTagAnnotBtn[0]['attributes'][4]['value']='bi bi-chevron-down'
-              opcionCollapse="colapsar";
-            }
-            else{
-              newcontent='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"></path></svg>';
-              itemTagAnnotBtn.empty().append(newcontent);
-
-              itemTagAnnotBtn[0]['attributes'][4]['value']='bi bi-chevron-up'
-            }
-         
+          }else{
+            $('#nrep-'+justId).empty().append(labelExpand);
+            $('#nrep-'+justId).addClass('isexpand');
+            $('#nrep-'+justId).removeClass('iscollapsed');
           }
+          
+          
+
           
      
 
@@ -274,16 +272,34 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
               
             if (opcionCollapse=="expandir"){
 
+              
+
            // if (tagAnnot.hidden == true) {
             
-            iconoBtn=tagAnnot.getAttribute('class').value;// [0]['attributes'][4]['value'].split(" ")[1];
+            iconoBtn=tagAnnot.getAttribute('class');// [0]['attributes'][4]['value'].split(" ")[1];
+            idRep=tagAnnot.getAttribute('id').substring(11);
+
+              //Muestro solamente los hijos del primer nivel:
+
+              if(tagAnnot.getAttribute('idlink')==anotationTagId){
+                tagAnnot.hidden = false;
               
-              tagAnnot.hidden = false;
-              
-              //With Jquery
-              $("li.annotator-marginviewer-element"+'#'+listReplies[key]).addClass("found");
-              $("li.annotator-marginviewer-element"+'#'+listReplies[key]).show();
+                //With Jquery
+                $("li.annotator-marginviewer-element"+'#'+listReplies[key]).addClass("found");
+                $("li.annotator-marginviewer-element"+'#'+listReplies[key]).show();
+
+                //Pongo todos los iconos como comprimidos
+
+           //   $('#nrep-'+anotationTagId).html(labelExpand);
+
+              $('#nrep-'+idRep).empty().append(labelCollapse);
+              $('#nrep-'+idRep).addClass('iscollapsed');
+              $('#nrep-'+idRep).removeClass('isexpand');
             
+              }
+
+              
+              
             } else {
   
               tagAnnot.hidden = true;
@@ -1102,7 +1118,7 @@ textAreaEditor.replaceWith(anotacio_capa);
         idAnnotation=item.substring(11);
         if (listHijos.length > 0) {
         
-          $('#nrep-'+idAnnotation).prepend('('+listHijos.length+')');
+          //$('#nrep-'+idAnnotation).prepend('('+listHijos.length+')');
           
         }else{
          
@@ -1359,7 +1375,7 @@ textAreaEditor.replaceWith(anotacio_capa);
         var annotation_layer1 =
           '<div id="cont-'+annotation.id+'"  style="display:grid;align-self:end;min-height:18px;grid-template-columns: repeat(1,2fr);width:50px;min-width: 50px;background-color: #f5f5f5;">'+
           //'<span id="nrep-'+annotation.id+'"> </span>' +
-          '<button  id="nrep-'+annotation.id+'" type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"></path></svg></button> '+
+          '<button  id="nrep-'+annotation.id+'" type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button isexpand" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg></button> '+
           '</div>'+
           '<div class="flex-replyBox">' +
           //'<div style="border-radius: 3px;flex-basis:3px;background-color:#d4d4d4;width:3.58px;" ></div>'+
@@ -1418,7 +1434,7 @@ textAreaEditor.replaceWith(anotacio_capa);
           '<div class="annotator-marginviewer-text">' +
           '<div  style="display: flex;width:100%;min-width:100%;">'+
             '<div class="' + anotation_color +' anotator_color_box"> '+'</div>'+
-            '<button id="nrep-'+annotation.id+'" type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"></path></svg></button>'+
+            '<button id="nrep-'+annotation.id+'" type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button isexpand" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg></button>'+
           '</div>'
           ;
 
