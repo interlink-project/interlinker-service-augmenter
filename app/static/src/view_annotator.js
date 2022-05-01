@@ -161,7 +161,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     AnnotatorViewer.prototype.onCollapseClick = function (event) {
       event.stopPropagation();
       this.click;
-      
+
       return this.onButtonClick(event, "collapse");
     };
 
@@ -178,176 +178,167 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         .getElementById("databackend")
         .getAttribute("servicepediapath");
 
-        
-      var opcionCollapse="expandir";
+      var opcionCollapse = "expandir";
 
       //Iconos de expand and collapse
-      const labelExpand='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg>';
-      const labelCollapse='<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path></svg>';
-                
+      const labelExpand =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg>';
+      const labelCollapse =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path></svg>';
 
       if (type == "collapse") {
-          //Obtengo el codigo de la annotation root to collapse
-          anotationTagId=item[0]['id'];
+        //Obtengo el codigo de la annotation root to collapse
+        anotationTagId = item[0]["id"];
 
-          justId=anotationTagId.substring(11);
-          let codText=$('#nrep-'+justId).attr("class");
-          let result = codText.includes('isexpand');
+        justId = anotationTagId.substring(11);
+        let codText = $("#nrep-" + justId).attr("class");
+        let result = codText.includes("isexpand");
 
-          if(result){
-            opcionCollapse="colapsar";
-            $('#nrep-'+justId).empty().append(labelCollapse);
-            $('#nrep-'+justId).addClass('iscollapsed');
-            $('#nrep-'+justId).removeClass('isexpand');
+        if (result) {
+          opcionCollapse = "colapsar";
+          $("#nrep-" + justId)
+            .empty()
+            .append(labelCollapse);
+          $("#nrep-" + justId).addClass("iscollapsed");
+          $("#nrep-" + justId).removeClass("isexpand");
+        } else {
+          $("#nrep-" + justId)
+            .empty()
+            .append(labelExpand);
+          $("#nrep-" + justId).addClass("isexpand");
+          $("#nrep-" + justId).removeClass("iscollapsed");
+        }
 
-          }else{
-            $('#nrep-'+justId).empty().append(labelExpand);
-            $('#nrep-'+justId).addClass('isexpand');
-            $('#nrep-'+justId).removeClass('iscollapsed');
-          }
-          
-          
+        //Obtengo todos los replies de este tag
 
-          
-     
+        function getReplies(idAnnotation, listReplies) {
+          //Obtengo los hijos
+          var listHijos = [];
+          var listAnnotationsTags = $("li.annotator-marginviewer-element");
+          for (let i = 0; i < listAnnotationsTags.length; i++) {
+            itemTag = listAnnotationsTags[i];
 
-          
+            let hijoTag = itemTag["children"][0];
+            existeContainerReply = false;
+            if ("flex-replyContainer" == hijoTag["className"]) {
+              existeContainerReply = true;
+            }
 
-          //Obtengo todos los replies de este tag
+            if (existeContainerReply) {
+              annotationId = itemTag.getAttribute("id");
+              annotationRef = hijoTag.getAttribute("idannotationref");
 
-          function getReplies(idAnnotation, listReplies) {
-            //Obtengo los hijos
-            var listHijos = [];
-            var listAnnotationsTags=$("li.annotator-marginviewer-element");
-            for (let i = 0; i < listAnnotationsTags.length; i++) {
-              itemTag = listAnnotationsTags[i];
-  
-              let hijoTag = itemTag["children"][0];
-              existeContainerReply = false;
-              if ("flex-replyContainer" == hijoTag["className"]) {
-                existeContainerReply = true;
-              }
-  
-              if (existeContainerReply) {
-                annotationId = itemTag.getAttribute("id");
-                annotationRef = hijoTag.getAttribute("idannotationref");
-  
-                if (annotationRef == idAnnotation) {
-                  listHijos.push(annotationId);
-                }
+              if (annotationRef == idAnnotation) {
+                listHijos.push(annotationId);
               }
             }
-  
-            if (listHijos.length > 0) {
-              listReplies.push(listHijos);
-  
-              //Recorro cada hijo buscando relacionados:
-  
-              for (itemHijo in listHijos) {
-                itemValue = listHijos[itemHijo];
-  
-                if (itemValue === undefined) {
-                } else {
-                  idHijo = itemValue;
-  
-                  listReplies = getReplies(idHijo, listReplies);
-                }
-              }
-            }
-  
-            return listReplies.flat();
           }
 
-          //Remuevo todos los hijos
-          //Obtengo hijos
-          var listReplies = [];
-          listReplies = getReplies(anotationTagId, listReplies);
+          if (listHijos.length > 0) {
+            listReplies.push(listHijos);
 
-          
+            //Recorro cada hijo buscando relacionados:
 
-          for (const key in listReplies) {
-            tagAnnot = document.getElementById(listReplies[key]);
+            for (itemHijo in listHijos) {
+              itemValue = listHijos[itemHijo];
 
-            //componentTagConflict= $("li.annotator-marginviewer-element"+'#'+listReplies[key]);
-              
-            if (opcionCollapse=="expandir"){
+              if (itemValue === undefined) {
+              } else {
+                idHijo = itemValue;
 
-              
-
-           // if (tagAnnot.hidden == true) {
-            
-            iconoBtn=tagAnnot.getAttribute('class');// [0]['attributes'][4]['value'].split(" ")[1];
-            idRep=tagAnnot.getAttribute('id').substring(11);
-
-              //Muestro solamente los hijos del primer nivel:
-
-              if(tagAnnot.getAttribute('idlink')==anotationTagId){
-                tagAnnot.hidden = false;
-              
-                //With Jquery
-                $("li.annotator-marginviewer-element"+'#'+listReplies[key]).addClass("found");
-                $("li.annotator-marginviewer-element"+'#'+listReplies[key]).show();
-
-                //Pongo todos los iconos como comprimidos
-
-           //   $('#nrep-'+anotationTagId).html(labelExpand);
-
-              $('#nrep-'+idRep).empty().append(labelCollapse);
-              $('#nrep-'+idRep).addClass('iscollapsed');
-              $('#nrep-'+idRep).removeClass('isexpand');
-            
+                listReplies = getReplies(idHijo, listReplies);
               }
+            }
+          }
 
-              
-              
-            } else {
-  
-              tagAnnot.hidden = true;
-              
+          return listReplies.flat();
+        }
+
+        //Remuevo todos los hijos
+        //Obtengo hijos
+        var listReplies = [];
+        listReplies = getReplies(anotationTagId, listReplies);
+
+        for (const key in listReplies) {
+          tagAnnot = document.getElementById(listReplies[key]);
+
+          //componentTagConflict= $("li.annotator-marginviewer-element"+'#'+listReplies[key]);
+
+          if (opcionCollapse == "expandir") {
+            // if (tagAnnot.hidden == true) {
+
+            iconoBtn = tagAnnot.getAttribute("class"); // [0]['attributes'][4]['value'].split(" ")[1];
+            idRep = tagAnnot.getAttribute("id").substring(11);
+
+            //Muestro solamente los hijos del primer nivel:
+
+            if (tagAnnot.getAttribute("idlink") == anotationTagId) {
+              tagAnnot.hidden = false;
+
               //With Jquery
-              $("li.annotator-marginviewer-element"+'#'+listReplies[key]).removeClass("found");
-              $("li.annotator-marginviewer-element"+'#'+listReplies[key]).hide();
+              $(
+                "li.annotator-marginviewer-element" + "#" + listReplies[key]
+              ).addClass("found");
+              $(
+                "li.annotator-marginviewer-element" + "#" + listReplies[key]
+              ).show();
+
+              //Pongo todos los iconos como comprimidos
+
+              //   $('#nrep-'+anotationTagId).html(labelExpand);
+
+              $("#nrep-" + idRep)
+                .empty()
+                .append(labelCollapse);
+              $("#nrep-" + idRep).addClass("iscollapsed");
+              $("#nrep-" + idRep).removeClass("isexpand");
             }
+          } else {
+            tagAnnot.hidden = true;
 
+            //With Jquery
+            $(
+              "li.annotator-marginviewer-element" + "#" + listReplies[key]
+            ).removeClass("found");
+            $(
+              "li.annotator-marginviewer-element" + "#" + listReplies[key]
+            ).hide();
           }
+        }
 
+        //Obtengo el listado de todos los tags de anotaciones
+        // var listaAnnotations=$("li.annotator-marginviewer-element");
+        // for (const key in listaAnnotations) {
 
-          //Obtengo el listado de todos los tags de anotaciones
-          // var listaAnnotations=$("li.annotator-marginviewer-element");
-          // for (const key in listaAnnotations) {
+        //   tagAnnot=document.getElementById(listaAnnotations[key].getAttribute('id'));
 
-          //   tagAnnot=document.getElementById(listaAnnotations[key].getAttribute('id'));
+        //   if (tagAnnot.hasAttribute('idlink')){
 
-          //   if (tagAnnot.hasAttribute('idlink')){
+        //     itemAnnotationId=listaAnnotations[key].getAttribute('idlink');
+        //     if(itemAnnotationId==anotationTagId){
 
-          //     itemAnnotationId=listaAnnotations[key].getAttribute('idlink');
-          //     if(itemAnnotationId==anotationTagId){
+        //       tagAnnot=document.getElementById(listaAnnotations[key].getAttribute('id'));
 
-          //       tagAnnot=document.getElementById(listaAnnotations[key].getAttribute('id'));
-                
+        //       if(tagAnnot.hidden == true){
+        //         tagAnnot.hidden = false;
+        //       }else{
+        //         tagAnnot.hidden = true;
+        //       }
 
-          //       if(tagAnnot.hidden == true){
-          //         tagAnnot.hidden = false;
-          //       }else{
-          //         tagAnnot.hidden = true;
-          //       }
-                
-            
-          //     }
+        //     }
 
-          //   }
-          // }
+        //   }
+        // }
 
-/*
+        /*
 if(divreply.is(":hidden")){
         divreply.attr('hidden', false);
       }
 */
 
-          return item.data("annotation");
+        return item.data("annotation");
       }
-      
-      
+
       if (type == "delete") {
         return this.annotator.deleteAnnotation(item.data("annotation"));
       }
@@ -487,70 +478,67 @@ if(divreply.is(":hidden")){
         "div.annotator-marginviewer-reply"
       );
 
-      if(divreply.is(":hidden")){
-        divreply.attr('hidden', false);
-      }
-      else{
-      
+      if (divreply.is(":hidden")) {
+        divreply.attr("hidden", false);
+      } else {
+        //Cambio el id del campo
+        //idReferencia=item.highlights[0].id
+        $("li#annotation-" + idReferencia).attr("id", "annotation-" + item.id);
 
-
-
-      //Cambio el id del campo
-      //idReferencia=item.highlights[0].id
-      $("li#annotation-" + idReferencia).attr("id", "annotation-" + item.id);
-
-      //First we have to get the text, if no, we will have an empty text area after replace the div
-      if (
-        $("li#annotation-" + item.id).find("textarea.panelTextAreaReply")
-          .length == 0
-      ) {
-        var editableTextAreaReply = $(
-          "<textarea id='textareaReply-" +
-            item.id +
-            "'' class='panelTextAreaReply'>" +
-            "" +
-            "</textarea>"
-        );
-
-        if (item.category == "reply") {
-          var annotationCSSReference =
-            "li#annotation-" +
-            item.id +
-            "> div.flex-replyContainer > div.annotator-marginviewer-reply";
-        } else {
-          var annotationCSSReference =
-            "li#annotation-" + item.id + " > div.annotator-marginviewer-reply";
-        }
-
-        annotator_textArea.replaceWith(editableTextAreaReply);
-        editableTextAreaReply.css(
-          "height",
-          editableTextAreaReply[0].scrollHeight + "px"
-        );
-        editableTextAreaReply.blur(); //Textarea blur
-        if (typeof this.annotator.plugins.RichEditor != "undefined") {
-          this.tinymceActivation(
-            annotationCSSReference + " > textarea#textareaReply-" + item.id
+        //First we have to get the text, if no, we will have an empty text area after replace the div
+        if (
+          $("li#annotation-" + item.id).find("textarea.panelTextAreaReply")
+            .length == 0
+        ) {
+          var editableTextAreaReply = $(
+            "<textarea id='textareaReply-" +
+              item.id +
+              "'' class='panelTextAreaReply'>" +
+              "" +
+              "</textarea>"
           );
+
+          if (item.category == "reply") {
+            var annotationCSSReference =
+              "li#annotation-" +
+              item.id +
+              "> div.flex-replyContainer > div.annotator-marginviewer-reply";
+          } else {
+            var annotationCSSReference =
+              "li#annotation-" +
+              item.id +
+              " > div.annotator-marginviewer-reply";
+          }
+
+          annotator_textArea.replaceWith(editableTextAreaReply);
+          editableTextAreaReply.css(
+            "height",
+            editableTextAreaReply[0].scrollHeight + "px"
+          );
+          editableTextAreaReply.blur(); //Textarea blur
+          if (typeof this.annotator.plugins.RichEditor != "undefined") {
+            this.tinymceActivation(
+              annotationCSSReference + " > textarea#textareaReply-" + item.id
+            );
+          }
+          $(
+            '<div class="annotator-textarea-controls annotator-editor"></div>'
+          ).insertAfter(editableTextAreaReply);
+          var control_buttons = $(
+            annotationCSSReference + "> .annotator-textarea-controls"
+          );
+
+          saveTxt = i18n_dict.Save;
+          cancelTxt = i18n_dict.Cancel;
+
+          $(`<a href="#save" class="annotator-panel-save">${saveTxt}</a>`)
+            .appendTo(control_buttons)
+            .bind("click", { annotation: item }, this.onSavePanelReply);
+          $(`<a href="#cancel" class="annotator-panel-cancel">${cancelTxt}</a>`)
+            .appendTo(control_buttons)
+            .bind("click", { annotation: item }, this.onCancelPanelReply);
         }
-        $(
-          '<div class="annotator-textarea-controls annotator-editor"></div>'
-        ).insertAfter(editableTextAreaReply);
-        var control_buttons = $(
-          annotationCSSReference + "> .annotator-textarea-controls"
-        );
-
-        saveTxt = i18n_dict.Save;
-        cancelTxt = i18n_dict.Cancel;
-
-        $(`<a href="#save" class="annotator-panel-save">${saveTxt}</a>`)
-          .appendTo(control_buttons)
-          .bind("click", { annotation: item }, this.onSavePanelReply);
-        $(`<a href="#cancel" class="annotator-panel-cancel">${cancelTxt}</a>`)
-          .appendTo(control_buttons)
-          .bind("click", { annotation: item }, this.onCancelPanelReply);
       }
-    }
     };
 
     AnnotatorViewer.prototype.tinymceActivation = function (selector) {
@@ -633,7 +621,7 @@ if(divreply.is(":hidden")){
         .getAttribute("currentuser");
       anotacionReply.user = currentuser;
 
-      anotacionReply.permissions.delete=[currentuser];
+      anotacionReply.permissions.delete = [currentuser];
 
       anotacionReply.category = "reply";
 
@@ -711,15 +699,14 @@ if(divreply.is(":hidden")){
         //tinymce.remove("#textarea-" + current_annotation.id);
 
         //Compruebo si el textarea ya fue cargado
-      //Si es asi solamente le pongo visible=true.
-      //Caso contrario le pongo hidden al tag.
+        //Si es asi solamente le pongo visible=true.
+        //Caso contrario le pongo hidden al tag.
 
-      // var divreply = $("li#annotation-" + current_annotation.id).find(
-      //   "div.tox-tinymce"
-      // );
+        // var divreply = $("li#annotation-" + current_annotation.id).find(
+        //   "div.tox-tinymce"
+        // );
 
-      // divreply.attr('hidden', true);
-
+        // divreply.attr('hidden', true);
 
         tinymce.EditorManager.remove(".editable");
         var textAnnotation =
@@ -742,8 +729,7 @@ if(divreply.is(":hidden")){
             current_annotation.id +
             " > .annotator-marginviewer-text"
         );
-textAreaEditor.replaceWith(anotacio_capa);
-        
+        textAreaEditor.replaceWith(anotacio_capa);
       } else {
         var textarea = $("li#annotation-" + current_annotation.id).find(
           "textarea.panelTextArea"
@@ -761,17 +747,15 @@ textAreaEditor.replaceWith(anotacio_capa);
       if (typeof this.annotator.plugins.RichEditor != "undefined") {
         //tinymce.remove("#textareaReply-" + current_annotation.id);
 
-      //Compruebo si el textarea ya fue cargado
-      //Si es asi solamente le pongo visible=true.
-      //Caso contrario le pongo hidden al tag.
+        //Compruebo si el textarea ya fue cargado
+        //Si es asi solamente le pongo visible=true.
+        //Caso contrario le pongo hidden al tag.
 
-      var divreply = $("li#annotation-" + current_annotation.id).find(
-        "div.annotator-marginviewer-reply"
-      );
+        var divreply = $("li#annotation-" + current_annotation.id).find(
+          "div.annotator-marginviewer-reply"
+        );
 
-      divreply.attr('hidden', true);
-
-
+        divreply.attr("hidden", true);
 
         // tinymce.EditorManager.remove(".editable");
 
@@ -798,9 +782,6 @@ textAreaEditor.replaceWith(anotacio_capa);
         // }
 
         // textAreaEditorReply.replaceWith(anotacio_capa);
-
-
-
       } else {
         var textarea = $("li#annotation-" + current_annotation.id).find(
           "textarea.panelTextAreaReply"
@@ -1048,23 +1029,20 @@ textAreaEditor.replaceWith(anotacio_capa);
         $(".container-anotacions").find(".annotator-marginviewer-element")
           .length
       );
-      
+
       //Agrego los numeros de rep a los nodos:
-      
+
       //Obtengo todas las anotaciones
       const listAnnotationsTags = $(".container-anotacions").find(
         ".annotator-marginviewer-element"
       );
 
- 
       var listIds = [];
       for (let i = 0; i < listAnnotationsTags.length; i++) {
         itemTag = listAnnotationsTags[i];
         annotationId = itemTag.getAttribute("id");
         listIds.push(annotationId);
       }
-
-
 
       function getReplies(idAnnotation, listReplies) {
         //Obtengo los hijos
@@ -1082,7 +1060,7 @@ textAreaEditor.replaceWith(anotacio_capa);
             annotationId = itemTag.getAttribute("id");
             annotationRef = hijoTag.getAttribute("idannotationref");
 
-            if (annotationRef ==  idAnnotation) {
+            if (annotationRef == idAnnotation) {
               listHijos.push(annotationId);
             }
           }
@@ -1108,33 +1086,17 @@ textAreaEditor.replaceWith(anotacio_capa);
         return listReplies.flat();
       }
 
-
-
       listIds.forEach(function (item, index) {
-        
         var listReplies = [];
 
         listHijos = getReplies(item, listReplies);
-        idAnnotation=item.substring(11);
+        idAnnotation = item.substring(11);
         if (listHijos.length > 0) {
-        
           //$('#nrep-'+idAnnotation).prepend('('+listHijos.length+')');
-          
-        }else{
-         
-          $('#nrep-'+idAnnotation).hide();
-         
+        } else {
+          $("#nrep-" + idAnnotation).hide();
         }
-
       });
-      
-
-     
-
-        
-      
-
-
     };
 
     AnnotatorViewer.prototype.onAnnotationDeleted = function (annotation) {
@@ -1237,9 +1199,8 @@ textAreaEditor.replaceWith(anotacio_capa);
     };
 
     AnnotatorViewer.prototype.onAnnotationCollapse = function (annotation) {
-      alert('Aqui si llego');
+      alert("Aqui si llego");
     };
-
 
     AnnotatorViewer.prototype.mascaraAnnotation = function (annotation) {
       if (!annotation.data_creacio) annotation.data_creacio = $.now();
@@ -1249,7 +1210,7 @@ textAreaEditor.replaceWith(anotacio_capa);
 
       //Verifico los permisos:
 
-     // var currentUser = sessionStorage.getItem("user");
+      // var currentUser = sessionStorage.getItem("user");
 
       var currentUser = document
         .getElementById("databackend")
@@ -1373,10 +1334,14 @@ textAreaEditor.replaceWith(anotacio_capa);
           );
 
         var annotation_layer1 =
-          '<div id="cont-'+annotation.id+'"  style="display:grid;align-self:end;min-height:18px;grid-template-columns: repeat(1,2fr);width:50px;min-width: 50px;background-color: #f5f5f5;">'+
+          '<div id="cont-' +
+          annotation.id +
+          '"  style="display:grid;align-self:end;min-height:18px;grid-template-columns: repeat(1,2fr);width:50px;min-width: 50px;background-color: #f5f5f5;">' +
           //'<span id="nrep-'+annotation.id+'"> </span>' +
-          '<button  id="nrep-'+annotation.id+'" type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button isexpand" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg></button> '+
-          '</div>'+
+          '<button  id="nrep-' +
+          annotation.id +
+          '" type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button isexpand" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg></button> ' +
+          "</div>" +
           '<div class="flex-replyBox">' +
           //'<div style="border-radius: 3px;flex-basis:3px;background-color:#d4d4d4;width:3.58px;" ></div>'+
           textoLineasNiveles +
@@ -1432,22 +1397,25 @@ textAreaEditor.replaceWith(anotacio_capa);
       } else {
         var annotation_layer =
           '<div class="annotator-marginviewer-text">' +
-          '<div  style="display: flex;width:100%;min-width:100%;">'+
-            '<div class="' + anotation_color +' anotator_color_box"> '+'</div>'+
-            '<button id="nrep-'+annotation.id+'" type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button isexpand" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg></button>'+
-          '</div>'
-          ;
-
+          '<div  style="display: flex;width:100%;min-width:100%;">' +
+          '<div class="' +
+          anotation_color +
+          ' anotator_color_box"> ' +
+          "</div>" +
+          '<button id="nrep-' +
+          annotation.id +
+          '" type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button isexpand" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg></button>' +
+          "</div>";
         var annotation_stateCode = annotation.state;
-        var annotation_stateSpan='';
-        if(annotation_stateCode==2){
-          annotation_stateSpan='<span class="' +
-          class_label +
-          '" style="color:#98218c;">' +
-          'Aprobado' +
-          "</span>";
-        } 
-      
+        var annotation_stateSpan = "";
+        if (annotation_stateCode == 2) {
+          annotation_stateSpan =
+            '<span class="' +
+            class_label +
+            '" style="color:#98218c;">' +
+            "Aprobado" +
+            "</span>";
+        }
 
         annotation_layer +=
           '<div class="anotador_ident">' +
@@ -1460,7 +1428,7 @@ textAreaEditor.replaceWith(anotacio_capa);
           $.format.date(annotation.data_creacio, "dd/MM/yyyy HH:mm:ss") +
           '</div><div class="annotator-marginviewer-quote">' +
           annotation.quote +
-          '</div><div class="annotator-marginviewer-footer">'+
+          '</div><div class="annotator-marginviewer-footer">' +
           '<span class="' +
           class_label +
           '">' +
@@ -1551,11 +1519,11 @@ textAreaEditor.replaceWith(anotacio_capa);
         data_owner +
         '" id="' +
         anotation_reference +
-        '"'+
+        '"' +
         '" idlink="' +
         anotation_link +
-        '"'+
-        '>' +
+        '"' +
+        ">" +
         this.mascaraAnnotation(annotation) +
         "</li>";
       var malert = i18n_dict.anotacio_lost;

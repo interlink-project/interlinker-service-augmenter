@@ -136,12 +136,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
           if (annotation.propietary == 0) {
             class_label = "label-compartit";
           }
-          if(annotation.category!="reply"){
-          $("ul.annotator-widget > li.annotator-item").prepend(
-            '<div class="' +
-              annotation.category +
-              '" style="border: 1px solid #b3b3b3;height:6px;margin:4px;padding:4px;"></div> '
-          );
+          if (annotation.category != "reply") {
+            $("ul.annotator-widget > li.annotator-item").prepend(
+              '<div class="' +
+                annotation.category +
+                '" style="border: 1px solid #b3b3b3;height:6px;margin:4px;padding:4px;"></div> '
+            );
           }
           $("div.annotator-user").html(
             "<span class='" +
@@ -149,11 +149,118 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
               "'>" +
               annotation.user +
               "</span>" +
-              isShared //+
-             // '<button type="button">See in Panel</button>'
+              isShared +
+              '<button type="button" class="' +
+              annotation.category +
+              '" id="btn-' +
+              annotation.id +
+              '" >See</button>'
           );
         }
       }
+      $("button").on("click", function () {
+        let elemento = this;
+        const category = elemento.className;
+        const idAnnotation = elemento.id;
+        if (idAnnotation.startsWith("btn-")) {
+          if (category != "reply") {
+            $(".container-anotacions").show();
+
+            //Muestro los replies de esta anotacion:
+
+            function getReplies(idAnnotation, listReplies) {
+              //Obtengo los hijos
+              var listHijos = [];
+              var listAnnotationsTags = $("li.annotator-marginviewer-element");
+              for (let i = 0; i < listAnnotationsTags.length; i++) {
+                itemTag = listAnnotationsTags[i];
+
+                let hijoTag = itemTag["children"][0];
+                existeContainerReply = false;
+                if ("flex-replyContainer" == hijoTag["className"]) {
+                  existeContainerReply = true;
+                }
+
+                if (existeContainerReply) {
+                  annotationId = itemTag.getAttribute("id");
+                  annotationRef = hijoTag.getAttribute("idannotationref");
+
+                  if (annotationRef == "annotation-" + idAnnotation) {
+                    listHijos.push(annotationId);
+                  }
+                }
+              }
+
+              if (listHijos.length > 0) {
+                listReplies.push(listHijos);
+
+                //Recorro cada hijo buscando relacionados:
+
+                for (itemHijo in listHijos) {
+                  itemValue = listHijos[itemHijo];
+
+                  if (itemValue === undefined) {
+                  } else {
+                    idHijo = itemValue;
+
+                    listReplies = getReplies(idHijo, listReplies);
+                  }
+                }
+              }
+
+              return listReplies.flat();
+            }
+
+            //Buscar la anotación y mostrar solamente la rama donde
+            // está la anotación seleccionada.
+
+            $("li.annotator-marginviewer-element").each(function (index) {
+              const annotationId = this["id"];
+
+              //Obtengo los replies:
+              let listReplies = [];
+              listReplies = getReplies(idAnnotation.substring(4), listReplies);
+
+              if (annotationId.substring(11) == idAnnotation.substring(4)) {
+                $(this).show();
+              } else {
+                if (listReplies.includes(annotationId)) {
+                  //With Jquery
+                  $(
+                    "li.annotator-marginviewer-element" + "#" + annotationId
+                  ).addClass("found");
+                  $(
+                    "li.annotator-marginviewer-element" + "#" + annotationId
+                  ).show();
+
+                  //Pongo todos los iconos como comprimidos
+                  const idRep = annotationId.substring(11);
+                  const labelCollapse =
+                    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path></svg>';
+
+                  $("#nrep-" + idRep)
+                    .empty()
+                    .append(labelCollapse);
+                  $("#nrep-" + idRep).addClass("iscollapsed");
+                  $("#nrep-" + idRep).removeClass("isexpand");
+                } else {
+                  $(this).hide();
+                }
+              }
+            });
+
+            // var listAnnotationsTags = $("li.annotator-marginviewer-element");
+            // for (let i = 0; i < listAnnotationsTags.length; i++) {
+            //   itemTag = listAnnotationsTags[i];
+
+            //   annotationId = itemTag.getAttribute("id");
+
+            //   if (annotationId == idAnnotation) {
+            //   }
+            // }
+          }
+        }
+      });
     };
 
     //Section order and section title
@@ -189,16 +296,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
         for (cat in _categories) {
           if (i > 1) checked = "";
 
-          txtCat='No especificado'
-          if(cat == 'feedback'){
-            txtCat=i18n_dict.Feedback
-          }else if (cat == 'question') {
-            txtCat=i18n_dict.Question
-          }else if (cat == 'term') {
-            txtCat=i18n_dict.Term
+          txtCat = "No especificado";
+          if (cat == "feedback") {
+            txtCat = i18n_dict.Feedback;
+          } else if (cat == "question") {
+            txtCat = i18n_dict.Question;
+          } else if (cat == "term") {
+            txtCat = i18n_dict.Term;
           }
-
-
 
           var radio =
             "<input id='" +
@@ -242,7 +347,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       $("span[id=" + annotation.id + "]").attr("id", annotation.id);
       cat = annotation.category;
       highlights = annotation.highlights;
-      if (cat!="reply") {
+      if (cat != "reply") {
         //If have a category
         _results = [];
         for (_i = 0, _len = highlights.length; _i < _len; _i++) {
