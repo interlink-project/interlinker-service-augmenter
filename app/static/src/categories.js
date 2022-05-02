@@ -140,21 +140,34 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
             $("ul.annotator-widget > li.annotator-item").prepend(
               '<div class="' +
                 annotation.category +
-                '" style="border: 1px solid #b3b3b3;height:6px;margin:4px;padding:4px;"></div> '
+                '" style="border: 1px solid #b3b3b3;height:6px;margin:4px;padding:4px;left:5px;"></div> '+
+                "<span >" +
+                "&nbsp;Posted by: "+ annotation.user.split('@',1) +
+              "</span>" 
             );
           }
+
+          let stateLabel="";
+          if(annotation.state==0){
+            stateLabel="In Progress";
+          }else if (annotation.state==2){
+            stateLabel="Approved";
+          }
+
+
           $("div.annotator-user").html(
-            "<span class='" +
-              class_label +
-              "'>" +
-              annotation.user +
+  
+              //isShared +
+              "<div style='display: flex;align-text:center;align-items:center;flex-direction:column;'>"+
+              "<span  style='color:#98218c;'  >" +
+              "State:"+ stateLabel +
               "</span>" +
-              isShared +
-              '<button type="button" class="' +
-              annotation.category +
-              '" id="btn-' +
+              '<button type="button" class="replies" id="btn-' +
               annotation.id +
-              '" >See</button>'
+              '"  >Comments</button>'+
+              "</div>"
+            
+
           );
         }
       }

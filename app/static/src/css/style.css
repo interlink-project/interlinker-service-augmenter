@@ -217,6 +217,25 @@ body {
 
 }
 
+.replies {
+    background-color: white;
+    color: black;
+    border: 2px solid #555555;
+    padding: 2px 2px;
+    text-align: center;
+    align-self: center;
+    text-decoration: none;
+    font-size: 10px;
+    margin: 0px 0px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.replies:hover {
+  background-color: #555555;
+  color: white;
+}
+
 .caixa_color {
   float: left !important;
   width: 20px !important;

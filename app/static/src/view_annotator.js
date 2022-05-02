@@ -1044,7 +1044,7 @@ if(divreply.is(":hidden")){
         listIds.push(annotationId);
       }
 
-      function getReplies(idAnnotation, listReplies) {
+      function getReplies1(idAnnotation, listReplies) {
         //Obtengo los hijos
         var listHijos = [];
         for (let i = 0; i < listAnnotationsTags.length; i++) {
@@ -1078,7 +1078,7 @@ if(divreply.is(":hidden")){
             } else {
               idHijo = itemValue.substring(11, itemValue.length);
 
-              listReplies = getReplies(idHijo, listReplies);
+              listReplies = getReplies1(idHijo, listReplies);
             }
           }
         }
@@ -1089,14 +1089,140 @@ if(divreply.is(":hidden")){
       listIds.forEach(function (item, index) {
         var listReplies = [];
 
-        listHijos = getReplies(item, listReplies);
-        idAnnotation = item.substring(11);
+        listHijos = getReplies1(item, listReplies);
+        var idAnnotation = item.substring(11);
         if (listHijos.length > 0) {
-          //$('#nrep-'+idAnnotation).prepend('('+listHijos.length+')');
+          $('#nrep-'+idAnnotation).prepend('('+listHijos.length+')');
         } else {
           $("#nrep-" + idAnnotation).hide();
         }
       });
+
+
+      // Abro el panel y cargo una annotacion especifica:
+      const queryString = window.location.search;
+      console.log(queryString);
+      const urlParams = new URLSearchParams(queryString);
+      const idAnnotation = urlParams.get('annotationId');
+      //alert('Identificador Annotation:'+annotationId);
+
+      if (idAnnotation != null){
+      // Abro Panel:
+      $(".container-anotacions").show();
+      
+      //Muestro la annotacion y sus replies:
+
+      function getReplies(idAnnotation, listReplies) {
+        //Obtengo los hijos
+        var listHijos = [];
+        var listAnnotationsTags = $("li.annotator-marginviewer-element");
+        for (let i = 0; i < listAnnotationsTags.length; i++) {
+          itemTag = listAnnotationsTags[i];
+
+          let hijoTag = itemTag["children"][0];
+          existeContainerReply = false;
+          if ("flex-replyContainer" == hijoTag["className"]) {
+            existeContainerReply = true;
+          }
+
+          if (existeContainerReply) {
+            annotationId = itemTag.getAttribute("id");
+            annotationRef = hijoTag.getAttribute("idannotationref");
+
+            if (annotationRef == "annotation-" + idAnnotation) {
+              listHijos.push(annotationId);
+            }
+          }
+        }
+
+        if (listHijos.length > 0) {
+          listReplies.push(listHijos);
+
+          //Recorro cada hijo buscando relacionados:
+
+          for (itemHijo in listHijos) {
+            itemValue = listHijos[itemHijo];
+
+            if (itemValue === undefined) {
+            } else {
+              idHijo = itemValue;
+
+              listReplies = getReplies(idHijo, listReplies);
+            }
+          }
+        }
+
+        return listReplies.flat();
+      }
+
+
+
+      $("li.annotator-marginviewer-element").each(function (index) {
+        const annotationId = this["id"];
+
+        //Obtengo los replies:
+        let listReplies = [];
+        listReplies = getReplies(idAnnotation, listReplies);
+
+        if (annotationId.substring(11) == idAnnotation) {
+          $(this).show();
+        } else {
+          if (listReplies.includes(annotationId)) {
+            //With Jquery
+            $(
+              "li.annotator-marginviewer-element" + "#" + annotationId
+            ).addClass("found");
+            $(
+              "li.annotator-marginviewer-element" + "#" + annotationId
+            ).show();
+
+            //Pongo todos los iconos como comprimidos
+            const idRep = annotationId.substring(11);
+            const labelCollapse =
+              '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path></svg>';
+
+            $("#nrep-" + idRep)
+              .empty()
+              .append(labelCollapse);
+            $("#nrep-" + idRep).addClass("iscollapsed");
+            $("#nrep-" + idRep).removeClass("isexpand");
+          } else {
+            $(this).hide();
+          }
+        }
+      });
+
+      //POngo el visor sobre la annotacion:
+
+      var viewPanelHeight = jQuery(window).height();
+      var annotation_reference = idAnnotation;
+
+      $element = jQuery("#" + idAnnotation);
+      // if (!$element.length) {
+      //   $element = jQuery("#" + annotation.order);
+      //   annotation_reference = annotation.order; //If exists a sorted annotations we put it in the right order, using order attribute
+      // }
+
+      if ($element.length) {
+        elOffset = $element.offset();
+        $(this).children(".annotator-marginviewer-quote").toggle();
+        $("html, body").animate(
+          {
+            scrollTop:
+              $("#" + annotation_reference).offset().top -
+              viewPanelHeight / 2,
+          },
+          2000
+        );
+      }
+
+
+      //Muestro La leyenda
+      //$("#" + idAnnotation).trigger('mouseover');
+      
+
+    }
+
     };
 
     AnnotatorViewer.prototype.onAnnotationDeleted = function (annotation) {
@@ -1336,7 +1462,7 @@ if(divreply.is(":hidden")){
         var annotation_layer1 =
           '<div id="cont-' +
           annotation.id +
-          '"  style="display:grid;align-self:end;min-height:18px;grid-template-columns: repeat(1,2fr);width:50px;min-width: 50px;background-color: #f5f5f5;">' +
+          '"  style="align-self:end;min-height:18px;grid-template-columns: repeat(1,2fr);width:50px;min-width: 50px;background-color: #f5f5f5;">' +
           //'<span id="nrep-'+annotation.id+'"> </span>' +
           '<button  id="nrep-' +
           annotation.id +
@@ -1350,7 +1476,7 @@ if(divreply.is(":hidden")){
           "</div>" +
           "</div>";
         var annotation_layer =
-          '<div class="flex-replyContainer" style="background-color: #f5f5f5;" idannotationref="' +
+          '<div class="flex-replyContainer" style="background-color: #f5f5f5;width:100%" idannotationref="' +
           annotation.idAnotationReply +
           '">' +
           annotation_layer1 +
@@ -1453,7 +1579,7 @@ if(divreply.is(":hidden")){
       myAnotationTxt = i18n_dict.my_annotations;
       sharedTxt = i18n_dict.Shared;
 
-      var checboxes = `<label class="checkbox-inline"><input type="checkbox" id="type_own" rel="meAnotator"/>${myAnotationTxt}</label><label class="checkbox-inline">  <input type="checkbox" id="type_share" rel="shared"/>${sharedTxt}</label>`;
+      var checboxes = `<label class="checkbox-inline"><input type="checkbox" id="type_own" rel="meAnotator"/>${myAnotationTxt}</label><label class="checkbox-inline">`;//  <input type="checkbox" id="type_share" rel="shared"/>${sharedTxt}</label>`;
 
       var annotation_layer =
         '<div  class="annotations-list-uoc" ><div id="annotations-panel"><span class="rotate etiquetaSolapa" title="' +
