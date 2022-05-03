@@ -8,14 +8,16 @@ msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2022-03-28 14:18+0200\n"
-"PO-Revision-Date: 2022-03-28 14:18+0200\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2022-05-03 08:36+0000\n"
+"Last-Translator: Weblate Admin <badiolajulen@opendeusto.es>\n"
+"Language-Team: Spanish <https://demo.interlink-project.eu/weblate/projects/"
+"servicepedia/backend/es/>\n"
 "Language: es\n"
-"Language-Team: es <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf=8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.12\n"
 "Generated-By: Babel 2.9.1\n"
 
 #: templates/dashboard.html:345 templates/home.html:141
@@ -179,11 +181,11 @@ msgstr "Registrar una nueva Descripción"
 
 #: templates/descriptionDetail.html:360
 msgid "Title field is valid!"
-msgstr "Título inválido"
+msgstr "Título inválido!"
 
 #: templates/descriptionDetail.html:361
 msgid "Title field cannot be blank!"
-msgstr "El título no puede ser blanco"
+msgstr "El título no puede estar en blanco!"
 
 #: templates/descriptionDetail.html:389 templates/descriptionDetail.html:391
 #: templates/descriptionDetail.html:398 templates/subjectPage.html:345
@@ -418,16 +420,15 @@ msgstr "Guardar cambios"
 
 #: templates/surveys.html:372
 msgid "Create a new survey"
-msgstr "Crear una encuesta nueva "
-
+msgstr "Crear una encuesta nueva"
 
 #: instantiate.html:180
 msgid "Malformed URL"
-msgstr "El Url tiene un formato equivocado. Ejemplo: https://www.domain.com/ "
+msgstr "El Url tiene un formato equivocado. Ejemplo: https://www.domain.com/"
 
 #: instantiate.html:198
 msgid "At least one Url most be added."
-msgstr "Por lo menos una dirección Url valida debe ser agregada al listado. "
+msgstr "Por lo menos una dirección Url valida debe ser agregada al listado."
 
 #: isntantiate.html:271
 msgid "Can not add the description, the description is already in the list"
@@ -508,8 +509,3 @@ msgstr "Un portal"
 #: templates/descriptionDetail.html:
 msgid "It is only possible to add a URL, in case the description is of a single page"
 msgstr "Solamente es posible agregar un URL, en el caso de descripciones de una página."
-
-
-
-
-
