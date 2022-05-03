@@ -145,7 +145,7 @@ def login():
         if usuario.is_anonymous:
 
             redirecttoCallback=settings.REDIRECT_URI
-            if(redirecttoCallback=='https://dev.interlink-project.eu/callback'):
+            if(redirecttoCallback=='https://dev.interlink-project.eu/callback' or redirecttoCallback=='https://demo.interlink-project.eu/callback' ):
                 redirecttoCallback=settings.REDIRECT_SERVICEPEDIA+'/callback'
 
             # get request params
