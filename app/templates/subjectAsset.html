@@ -49,6 +49,17 @@
     }
   }
 
+  function irAnnotacionOnText(event,annotationId = "",annotationUri="",descriptionId="") {
+
+    rutaPagina=`${annotationUri}?description=${descriptionId}&annotationId=${annotationId}`;
+
+    linkDescriptionShow = "{{ url_for('views.augment',rutaPagina='RUTAPAGINAMAIN') }}";
+    linkDescriptionShow = linkDescriptionShow.replace("RUTAPAGINAMAIN",rutaPagina);
+
+    window.location.replace(linkDescriptionShow+"&integrationInterlinker=True");
+
+  }
+
   function registrarEstadoAnnotation(
     event,
     annotationState = "0",
@@ -540,15 +551,16 @@ replyRep.idAnotationReply=='annotation-'+reply.id %}
 
   </div>
     {% endif %}
-  <div class="btn-group" role="group" aria-label="doctext">
-    <button
-    type="button"
-    class="btn bi-blockquote-left border btn-secondary"
-    hidden="true"
-    >
-      See in Text
-    </button>
-  </div>
+    <div class="btn-group" role="group" aria-label="doctext">
+      <button
+      type="button"
+      class="btn bi-blockquote-left border btn-secondary"
+      onclick="irAnnotacionOnText(event,annotationId = '{{ annotation.id}}',annotationUri='{{ annotation.uri}}',descriptionId='{{ description.id}}')"
+      >
+  
+        See in Text
+      </button>
+    </div>
 </div>
 
 <hr />

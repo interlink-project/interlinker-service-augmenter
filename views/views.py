@@ -1286,6 +1286,10 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     internacii18nScript = soup.new_tag(
         'script', src=url_for('static', filename='lib/gettext.js'))
 
+
+    socketioLibScript=  soup.new_tag(
+        'script', src=url_for('static', filename='lib/socketio/socket.io.min.js'))
+
     # Agrego las librerias personalizadas:
 
     # Defino la funcion de navegacion entre enlaces:
@@ -1342,6 +1346,8 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
         # bodyTag.append(jqueryScript12)
         bodyTag.append(jqueryScript13)
         bodyTag.append(jqueryScript14)
+
+        bodyTag.append(socketioLibScript)
 
     except:
         #print("Excepcion en ccs1")

@@ -35,6 +35,8 @@ from authInterlink.user import User
 import secrets
 from app.config import settings
 
+#from  flask_socketio import SocketIO,emit
+
 logging.basicConfig(format='%(asctime)s %(process)d %(name)s [%(levelname)s] '
                            '%(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
@@ -101,6 +103,66 @@ def create_app():
     login_manager.login_view = "authInterlink.login"
 
     login_manager.init_app(app)
+
+
+    # Setting Socket:
+    
+    # socketio=SocketIO(app)
+
+    # @socketio.on('event')
+    # def event(data):
+       
+    #     import time
+       
+    #     while True:
+    #         time.sleep(5)
+            
+    #         from api.annotation import Annotation
+    #         res = []
+            
+    #         descriptionId=data['descriptionId']
+    #         actualLastAnnotations=data['annotationsIds']
+        
+
+    #         res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
+    #                                   'InProgress': True, 'Archived': False, 'Approved': True}, 
+    #                                   descriptionId=descriptionId, category='', 
+    #                                   notreply=False, page='all')
+            
+    #         annotationsGrabadas=res['annotations']
+            
+    #         #Obtengo la lista de Identificadores
+    #         listIdGrabadas=[]
+    #         for annotationG in annotationsGrabadas:
+    #             listIdGrabadas.append(annotationG['id'])
+
+    #         #Miro si hay annotaciones agregadas:
+    #         listAnnotationsAgregadas=[]
+    #         for annotationG in annotationsGrabadas:
+    #             if(annotationG['id'] not in actualLastAnnotations):
+    #                 annotationG['notpublish']=True
+    #                 listAnnotationsAgregadas.append(annotationG) 
+    #                 actualLastAnnotations.append(annotationG['id'])
+                    
+            
+    #         #Las anotations a incrementadas son:
+    #         if(len(listAnnotationsAgregadas)>0):
+    #             emit('event',{'accion':'add','list':listAnnotationsAgregadas})
+               
+    #         #Miro si hay annotaciones borradas:
+    #         listAnnotationsBorradas=[]
+    #         for annotationA in actualLastAnnotations:
+    #             if(annotationA not in listIdGrabadas):
+    #                 listAnnotationsBorradas.append(annotationA) 
+    #                 actualLastAnnotations.remove(annotationA)
+            
+    #         #Las anotations a borradas son:
+    #         if(len(listAnnotationsBorradas)>0):
+    #             emit('event',{'accion':'remove','list':listAnnotationsBorradas})
+            
+             
+
+        
 
     # Babel Settings
 

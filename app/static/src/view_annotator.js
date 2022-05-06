@@ -77,6 +77,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     };
 
     function AnnotatorViewer(element, options) {
+      this.onAnnotationsLoaded = __bind(this.onAnnotationsLoaded, this);
       this.onAnnotationCreated = __bind(this.onAnnotationCreated, this);
       this.onAnnotationUpdated = __bind(this.onAnnotationUpdated, this);
       this.onDeleteClick = __bind(this.onDeleteClick, this);
@@ -1104,6 +1105,7 @@ if(divreply.is(":hidden")){
       console.log(queryString);
       const urlParams = new URLSearchParams(queryString);
       const idAnnotation = urlParams.get('annotationId');
+      const idDescription = urlParams.get('description');
       //alert('Identificador Annotation:'+annotationId);
 
       if (idAnnotation != null){
@@ -1217,11 +1219,150 @@ if(divreply.is(":hidden")){
       }
 
 
-      //Muestro La leyenda
-      //$("#" + idAnnotation).trigger('mouseover');
-      
+
+  
 
     }
+
+
+    //Obtengo todas las anotaciones
+    const listAnnotationsTagsLast = $(".container-anotacions").find(
+      ".annotator-marginviewer-element"
+    );
+
+    var listIds = [];
+    for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
+      itemTag = listAnnotationsTagsLast[i];
+      annotationId = itemTag.getAttribute("id");
+      listIds.push(annotationId.substring(11));
+    }
+
+    
+      //Me conecto al socket
+
+      // var socket = io();
+      // socket.on('connect', function() {
+
+      //     socket.on('event',function(res){
+           
+      //       var currentuser = document
+      //         .getElementById("databackend")
+      //         .getAttribute("currentuser");
+            
+      //       const accion=res['accion'];
+      //       const listAnnotations=res['list'];
+
+      //       //Agregar una annotacion
+      //       if(accion=='add'){
+              
+      //         for (let i = 0; i < listAnnotations.length; i++) {
+
+      //           anotacion = listAnnotations[i];
+
+      //           if (anotacion['user']!=currentuser){
+      //             //alert(anotacion['user']+ " ha agregado una annotacion");
+                  
+                  
+      //             Annotator.prototype.loadAnnotations(annotations=[anotacion]);
+
+      //             //Pongo la categoria correcta:
+      //             classF='annotator-hl-destacat';
+      //             classQ='annotator-hl-subratllat';
+      //             classT='annotator-hl-term';
+
+      //             newClassCategory='';
+      //             if(anotacion['category']=='feedback'){
+      //               newClassCategory=classF;
+      //             }
+      //             if(anotacion['category']=='question'){
+      //               newClassCategory=classQ;
+      //             }
+      //             if(anotacion['category']=='term'){
+      //               newClassCategory=classT;
+      //             }
+
+      //             //Le agrego un identificador unico:
+      //             $('.annotator-hl').not('.'+classF+',.'+classQ+',.'+classT).attr('id', anotacion['id']);
+      //             //Le doy el formato de color:
+      //             $('.annotator-hl').not('.'+classF+',.'+classQ+',.'+classT).addClass(newClassCategory);    
+                  
+                  
+      //             AnnotatorViewer.prototype.createReferenceAnnotation(anotacion);
+
+      //            // Annotator.prototype.onHighlightMouseoverEfect(anotacion);
+                  
+                  
+      //             //Pongo el contador con el numero correcto:
+      //             $("#count-anotations").text(
+      //               $(".container-anotacions").find(".annotator-marginviewer-element")
+      //                 .length
+      //             );
+       
+
+      //           }
+
+                
+
+      //         }
+                
+
+      //       }
+            
+      //       //Borrar una annotacion
+      //       if(accion=='remove'){
+
+      //         //alert("Se ha borrado una annotacion"+res);
+       
+      //         for (let i = 0; i < listAnnotations.length; i++) {
+           
+      //           anotacionId = listAnnotations[i];
+
+      //           anotacion=$("#" + anotacionId).data("annotation");
+                
+      //           //Quito los highlights:
+      //           //Para que el metodo on delete no trate de borrarlo (solo quito highlights)
+      //           anotacion['notpublish']=true; 
+      //           Annotator.prototype.deleteAnnotation(anotacion);
+
+      //           //Quito del Panel:
+      //           AnnotatorViewer.prototype.onAnnotationDeleted(anotacion);
+
+      //           //quitarHighlight(anotacion);
+      //           //quitarSidePanel(anotacion);
+
+      //            //Pongo el contador con el numero correcto:
+      //            $("#count-anotations").text(
+      //             $(".container-anotacions").find(".annotator-marginviewer-element")
+      //               .length
+      //           );
+
+      //         }
+       
+      //       }
+
+      //     })
+
+      //     //alert("COnectado!!");
+      // });
+
+      // socket.on('disconnect', function() {
+
+      //     console.log("Desconectados");
+      //     //alert("Desconectado!!");
+
+      // });
+
+      //Obtengo la description:
+  
+
+      descriptionInitial={'descriptionId':idDescription,
+                          'annotationsIds':listIds
+                          }
+      
+
+
+      //Pruebo enviando un mensaje
+      socket.emit('event',descriptionInitial);
 
     };
 
@@ -1237,19 +1378,11 @@ if(divreply.is(":hidden")){
         }
 
         let textoAnotacion = valor.children[0].text;
-        /*let textoAnotacion=valor.children[0].children[1].innerHTML
-        let textoCortado=textoAnotacion.substring(0, textoAnotacion.length-4)
-        let strippedCortadoText = textoCortado.replace(/<[^>]+>/g, '');
-        let strippedAnnotation =annotation.text.replace(/<[^>]+>/g, '');
-        if(strippedAnnotation.startsWith(strippedCortadoText)){
-          $("li").remove("#" + anotacionId);
-        }*/
-        /*if( textoAnotacion==annotation.text){
-          $("li").remove("#" + anotacionId);
-
-        }*/
+       
       });
+
       if (annotation.id != null) {
+
         //Antes de quitar esta annotation tengo que quitar todas las anotaciones hijas
         listAnnotationsTags = $(".container-anotacions").find(
           ".annotator-marginviewer-element"

@@ -145,8 +145,10 @@ def login():
         if usuario.is_anonymous:
 
             redirecttoCallback=settings.REDIRECT_URI
-            if(redirecttoCallback=='https://dev.interlink-project.eu/callback' or redirecttoCallback=='https://demo.interlink-project.eu/callback' ):
+            if(redirecttoCallback.endswith('interlink-project.eu/callback')):
+            #if(redirecttoCallback=='https://dev.interlink-project.eu/callback' or redirecttoCallback=='https://demo.interlink-project.eu/callback' ):
                 redirecttoCallback=settings.REDIRECT_SERVICEPEDIA+'/callback'
+
 
             # get request params
             query_params = {'client_id': current_app.config["CLIENT_ID"],
@@ -558,7 +560,7 @@ def genReport(descriptionId=None):
     #Agrego los hyperlinks (con el formato adecuado):
     for itemAnnotation in listAnnotationsApproved:
         enlaceTemp=itemAnnotation['uri']
-        enlaceTemptoPage= settings.REDIRECT_SERVICEPEDIA+'/augment/'+enlaceTemp+'?description='+descriptionId
+        enlaceTemptoPage= settings.REDIRECT_SERVICEPEDIA+'/augment/'+enlaceTemp+'?description='+descriptionId+'&annotationId='+itemAnnotation['id']
         
         rt = RichText('')
 
