@@ -178,7 +178,7 @@ def assetAdmin(id):
                 Annotation, descriptionId=description['id'])
 
     res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
-                                      'InProgress': True, 'Archived': False, 'Approved': False}, descriptionId=description['id'], category=categoria, notreply=True, page=page)
+                                      'InProgress': True, 'Archived': False, 'Approved': True}, descriptionId=description['id'], category=categoria, notreply=True, page=page)
     numRes = res['numRes']
     res = res['annotations']
 
