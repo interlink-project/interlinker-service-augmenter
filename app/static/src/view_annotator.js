@@ -1348,7 +1348,7 @@ if(divreply.is(":hidden")){
       const { hostname } = new URL(servicepediaPath);
 
       // servicepedia.dev.interlink-project.eu
-      let socket = new WebSocket("wss://"+hostname+":80/eventsocket");
+      let socket = new WebSocket("wss://"+hostname+":443/eventsocket");
 
       socket.onopen = function(e) {
         //alert("[open] Connection established");
