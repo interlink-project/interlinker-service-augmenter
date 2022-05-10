@@ -37,6 +37,8 @@ from app.config import settings
 
 #from  flask_socketio import SocketIO,emit
 
+from flask_sock import Sock
+
 logging.basicConfig(format='%(asctime)s %(process)d %(name)s [%(levelname)s] '
                            '%(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
@@ -103,6 +105,87 @@ def create_app():
     login_manager.login_view = "authInterlink.login"
 
     login_manager.init_app(app)
+
+
+    sock = Sock(app)
+
+    @sock.route('/eventsocket')
+    def eventsocket(ws):
+        import time
+        while True:
+            #text=ws.receive()
+            #ws.send(text[::-1])
+
+            data=ws.receive()
+
+            logging.info('la info que llega es:'+ data )
+
+            dataListado=data.split('#')
+            descriptionId=dataListado[0]
+
+            from api.annotation import Annotation
+            res = []
+            
+            #descriptionId=data['descriptionId']
+            logging.info('la descriptionId es:'+ descriptionId )
+
+
+            actualLastAnnotations=dataListado[1].split(',')
+            #actualLastAnnotations=data['annotationsIds']
+        
+
+            res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
+                                      'InProgress': True, 'Archived': False, 'Approved': True}, 
+                                      descriptionId=descriptionId, category='', 
+                                      notreply=False, page='all')
+            
+            
+            
+            annotationsGrabadas=res['annotations']
+            
+            #Obtengo la lista de Identificadores
+            listIdGrabadas=[]
+            for annotationG in annotationsGrabadas:
+                listIdGrabadas.append(annotationG['id'])
+
+            #Miro si hay annotaciones agregadas:
+            listAnnotationsAgregadas=[]
+            for annotationG in annotationsGrabadas:
+                if(annotationG['id'] not in actualLastAnnotations):
+                    annotationG['notpublish']=True
+                    
+                    listAnnotationsAgregadas.append(annotationG['id']) 
+                    logging.info('la listAnnotationsAgregadas es:'+ ','.join(listAnnotationsAgregadas) )
+                    actualLastAnnotations.append(annotationG['id'])
+
+                    
+            logging.info('El largo de las Annotations Agregadas es:'+ str(len(listAnnotationsAgregadas)) )
+
+            #Las anotations a incrementadas son:
+            if(len(listAnnotationsAgregadas)>0):
+                #ws.send({'accion':'add','list':listAnnotationsAgregadas})
+                logging.info('la info que llega es:'+ 'add'+'#'+','.join(listAnnotationsAgregadas) )
+                ws.send('add'+'#'+','.join(listAnnotationsAgregadas))
+                
+
+            
+               
+            #Miro si hay annotaciones borradas:
+            listAnnotationsBorradas=[]
+            for annotationA in actualLastAnnotations:
+                if(annotationA not in listIdGrabadas):
+                    listAnnotationsBorradas.append(annotationA) 
+                    logging.info('El listAnnotationsBorradas es:'+ ','.join(listAnnotationsBorradas) )
+                    actualLastAnnotations.remove(annotationA)
+
+            logging.info('El largo de las listAnnotationsBorradas es:'+ str(len(listAnnotationsBorradas)) )
+
+            #Las anotations a borradas son:
+            if(len(listAnnotationsBorradas)>0):
+                logging.info('la info que llega es:'+ 'remove'+'#'+','.join(listAnnotationsBorradas) )
+                ws.send('remove'+'#'+','.join(listAnnotationsBorradas))
+                
+
 
 
     # Setting Socket:

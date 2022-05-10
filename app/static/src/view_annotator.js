@@ -1237,132 +1237,197 @@ if(divreply.is(":hidden")){
       listIds.push(annotationId.substring(11));
     }
 
+    function updateAnnotationsVisibles(accion,annotationId){
+      //Agregar una annotacion
+      if(accion=='add'){
+        //alert('agrego'+annotationId);
+
+        //Obtengo la informacion de la annotacion:
+
+        var servicepediaPath = document
+        .getElementById("databackend")
+        .getAttribute("servicepediapath");
+
+        request = $.ajax({
+          url: servicepediaPath + "/annotations/" + annotationId,
+          dataType: 'json',
+          success: onSuccessAddGetAnot,
+          error: function (jqXhr, textStatus, errorThrown) {
+            console.log(errorThrown);
+          }
+        });
+
+        function onSuccessAddGetAnot(data, status, xhr) {// success callback function
+          anotacion=data;
+          //Agrego la anotacion:
+          
+          var currentuser = document
+          .getElementById("databackend")
+          .getAttribute("currentuser");
+          
+                if (anotacion['user']!=currentuser){
+                  //alert(anotacion['user']+ " ha agregado una annotacion");
+                  
+                  //notPublish por que la salida del metodo detiene las siguiente ejecución
+                  anotacion['notpublish']=true;
+                  Annotator.prototype.loadAnnotations(annotations=[anotacion]);
+
+                  //Pongo la categoria correcta:
+                  classF='annotator-hl-destacat';
+                  classQ='annotator-hl-subratllat';
+                  classT='annotator-hl-term';
+
+                  newClassCategory='';
+                  if(anotacion['category']=='feedback'){
+                    newClassCategory=classF;
+                  }
+                  if(anotacion['category']=='question'){
+                    newClassCategory=classQ;
+                  }
+                  if(anotacion['category']=='term'){
+                    newClassCategory=classT;
+                  }
+
+                  //Le agrego un identificador unico:
+                  $('.annotator-hl').not('.'+classF+',.'+classQ+',.'+classT).attr('id', anotacion['id']);
+                  //Le doy el formato de color:
+                  $('.annotator-hl').not('.'+classF+',.'+classQ+',.'+classT).addClass(newClassCategory);    
+                  
+                  
+                  AnnotatorViewer.prototype.createReferenceAnnotation(anotacion);
+
+                 // Annotator.prototype.onHighlightMouseoverEfect(anotacion);
+                  
+
+                }
+
+              }
+
+
+        }
+
+
+
+      
+      if(accion=='remove'){
+
+        //alert('quito'+annotationId);
+
+        anotacion=$("#" + annotationId).data("annotation");
+        
+        //Quito los highlights:
+        //Para que el metodo on delete no trate de borrarlo (solo quito highlights)
+        anotacion['notpublish']=true; 
+        Annotator.prototype.deleteAnnotation(anotacion);
+
+        //Quito del Panel:
+        AnnotatorViewer.prototype.onAnnotationDeleted(anotacion);
+
+        //quitarHighlight(anotacion);
+        //quitarSidePanel(anotacion);
+
+          //Pongo el contador con el numero correcto:
+          $("#count-anotations").text(
+          $(".container-anotacions").find(".annotator-marginviewer-element")
+            .length
+        );
+      }
+
+    }
+
+
+
+
+
+
     
       //Me conecto al socket
 
-      // var socket = io();
-      // socket.on('connect', function() {
+      let socket = new WebSocket("ws://localhost:80/eventsocket");
 
-      //     socket.on('event',function(res){
-           
-      //       var currentuser = document
-      //         .getElementById("databackend")
-      //         .getAttribute("currentuser");
-            
-      //       const accion=res['accion'];
-      //       const listAnnotations=res['list'];
+      socket.onopen = function(e) {
+        //alert("[open] Connection established");
+        //alert("Sending to server");
+        //socket.send("My name is John");
 
-      //       //Agregar una annotacion
-      //       if(accion=='add'){
-              
-      //         for (let i = 0; i < listAnnotations.length; i++) {
 
-      //           anotacion = listAnnotations[i];
+        function buscoCambios() { 
+          //Obtengo todas las anotaciones
+        const listAnnotationsTagsLast = $(".container-anotacions").find(
+          ".annotator-marginviewer-element"
+        );
+    
+        var listIds = [];
+        for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
+          itemTag = listAnnotationsTagsLast[i];
+          annotationId = itemTag.getAttribute("id");
+          listIds.push(annotationId.substring(11));
+        }
 
-      //           if (anotacion['user']!=currentuser){
-      //             //alert(anotacion['user']+ " ha agregado una annotacion");
-                  
-                  
-      //             Annotator.prototype.loadAnnotations(annotations=[anotacion]);
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const descriptionId = urlParams.get('description');
 
-      //             //Pongo la categoria correcta:
-      //             classF='annotator-hl-destacat';
-      //             classQ='annotator-hl-subratllat';
-      //             classT='annotator-hl-term';
+        socket.send(descriptionId+'#'+listIds.join());
 
-      //             newClassCategory='';
-      //             if(anotacion['category']=='feedback'){
-      //               newClassCategory=classF;
-      //             }
-      //             if(anotacion['category']=='question'){
-      //               newClassCategory=classQ;
-      //             }
-      //             if(anotacion['category']=='term'){
-      //               newClassCategory=classT;
-      //             }
+        }
 
-      //             //Le agrego un identificador unico:
-      //             $('.annotator-hl').not('.'+classF+',.'+classQ+',.'+classT).attr('id', anotacion['id']);
-      //             //Le doy el formato de color:
-      //             $('.annotator-hl').not('.'+classF+',.'+classQ+',.'+classT).addClass(newClassCategory);    
-                  
-                  
-      //             AnnotatorViewer.prototype.createReferenceAnnotation(anotacion);
+        //Comienzo un loop que pregunte cada 3 segundos
 
-      //            // Annotator.prototype.onHighlightMouseoverEfect(anotacion);
-                  
-                  
-      //             //Pongo el contador con el numero correcto:
-      //             $("#count-anotations").text(
-      //               $(".container-anotacions").find(".annotator-marginviewer-element")
-      //                 .length
-      //             );
-       
+        function myLoop() {         //  create a loop function
+          setTimeout(function() {   //  call a 3s setTimeout when the loop is called
+            buscoCambios();   //  your code here
+                               //  increment the counter
+            if (true) {           //  if the counter < 10, call the loop function
+              myLoop();             //  ..  again which will trigger another 
+            }                       //  ..  setTimeout()
+          }, 5000)
+        }
 
-      //           }
+        myLoop();   
 
-                
 
-      //         }
-                
-
-      //       }
-            
-      //       //Borrar una annotacion
-      //       if(accion=='remove'){
-
-      //         //alert("Se ha borrado una annotacion"+res);
-       
-      //         for (let i = 0; i < listAnnotations.length; i++) {
-           
-      //           anotacionId = listAnnotations[i];
-
-      //           anotacion=$("#" + anotacionId).data("annotation");
-                
-      //           //Quito los highlights:
-      //           //Para que el metodo on delete no trate de borrarlo (solo quito highlights)
-      //           anotacion['notpublish']=true; 
-      //           Annotator.prototype.deleteAnnotation(anotacion);
-
-      //           //Quito del Panel:
-      //           AnnotatorViewer.prototype.onAnnotationDeleted(anotacion);
-
-      //           //quitarHighlight(anotacion);
-      //           //quitarSidePanel(anotacion);
-
-      //            //Pongo el contador con el numero correcto:
-      //            $("#count-anotations").text(
-      //             $(".container-anotacions").find(".annotator-marginviewer-element")
-      //               .length
-      //           );
-
-      //         }
-       
-      //       }
-
-      //     })
-
-      //     //alert("COnectado!!");
-      // });
-
-      // socket.on('disconnect', function() {
-
-      //     console.log("Desconectados");
-      //     //alert("Desconectado!!");
-
-      // });
-
-      //Obtengo la description:
-  
-
-      descriptionInitial={'descriptionId':idDescription,
-                          'annotationsIds':listIds
-                          }
       
+        
 
+      };
 
-      //Pruebo enviando un mensaje
-      socket.emit('event',descriptionInitial);
+      socket.onmessage = function(event) {
+        //alert(`[message] Data received from server: ${event.data}`);
+        stringData=event.data.split('#');
+        dataAccion=stringData[0];
+        datalst=stringData[1];
+        listIds=datalst.split(",");
+
+        for (let i = 0; i < listIds.length; i++) {
+          annotationId= listIds[i];
+          updateAnnotationsVisibles(dataAccion,annotationId);
+        } 
+
+        //Pongo el contador con el numero correcto:
+        $("#count-anotations").text(
+          $(".container-anotacions").find(".annotator-marginviewer-element")
+            .length
+        );
+
+      };
+
+      socket.onclose = function(event) {
+        if (event.wasClean) {
+          alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+        } else {
+          // e.g. server process killed or network down
+          // event.code is usually 1006 in this case
+          alert('[close] Connection died');
+        }
+      };
+
+      socket.onerror = function(error) {
+        alert(`[error] ${error.message}`);
+      };
+
+    
+
 
     };
 
