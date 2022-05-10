@@ -1342,8 +1342,13 @@ if(divreply.is(":hidden")){
 
     
       //Me conecto al socket
+      var servicepediaPath = document
+      .getElementById("databackend")
+      .getAttribute("servicepediapath");
+      const { hostname } = new URL(servicepediaPath);
 
-      let socket = new WebSocket("ws://localhost:80/eventsocket");
+      // servicepedia.dev.interlink-project.eu
+      let socket = new WebSocket("ws://"+hostname+":80/eventsocket");
 
       socket.onopen = function(e) {
         //alert("[open] Connection established");
@@ -1369,6 +1374,7 @@ if(divreply.is(":hidden")){
         const descriptionId = urlParams.get('description');
 
         socket.send(descriptionId+'#'+listIds.join());
+        //alert('Se envian la description '+descriptionId);
 
         }
 
@@ -1414,11 +1420,11 @@ if(divreply.is(":hidden")){
 
       socket.onclose = function(event) {
         if (event.wasClean) {
-          alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+          //alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
         } else {
           // e.g. server process killed or network down
           // event.code is usually 1006 in this case
-          alert('[close] Connection died');
+          //alert('[close] Connection died');
         }
       };
 
