@@ -95,6 +95,7 @@ services:
       - elasticsearch
       - survey
       - auth
+      - rabbitmq
     networks:
       - traefik-public
       - default
@@ -186,10 +187,28 @@ services:
       retries: 3
     networks:
       - traefik-public
-      - default
     logging:
       driver: "json-file"
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
 
+  logging:
+    image: interlinkproject/backend-logging:${LOGGING_VERSION}
+    container_name: ${PLATFORM_STACK_NAME}-logging
+    profiles: ["all", "logging", "loggingworker"]
+    env_file:
+      - ./.env
+    restart: on-failure
+    networks:
+      - traefik-public
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    command: ["./wait-for-it.sh", "rabbitmq:5672", "--", "python", "./main.py"]
+    logging:
+      driver: "json-file"
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
   
  
     
