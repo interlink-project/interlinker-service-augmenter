@@ -1347,8 +1347,15 @@ if(divreply.is(":hidden")){
       .getAttribute("servicepediapath");
       const { hostname } = new URL(servicepediaPath);
 
+      let puertoSocket='80';
+      let protocolSocket='ws';
+      if(hostname!='localhost'){
+        puertoSocket='443';
+        protocolSocket='wss';
+      }
+
       // servicepedia.dev.interlink-project.eu
-      let socket = new WebSocket("wss://"+hostname+":443/eventsocket");
+      let socket = new WebSocket(protocolSocket+"://"+hostname+":"+puertoSocket+"/eventsocket");
 
       socket.onopen = function(e) {
         //alert("[open] Connection established");
