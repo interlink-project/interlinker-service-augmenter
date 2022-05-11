@@ -171,7 +171,6 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
-    profiles: ["all", "logging", "rabbitmq"]
     env_file:
       - ./.env
     ports:
@@ -187,15 +186,12 @@ services:
       retries: 3
     networks:
       - traefik-public
-    logging:
-      driver: "json-file"
-      options:
-        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+    
 
   logging:
-    image: interlinkproject/backend-logging:${LOGGING_VERSION}
-    container_name: ${PLATFORM_STACK_NAME}-logging
-    profiles: ["all", "logging", "loggingworker"]
+    image: interlinkproject/backend-logging:v1.0.0
+    container_name: ${STACK_NAME}-logging
+
     env_file:
       - ./.env
     restart: on-failure
@@ -205,11 +201,7 @@ services:
       rabbitmq:
         condition: service_healthy
     command: ["./wait-for-it.sh", "rabbitmq:5672", "--", "python", "./main.py"]
-    logging:
-      driver: "json-file"
-      options:
-        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-  
+    
  
     
       
