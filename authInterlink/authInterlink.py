@@ -561,15 +561,25 @@ def genReport(descriptionId=None):
     for itemAnnotation in listAnnotationsApproved:
         enlaceTemp=itemAnnotation['uri']
         enlaceTemptoPage= settings.REDIRECT_SERVICEPEDIA+'/augment/'+enlaceTemp+'?description='+descriptionId+'&annotationId='+itemAnnotation['id']
+
         
-        rt = RichText('')
-
         import urllib.parse
+
+        #Codifico el enlace a la pagina original:
+        rt1 = RichText('')
+        linkEncoded1 = urllib.parse.quote(enlaceTemp)
+        rt1.add(enlaceTemp,underline=True,color='#A7A7A7',url_id=doc.build_url_id(linkEncoded1))
+
+        
+        #Codifico el enlace a la pagina augmentada:
+        rt = RichText('')
         linkEncoded = urllib.parse.quote(enlaceTemptoPage)
-
-
-        rt.add(enlaceTemp,url_id=doc.build_url_id(linkEncoded))
+        rt.add(enlaceTemptoPage,underline=True,color='#2F759E',url_id=doc.build_url_id(linkEncoded))
+        
+        itemAnnotation['enlaceaugmentado']=settings.REDIRECT_SERVICEPEDIA+'/augment/'+enlaceTemp+'?description='+descriptionId+'&annotationId='+itemAnnotation['id']
+        itemAnnotation['enlaceOriginalRich']=rt1
         itemAnnotation['enlaceRich']=rt
+        itemAnnotation['shorttext']=itemAnnotation['text'][:75]
 
     
     context = {
@@ -580,6 +590,8 @@ def genReport(descriptionId=None):
                'qent': 'false',
                'tent': 'false',
                'fent': 'false',
+               'content_table_title':_('Content Table'),
+               'annotation_on_page':_('Annotation on page'),
                'reportTitle': _('DESCRIPTION REPORT'),
                'shortDescriptionlbl': _('Short Description'),
                'term': _('TERM'),
@@ -594,6 +606,22 @@ def genReport(descriptionId=None):
 
                }
     doc.render(context)
+    
+
+    #Refresco la tabla de contenidos:
+    def set_updatefields_true(doc):
+        from lxml import etree
+        namespace = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+        #doc = Document(docx_path)
+        # add child to doc.settings element
+        element_updatefields = etree.SubElement(
+            doc.settings.element, f"{namespace}updateFields"
+        )
+        element_updatefields.set(f"{namespace}val", "true")
+        return doc
+    
+    doc=set_updatefields_true(doc)
+    
 
     name = datetime.datetime.now().strftime("%Y%m%dT%H%M%S")+"_reportFilled.docx"
     root = txtRaiz+"Render/"+name
@@ -620,6 +648,8 @@ def genReport(descriptionId=None):
 
         os.remove(txtRaiz+root)
         return response
+
+   
 
     return send_file(root, name, as_attachment=True,
                      attachment_filename=os.path.basename(name))

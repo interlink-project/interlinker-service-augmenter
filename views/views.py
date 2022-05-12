@@ -9,6 +9,9 @@ import requests
 import math
 import os
 import iso8601
+import asyncio
+
+from asgiref.sync import async_to_sync
 
 from werkzeug.utils import secure_filename
 from api.notification import Notification
@@ -45,6 +48,8 @@ import secrets
 from app.config import settings
 
 from app.languages import getLanguagesList
+
+from app.messages import log
 
 
 from flask_login import (
@@ -431,6 +436,14 @@ def saveDescription():
             # Actualizo la description
             newdescription.save(index="description")
             description = newdescription
+
+            #Guardo los logs:
+            
+            result = log({'id':description['id'],'title':description['title']})
+       
+            logging.info('Guardo el log de creacion')
+
+
             #flash("Record created successfully.", "info")
 
             # Redirecciono a la descripcion creada:

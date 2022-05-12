@@ -87,6 +87,18 @@ class Settings(BaseSettings):
     CONSUMER_TTL: int = os.getenv("CONSUMER_TTL")
     CRYPT_KEY: str = os.getenv("CRYPT_KEY")
 
+
+    #For the Rabbitmq
+
+    RABBITMQ_HOST: str =os.getenv("RABBITMQ_HOST")
+    RABBITMQ_USER: str =os.getenv("RABBITMQ_USER")
+    RABBITMQ_PASSWORD:str = os.getenv("RABBITMQ_PASSWORD")
+    EXCHANGE_NAME: str =os.getenv("EXCHANGE_NAME")
+
+    
+    
+
+
     class Config:
         case_sensitive = True
 
