@@ -579,13 +579,22 @@ def genReport(descriptionId=None):
         itemAnnotation['enlaceaugmentado']=settings.REDIRECT_SERVICEPEDIA+'/augment/'+enlaceTemp+'?description='+descriptionId+'&annotationId='+itemAnnotation['id']
         itemAnnotation['enlaceOriginalRich']=rt1
         itemAnnotation['enlaceRich']=rt
-        itemAnnotation['shorttext']=itemAnnotation['text'][:75]
+
+
+        if( len(itemAnnotation['text']) >70 ):
+            itemAnnotation['shorttext']=itemAnnotation['text'][:68]+'...'
+        else:
+             itemAnnotation['shorttext']=itemAnnotation['text']
 
     
     context = {
                'dateReport': fechaActual,
                'description_title': description['title'],
                'shortDescription': description['description'],
+               'detailslbl':_('DETAILS'),
+               'replieslbl':_('REPLIES'),
+               'noreplies':_('There is not replies for this description'),
+               'noclosestatement':_('There is no final comment about this description'),
                'annotations': listAnnotationsApproved,
                'qent': 'false',
                'tent': 'false',
@@ -593,7 +602,7 @@ def genReport(descriptionId=None):
                'content_table_title':_('Content Table'),
                'annotation_on_page':_('Annotation on page'),
                'reportTitle': _('DESCRIPTION REPORT'),
-               'shortDescriptionlbl': _('Short Description'),
+               'shortDescriptionlbl': _('Short summary'),
                'term': _('TERM'),
                'question': _('QUESTION'),
                'feedback': _('FEEDBACK'),
