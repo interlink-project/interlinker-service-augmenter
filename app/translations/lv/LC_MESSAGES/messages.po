@@ -496,6 +496,34 @@ msgstr "Noslēguma paziņojums"
 msgid "Date"
 msgstr "Datums"
 
+#: Report
+msgid "DETAILS"
+msgstr "INFORMĀCIJAS"
+
+#: Report
+msgid "REPLIES"
+msgstr "ATBILDES"
+
+#: Report
+msgid "There is not replies for this annotation"
+msgstr "Šai anotācijai nav atbilžu"
+
+#: Report
+msgid "There is no final comment about this description"
+msgstr "Galīgo komentāru par šo aprakstu nav."
+
+#: Report
+msgid "Content Table"
+msgstr "Satura tabula"
+
+#: Report
+msgid "Annotation on page"
+msgstr "Anotācija lapā"
+
+#: Report
+msgid "Short summary"
+msgstr "Īss kopsavilkums"
+
 
 #: templates/descriptionDetail.html:
 msgid "Would you like to a annotate a single page or a portal?"

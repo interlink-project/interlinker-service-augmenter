@@ -187,3 +187,36 @@ msgstr ""
 #: lib/plugin/kitchensink.js:27
 msgid "Tags"
 msgstr ""
+
+
+#: lib/plugin/kitchensink.js:27
+msgid "Feedback"
+msgstr ""
+
+#: lib/plugin/kitchensink.js:27
+msgid "Question"
+msgstr ""
+
+
+#: lib/plugin/kitchensink.js:27
+msgid "Terms"
+msgstr ""
+
+
+#: lib/plugin/kitchensink.js:27
+msgid "In Progress"
+msgstr ""
+
+#: lib/plugin/kitchensink.js:27
+msgid "Approved"
+msgstr ""
+
+
+#: lib/plugin/kitchensink.js:27
+msgid "Posted by"
+msgstr ""
+
+#: lib/plugin/kitchensink.js:27
+msgid "State"
+msgstr ""
+

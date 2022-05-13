@@ -23,5 +23,10 @@ var i18n_dict = {
         "log_in"                   : "Pieteikties",
         "Feedback"                 : "Atsauksmes",
         "Question"                 : "Jautājums",
-        "Term"                     : "Termiņš"
+        "Term"                     : "Termiņš",
+        "Term"                     : "Term",
+        "In Progress"              : "Izstrādes stadijā",
+        "Approved"                 : "Approved",
+        "Posted by"                : "Apstiprināts",
+        "State"                    : "Valsts",
 };

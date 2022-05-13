@@ -198,3 +198,21 @@ msgstr "Question"
 #: lib/plugin/kitchensink.js:27
 msgid "Terms"
 msgstr "Terms"
+
+
+#: lib/plugin/kitchensink.js:27
+msgid "In Progress"
+msgstr "In Progress"
+
+#: lib/plugin/kitchensink.js:27
+msgid "Approved"
+msgstr "Approved"
+
+
+#: lib/plugin/kitchensink.js:27
+msgid "Posted by"
+msgstr "Posted by"
+
+#: lib/plugin/kitchensink.js:27
+msgid "State"
+msgstr "State"

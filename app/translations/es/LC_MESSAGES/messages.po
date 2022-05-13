@@ -494,6 +494,44 @@ msgstr "Declaración de cierre"
 msgid "Date"
 msgstr "Fecha"
 
+#: Report
+msgid "DETAILS"
+msgstr "DETALLES"
+
+#: Report
+msgid "REPLIES"
+msgstr "RESPUESTAS"
+
+#: Report
+msgid "There is not replies for this annotation"
+msgstr "No hay respuestas para esta anotación"
+
+#: Report
+msgid "There is no final comment about this description"
+msgstr "No hay un comentario final sobre esta descripción."
+
+
+#: Report
+msgid "Content Table"
+msgstr "Tabla de contenidos"
+
+#: Report
+msgid "Annotation on page"
+msgstr "Anotación en la página"
+
+#: Report
+msgid "Short summary"
+msgstr "Breve resumen"
+
+
+
+
+
+
+
+
+
+
 #: templates/descriptionDetail.html:
 msgid "Would you like to a annotate a single page or a portal?"
 msgstr "Te gustaría anotar una página o un portal con múltiples páginas?"

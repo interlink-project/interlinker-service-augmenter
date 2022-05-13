@@ -1,5 +1,5 @@
 var i18n_dict = {
-                "Comments"                 : "Comentario",
+                "Comments"                 : "Comentarios",
                 "requires_jQuery"          :"Annotator necesita del jQuery: tienes que incluir jquery.js",
                 "requires_JSON"            :"Annotator necesita JSON:  tienes que incluir json2.js.",
                 "Cancel"                   : "Cancelar",
@@ -23,6 +23,10 @@ var i18n_dict = {
                 "log_in"                   : "Iniciar Sesión",
                 "Feedback"                 : "Contribución",
                 "Question"                 : "Pregunta",
-                "Term"                     : "Término"
+                "Term"                     : "Término",
+                "In Progress"              : "En Progreso",
+                "Approved"                 : "Aprovado",
+                "Posted by"                : "Publicado por",
+                "State"                    : "Estado"
               
         };

@@ -197,3 +197,22 @@ msgstr "Pregunta"
 #: lib/plugin/kitchensink.js:27
 msgid "Terms"
 msgstr "Termino"
+
+
+#: lib/annotator.js
+msgid "In Progress"
+msgstr "En Progreso"
+
+#: lib/annotator.js
+msgid "Approved"
+msgstr "Aprovado"
+
+
+#: lib/annotator.js
+msgid "Posted by"
+msgstr "Publicado por"
+
+#: lib/annotator.js
+msgid "State"
+msgstr "Estado"
+

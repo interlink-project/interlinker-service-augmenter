@@ -198,3 +198,22 @@ msgstr "Jautājums"
 #: lib/plugin/kitchensink.js:27
 msgid "Terms"
 msgstr "Noteikumi"
+
+
+#: lib/plugin/kitchensink.js:27
+msgid "In Progress"
+msgstr "Izstrādes stadijā"
+
+#: lib/plugin/kitchensink.js:27
+msgid "Approved"
+msgstr "Apstiprināts"
+
+
+#: lib/plugin/kitchensink.js:27
+msgid "Posted by"
+msgstr "Iesūtīja"
+
+#: lib/plugin/kitchensink.js:27
+msgid "State"
+msgstr "Valsts"
+

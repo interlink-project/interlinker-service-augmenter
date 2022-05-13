@@ -593,7 +593,7 @@ def genReport(descriptionId=None):
                'shortDescription': description['description'],
                'detailslbl':_('DETAILS'),
                'replieslbl':_('REPLIES'),
-               'noreplies':_('There is not replies for this description'),
+               'noreplies':_('There is not replies for this annotation'),
                'noclosestatement':_('There is no final comment about this description'),
                'annotations': listAnnotationsApproved,
                'qent': 'false',

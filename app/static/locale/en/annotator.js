@@ -23,5 +23,12 @@ var i18n_dict = {
                 "log_in"                   : "Log In",
                 "Feedback"                 : "Feedback",
                 "Question"                 : "Question",
-                "Term"                     : "Term"
+                "Term"                     : "Term",
+                "In Progress"              : "In Progress",
+                "Approved"                 : "Approved",
+                "Posted by"                : "Posted by",
+                "State"                    : "State"
+
+                        
+                
         };
