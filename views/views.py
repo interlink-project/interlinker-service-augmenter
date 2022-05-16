@@ -437,12 +437,12 @@ def saveDescription():
             newdescription.save(index="description")
             description = newdescription
 
-            #Guardo los logs:
-            
-            result = log({'id':description['id'],'title':description['title']})
-       
-            logging.info('Guardo el log de creacion')
+            # Guardo los logs:
 
+            result = log(
+                {'id': description['id'], 'title': description['title']})
+
+            logging.info('Guardo el log de creacion')
 
             #flash("Record created successfully.", "info")
 
@@ -847,7 +847,6 @@ def survey():
     return render_template("survey.html")
 
 
-
 def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     # En el caso que se tiene interes en una anotacion en particular
     argumentos = request.args.to_dict()
@@ -1168,12 +1167,23 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
                     if settings.DOMAIN != 'localhost':
                         hrefVal.replace("http://", "https://")
 
-                    urlLink = url_for(
-                        'views.augment', rutaPagina=hrefVal)+'?description='+descriptionRef+'&integrated='+integrationInterlinker
-                    a_Link.attrs['href'] = urlLink
-                    a_Link.attrs['integrated'] = integrationInterlinker
-                    a_Link.attrs['is_portal'] = 'true'
-                    a_Link.attrs['onclick'] = "navegatetoPage(event)"
+                    # Pregunto si el enlace esta dentro del mismo dominio de la pagina
+                    if settings.DOMAIN in hrefVal:
+
+                        urlLink = url_for(
+                            'views.augment', rutaPagina=hrefVal)+'?description='+descriptionRef+'&integrated='+integrationInterlinker
+                        a_Link.attrs['href'] = urlLink
+                        a_Link.attrs['integrated'] = integrationInterlinker
+                        a_Link.attrs['is_portal'] = 'true'
+                        a_Link.attrs['onclick'] = "navegatetoPage(event)"
+                    else:
+
+                        urlLink = hrefVal
+                        a_Link.attrs['href'] = urlLink
+                        a_Link.attrs['integrated'] = integrationInterlinker
+                        a_Link.attrs['isexternal'] = 'true'
+                        a_Link.attrs['is_portal'] = 'true'
+                        a_Link.attrs['onclick'] = "navegatetoPage(event)"
 
     #print("Total CSS insertados en the page:", len(css_files))
 
@@ -1299,8 +1309,7 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     internacii18nScript = soup.new_tag(
         'script', src=url_for('static', filename='lib/gettext.js'))
 
-
-    socketioLibScript=  soup.new_tag(
+    socketioLibScript = soup.new_tag(
         'script', src=url_for('static', filename='lib/socketio/socket.io.min.js'))
 
     # Agrego las librerias personalizadas:
@@ -1312,15 +1321,28 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     function navegatetoPage(event) {
         if(event.type=='click'){
         event.preventDefault();
+        
         integrated = event.target.getAttribute('integrated');
         is_portal = event.target.getAttribute('is_portal');
+        
+        
         var href = event.currentTarget.href;
         
         if (is_portal == 'false'){
             alert('This description is a single page, can´t navegate to other pages.');
             return false;
+        }else{
+            
+            try {
+                is_external = event.target.getAttribute('isexternal');
+                if(is_external=='true'){
+                    alert('You are about to navigate out of the portal pages. You will not be able to make annotations on these pages.');    
+                }
+            } catch (error) {
+            }
+            
+            
         }
-        
         
         sessionStorage.setItem("integrated",integrated);
         window.location = href;
@@ -1447,10 +1469,12 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     return soup
 
 # Cargo la pagina desde beautifulSoup y la muestro en pantalla
+
+
 @views.route("/augment/<path:rutaPagina>", methods=["GET", "POST"])
 def augment(rutaPagina, integrationInterlinker='False'):
 
-    soup=mostrarPagina(rutaPagina,integrationInterlinker)
+    soup = mostrarPagina(rutaPagina, integrationInterlinker)
 
     headers = {'Content-Type': 'text/html',
                'x-annotator-auth-token': generate_token()}
@@ -1458,17 +1482,18 @@ def augment(rutaPagina, integrationInterlinker='False'):
     return make_response(soup.prettify(), 200, headers)
 
 # Cargo la pagina desde beautifulSoup y la muestro en pantalla
+
+
 @views.route("/augments/<path:rutaPagina>", methods=["GET", "POST"])
 @login_required
 def augments(rutaPagina, integrationInterlinker='False'):
-    
-    soup=mostrarPagina(rutaPagina,integrationInterlinker)
+
+    soup = mostrarPagina(rutaPagina, integrationInterlinker)
 
     headers = {'Content-Type': 'text/html',
                'x-annotator-auth-token': generate_token()}
 
     return make_response(soup.prettify(), 200, headers)
-
 
 
 def generate_token():

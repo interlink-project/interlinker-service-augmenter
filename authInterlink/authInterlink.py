@@ -103,7 +103,7 @@ def logina():
 @authInterlink.route("/login")
 def login():
 
-    #Intento con el componente de Julen
+    # Intento con el componente de Julen
 
     # LLamo al componente de authentication para verificar que existe un usuario en session
     usuario = get_current_user(request)
@@ -139,16 +139,14 @@ def login():
 
         # LLamo al componente de authentication para verificar que existe un usuario en session
         usuario = current_user
-    
-        
+
         # If the user is not logged in call a log in method of ath
         if usuario.is_anonymous:
 
-            redirecttoCallback=settings.REDIRECT_URI
+            redirecttoCallback = settings.REDIRECT_URI
             if(redirecttoCallback.endswith('interlink-project.eu/callback')):
-            #if(redirecttoCallback=='https://dev.interlink-project.eu/callback' or redirecttoCallback=='https://demo.interlink-project.eu/callback' ):
-                redirecttoCallback=settings.REDIRECT_SERVICEPEDIA+'/callback'
-
+                # if(redirecttoCallback=='https://dev.interlink-project.eu/callback' or redirecttoCallback=='https://demo.interlink-project.eu/callback' ):
+                redirecttoCallback = settings.REDIRECT_SERVICEPEDIA+'/callback'
 
             # get request params
             query_params = {'client_id': current_app.config["CLIENT_ID"],
@@ -159,8 +157,7 @@ def login():
                             'response_type': 'code',
                             'response_mode': 'query'}
             #logging.info('parametros de configuracion auth:')
-            #logging.info(query_params)
-
+            # logging.info(query_params)
 
             # build request_uri
             request_uri = "{base_url}?{query_params}".format(
@@ -179,8 +176,6 @@ def login():
                 return redirect(paginaNext)
             else:
                 return redirect(url_for("authInterlink.dashboard"))
-        
-   
 
 
 @authInterlink.route("/logout", methods=["GET", "POST"])
@@ -208,8 +203,8 @@ def logout():
     # # return render_template("home.html")
     # # Por ahora queda asi.
     return redirect(current_app.config["END_SESSION_ENDPOINT"])
-    
-    
+
+
 @authInterlink.route("/logouta", methods=["GET", "POST"])
 @login_required
 def logouta():
@@ -487,15 +482,17 @@ def advanceSearch():
 
     return render_template("advanceSearch.html", user=current_user, anotations=res)
 
-def addFormatConversation(listAnnotationsApproved,rootAnnotationId,level=0):
-    listFormatoCorrecto=[]
-    #recorro todas las anotaciones base
+
+def addFormatConversation(listAnnotationsApproved, rootAnnotationId, level=0):
+    listFormatoCorrecto = []
+    # recorro todas las anotaciones base
     for itemAnnotation in listAnnotationsApproved:
-        if (itemAnnotation['idAnotationReply']=='annotation-'+rootAnnotationId):
-            itemAnnotation['level']=level
+        if (itemAnnotation['idAnotationReply'] == 'annotation-'+rootAnnotationId):
+            itemAnnotation['level'] = level
             listFormatoCorrecto.append(itemAnnotation)
-            
-            listFormatoCorrecto.extend(addFormatConversation(listAnnotationsApproved,itemAnnotation['id'],level+1))
+
+            listFormatoCorrecto.extend(addFormatConversation(
+                listAnnotationsApproved, itemAnnotation['id'], level+1))
 
     return listFormatoCorrecto
 
@@ -514,110 +511,109 @@ def genReport(descriptionId=None):
         descriptionId=descriptionId)
     listAnnotationsApproved = listAnnotationsApproved['annotations']
 
-    #Obtengo todos los replies de esta description:
+    # Obtengo todos los replies de esta description:
     res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
-                                        'InProgress': True, 'Archived': False, 'Approved': True}, descriptionId=descriptionId, category='reply', notreply=False, page='all')
-    replies=res['annotations']
-        
+        'InProgress': True, 'Archived': False, 'Approved': True}, descriptionId=descriptionId, category='reply', notreply=False, page='all')
+    replies = res['annotations']
 
-    #Obtengo todas las replies approved:
-    for itemAnnotationApproved in  listAnnotationsApproved:
-        listreplies=[]
+    # Obtengo todas las replies approved:
+    for itemAnnotationApproved in listAnnotationsApproved:
+        listreplies = []
         for itemReply in replies:
             if(itemReply['idReplyRoot'] == itemAnnotationApproved['id']):
-                
-                raw_html=itemReply['text']
+
+                raw_html = itemReply['text']
                 from bs4 import BeautifulSoup
                 cleantext = BeautifulSoup(raw_html, "lxml").text
-                itemReply['text']=cleantext
+                itemReply['text'] = cleantext
 
-                userEmail=itemReply['user']
-                userlabel=userEmail.split('@',1)
-                itemReply['userlabel']=userlabel[0]
+                userEmail = itemReply['user']
+                userlabel = userEmail.split('@', 1)
+                itemReply['userlabel'] = userlabel[0]
 
                 listreplies.append(itemReply)
 
-        listreplies=listreplies[::-1]
-        #Doy el formato indicado:
-        listreplies = addFormatConversation(listAnnotationsApproved=listreplies,rootAnnotationId=itemAnnotationApproved['id'])
+        listreplies = listreplies[::-1]
+        # Doy el formato indicado:
+        listreplies = addFormatConversation(
+            listAnnotationsApproved=listreplies, rootAnnotationId=itemAnnotationApproved['id'])
 
-        #Agrego todos los replies al listado
-        itemAnnotationApproved['replies']=listreplies   
-        #itemAnnotationApproved['replies']=[]  
-    
-    
+        # Agrego todos los replies al listado
+        itemAnnotationApproved['replies'] = listreplies
+        # itemAnnotationApproved['replies']=[]
 
-    txtRaiz=''
-    protocoltxt='http://'
+    txtRaiz = ''
+    protocoltxt = 'http://'
     # if(settings.DOMAIN == "localhost"):
     #     doc = DocxTemplate('static/servicepediaReport_template.docx')
     # else:
-    
+
     doc = DocxTemplate('app/static/servicepediaReport_template.docx')
-    txtRaiz='app/'
-    protocoltxt='https://'
+    txtRaiz = 'app/'
+    protocoltxt = 'https://'
 
-    #Agrego los hyperlinks (con el formato adecuado):
+    # Agrego los hyperlinks (con el formato adecuado):
     for itemAnnotation in listAnnotationsApproved:
-        enlaceTemp=itemAnnotation['uri']
-        enlaceTemptoPage= settings.REDIRECT_SERVICEPEDIA+'/augment/'+enlaceTemp+'?description='+descriptionId+'&annotationId='+itemAnnotation['id']
+        enlaceTemp = itemAnnotation['uri']
+        enlaceTemptoPage = settings.REDIRECT_SERVICEPEDIA+'/augment/'+enlaceTemp + \
+            '?description='+descriptionId+'&annotationId='+itemAnnotation['id']
 
-        
         import urllib.parse
 
-        #Codifico el enlace a la pagina original:
+        # Codifico el enlace a la pagina original:
         rt1 = RichText('')
         linkEncoded1 = urllib.parse.quote(enlaceTemp)
-        rt1.add(enlaceTemp,underline=True,color='#A7A7A7',url_id=doc.build_url_id(linkEncoded1))
+        rt1.add(enlaceTemp, underline=True, color='#A7A7A7',
+                url_id=doc.build_url_id(linkEncoded1))
 
-        
-        #Codifico el enlace a la pagina augmentada:
+        # Codifico el enlace a la pagina augmentada:
         rt = RichText('')
         linkEncoded = urllib.parse.quote(enlaceTemptoPage)
-        rt.add(enlaceTemptoPage,underline=True,color='#2F759E',url_id=doc.build_url_id(linkEncoded))
-        
-        itemAnnotation['enlaceaugmentado']=settings.REDIRECT_SERVICEPEDIA+'/augment/'+enlaceTemp+'?description='+descriptionId+'&annotationId='+itemAnnotation['id']
-        itemAnnotation['enlaceOriginalRich']=rt1
-        itemAnnotation['enlaceRich']=rt
+        rt.add(enlaceTemptoPage, underline=True, color='#2F759E',
+               url_id=doc.build_url_id(linkEncoded))
 
+        itemAnnotation['enlaceaugmentado'] = settings.REDIRECT_SERVICEPEDIA+'/augment/' + \
+            enlaceTemp+'?description='+descriptionId + \
+            '&annotationId='+itemAnnotation['id']
+        itemAnnotation['enlaceOriginalRich'] = rt1
+        itemAnnotation['enlaceRich'] = rt
 
-        if( len(itemAnnotation['text']) >70 ):
-            itemAnnotation['shorttext']=itemAnnotation['text'][:68]+'...'
+        if(len(itemAnnotation['text']) > 70):
+            itemAnnotation['shorttext'] = itemAnnotation['text'][:68]+'...'
         else:
-             itemAnnotation['shorttext']=itemAnnotation['text']
+            itemAnnotation['shorttext'] = itemAnnotation['text']
 
-    
     context = {
-               'dateReport': fechaActual,
-               'description_title': description['title'],
-               'shortDescription': description['description'],
-               'detailslbl':_('DETAILS'),
-               'replieslbl':_('REPLIES'),
-               'noreplies':_('There is not replies for this annotation'),
-               'noclosestatement':_('There is no final comment about this description'),
-               'annotations': listAnnotationsApproved,
-               'qent': 'false',
-               'tent': 'false',
-               'fent': 'false',
-               'content_table_title':_('Content Table'),
-               'annotation_on_page':_('Annotation on page'),
-               'reportTitle': _('DESCRIPTION REPORT'),
-               'shortDescriptionlbl': _('Short summary'),
-               'term': _('TERM'),
-               'question': _('QUESTION'),
-               'feedback': _('FEEDBACK'),
-               'posted_by': _('Posted by'),
-               'websitepage': _('Website Page'),
-               'openingtext': _('Opening Text'),
-               'referencetext': _('Reference Text'),
-               'closingstatement': _('Closing Statement'),
-               'date': _('Date')
+        'dateReport': fechaActual,
+        'description_title': description['title'],
+        'shortDescription': description['description'],
+        'detailslbl': _('DETAILS'),
+        'replieslbl': _('REPLIES'),
+        'noreplies': _('There is not replies for this annotation'),
+        'noclosestatement': _('There is no final comment about this description'),
+        'annotations': listAnnotationsApproved,
+        'qent': 'false',
+        'tent': 'false',
+        'fent': 'false',
+        'content_table_title': _('Content Table'),
+        'annotation_on_page': _('Annotation on page'),
+        'reportTitle': _('DESCRIPTION REPORT'),
+        'shortDescriptionlbl': _('Short summary'),
+        'term': _('TERM'),
+        'question': _('QUESTION'),
+        'feedback': _('FEEDBACK'),
+        'posted_by': _('Posted by'),
+        'websitepage': _('Website Page'),
+        'openingtext': _('Opening Text'),
+        'referencetext': _('Reference Text'),
+        'closingstatement': _('Closing Statement'),
+        'date': _('Date')
 
-               }
+    }
     doc.render(context)
-    
 
-    #Refresco la tabla de contenidos:
+    # Refresco la tabla de contenidos:
+
     def set_updatefields_true(doc):
         from lxml import etree
         namespace = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
@@ -628,9 +624,8 @@ def genReport(descriptionId=None):
         )
         element_updatefields.set(f"{namespace}val", "true")
         return doc
-    
-    doc=set_updatefields_true(doc)
-    
+
+    doc = set_updatefields_true(doc)
 
     name = datetime.datetime.now().strftime("%Y%m%dT%H%M%S")+"_reportFilled.docx"
     root = txtRaiz+"Render/"+name
@@ -657,8 +652,6 @@ def genReport(descriptionId=None):
 
         os.remove(txtRaiz+root)
         return response
-
-   
 
     return send_file(root, name, as_attachment=True,
                      attachment_filename=os.path.basename(name))
@@ -765,14 +758,13 @@ def subjectPage(descriptionId=None, annotatorId=None):
 
     annotation = Annotation._get_Annotation_byId(id=annotatorId)[0]
 
-    #Obtengo los replies de esta annotacion.
-
+    # Obtengo los replies de esta annotacion.
 
     res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
                                       'InProgress': True, 'Archived': False, 'Approved': True}, descriptionId=descriptionId, category='reply', notreply=False, page='all')
 
-    nroReplies=res['numRes']
-    replies=res['annotations']
+    nroReplies = res['numRes']
+    replies = res['annotations']
 
     # nroReplies = Annotation.count(
     #     query={'idReplyRoot': annotatorId, 'category': 'reply'})
@@ -825,10 +817,11 @@ def changeAnnotation(descriptionId=None, annotatorId=None, option=None):
             "user": current_user.email
         })
 
-        #Actualizo el estado a todos los comentarios de la branch:
-        #Pongo a todos los replies archivados (State=1)
+        # Actualizo el estado a todos los comentarios de la branch:
+        # Pongo a todos los replies archivados (State=1)
 
-        annotation._changeStateReplies(annotation=annotation,newstate=newstate) 
+        annotation._changeStateReplies(
+            annotation=annotation, newstate=newstate)
         annotation['state'] = int(newstate)
         annotation.updateState()
 
@@ -988,7 +981,7 @@ def callback():
 
     # if not is_id_token_valid(id_token, config["issuer"], config["client_id"], NONCE):
     #    return "ID token is invalid", 403
-    
+
     # Authorization flow successful, get userinfo and login user
     userinfo_response = requests.get(current_app.config["USERINFO_URI"],
                                      headers={'Authorization': f'Bearer {access_token}'}).json()
