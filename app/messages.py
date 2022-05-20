@@ -11,6 +11,9 @@ from flask_login import current_user
 import pika
 from app.config import settings
 
+import requests
+import time
+
 
 _disable_logging: ContextVar[str] = ContextVar(
     "disable_logging", default=False)
