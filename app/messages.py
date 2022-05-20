@@ -92,12 +92,12 @@ def logapi(data: dict):
     pretext = settings.PROTOCOL+settings.DOMAIN
 
     # Para debug es necesario poner:
-    if settings.DOMAIN == 'localhost':
-        # Degbug:
-        #url = f'http://localhost:5001/api/v1/log'
+    # if settings.DOMAIN == 'localhost':
+    # Degbug:
+    #url = f'http://localhost:5001/api/v1/log'
 
-        # Local:
-        url = 'http://logging:80/api/v1/log'
+    # Local:
+    url = 'http://logging:80/api/v1/log'
 
     print(url)
     logging.info('La url es: '+url)
