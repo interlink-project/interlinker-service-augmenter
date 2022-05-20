@@ -88,6 +88,9 @@ def logapi(data: dict):
     except:
         data["user_id"] = None
 
+    # Defino el Servicepedia
+    data["service"] = 'Augmenter-interlinker'
+
     start_time = time.time()
     pretext = settings.PROTOCOL+settings.DOMAIN
 
