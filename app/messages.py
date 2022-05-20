@@ -97,7 +97,7 @@ def logapi(data: dict):
     #url = f'http://localhost:5001/api/v1/log'
 
     # Local:
-    url = 'http://logging:80/api/v1/log'
+    url = 'http://logging:80/logging/api/v1/log'
 
     print(url)
     logging.info('La url es: '+url)
