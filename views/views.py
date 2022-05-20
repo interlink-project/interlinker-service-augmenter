@@ -49,7 +49,7 @@ from app.config import settings
 
 from app.languages import getLanguagesList
 
-from app.messages import log
+from app.messages import log, logapi
 
 
 from flask_login import (
@@ -438,13 +438,10 @@ def saveDescription():
             description = newdescription
 
             # Guardo los logs:
+            # Create a new description
 
-            result = log(
-                {'id': description['id'], 'title': description['title']})
-
-            logging.info('Guardo el log de creacion')
-
-            #flash("Record created successfully.", "info")
+            logapi(
+                {"action": "new_description", "object_id": description['id'], "model": "description", 'description_data': description})
 
             # Redirecciono a la descripcion creada:
             if interlinkIntegration:
@@ -514,6 +511,12 @@ def saveDescription():
             editDescripcion.updateFields(index="description")
             description = editDescripcion
             flash("Registro editado correctamente.", "info")
+
+            # Guardo los logs:
+            # Create a new description
+
+            logapi(
+                {"action": "update_description", "object_id": description['id'], "model": "description", 'description_data': editDescripcion})
 
         else:
             description = editDescripcion
