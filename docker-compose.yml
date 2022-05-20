@@ -189,14 +189,34 @@ services:
       - default
     
 
+  
+ 
   logging:
     image: interlinkproject/backend-logging:master
-    container_name: logging
-
+    container_name: ${STACK_NAME}-logging
+    profiles: ["all", "logging", "loggingworker"]
     env_file:
       - ./.env
     environment:
-      - BASE_PATH=
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
+      - EXCHANGE_NAME=${EXCHANGE_NAME}
+      - DOMAIN=${DOMAIN}
+      - PORT=${PORT}
+      - BASE_PATH=/logging
+      - TZ=${TZ}
+      - WAITFORIT_TIMEOUT=120
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.http.services.${STACK_NAME}-logging.loadbalancer.server.port=${PORT}
+      - traefik.http.routers.${STACK_NAME}-logging.entrypoints=websecure
+      - traefik.http.routers.${STACK_NAME}-logging.tls.certresolver=letsencrypt
+      - traefik.http.routers.${STACK_NAME}-logging.tls=true
+      - traefik.http.routers.${STACK_NAME}-logging.rule=Host(`${DOMAIN}`) && PathPrefix(`/logging`)
+      - traefik.http.routers.${STACK_NAME}-logging.middlewares=logging-stripprefix
+      - traefik.http.middlewares.logging-stripprefix.stripprefix.prefixes=/logging
     restart: on-failure
     networks:
       - traefik-public
@@ -204,17 +224,12 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
-    command: ["./wait-for-it.sh", "rabbitmq:5672", "--", "uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "${PORT}"]
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=traefik-public
-      - traefik.http.routers.${STACK_NAME?Variable not set}-logging-http.rule=PathPrefix(`/logging`)
-      - traefik.http.services.${STACK_NAME?Variable not set}-logging.loadbalancer.server.port=${PORT}
-      - traefik.http.routers.${STACK_NAME?Variable not set}-logging-http.middlewares=logging-stripprefix
-      - traefik.http.middlewares.logging-stripprefix.stripprefix.prefixes=/logging
-  
- 
-    
+    command: ["./wait-for-it.sh", "rabbitmq:5672", "--", "gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-c", "gunicorn_conf.py", "main:app"]
+    logging:
+      driver: "json-file"
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+
       
       
 
