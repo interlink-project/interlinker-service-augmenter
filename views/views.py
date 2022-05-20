@@ -49,7 +49,7 @@ from app.config import settings
 
 from app.languages import getLanguagesList
 
-from app.messages import log, logapi
+from app.messages import logapi
 
 
 from flask_login import (

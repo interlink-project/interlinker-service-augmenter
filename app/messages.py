@@ -12,7 +12,9 @@ import pika
 from app.config import settings
 
 
-_disable_logging: ContextVar[str] = ContextVar("disable_logging", default=False)
+_disable_logging: ContextVar[str] = ContextVar(
+    "disable_logging", default=False)
+
 
 def set_logging_disabled(val: bool) -> str:
     try:
@@ -20,8 +22,9 @@ def set_logging_disabled(val: bool) -> str:
     except:
         pass
 
+
 def is_logging_disabled() -> str:
-    return  _disable_logging.get()
+    return _disable_logging.get()
 
 
 class UUIDEncoder(json.JSONEncoder):
@@ -30,7 +33,8 @@ class UUIDEncoder(json.JSONEncoder):
             # if the obj is uuid, we simply return the value of uuid
             return obj.hex
         return json.JSONEncoder.default(self, obj)
-        
+
+
 exchange_name = settings.EXCHANGE_NAME
 rabbitmq_host = settings.RABBITMQ_HOST
 rabbitmq_user = settings.RABBITMQ_USER
@@ -48,17 +52,17 @@ def log(data: dict):
         data["user_id"] = None
     #data["service"] = "coproduction"
 
-    request = b64encode(json.dumps(data,cls=UUIDEncoder).encode())
+    request = b64encode(json.dumps(data, cls=UUIDEncoder).encode())
 
     logging.info('RabbitHost:'+rabbitmq_host)
 
     credentials = pika.PlainCredentials(rabbitmq_user, rabbitmq_password)
-    parameters = pika.ConnectionParameters(host=rabbitmq_host,credentials=credentials)
+    parameters = pika.ConnectionParameters(
+        host=rabbitmq_host, credentials=credentials)
 
     connection = pika.BlockingConnection(parameters)
 
     channel = connection.channel()
-
 
     channel.exchange_declare(
         exchange=exchange_name, exchange_type='direct'
@@ -66,6 +70,39 @@ def log(data: dict):
 
     channel.basic_publish(
         exchange=exchange_name,
-        routing_key='logging', 
+        routing_key='logging',
         body=request
     )
+
+
+def logapi(data: dict):
+
+    if is_logging_disabled():
+        return
+
+    try:
+        data["user_id"] = current_user.email
+    except:
+        data["user_id"] = None
+
+    start_time = time.time()
+    pretext = settings.PROTOCOL+settings.DOMAIN
+
+    # Para debug es necesario poner:
+    if settings.DOMAIN == 'localhost':
+        # Degbug:
+        #url = f'http://localhost:5001/api/v1/log'
+
+        # Local:
+        url = 'http://logging:80/api/v1/log'
+
+    print(url)
+    logging.info('La url es: '+url)
+
+    requestdata = b64encode(json.dumps(data, cls=UUIDEncoder).encode())
+
+    responseOut = requests.post(url, json=data)
+
+    print(responseOut.text)
+
+    print("--- %s seconds ---" % (time.time() - start_time))
