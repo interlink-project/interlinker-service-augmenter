@@ -37,6 +37,8 @@ from app.config import settings
 import logging
 import requests
 
+from app.messages import logapi
+
 store = Blueprint('store', __name__)
 
 CREATE_FILTER_FIELDS = ('updated', 'created', 'consumer')  # , 'id')
@@ -591,6 +593,9 @@ def create_annotation():
 
         #print("El id final es:"+annotation['id'])
 
+        logapi(
+            {"action": "new_annotation", "object_id": annotation['id'], "model": "annotation", 'annotation_data': annotation})
+
         location = url_for('.read_annotation', docid=annotation['id'])
 
         return jsonify(annotation), 201, {'Location': location}
@@ -652,6 +657,9 @@ def update_annotation(docid):
         if hasattr(g, 'after_annotation_update'):
             g.after_annotation_update(annotation)
 
+        logapi(
+            {"action": "update_annotation", "object_id": annotation['id'], "model": "annotation", 'annotation_data': annotation})
+
     return jsonify(annotation)
 
 
@@ -671,16 +679,17 @@ def delete_annotation(docid):
     if hasattr(g, 'before_annotation_delete'):
         g.before_annotation_delete(annotation)
 
-    
-    #Borro todas las replies
+    # Borro todas las replies
     Annotation._deleteReplies(annotation=annotation)
 
-    #Booro la annotation.
+    # Booro la annotation.
     annotation.delete()
-
 
     if hasattr(g, 'after_annotation_delete'):
         g.after_annotation_delete(annotation)
+
+    logapi(
+        {"action": "delete_annotation", "object_id": annotation['id'], "model": "annotation", 'annotation_data': annotation})
 
     return '', 204
 

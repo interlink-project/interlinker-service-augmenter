@@ -1093,339 +1093,409 @@ if(divreply.is(":hidden")){
         listHijos = getReplies1(item, listReplies);
         var idAnnotation = item.substring(11);
         if (listHijos.length > 0) {
-          $('#nrep-'+idAnnotation).prepend('('+listHijos.length+')');
+          $("#nrep-" + idAnnotation).prepend("(" + listHijos.length + ")");
         } else {
           $("#nrep-" + idAnnotation).hide();
         }
       });
 
-
       // Abro el panel y cargo una annotacion especifica:
       const queryString = window.location.search;
       console.log(queryString);
       const urlParams = new URLSearchParams(queryString);
-      const idAnnotation = urlParams.get('annotationId');
-      const idDescription = urlParams.get('description');
+      const idAnnotation = urlParams.get("annotationId");
+      const idDescription = urlParams.get("description");
       //alert('Identificador Annotation:'+annotationId);
 
-      if (idAnnotation != null){
-      // Abro Panel:
-      $(".container-anotacions").show();
-      
-      //Muestro la annotacion y sus replies:
+      if (idAnnotation != null) {
+        // Abro Panel:
+        $(".container-anotacions").show();
 
-      function getReplies(idAnnotation, listReplies) {
-        //Obtengo los hijos
-        var listHijos = [];
-        var listAnnotationsTags = $("li.annotator-marginviewer-element");
-        for (let i = 0; i < listAnnotationsTags.length; i++) {
-          itemTag = listAnnotationsTags[i];
+        //Muestro la annotacion y sus replies:
 
-          let hijoTag = itemTag["children"][0];
-          existeContainerReply = false;
-          if ("flex-replyContainer" == hijoTag["className"]) {
-            existeContainerReply = true;
-          }
+        function getReplies(idAnnotation, listReplies) {
+          //Obtengo los hijos
+          var listHijos = [];
+          var listAnnotationsTags = $("li.annotator-marginviewer-element");
+          for (let i = 0; i < listAnnotationsTags.length; i++) {
+            itemTag = listAnnotationsTags[i];
 
-          if (existeContainerReply) {
-            annotationId = itemTag.getAttribute("id");
-            annotationRef = hijoTag.getAttribute("idannotationref");
+            let hijoTag = itemTag["children"][0];
+            existeContainerReply = false;
+            if ("flex-replyContainer" == hijoTag["className"]) {
+              existeContainerReply = true;
+            }
 
-            if (annotationRef == "annotation-" + idAnnotation) {
-              listHijos.push(annotationId);
+            if (existeContainerReply) {
+              annotationId = itemTag.getAttribute("id");
+              annotationRef = hijoTag.getAttribute("idannotationref");
+
+              if (annotationRef == "annotation-" + idAnnotation) {
+                listHijos.push(annotationId);
+              }
             }
           }
-        }
 
-        if (listHijos.length > 0) {
-          listReplies.push(listHijos);
+          if (listHijos.length > 0) {
+            listReplies.push(listHijos);
 
-          //Recorro cada hijo buscando relacionados:
+            //Recorro cada hijo buscando relacionados:
 
-          for (itemHijo in listHijos) {
-            itemValue = listHijos[itemHijo];
+            for (itemHijo in listHijos) {
+              itemValue = listHijos[itemHijo];
 
-            if (itemValue === undefined) {
-            } else {
-              idHijo = itemValue;
+              if (itemValue === undefined) {
+              } else {
+                idHijo = itemValue;
 
-              listReplies = getReplies(idHijo, listReplies);
+                listReplies = getReplies(idHijo, listReplies);
+              }
             }
           }
+
+          return listReplies.flat();
         }
 
-        return listReplies.flat();
-      }
+        $("li.annotator-marginviewer-element").each(function (index) {
+          const annotationId = this["id"];
 
+          //Obtengo los replies:
+          let listReplies = [];
+          listReplies = getReplies(idAnnotation, listReplies);
 
-
-      $("li.annotator-marginviewer-element").each(function (index) {
-        const annotationId = this["id"];
-
-        //Obtengo los replies:
-        let listReplies = [];
-        listReplies = getReplies(idAnnotation, listReplies);
-
-        if (annotationId.substring(11) == idAnnotation) {
-          $(this).show();
-        } else {
-          if (listReplies.includes(annotationId)) {
-            //With Jquery
-            $(
-              "li.annotator-marginviewer-element" + "#" + annotationId
-            ).addClass("found");
-            $(
-              "li.annotator-marginviewer-element" + "#" + annotationId
-            ).show();
-
-            //Pongo todos los iconos como comprimidos
-            const idRep = annotationId.substring(11);
-            const labelCollapse =
-              '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path></svg>';
-
-            $("#nrep-" + idRep)
-              .empty()
-              .append(labelCollapse);
-            $("#nrep-" + idRep).addClass("iscollapsed");
-            $("#nrep-" + idRep).removeClass("isexpand");
+          if (annotationId.substring(11) == idAnnotation) {
+            $(this).show();
           } else {
-            $(this).hide();
-          }
-        }
-      });
+            if (listReplies.includes(annotationId)) {
+              //With Jquery
+              $(
+                "li.annotator-marginviewer-element" + "#" + annotationId
+              ).addClass("found");
+              $(
+                "li.annotator-marginviewer-element" + "#" + annotationId
+              ).show();
 
-      //POngo el visor sobre la annotacion:
+              //Pongo todos los iconos como comprimidos
+              const idRep = annotationId.substring(11);
+              const labelCollapse =
+                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path></svg>';
 
-      var viewPanelHeight = jQuery(window).height();
-      var annotation_reference = idAnnotation;
-
-      $element = jQuery("#" + idAnnotation);
-      // if (!$element.length) {
-      //   $element = jQuery("#" + annotation.order);
-      //   annotation_reference = annotation.order; //If exists a sorted annotations we put it in the right order, using order attribute
-      // }
-
-      if ($element.length) {
-        elOffset = $element.offset();
-        $(this).children(".annotator-marginviewer-quote").toggle();
-        $("html, body").animate(
-          {
-            scrollTop:
-              $("#" + annotation_reference).offset().top -
-              viewPanelHeight / 2,
-          },
-          2000
-        );
-      }
-
-
-
-  
-
-    }
-
-
-    //Obtengo todas las anotaciones
-    const listAnnotationsTagsLast = $(".container-anotacions").find(
-      ".annotator-marginviewer-element"
-    );
-
-    var listIds = [];
-    for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
-      itemTag = listAnnotationsTagsLast[i];
-      annotationId = itemTag.getAttribute("id");
-      listIds.push(annotationId.substring(11));
-    }
-
-    function updateAnnotationsVisibles(accion,annotationId){
-      //Agregar una annotacion
-      if(accion=='add'){
-        //alert('agrego'+annotationId);
-
-        //Obtengo la informacion de la annotacion:
-
-        var servicepediaPath = document
-        .getElementById("databackend")
-        .getAttribute("servicepediapath");
-
-        request = $.ajax({
-          url: servicepediaPath + "/annotations/" + annotationId,
-          dataType: 'json',
-          success: onSuccessAddGetAnot,
-          error: function (jqXhr, textStatus, errorThrown) {
-            console.log(errorThrown);
+              $("#nrep-" + idRep)
+                .empty()
+                .append(labelCollapse);
+              $("#nrep-" + idRep).addClass("iscollapsed");
+              $("#nrep-" + idRep).removeClass("isexpand");
+            } else {
+              $(this).hide();
+            }
           }
         });
 
-        function onSuccessAddGetAnot(data, status, xhr) {// success callback function
-          anotacion=data;
-          //Agrego la anotacion:
-          
-          var currentuser = document
-          .getElementById("databackend")
-          .getAttribute("currentuser");
-          
-                if (anotacion['user']!=currentuser){
-                  //alert(anotacion['user']+ " ha agregado una annotacion");
-                  
-                  //notPublish por que la salida del metodo detiene las siguiente ejecución
-                  anotacion['notpublish']=true;
-                  Annotator.prototype.loadAnnotations(annotations=[anotacion]);
+        //POngo el visor sobre la annotacion:
 
-                  //Pongo la categoria correcta:
-                  classF='annotator-hl-destacat';
-                  classQ='annotator-hl-subratllat';
-                  classT='annotator-hl-term';
+        var viewPanelHeight = jQuery(window).height();
+        var annotation_reference = idAnnotation;
 
-                  newClassCategory='';
-                  if(anotacion['category']=='feedback'){
-                    newClassCategory=classF;
-                  }
-                  if(anotacion['category']=='question'){
-                    newClassCategory=classQ;
-                  }
-                  if(anotacion['category']=='term'){
-                    newClassCategory=classT;
-                  }
+        $element = jQuery("#" + idAnnotation);
+        // if (!$element.length) {
+        //   $element = jQuery("#" + annotation.order);
+        //   annotation_reference = annotation.order; //If exists a sorted annotations we put it in the right order, using order attribute
+        // }
 
-                  //Le agrego un identificador unico:
-                  $('.annotator-hl').not('.'+classF+',.'+classQ+',.'+classT).attr('id', anotacion['id']);
-                  //Le doy el formato de color:
-                  $('.annotator-hl').not('.'+classF+',.'+classQ+',.'+classT).addClass(newClassCategory);    
-                  
-                  
-                  AnnotatorViewer.prototype.createReferenceAnnotation(anotacion);
+        if ($element.length) {
+          elOffset = $element.offset();
+          $(this).children(".annotator-marginviewer-quote").toggle();
+          $("html, body").animate(
+            {
+              scrollTop:
+                $("#" + annotation_reference).offset().top -
+                viewPanelHeight / 2,
+            },
+            2000
+          );
+        }
+      }
 
-                 // Annotator.prototype.onHighlightMouseoverEfect(anotacion);
-                  
+      //Obtengo todas las anotaciones
+      const listAnnotationsTagsLast = $(".container-anotacions").find(
+        ".annotator-marginviewer-element"
+      );
 
-                }
+      var listIds = [];
+      for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
+        itemTag = listAnnotationsTagsLast[i];
+        annotationId = itemTag.getAttribute("id");
+        listIds.push(annotationId.substring(11));
+      }
 
+      function updateAnnotationsVisibles(accion, annotationId) {
+        //Agregar una annotacion
+        if (accion == "add") {
+          //alert('agrego'+annotationId);
+
+          //Obtengo la informacion de la annotacion:
+
+          var servicepediaPath = document
+            .getElementById("databackend")
+            .getAttribute("servicepediapath");
+
+          request = $.ajax({
+            url: servicepediaPath + "/annotations/" + annotationId,
+            dataType: "json",
+            success: onSuccessAddGetAnot,
+            error: function (jqXhr, textStatus, errorThrown) {
+              console.log(errorThrown);
+            },
+          });
+
+          function onSuccessAddGetAnot(data, status, xhr) {
+            // success callback function
+            anotacion = data;
+            //Agrego la anotacion:
+
+            var currentuser = document
+              .getElementById("databackend")
+              .getAttribute("currentuser");
+
+            if (anotacion["user"] != currentuser) {
+              //alert(anotacion['user']+ " ha agregado una annotacion");
+
+              //notPublish por que la salida del metodo detiene las siguiente ejecución
+              anotacion["notpublish"] = true;
+              Annotator.prototype.loadAnnotations((annotations = [anotacion]));
+
+              //Pongo la categoria correcta:
+              classF = "annotator-hl-destacat";
+              classQ = "annotator-hl-subratllat";
+              classT = "annotator-hl-term";
+
+              newClassCategory = "";
+              if (anotacion["category"] == "feedback") {
+                newClassCategory = classF;
+              }
+              if (anotacion["category"] == "question") {
+                newClassCategory = classQ;
+              }
+              if (anotacion["category"] == "term") {
+                newClassCategory = classT;
               }
 
+              //Le agrego un identificador unico:
+              $(".annotator-hl")
+                .not("." + classF + ",." + classQ + ",." + classT)
+                .attr("id", anotacion["id"]);
+              //Le doy el formato de color:
+              $(".annotator-hl")
+                .not("." + classF + ",." + classQ + ",." + classT)
+                .addClass(newClassCategory);
 
+              AnnotatorViewer.prototype.createReferenceAnnotation(anotacion);
+
+              // Annotator.prototype.onHighlightMouseoverEfect(anotacion);
+            }
+          }
         }
 
+        if (accion == "remove") {
+          //alert('quito'+annotationId);
 
+          anotacion = $("#" + annotationId).data("annotation");
 
-      
-      if(accion=='remove'){
+          //Quito los highlights:
+          //Para que el metodo on delete no trate de borrarlo (solo quito highlights)
+          anotacion["notpublish"] = true;
+          Annotator.prototype.deleteAnnotation(anotacion);
 
-        //alert('quito'+annotationId);
+          //Quito del Panel:
+          AnnotatorViewer.prototype.onAnnotationDeleted(anotacion);
 
-        anotacion=$("#" + annotationId).data("annotation");
-        
-        //Quito los highlights:
-        //Para que el metodo on delete no trate de borrarlo (solo quito highlights)
-        anotacion['notpublish']=true; 
-        Annotator.prototype.deleteAnnotation(anotacion);
-
-        //Quito del Panel:
-        AnnotatorViewer.prototype.onAnnotationDeleted(anotacion);
-
-        //quitarHighlight(anotacion);
-        //quitarSidePanel(anotacion);
+          //quitarHighlight(anotacion);
+          //quitarSidePanel(anotacion);
 
           //Pongo el contador con el numero correcto:
           $("#count-anotations").text(
-          $(".container-anotacions").find(".annotator-marginviewer-element")
-            .length
+            $(".container-anotacions").find(".annotator-marginviewer-element")
+              .length
+          );
+        }
+      }
+
+      TimeMe.initialize({
+        currentPageName: window.location.href, // current page
+        idleTimeoutInSeconds: 5, // stop recording time due to inactivity
+        //websocketOptions: { // optional
+        //	websocketHost: "ws://your_host:your_port",
+        //	appId: "insert-your-made-up-app-id"
+        //}
+      });
+
+      TimeMe.callAfterTimeElapsedInSeconds(4, function () {
+        console.log(
+          "The user has been using the page for 4 seconds! Let's prompt them with something."
         );
-      }
+      });
 
-    }
+      TimeMe.callAfterTimeElapsedInSeconds(9, function () {
+        console.log(
+          "The user has been using the page for 9 seconds! Let's prompt them with something."
+        );
+      });
 
-
-
-
-
-
-    
-      //Me conecto al socket
-      var servicepediaPath = document
-      .getElementById("databackend")
-      .getAttribute("servicepediapath");
-      const { hostname } = new URL(servicepediaPath);
-
-      let puertoSocket='80';
-      let protocolSocket='ws';
-      if(hostname!='localhost'){
-        puertoSocket='443';
-        protocolSocket='wss';
-      }
-
-      // servicepedia.dev.interlink-project.eu
-      let socket = new WebSocket(protocolSocket+"://"+hostname+":"+puertoSocket+"/eventsocket");
-
-      socket.onopen = function(e) {
-        //alert("[open] Connection established");
-        //alert("Sending to server");
-        //socket.send("My name is John");
-
-
-        function buscoCambios() { 
-          //Obtengo todas las anotaciones
+      window.onload = function () {
+        //Obtengo todas las anotaciones
         const listAnnotationsTagsLast = $(".container-anotacions").find(
           ".annotator-marginviewer-element"
         );
-    
+
         var listIds = [];
         for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
           itemTag = listAnnotationsTagsLast[i];
           annotationId = itemTag.getAttribute("id");
-          listIds.push(annotationId.substring(11));
+          TimeMe.trackTimeOnElement(annotationId);
         }
 
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const descriptionId = urlParams.get('description');
+        //TimeMe.trackTimeOnElement("area-of-interest-1");
+        //TimeMe.trackTimeOnElement("area-of-interest-2");
+        setInterval(function () {
+          let timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+          document.getElementById("timeInSeconds").textContent =
+            timeSpentOnPage.toFixed(2);
 
-        socket.send(descriptionId+'#'+listIds.join());
-        //alert('Se envian la description '+descriptionId);
+          if (
+            TimeMe.isUserCurrentlyOnPage &&
+            TimeMe.isUserCurrentlyIdle === false
+          ) {
+            document.getElementById("activityStatus").textContent =
+              "You are actively using this page.";
+          } else {
+            document.getElementById("activityStatus").textContent =
+              "You have left the page.";
+          }
 
+          for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
+            itemTag = listAnnotationsTagsLast[i];
+            annotationId = itemTag.getAttribute("id");
+            let timeSpentOnElement =
+              TimeMe.getTimeOnElementInSeconds(annotationId);
+            document.getElementById("time-" + annotationId).textContent =
+              timeSpentOnElement.toFixed(2);
+          }
+
+          /*let timeSpentOnElement =
+           TimeMe.getTimeOnElementInSeconds("area-of-interest-1");
+         document.getElementById("area-of-interest-time-1").textContent =
+           timeSpentOnElement.toFixed(2);
+
+         let timeSpentOnElement2 =
+           TimeMe.getTimeOnElementInSeconds("area-of-interest-2");
+         document.getElementById("area-of-interest-time-2").textContent =
+           timeSpentOnElement2.toFixed(2);*/
+        }, 37);
+      };
+
+      window.onbeforeunload = function (event) {
+        var servicepediaPath = document
+          .getElementById("databackend")
+          .getAttribute("servicepediapath");
+
+        xmlhttp = new XMLHttpRequest();
+
+        const urlpost = servicepediaPath + "/logwithapi";
+
+        xmlhttp.open("POST", urlpost, true);
+
+        xmlhttp.setRequestHeader(
+          "Content-type",
+          "application/json;charset=UTF-8"
+        );
+
+        let timeSpentOnPage = TimeMe.getTimeOnAllPagesInSeconds();
+
+        xmlhttp.send(JSON.stringify(timeSpentOnPage));
+      };
+
+      //Me conecto al socket
+      var servicepediaPath = document
+        .getElementById("databackend")
+        .getAttribute("servicepediapath");
+      const { hostname } = new URL(servicepediaPath);
+
+      let puertoSocket = "80";
+      let protocolSocket = "ws";
+      if (hostname != "localhost") {
+        puertoSocket = "443";
+        protocolSocket = "wss";
+      }
+
+      // servicepedia.dev.interlink-project.eu
+      let socket = new WebSocket(
+        protocolSocket + "://" + hostname + ":" + puertoSocket + "/eventsocket"
+      );
+
+      socket.onopen = function (e) {
+        //alert("[open] Connection established");
+        //alert("Sending to server");
+        //socket.send("My name is John");
+
+        function buscoCambios() {
+          //Obtengo todas las anotaciones
+          const listAnnotationsTagsLast = $(".container-anotacions").find(
+            ".annotator-marginviewer-element"
+          );
+
+          var listIds = [];
+          for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
+            itemTag = listAnnotationsTagsLast[i];
+            annotationId = itemTag.getAttribute("id");
+            listIds.push(annotationId.substring(11));
+          }
+
+          const queryString = window.location.search;
+          const urlParams = new URLSearchParams(queryString);
+          const descriptionId = urlParams.get("description");
+
+          socket.send(descriptionId + "#" + listIds.join());
+          //alert('Se envian la description '+descriptionId);
         }
 
         //Comienzo un loop que pregunte cada 3 segundos
 
-        function myLoop() {         //  create a loop function
-          setTimeout(function() {   //  call a 3s setTimeout when the loop is called
-            buscoCambios();   //  your code here
-                               //  increment the counter
-            if (true) {           //  if the counter < 10, call the loop function
-              myLoop();             //  ..  again which will trigger another 
-            }                       //  ..  setTimeout()
-          }, 5000)
+        function myLoop() {
+          //  create a loop function
+          setTimeout(function () {
+            //  call a 3s setTimeout when the loop is called
+            buscoCambios(); //  your code here
+            //  increment the counter
+            if (true) {
+              //  if the counter < 10, call the loop function
+              myLoop(); //  ..  again which will trigger another
+            } //  ..  setTimeout()
+          }, 5000);
         }
 
-        myLoop();   
-
-
-      
-        
-
+        myLoop();
       };
 
-      socket.onmessage = function(event) {
+      socket.onmessage = function (event) {
         //alert(`[message] Data received from server: ${event.data}`);
-        stringData=event.data.split('#');
-        dataAccion=stringData[0];
-        datalst=stringData[1];
-        listIds=datalst.split(",");
+        stringData = event.data.split("#");
+        dataAccion = stringData[0];
+        datalst = stringData[1];
+        listIds = datalst.split(",");
 
         for (let i = 0; i < listIds.length; i++) {
-          annotationId= listIds[i];
-          updateAnnotationsVisibles(dataAccion,annotationId);
-        } 
+          annotationId = listIds[i];
+          updateAnnotationsVisibles(dataAccion, annotationId);
+        }
 
         //Pongo el contador con el numero correcto:
         $("#count-anotations").text(
           $(".container-anotacions").find(".annotator-marginviewer-element")
             .length
         );
-
       };
 
-      socket.onclose = function(event) {
+      socket.onclose = function (event) {
         if (event.wasClean) {
           //alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
         } else {
@@ -1435,13 +1505,9 @@ if(divreply.is(":hidden")){
         }
       };
 
-      socket.onerror = function(error) {
+      socket.onerror = function (error) {
         alert(`[error] ${error.message}`);
       };
-
-    
-
-
     };
 
     AnnotatorViewer.prototype.onAnnotationDeleted = function (annotation) {
@@ -1456,11 +1522,9 @@ if(divreply.is(":hidden")){
         }
 
         let textoAnotacion = valor.children[0].text;
-       
       });
 
       if (annotation.id != null) {
-
         //Antes de quitar esta annotation tengo que quitar todas las anotaciones hijas
         listAnnotationsTags = $(".container-anotacions").find(
           ".annotator-marginviewer-element"
@@ -1761,9 +1825,18 @@ if(divreply.is(":hidden")){
           '<div class="anotador_text">' +
           textAnnotation +
           "</div>" +
-          '</div><div class="annotator-marginviewer-date">' +
+          "</div>" +
+          '<div class="annotator-marginviewer-date">' +
           $.format.date(annotation.data_creacio, "dd/MM/yyyy HH:mm:ss") +
-          '</div><div class="annotator-marginviewer-quote">' +
+          "</div>" +
+          '<div class="area-of-interest" id="timecont-' +
+          annotation.id +
+          '">' +
+          'Interaction: <span id="time-annotation-' +
+          annotation.id +
+          '"></span> seconds.' +
+          "</div>" +
+          '<div class="annotator-marginviewer-quote">' +
           annotation.quote +
           '</div><div class="annotator-marginviewer-footer">' +
           '<span class="' +
@@ -1790,7 +1863,7 @@ if(divreply.is(":hidden")){
       myAnotationTxt = i18n_dict.my_annotations;
       sharedTxt = i18n_dict.Shared;
 
-      var checboxes = `<label class="checkbox-inline"><input type="checkbox" id="type_own" rel="meAnotator"/>${myAnotationTxt}</label><label class="checkbox-inline">`;//  <input type="checkbox" id="type_share" rel="shared"/>${sharedTxt}</label>`;
+      var checboxes = `<label class="checkbox-inline"><input type="checkbox" id="type_own" rel="meAnotator"/>${myAnotationTxt}</label><label class="checkbox-inline">`; //  <input type="checkbox" id="type_share" rel="shared"/>${sharedTxt}</label>`;
 
       var annotation_layer =
         '<div  class="annotations-list-uoc" ><div id="annotations-panel"><span class="rotate etiquetaSolapa" title="' +

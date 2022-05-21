@@ -99,11 +99,11 @@ def logapi(data: dict):
     # Degbug:
     #url = f'http://localhost:5001/api/v1/log'
 
-    # Local:
-    url = 'http://logging/api/v1/log'
-
     # Server:
     #url = 'http://logging/logging/api/v1/log'
+
+    # Local:
+    url = 'http://logging/api/v1/log'
 
     print(url)
     logging.info('La url es: '+url)

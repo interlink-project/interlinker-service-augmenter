@@ -542,6 +542,24 @@ def cargar_clave():
     # except:
     #     return None """
 
+# Formulatio de carga de Pagina
+
+
+@views.route("/logwithapi", methods=["POST"])
+def logwithapi():
+
+    try:
+        JSON_sent = request.get_json()
+        print(JSON_sent)
+
+        logapi(
+            {"action": "time_registration", "object_id": "times123", "model": "times", 'timer-data': JSON_sent})
+
+        return ('', 204)
+    except Exception as e:
+        print("AJAX excepted " + str(e))
+        return str(e)
+
 
 @views.route("/claimModeration", methods=["POST"])
 def claimModeration():
@@ -1315,6 +1333,9 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     socketioLibScript = soup.new_tag(
         'script', src=url_for('static', filename='lib/socketio/socket.io.min.js'))
 
+    timermeLibScript = soup.new_tag(
+        'script', src=url_for('static', filename='lib/timeme.min.js'))
+
     # Agrego las librerias personalizadas:
 
     # Defino la funcion de navegacion entre enlaces:
@@ -1386,6 +1407,7 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
         bodyTag.append(jqueryScript14)
 
         bodyTag.append(socketioLibScript)
+        bodyTag.append(timermeLibScript)
 
     except:
         #print("Excepcion en ccs1")
@@ -1469,6 +1491,11 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     except:
         #print("Excepcion en ccs1")
         pass
+
+    # Guardo el log
+    logapi(
+        {"action": "open_agmentationpage", "object_id": descriptionRef, "model": "description"})
+
     return soup
 
 # Cargo la pagina desde beautifulSoup y la muestro en pantalla
