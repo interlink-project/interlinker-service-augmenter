@@ -108,6 +108,31 @@ msgstr "Viss"
 msgid "My Contributions"
 msgstr "Mani ieguldījumi"
 
+
+#: templates/description.html:311
+msgid "See in Page"
+msgstr "Skatīt lapā"
+
+#: templates/description.html:311
+msgid "Options"
+msgstr "Iespējas"
+
+#: templates/subjectPage.html:311
+msgid "See in Text"
+msgstr "Skatīt tekstā"
+
+#: templates/description.html:353
+msgid "Generate Report"
+msgstr "Ģenerēt atskaiti"
+
+#: templates/description.html:353
+msgid "Annotate"
+msgstr "Anotēt"
+
+#: templates/description.html:311
+msgid "More Details"
+msgstr "Skatīt vairāk"
+
 #: templates/description.html:365
 msgid "In Progress"
 msgstr "Notiek"

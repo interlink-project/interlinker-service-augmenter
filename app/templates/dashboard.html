@@ -9,6 +9,20 @@
   
   <script>
   
+  function resetFilters(event){
+    if(event.type=='click'){
+      event.preventDefault();
+
+      $('#padministration').prop('selectedIndex',0);
+      $('#domain').prop('selectedIndex',0);
+      $('#searchBox').val('');
+      $( "#buscarButton" ).trigger( "click" );
+      $( "#collapseButton" ).trigger( "click" );
+      
+
+    }
+
+  }
     //Falta cargar de nuevo cuando se tenga una consulta en memoria
   
   
@@ -346,19 +360,25 @@
             aria-label="Search"
             onkeydown="searchText(event)"
           />
-          <button class="btn btn-outline-secondary" onclick="searchText(event)">
-            {{ _('Search') }}
-          </button>
+
           <button
-            class="btn btn-outline-dark"
+            id="collapseButton"
+            class="btn btn-outline-secondary"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#advanseSearchTools"
             aria-expanded="false"
             aria-controls="collapseExample"
+            data-bs-toggle="tooltip" data-bs-placement="bottom"
+            title="More Filters" alt="Filters"
           >
-            +
+          <i class="fa-solid fa-filter"></i>
+           
           </button>
+          <button  id="buscarButton" class="btn btn-outline-secondary" onclick="searchText(event)">
+            {{ _('Search') }}
+          </button>
+          
         </form>
       </div>
       <div class="col">
@@ -382,7 +402,7 @@
     <div class="container">
       <div class="row">
         <div
-          class="col-6"
+          class="col-5"
           style="display: flex; align-content: center; justify-content: center"
         >
           <select class="form-control" id="padministration">
@@ -395,7 +415,7 @@
           </select>
         </div>
         <div
-          class="col-6"
+          class="col-5"
           style="display: flex; align-content: center; justify-content: center"
         >
           <select class="form-control cl-3" id="domain">
@@ -408,6 +428,11 @@
             {% endfor %}
           </select>
         </div>
+
+         <div class="col-2" style="display: flex; align-content: center; justify-content: center">
+      <button class="btn btn-outline-secondary"  onclick="resetFilters(event)" >{{ _('Reset Filters') }}</button>
+     </div>
+
       </div>
     </div>
   </div>

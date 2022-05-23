@@ -104,6 +104,31 @@ msgstr "Pregunta"
 msgid "All"
 msgstr "Todos"
 
+#: templates/description.html:311
+msgid "See in Page"
+msgstr "Ver en Página"
+
+#: templates/description.html:311
+msgid "More Details"
+msgstr "Ver Detalles"
+
+#: templates/description.html:311
+msgid "Options"
+msgstr "Opciones"
+
+#: templates/subjectPage.html:311
+msgid "See in Text"
+msgstr "Ver en texto"
+
+#: templates/description.html:353
+msgid "Generate Report"
+msgstr "Generar Reporte"
+
+#: templates/description.html:353
+msgid "Annotate"
+msgstr "Anotar"
+
+
 #: templates/description.html:353
 msgid "My Contributions"
 msgstr "Mis Contribuciones"

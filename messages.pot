@@ -410,3 +410,12 @@ msgstr ""
 #: templates/surveys.html:372
 msgid "Create a new survey"
 msgstr ""
+
+
+#: Report
+msgid "REPLIES"
+msgstr ""
+
+#: Report
+msgid "There is not replies for this annotation"
+msgstr ""
