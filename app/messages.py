@@ -110,8 +110,12 @@ def logapi(data: dict):
 
     requestdata = b64encode(json.dumps(data, cls=UUIDEncoder).encode())
 
-    responseOut = requests.post(url, json=data)
+    try:
+        responseOut = requests.post(url, json=data)
+        print(responseOut.text)
+    except:
+        print('Error while saving the logging informacion.')
 
-    print(responseOut.text)
+    
 
     print("--- %s seconds ---" % (time.time() - start_time))

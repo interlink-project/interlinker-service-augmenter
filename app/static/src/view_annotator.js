@@ -1831,7 +1831,7 @@ if(divreply.is(":hidden")){
           "</div>" +
           '<div class="area-of-interest" id="timecont-' +
           annotation.id +
-          '">' +
+          '" hidden>' +
           'Interaction: <span id="time-annotation-' +
           annotation.id +
           '"></span> seconds.' +

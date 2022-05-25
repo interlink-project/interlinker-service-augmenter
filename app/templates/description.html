@@ -145,16 +145,18 @@ block content %}
         let txtCategory = '';
         if (dataItem.category == 'feedback') {
           txtCategory = "{{ _('feedback')}}";
-
-          botonCategory = ' <button class="btn" onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style = "height: 30px;" alt = "' + txtCategory + '" title = "' + txtCategory + '" ><i class="fa-solid fa-file-pen" style="color:rgb(152, 82, 140);"></i> </button></td>';
+          //onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";"
+          botonCategory = ' <button class="btn"  style = "height: 30px;" alt = "' + txtCategory + '" title = "' + txtCategory + '" ><i class="fa-solid fa-file-pen" style="color:rgb(152, 82, 140);"></i> </button></td>';
 
         } else if (dataItem.category == 'question') {
           txtCategory = "{{ _('question')}}";
-          botonCategory = ' <button class="btn" onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style = "height: 30px;" alt = "' + txtCategory + '" title = "' + txtCategory + '" ><i class="fa-solid fa-file-circle-question" style="color:rgb(212, 211, 122);"></i> </button></td>';
+          //onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";"
+          botonCategory = ' <button class="btn"  style = "height: 30px;" alt = "' + txtCategory + '" title = "' + txtCategory + '" ><i class="fa-solid fa-file-circle-question" style="color:rgb(212, 211, 122);"></i> </button></td>';
 
         } else if (dataItem.category == 'term') {
           txtCategory = "{{ _('term')}}";
-          botonCategory = ' <button class="btn" onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style = "height: 30px;" alt = "' + txtCategory + '" title = "' + txtCategory + '" ><i class="fa-solid fa-file-circle-exclamation" style="color:rgb(107, 205, 166);"></i> </button></td>';
+          //onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";"
+          botonCategory = ' <button class="btn"  style = "height: 30px;" alt = "' + txtCategory + '" title = "' + txtCategory + '" ><i class="fa-solid fa-file-circle-exclamation" style="color:rgb(107, 205, 166);"></i> </button></td>';
 
         }
         sectionCategoria = ' <tr > <td> ' + botonCategory + ' </td>';
@@ -652,8 +654,10 @@ function getval(sel)
           -->
     <tr>
       <td>
+        <!-- Quito on click para evitar confusion.
+        // onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';" --> 
         <button class='btn'
-          onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';"
+          
           style="height: 30px;" alt="{{ _('Feedback') }}" title="{{ _('Feedback') }}">
 
           <i class="fa-solid fa-file-circle-exclamation" style="color:rgb(107, 205, 166);"></i>
@@ -667,8 +671,10 @@ function getval(sel)
           -->
     <tr></tr>
     <td>
+      <!-- Quito on click para evitar confusion.
+        // onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';" --> 
       <button class='btn'
-        onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';"
+        
         style="height: 30px;" alt="{{ _('Question') }}" title="{{ _('Question') }}">
 
         <i class="fa-solid fa-file-circle-question" style="color:rgb(212, 211, 122);"></i>
@@ -682,8 +688,10 @@ function getval(sel)
           -->
       <tr>
         <td>
+          <!-- Quito on click para evitar confusion.
+        // onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';" --> 
           <button class='btn'
-            onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';"
+            
             style="height: 30px;" alt="{{ _('Term') }}" title="{{ _('Term') }}">
 
             <i class="fa-solid fa-file-pen" style="color:rgb(152, 82, 140);"></i>
