@@ -250,7 +250,7 @@ block content %}
 
 
                <div class="dropdown  dropstart">
-            <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+            <a class="btn btn-outline-secondary dropdown-toggle" style="max-width: 130;" href="#" role="button" id="dropdownMenuLink"
               data-bs-toggle="dropdown" aria-expanded="false">
               {{_('Options')}}
             </a>
@@ -476,8 +476,8 @@ function getval(sel)
 <hr />
 
 <div style="display: block">
-  <div class="row" style="padding-bottom: 20;">
-    <div class="col-8" style="text-align: center;margin-top: 4px;display: inline-flex;">
+  <div style="padding-bottom: 20;display: flex;">
+    <div  style="text-align: center;width: 100vh;">
 
 
       <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
@@ -485,10 +485,10 @@ function getval(sel)
       <span id="descriptionId" hidden>{{description['id']}}</span>
 
     </div>
-    <div class="col-4" style="display: flex;flex-direction: row-reverse;">
+    <div style="flex: auto;text-align: right;flex-direction: row;">
 
 
-      <button class="btn btn-success" style='min-width: 120px; margin-left: 5px;'
+      <button class="btn btn-success" style='min-width: 170px; margin-left: 5px;'
         onclick="window.location.href='{{ url_for('views.augment',rutaPagina=urlMainPage) }}?description={{description['id']}}';"><i
           class="fa-solid fa-play"></i> | {{_('Annotate')}}</button>
 
@@ -773,7 +773,7 @@ function getval(sel)
 
 
           <div class="dropdown  dropstart">
-            <a class="btn btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+            <a class="btn btn-outline-secondary dropdown-toggle" style="max-width: 130;" href="#" role="button" id="dropdownMenuLink"
               data-bs-toggle="dropdown" aria-expanded="false">
               {{_('Options')}}
             </a>
