@@ -603,8 +603,8 @@ msgid "How likely is that you would recommend this app?"
 msgstr "Cik iespējams, ka jūs ieteiktu šo programmu?"
 
 #: templates/feedback.html:
-msgid "Provide feedback about the app."
-msgstr "Sniedziet atsauksmes par lietotni."
+msgid "Provide feedback about the app"
+msgstr "Sniedziet atsauksmes par lietotni"
 
 #: templates/feedback.html:
 msgid "Enter your email address in case you like to keep in touch with INTERLINK to provide more detailed feedback"

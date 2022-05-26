@@ -608,7 +608,7 @@ msgid "How likely is that you would recommend this app?"
 msgstr "¿Recomendarías el uso de esta aplicación a otros colaboradores?"
 
 #: templates/feedback.html:
-msgid "Provide feedback about the app."
+msgid "Provide feedback about the app"
 msgstr "¿Tienes algún comentario para mejorar la aplicación?"
 
 #: templates/feedback.html:

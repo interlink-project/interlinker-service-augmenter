@@ -29,4 +29,17 @@ var i18n_dict = {
         "Approved"                 : "Approved",
         "Posted by"                : "Apstiprināts",
         "State"                    : "Valsts",
+        "Your opinion is important to us, let us know how you felt using this web application and help us make it better and better" : "Jūsu viedoklis mums ir svarīgs, informējiet mūs, kā jūs jutāties, izmantojot šo tīmekļa lietojumprogrammu, un palīdziet mums to uzlabot un uzlabot",
+        "For the next five questions, select a value from a scale of (1 - 5). Where the value of 1 means that you are totally dissatisfied and 5 totally satisfied":"Nākamajiem pieciem jautājumiem atlasiet vērtību no skalas (1 -5). Kur vērtība 1 nozīmē, ka esi totāli neapmierināts un 5 pilnīgi apmierināts",
+        "Did you like the app design?":"Vai jums patika programmas dizains?",
+        "Was this app easy-to-use?":"Vai šī programma bija viegli lietojama?",
+        "Was this app useful for you?":"Vai šī programma jums bija noderīga?",
+        "Does this app increase your chance to take part in collaborative processes?":"Vai šī programma palielina jūsu iespējas piedalīties sadarbības procesos?",
+        "How likely is that you would recommend this app?":"Cik iespējams, ka jūs ieteiktu šo programmu?",
+        "Provide feedback about the app":"Sniedziet atsauksmes par lietotni",
+        "Enter your email address in case you like to keep in touch with INTERLINK to provide more detailed feedback":"Ievadiet savu e-pasta adresi, ja vēlaties sazināties ar INTERLINK, lai sniegtu detalizētākas atsauksmes.",
+        "Email address":"E-pasta adrese",
+        "Submit":"iesniegt"
+
+
 };
