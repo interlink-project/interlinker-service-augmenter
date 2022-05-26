@@ -139,6 +139,7 @@
             {% if current_user.is_authenticated %}
             <a href="{{ url_for('views.inicio') }}" style="justify-content: center;align-self: center; text-align: center;">{{ _('Hot List') }}</a >
             <a href="{{ url_for('authInterlink.dashboard') }}"  style="justify-content: center;align-self: center; text-align: center;">{{ _('My Activity') }}</a >
+            
             {% endif %}
             <!--
             
@@ -227,7 +228,7 @@
                 <li><a class="dropdown-item" href="{{ url_for('authInterlink.descriptionDetail') }}">{{ _('New Description') }}</a></li>
                 <li><a class="dropdown-item" href="{{ url_for('authInterlink.moderate') }}">{{ _('Roles') }}</a></li>
                 <li><a class="dropdown-item" href="{{ url_for('authInterlink.profile') }}">{{ _('Profile') }}</a></li>
-                <li><a class="dropdown-item" href="{{ url_for('authInterlink.survey') }}">{{ _('Surveys') }}</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('authInterlink.feedback') }}">{{ _('Your Feedback') }}</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{{ url_for("authInterlink.logout") }}">{{ _('Sign out') }}</a></li>
             </ul>
@@ -322,7 +323,7 @@
                     ...
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Close') }}</button>
+                    <button type="button" class="btn btn-secondary" id="cerrarVentanaBtn" data-bs-dismiss="modal">{{ _('Close') }}</button>
                     <button type="button" class="btn btn-primary" id="notificationAcceptBtn">{{ _('Save changes') }}</button>
                 </div>
             </div>

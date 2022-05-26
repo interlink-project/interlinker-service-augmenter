@@ -391,6 +391,13 @@ function getval(sel)
     return res;
   }
 
+ //Defino el evento de cerrar el modal: (En este caso refrescar lista)
+ $("#cerrarVentanaBtn").click(function () {
+    annotationId = $("#annotationId").val();
+    $("#notificationBox").modal("hide");
+    document.location.reload(true)
+ });
+
 
 //Defino el evento de accept del modal: (En este caso submit a form)
   $("#notificationAcceptBtn").click(function () {
@@ -487,20 +494,21 @@ function getval(sel)
     </div>
     <div style="flex: auto;text-align: right;flex-direction: row;">
 
+      <button type="button" title="{{ _('Report') }}" class="btn btn-secondary"
+      style='min-width: 120px; margin-left: 5px;'
+      onclick="window.location.href='{{ url_for('authInterlink.genReport',descriptionId= description['id'] ) }}';"
+      style="padding: -2px;margin:0px;margin-left=5px;border: 0px;margin-right: 5px;">
+
+      <i class="fa-solid fa-file-export"></i> | {{_('Generate Report')}}
+
+
+    </button>
 
       <button class="btn btn-success" style='min-width: 170px; margin-left: 5px;'
         onclick="window.location.href='{{ url_for('views.augment',rutaPagina=urlMainPage) }}?description={{description['id']}}';"><i
           class="fa-solid fa-play"></i> | {{_('Annotate')}}</button>
 
-      <button type="button" title="{{ _('Report') }}" class="btn btn-secondary"
-        style='min-width: 120px; margin-left: 5px;'
-        onclick="window.location.href='{{ url_for('authInterlink.genReport',descriptionId= description['id'] ) }}';"
-        style="padding: -2px;margin:0px;margin-left=5px;border: 0px;margin-right: 5px;">
-
-        <i class="fa-solid fa-file-export"></i> | {{_('Generate Report')}}
-
-
-      </button>
+     
 
 
     </div>
@@ -635,15 +643,13 @@ function getval(sel)
 <table class="table">
   <thead>
     <tr>
-      <th scope="col-1"></th>
+      <th class="priority-2" scope="col-1"></th>
 
+      <th class="priority-1" scope="col-2" style="min-width: 200px;">{{ _('Description') }}</th>
+      <th class="priority-1" scope="col-1" style="text-align: center;">{{ _('State') }}</th>
 
-
-      <th scope="col-2" style="min-width: 200px;">{{ _('Description') }}</th>
-      <th scope="col-2" style="text-align: center;">{{ _('State') }}</th>
-
-      <th scope="col-2" style="text-align: center;">{{ _('Nro Replies') }}</th>
-      <th scope="col-2" style="text-align: center;">{{ _('Option') }}</th>
+      <th class="priority-3" scope="col-2" style="text-align: center;">{{ _('Nro Replies') }}</th>
+      <th class="priority-1" scope="col-2" style="text-align: center;">{{ _('Option') }}</th>
 
     </tr>
   </thead>
@@ -656,7 +662,7 @@ function getval(sel)
     <!--  <tr style="background-color: #d0ffdc;" >
           -->
     <tr>
-      <td style="vertical-align: middle;text-align: center;">
+      <td class="priority-2" style="vertical-align: middle;text-align: center;">
         <!-- Quito on click para evitar confusion.
         // onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';" 
         <button class='btn'
@@ -674,7 +680,7 @@ function getval(sel)
         <!--  <tr style="background-color: #f6ffa8;" >
           -->
     <tr></tr>
-    <td style="vertical-align: middle;text-align: center;">
+    <td class="priority-2" style="vertical-align: middle;text-align: center;">
       <!-- Quito on click para evitar confusion.
         // onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';"  
       <button class='btn'
@@ -691,7 +697,7 @@ function getval(sel)
       <!--  <tr style="background-color: #ffa7fb;" >
           -->
       <tr>
-        <td style="vertical-align: middle;text-align: center;">
+        <td class="priority-2" style="vertical-align: middle;text-align: center;">
           <!-- Quito on click para evitar confusion.
         // onclick="window.location.href='{{ url_for('authInterlink.subjectPage',descriptionId= description.id,annotatorId=anotation.id ) }}';" 
           <button class='btn'
@@ -729,14 +735,14 @@ function getval(sel)
         {% if soloTexto|length > 200 %}
         {% set soloTexto= anotation.text|striptags%}
         {% set textoCortado= soloTexto[0:200] %}
-        <td>{{ textoCortado }}... <br> {{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}} </td>
+        <td class="priority-1">{{ textoCortado }}... <br> {{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}} </td>
         {% else %}
         {% set soloTexto= anotation.text|striptags%}
         <td>{{ soloTexto }} <br> <span style="opacity: 0.5;"> {{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}
           </span> </td>
         {% endif %}
 
-        <td style="text-align: center;">
+        <td class="priority-1" style="text-align: center;">
 
 
 
@@ -756,7 +762,7 @@ function getval(sel)
 
 
 
-        <td style="text-align: center;">
+        <td class="priority-3" style="text-align: center;">
           <h5>
             <a class="badge bg-light text-dark position-relative" style="text-decoration: none;">
               {{ anotation.nroReplies }}
@@ -768,7 +774,7 @@ function getval(sel)
 
 
 
-        <td>
+        <td class="priority-1">
 
 
 

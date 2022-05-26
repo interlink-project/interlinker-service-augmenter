@@ -1,0 +1,190 @@
+{% extends "templateV2.html" %} {% block content %}
+
+<hr />
+
+<div class="container">
+  <div class="row">
+    <div
+      class="col-5"
+      style="display: flex; align-items: center; justify-content: right"
+    >
+      <img
+        src="{{url_for('static', filename='logo_servicepedia_S.png')}}"
+        style="max-width: 20%"
+      />
+    </div>
+
+    <div
+      class="col-7"
+      style="display: flex; align-items: center; justify-content: left;size: 50vh;"
+    >
+    <h3>Satisfaction survey</h3>
+     
+    </div>
+   
+    
+  </div>
+</div>
+
+<hr />
+
+<div style="display: flex; align-items: center; justify-content: center;size: 50vh;">
+    <p>
+        {{ _('Your opinion is important to us, let us know how you felt using this web application and help us make it better and better') }}!
+
+      </p>
+</div>
+
+<hr />
+
+<b>{{ _('For the next five questions, select a value from a scale of (1 - 5). Where the value of 1 means that you are totally dissatisfied and 5 totally satisfied') }}.
+    .</b>
+
+<form action="{{ url_for('authInterlink.storefeedback') }}" method="post">
+<label for="pregunta_1" style="padding-top: 10px;" class="form-label"><b>1.- {{ _('Did you like the app design?') }}?</b></label> <br>
+<div class="mb-3" style="text-align: center;">
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_1" id="inlineRadio1" value="1" required>
+        <label class="form-check-label" for="inlineRadio1">1</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_1" id="inlineRadio2" value="2" required>
+        <label class="form-check-label" for="inlineRadio2">2</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_1" id="inlineRadio3" value="3" required>
+        <label class="form-check-label" for="inlineRadio3">3 </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_1" id="inlineRadio4" value="4" required>
+        <label class="form-check-label" for="inlineRadio4">4 </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_1" id="inlineRadio5" value="5" required>
+        <label class="form-check-label" for="inlineRadio5">5 </label>
+    </div>
+</div>
+
+<label for="pregunta_2" style="padding-top: 10px;" class="form-label"><b>2.- {{ _('Was this app easy-to-use') }}?</b></label> <br>
+<div class="mb-3" style="text-align: center;">
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_2" id="inlineRadio11" value="1" required>
+        <label class="form-check-label" for="inlineRadio11">1</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_2" id="inlineRadio21" value="2" required>
+        <label class="form-check-label" for="inlineRadio21">2</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_2" id="inlineRadio31" value="3" required>
+        <label class="form-check-label" for="inlineRadio31">3 </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_2" id="inlineRadio41" value="4" required>
+        <label class="form-check-label" for="inlineRadio41">4 </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_2" id="inlineRadio51" value="5" required>
+        <label class="form-check-label" for="inlineRadio51">5 </label>
+    </div>
+</div>
+
+
+<label for="pregunta_3" style="padding-top: 10px;" class="form-label"><b>3.- {{ _('Was this app useful for you') }}?</b></label> <br>
+<div class="mb-3" style="text-align: center;">
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_3" id="inlineRadio12" value="1" required>
+        <label class="form-check-label" for="inlineRadio12">1</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_3" id="inlineRadio22" value="2" required>
+        <label class="form-check-label" for="inlineRadio22">2</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_3" id="inlineRadio32" value="3" required>
+        <label class="form-check-label" for="inlineRadio32">3 </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_3" id="inlineRadio42" value="4" required>
+        <label class="form-check-label" for="inlineRadio42">4 </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_3" id="inlineRadio52" value="5" required>
+        <label class="form-check-label" for="inlineRadio52">5 </label>
+    </div>
+</div>
+
+
+<label for="pregunta_4" style="padding-top: 10px;" class="form-label"><b>4.- {{ _('Does this app increase your chance to take part in collaborative processes') }}?</b></label> <br>
+<div class="mb-3" style="text-align: center;">
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_4" id="inlineRadio13" value="1" required>
+        <label class="form-check-label" for="inlineRadio13">1</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_4" id="inlineRadio23" value="2" required>
+        <label class="form-check-label" for="inlineRadio23">2</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_4" id="inlineRadio33" value="3" required>
+        <label class="form-check-label" for="inlineRadio33">3 </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_4" id="inlineRadio43" value="4" required>
+        <label class="form-check-label" for="inlineRadio43">4 </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_4" id="inlineRadio53" value="5" required>
+        <label class="form-check-label" for="inlineRadio53">5 </label>
+    </div>
+</div>
+
+
+
+<label for="pregunta_5" style="padding-top: 10px;" class="form-label"><b>5.- {{ _('How likely is that you would recommend this app') }}?</b></label> <br>
+<div class="mb-3" style="text-align: center;">
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_5" id="inlineRadio14" value="1" required>
+        <label class="form-check-label" for="inlineRadio14">1</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_5" id="inlineRadio24" value="2" required>
+        <label class="form-check-label" for="inlineRadio24">2</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_5" id="inlineRadio34" value="3" required>
+        <label class="form-check-label" for="inlineRadio34">3 </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_5" id="inlineRadio44" value="4" required>
+        <label class="form-check-label" for="inlineRadio44">4 </label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="pregunta_5" id="inlineRadio54" value="5" required>
+        <label class="form-check-label" for="inlineRadio54">5 </label>
+    </div>
+</div>
+
+
+<label for="didylike" style="padding-top: 10px;" class="form-label"><b>5.- {{ _('Provide feedback about the app') }}</b></label> <br>
+<div class="mb-3" style="text-align: center;">
+    <textarea rows="4" name="feedtext" id="feedbacktxt" class="form-control" aria-label="With textarea" required></textarea>
+</div>
+
+
+<hr />
+
+<div class="mb-3" >
+    <label for="inputEmail" style="padding-top: 10px;" class="form-label">{{ _('Email address') }}</label>
+    <input type="email" name="emailOp" class="form-control" id="inputEmail" aria-describedby="emailHelp">
+    <div id="emailHelp" class="form-text">{{ _('Enter your email address in case you like to keep in touch with INTERLINK to provide more detailed feedback') }}.</div>
+  </div>
+
+<hr />
+  <div class="col-auto" style="text-align: center;padding-top: 10px;">
+    <button type="submit" style="min-width: 150px;" class="btn btn-primary mb-3">{{ _('Submit') }}</button>
+  </div>
+
+</form>
+
+{% endblock content %}

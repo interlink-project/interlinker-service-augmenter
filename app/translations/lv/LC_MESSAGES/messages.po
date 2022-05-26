@@ -42,6 +42,11 @@ msgstr "Izveidot jaunu"
 msgid "Category"
 msgstr "Kategorija"
 
+#: templates/description.html
+msgid "Your Feedback"
+msgstr "Tava atsauksme"
+
+
 #: templates/dashboard.html:402 templates/home.html:181
 msgid "Domain"
 msgstr "Domēns"
@@ -566,3 +571,49 @@ msgstr "Uz vietni"
 #: templates/descriptionDetail.html:
 msgid "It is only possible to add a URL, in case the description is of a single page"
 msgstr "Ir iespējams pievienot tikai URL, ja apraksts ir par vienu lapu."
+
+#: templates/feedback.html:
+msgid "Your opinion is important to us, let us know how you felt using this web application and help us make it better and better"
+msgstr "Jūsu viedoklis mums ir svarīgs, informējiet mūs, kā jūs jutāties, izmantojot šo tīmekļa lietojumprogrammu, un palīdziet mums to uzlabot un uzlabot"
+
+
+#: templates/feedback.html:
+msgid "For the next five questions, select a value from a scale of (1 - 5). Where the value of 1 means that you are totally dissatisfied and 5 totally satisfied"
+msgstr "Nākamajiem pieciem jautājumiem atlasiet vērtību no skalas (1 –5). Kur vērtība 1 nozīmē, ka esi totāli neapmierināts un 5 pilnīgi apmierināts"
+
+
+#: templates/feedback.html:
+msgid "Did you like the app design?"
+msgstr "Vai jums patika programmas dizains?"
+
+#: templates/feedback.html:
+msgid "Was this app easy-to-use?"
+msgstr "Vai šī programma bija viegli lietojama?"
+
+#: templates/feedback.html:
+msgid "Was this app useful for you?"
+msgstr "Vai šī programma jums bija noderīga?"
+
+#: templates/feedback.html:
+msgid "Does this app increase your chance to take part in collaborative processes?"
+msgstr "Vai šī programma palielina jūsu iespējas piedalīties sadarbības procesos?"
+
+#: templates/feedback.html:
+msgid "How likely is that you would recommend this app?"
+msgstr "Cik iespējams, ka jūs ieteiktu šo programmu?"
+
+#: templates/feedback.html:
+msgid "Provide feedback about the app."
+msgstr "Sniedziet atsauksmes par lietotni."
+
+#: templates/feedback.html:
+msgid "Enter your email address in case you like to keep in touch with INTERLINK to provide more detailed feedback"
+msgstr "Ievadiet savu e-pasta adresi, ja vēlaties sazināties ar INTERLINK, lai sniegtu detalizētākas atsauksmes."
+
+#: templates/feedback.html:
+msgid "Email address"
+msgstr "E-pasta adrese"
+
+#: templates/feedback.html:
+msgid "Submit"
+msgstr "iesniegt"

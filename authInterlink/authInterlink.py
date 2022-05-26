@@ -24,7 +24,7 @@ from flask_login import (
     logout_user,
 )
 from api.survey import Survey
-
+from api.feedback import Feedback
 
 from authInterlink.user import User
 
@@ -234,10 +234,53 @@ def logouta():
 
     return redirect(settings.AUTHINTERLINK_URL+'/logout'+'?redirect_on_callback='+paginaToRedirect)
 
+@authInterlink.route("/storefeedback", methods=["GET","POST"])
+@login_required
+def storefeedback():
+    argumentos = request.form.to_dict()
 
-@authInterlink.route("/about")
-def about():
-    return render_template("about.html")
+    emailOp = argumentos.pop("emailOp")
+    feedtext = argumentos.pop("feedtext")
+    pregunta_1 = argumentos.pop("pregunta_1")
+    pregunta_2 = argumentos.pop("pregunta_2")
+    pregunta_3 = argumentos.pop("pregunta_3")
+    pregunta_4 = argumentos.pop("pregunta_4")
+    pregunta_5 = argumentos.pop("pregunta_5")
+
+
+    newfeedback = Feedback(emailOp=emailOp, feedtext=feedtext,
+                                     pregunta_1=pregunta_1, pregunta_2=pregunta_2,
+                                     pregunta_3=pregunta_3,
+                                     pregunta_4=pregunta_4, pregunta_5=pregunta_5
+                                     )
+
+    newfeedback.save(index="feedback")
+
+   # resultados=allfeedbacks=newfeedback._get_all()
+
+   # return jsonify(resultados['feedbacks'])
+    listNotifications, numRes = cargarNotifications()
+
+    flash("Feedback registrado correctamente.", "info")
+
+    return render_template("feedback.html",notifications=listNotifications)
+
+
+
+@authInterlink.route("/feedback")
+@login_required
+def feedback():
+    listNotifications, numRes = cargarNotifications()
+    
+    return render_template("feedback.html",notifications=listNotifications, notificationNum=numRes)
+
+@authInterlink.route("/feedbacks")
+@login_required
+def feedbacks():
+    myfeedback = Feedback()
+    resultados=allfeedbacks=myfeedback._get_all()
+    return jsonify(resultados['feedbacks'])
+
 
 
 @authInterlink.route("/dashboard")

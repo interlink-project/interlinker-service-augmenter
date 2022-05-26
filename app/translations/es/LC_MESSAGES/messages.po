@@ -46,6 +46,10 @@ msgstr "Categoría"
 msgid "Domain"
 msgstr "Dominio"
 
+#: templates/description.html
+msgid "Your Feedback"
+msgstr "Tu Opinión"
+
 #: templates/dashboard.html:432
 msgid "Your recent activity"
 msgstr "Tu actividad reciente"
@@ -572,3 +576,50 @@ msgstr "Un portal"
 #: templates/descriptionDetail.html:
 msgid "It is only possible to add a URL, in case the description is of a single page"
 msgstr "Solamente es posible agregar un URL, en el caso de descripciones de una página."
+
+#: templates/feedback.html:
+msgid "Your opinion is important to us, let us know how you felt using this web application and help us make it better and better"
+msgstr "Su opinión es importante para nosotros, háganos saber cómo se sintió al usar esta aplicación web y ayúdenos a mejorarla cada vez más"
+
+
+#: templates/feedback.html:
+msgid "For the next five questions, select a value from a scale of (1 - 5). Where the value of 1 means that you are totally dissatisfied and 5 totally satisfied"
+msgstr "Para las siguientes cinco preguntas, seleccione un valor de una escala de (1 - 5). Donde el valor de 1 significa que está totalmente insatisfecho y 5 totalmente satisfecho"
+
+
+#: templates/feedback.html:
+msgid "Did you like the app design?"
+msgstr "¿Te ha gustado el diseño de la aplicación?"
+
+#: templates/feedback.html:
+msgid "Was this app easy-to-use?"
+msgstr "¿Ha sido la aplicación fácil de usar?"
+
+#: templates/feedback.html:
+msgid "Was this app useful for you?"
+msgstr "¿Consideras útil esta aplicación?"
+
+#: templates/feedback.html:
+msgid "Does this app increase your chance to take part in collaborative processes?"
+msgstr "¿Incrementa esta aplicación tu capacidad de participar en procesos colaborativos?"
+
+#: templates/feedback.html:
+msgid "How likely is that you would recommend this app?"
+msgstr "¿Recomendarías el uso de esta aplicación a otros colaboradores?"
+
+#: templates/feedback.html:
+msgid "Provide feedback about the app."
+msgstr "¿Tienes algún comentario para mejorar la aplicación?"
+
+#: templates/feedback.html:
+msgid "Enter your email address in case you like to keep in touch with INTERLINK to provide more detailed feedback"
+msgstr "En el caso de que quieras proporcionar más comentarios y participar en los eventos que celebremos en INTERLINK, por favor, danos tu correo electrónico"
+
+#: templates/feedback.html:
+msgid "Email address"
+msgstr "Correo electrónico"
+
+#: templates/feedback.html:
+msgid "Submit"
+msgstr "Enviar"
+
