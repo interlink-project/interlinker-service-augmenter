@@ -468,8 +468,8 @@
             <tr>
             
               <th class="priority-1" scope="col-4">{{ _('Title') }}</th>
-              <th class="priority-2" scope="col-2" style="text-align: center;">{{ _('Progress') }}</th>
-              <th class="priority-2" scope="col-2" style="text-align: center;">{{ _('Annotations') }}</th>
+              <th class="priority-3" scope="col-2" style="text-align: center;">{{ _('Progress') }}</th>
+              <th class="priority-3" scope="col-2" style="text-align: center;">{{ _('Annotations') }}</th>
            
               <th class="priority-1" scope="col-2"  style="text-align: center;max-width: 5px;">{{ _('Options') }}</th>
        
@@ -489,7 +489,7 @@
             {% endif %}
   
   
-              <td class="priority-2"  style="text-align: center;">
+              <td class="priority-3"  style="text-align: center;">
   
                 <div class="progress" style="height: 20px;">
                   <div class="progress-bar" role="progressbar" style="width: {{ description.progressTotal }}%;" aria-valuenow={{ description.progressTotal }} aria-valuemin="0" aria-valuemax="100" ></div>
@@ -500,7 +500,7 @@
                 
               </td>
 
-              <td class="priority-2"  style="text-align: center;">
+              <td class="priority-3"  style="text-align: center;">
   
                 <div class="btn-group" role="group" aria-label="Basic example">
                   
@@ -635,7 +635,7 @@
              
                 
   
-              <div class="btn-group me-2" role="group" aria-label="Second group">
+              
                 <button type="button" class="btn btn-primary"
                   alt="All"
       
@@ -643,7 +643,7 @@
                   onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}';"
                 
                 >{{ _('Access') }}</button>
-              </div>
+              
   
               </td>
   

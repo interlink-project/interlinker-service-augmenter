@@ -644,11 +644,13 @@ block content %}
     <tr>
       <th class="priority-2" scope="col-1"></th>
 
-      <th class="priority-1" scope="col-2" style="min-width: 200px;">{{ _('Description') }}</th>
-      <th class="priority-1" scope="col-1" style="text-align: center;">{{ _('State') }}</th>
+      <th class="priority-1" scope="col-7" style="min-width: 200px;">{{ _('Description') }}</th>
 
-      <th class="priority-3" scope="col-2" style="text-align: center;">{{ _('Nro Replies') }}</th>
-      <th class="priority-1" scope="col-2" style="text-align: center;">{{ _('Option') }}</th>
+      <th class="priority-3" scope="col-1" style="text-align: center;">{{ _('Nro Replies') }}</th>
+
+
+
+      <th class="priority-1" scope="col-3" style="text-align: center;">{{ _('Actions') }}</th>
 
     </tr>
   </thead>
@@ -742,27 +744,6 @@ block content %}
           </span> </td>
         {% endif %}
 
-        <td class="priority-1" style="text-align: center;">
-
-
-
-          <select onchange="getval(this);" annotationId="{{ anotation.id }}" class="form-select"
-            style="min-width:120px ;max-width: 170px;" aria-label="Default select example">
-
-            <option value="0" {% if anotation.state==0 %} selected {% endif %}>
-              {{ _('In Progress') }}</option>
-            <option value="2" {% if anotation.state==2 %} selected {% endif %}>
-              {{ _('Approved') }}</option>
-            <option value="1" {% if anotation.state==1 %} selected {% endif %}>{{ _('Archived') }}
-            </option>
-          </select>
-
-        </td>
-
-
-
-
-
         <td class="priority-3" style="text-align: center;">
           <h5>
             <a class="badge bg-light text-dark position-relative" style="text-decoration: none;">
@@ -773,16 +754,25 @@ block content %}
 
         </td>
 
-
-
-        <td class="priority-1">
+        <td class="priority-1" style="text-align: center;display: flex;justify-content: center;">
 
 
 
-          <div class="dropdown  dropstart">
+          <select onchange="getval(this);" annotationId="{{ anotation.id }}" title="{{_('Select State')}}" class="form-select"
+            style="min-width:120px ;max-width: 170px;" aria-label="Default select example">
+
+            <option value="0" {% if anotation.state==0 %} selected {% endif %}>
+              {{ _('In Progress') }}</option>
+            <option value="2" {% if anotation.state==2 %} selected {% endif %}>
+              {{ _('Approved') }}</option>
+            <option value="1" {% if anotation.state==1 %} selected {% endif %}>{{ _('Archived') }}
+            </option>
+          </select>
+
+          <div class="dropdown  dropstart" style="padding-left: 10px;">
             <a class="btn btn-outline-secondary dropdown-toggle" style="max-width: 130;" href="#" role="button"
               id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-              {{_('Options')}}
+              {{_('View')}}
             </a>
 
             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
