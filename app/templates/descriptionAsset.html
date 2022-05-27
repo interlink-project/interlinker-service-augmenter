@@ -1,5 +1,5 @@
 {% extends "template_Interlinker.html" %} {% block title %} Servicepedia {% endblock %} {% block
-    content %}
+content %}
 
 <script>
 
@@ -7,7 +7,7 @@
     if (event.type == 'click') {
       event.preventDefault();
       category = event.target.name.substring(2);
-      window.location.href = '{{ url_for('views.assetAdmin',id= description.id) }}?category='+category.toLowerCase();
+      window.location.href = '{{ url_for('views.assetAdmin',id= description.id) }}?category=' + category.toLowerCase();
     }
 
   }
@@ -18,13 +18,13 @@
 
 
       urlRef = `{{ url_for('views.assetSubject',descriptionId= DESCRIPTIONID,annotatorId=ANNOTATIONID) }}`;
-      urlRef = urlRef.replace("ANNOTATIONID",annotationId);
-      urlRef = urlRef.replace("DESCRIPTIONID",descriptionId);
+      urlRef = urlRef.replace("ANNOTATIONID", annotationId);
+      urlRef = urlRef.replace("DESCRIPTIONID", descriptionId);
 
       window.location.href = urlRef;
-    
-      subjectPage(descriptionId=None, annotatorId=None)
-    
+
+      subjectPage(descriptionId = None, annotatorId = None)
+
     }
   }
 
@@ -36,18 +36,18 @@
 
   function searchText(event) {
     if (event.type == 'click') {
-     
+
       event.preventDefault();
       aplicoFiltros(event);
-      
+
     }
   }
 
   function searchTextEnter(event) {
     if (event.type == 'keydown') {
       if (event.keyCode === 13) {
-      event.preventDefault();
-      aplicoFiltros(event);
+        event.preventDefault();
+        aplicoFiltros(event);
       }
     }
   }
@@ -64,7 +64,7 @@
     estados['Approved'] = document.getElementById("checkApproved").checked;
     estados['Archived'] = document.getElementById("checkArchived").checked;
 
-    let justMyContributions=document.getElementById("checkMyContributions").checked;
+    let justMyContributions = document.getElementById("checkMyContributions").checked;
 
 
     textoBox = document.getElementById("searchBox");
@@ -118,10 +118,10 @@
         dateUpdated = new Date(dataItem.created);
 
         //Doy formato al texto:
-        let shortTextItemDesc= dataItem.text.replace(/(<([^>]+)>)/gi, "");
+        let shortTextItemDesc = dataItem.text.replace(/(<([^>]+)>)/gi, "");
 
-        if( shortTextItemDesc.length>200 ){
-          shortTextItemDesc=shortTextItemDesc.substring(0, 200)+'...';
+        if (shortTextItemDesc.length > 200) {
+          shortTextItemDesc = shortTextItemDesc.substring(0, 200) + '...';
         }
 
 
@@ -142,16 +142,37 @@
         ruta = dataItem.uri.split('/');
         ruta = ruta[ruta.length - 1];
 
-        let txtCategory='';
-        if (dataItem.category == 'feedback'){
-          txtCategory="{{ _('feedback')}}";
-        }else if (dataItem.category == 'question'){
-          txtCategory="{{ _('question')}}";
-        }else if (dataItem.category == 'term'){
-          txtCategory="{{ _('term')}}";
+        let txtCategory = '';
+        if (dataItem.category == 'feedback') {
+          txtCategory = "{{ _('feedback')}}";
+          //onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";"
+          //botonCategory = ' <button class="btn"  style = "height: 30px;" alt = "' + txtCategory + '" title = "' + txtCategory + '" ><i class="fa-solid fa-file-pen" style="color:rgb(152, 82, 140);"></i> </td>';
+          botonCategory = ' <i class="fa-solid fa-file-pen" style="color:rgb(152, 82, 140);"></i> </button></td>';
+
+        } else if (dataItem.category == 'question') {
+          txtCategory = "{{ _('question')}}";
+          //onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";"
+          //botonCategory = ' <button class="btn"  style = "height: 30px;" alt = "' + txtCategory + '" title = "' + txtCategory + '" ><i class="fa-solid fa-file-circle-question" style="color:rgb(212, 211, 122);"></i> </td>';
+          botonCategory = ' <i class="fa-solid fa-file-circle-question" style="color:rgb(212, 211, 122);"></i> </button></td>';
+
+        } else if (dataItem.category == 'term') {
+          txtCategory = "{{ _('term')}}";
+          //onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";"
+          //botonCategory = ' <button class="btn"  style = "height: 30px;" alt = "' + txtCategory + '" title = "' + txtCategory + '" ><i class="fa-solid fa-file-circle-exclamation" style="color:rgb(107, 205, 166);"></i> </td>';
+          botonCategory = ' <i class="fa-solid fa-file-circle-exclamation" style="color:rgb(107, 205, 166);"></i> </button></td>';
+
+        }
+        sectionCategoria = ' <tr > <td style="vertical-align: middle;text-align: center;" > ' + botonCategory + ' </td>';
+
+        if (dataItem.state == 1) {
+          stateText = "{{ _('Archived') }}";
+        } else if (dataItem.state == 2) { //Approved
+          stateText = "{{ _('Approved') }}";
+        } else if (dataItem.state == 0) { //In Progress
+          stateText = "{{ _('In Progress') }}";
         }
 
-        if (dataItem.state == 1) { // Archived
+        /*if (dataItem.state == 1) { // Archived
           botonCategory = '<button class="btn btn-light"  onclick="goSubjectPage(event,\'' + descriptionId + '\',\'' + dataItem.id + '\')";" style="height: 30px;min-width:100px;" > <span style="position: relative;top: -5px;text-decoration: line-through;text-transform: capitalize;">' + txtCategory + '</span> </button> </td>';
           sectionCategoria = ' <tr style="color: rgba(141, 140, 140, 0.774);"> <td style="font-weight:bold;"> ' + botonCategory + ' </td>';
           stateText = "{{ _('Archived') }}";
@@ -177,23 +198,43 @@
           sectionCategoria = ' <tr style="color: rgba(0, 0, 0, 0.774);"> <td style="font-weight:bold;"> ' + botonCategory + ' </td>';
           stateText = "{{ _('In Progress') }}";
         }
-
+*/
         urlRef = `{{ url_for('views.assetSubject',descriptionId= 'DESCRIPTIONID',annotatorId='ANNOTATIONID') }}`;
-        urlRef = urlRef.replace("DESCRIPTIONID",descriptionId);
-        urlRef = urlRef.replace("ANNOTATIONID",dataItem.id);
-        
-        urlRefMod = `{{ url_for('views.augment',rutaPagina='RUTAPAGE') }}?description=DESCRIPTIONID&integrationInterlinker=True`
-        urlRefMod = urlRefMod.replace("RUTAPAGE",dataItem.uri);
-        urlRefMod = urlRefMod.replace("DESCRIPTIONID",descriptionId);
+        urlRef = urlRef.replace("DESCRIPTIONID", descriptionId);
+        urlRef = urlRef.replace("ANNOTATIONID", dataItem.id);
+
+        urlRefMod = `{{ url_for('views.augment',rutaPagina='RUTAPAGE') }}?description=DESCRIPTIONID&annotationId=ANNOTATIONID&integrationInterlinker=True`
+        urlRefMod = urlRefMod.replace("RUTAPAGE", dataItem.uri);
+        urlRefMod = urlRefMod.replace("DESCRIPTIONID", descriptionId);
+        urlRefMod = urlRefMod.replace("ANNOTATIONID", dataItem.id);
+
+        optionsSelectAn = '';
+        if (dataItem.state == 1) {
+          optionsSelectAn = `<option value="0">{{ _('In Progress') }}</option>
+                             <option value="2">{{ _('Approved') }}</option>
+                             <option value="1"  selected> {{ _('Archived') }}</option>`;
+        } else if (dataItem.state == 2) {
+          optionsSelectAn = `<option value="0" >{{ _('In Progress') }}</option>
+                             <option value="2" selected>{{ _('Approved') }}</option>
+                             <option value="1"> {{ _('Archived') }}</option>`;
+        } else if (dataItem.state == 0) {
+          optionsSelectAn = `<option value="0" selected>{{ _('In Progress') }}</option>
+                             <option value="2">{{ _('Approved') }}</option>
+                             <option value="1">  {{ _('Archived') }}</option>`;
+        }
+
+        selectionStateAn = ` 
+        <select id='sel-${dataItem.id}' onchange="getval(this);" annotationId="${dataItem.id}"  class="form-select" style="min-width:120px ;max-width: 170px;" aria-label="Default select example">
+          ${optionsSelectAn}
+        </select >`;
 
         $('#tablaAnnotations').append(
           ` ${sectionCategoria}
-            <td>
-              
-               <a href="${urlRefMod}">/${ruta}</a>
-        
-            </td>
-            <td> ${stateText} </td> 
+    
+            <td> ${shortTextItemDesc} <br> <span style="opacity: 0.5;">${ISODateString(dateUpdated)} </span> </td>
+            <td> ${selectionStateAn} </td> 
+
+             
             
             <td style="text-align: center;"> 
               <h5>
@@ -201,13 +242,41 @@
               </h5>
             </td>
             
-            <td> ${shortTextItemDesc} </td>  
-            <td> ${ISODateString(dateUpdated)} </td> 
+              
+     
             
             <td> 
-              <a href="${urlRef}" class="btn btn-outline-secondary" style="max-width: 70px;" >
-                <i class="bi bi-box-arrow-in-right " style="width:100px;"></i>
-              </a>  
+
+
+               <div class="dropdown  dropstart">
+            <a class="btn btn-outline-secondary dropdown-toggle" style="max-width: 130;" href="#" role="button" id="dropdownMenuLink"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              {{_('Options')}}
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
+              <li><a class="dropdown-item"
+                  href="${urlRefMod}">
+                  <i class="fa-solid fa-eye"></i> | {{_('See in Page')}}</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+
+
+
+              <li><a class="dropdown-item"
+                  href="${urlRef}">
+                  <i class="fa-solid fa-circle-chevron-down"></i> | {{_('More Details')}}</a>
+              </li>
+
+            </ul>
+          </div>
+
+
+
+
+
+              
             </td>
 
           </tr>`)
@@ -243,11 +312,168 @@
       method: 'POST',
       url: {{ url_for('store.annotationsIndex')| tojson}},
   contentType: 'application/json;charset=UTF-8',
-    data: JSON.stringify({ "textoABuscar": texto, "estados": estados,"justMyContributions":justMyContributions, "descriptionId": descriptionId, "page": page, "category": category })
+    data: JSON.stringify({ "textoABuscar": texto, "estados": estados, "justMyContributions": justMyContributions, "descriptionId": descriptionId, "page": page, "category": category })
     }).done(onSearchAnnotations);
         
     
   }
+
+
+  function getval(sel) {
+    let annotationId = sel.getAttribute("annotationId");
+    registrarEstadoAnnotation(annotationState = sel.value, annotationId = annotationId, objtype = 'annotation_state');
+  }
+
+
+  function registrarEstadoAnnotation(
+    annotationState = "0",
+    annotationId = "",
+    objtype = "annotation_state"
+  ) {
+
+    //  Muestro el panel de ingreso de razon:
+    var myModal = new bootstrap.Modal(
+      document.getElementById("notificationBox"),
+      {}
+    );
+    $("#notificationBoxLabel").text("{{ _('Information') }}");
+    $("#notificationBody").text("");
+    $("#notificationBody").append(
+      "<div class='mb-3'> <label for='commentsChangeState' class='form-label'> {{ _('Please enter comments on your decision') }}. </label>      <textarea class='form-control' id='commentsChangeState' rows='3'></textarea>    </div>"
+    );
+
+    $("#notificationBody").append(
+      "<input type='hidden' name='stateToChange' id='stateToChange' value='" +
+      annotationState +
+      "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
+    );
+
+    $("#notificationBody").append(
+      "<input type='hidden' name='annotationId' id='annotationId' value='" +
+      annotationId +
+      "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
+    );
+
+    $("#notificationBody").append(
+      "<input type='hidden' name='objtype' id='objtype' value='" +
+      objtype +
+      "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
+    );
+
+    $("#notificationAcceptBtn").text("{{ _('Accept') }}");
+    $("#notificationAcceptBtn").show();
+    //$('#notificationAcceptBtn').hide();
+
+    $("#createUrl").val("");
+    myModal.show();
+
+  }
+
+  function getStateText(val) {
+    res = "";
+    switch (val) {
+      case 0:
+        res = "{{ _('In Progress') }}";
+        break;
+      case 1:
+        res = "{{ _('Archived') }}";
+        break;
+      case 2:
+        res = "{{ _('Approved') }}";
+        break;
+      case 3:
+        res = "Banned";
+        break;
+      default:
+        res = "Nan";
+    }
+    return res;
+  }
+
+  //Defino el evento de cerrar el modal: (En este caso refrescar lista)
+  $("#cerrarVentanaBtn").click(function () {
+    annotationId = $("#annotationId").val();
+    $("#notificationBox").modal("hide");
+    document.location.reload(true)
+  });
+
+
+  //Defino el evento de accept del modal: (En este caso submit a form)
+  $("#notificationAcceptBtn").click(function () {
+    annotationId = $("#annotationId").val();
+    stateToChange = $("#stateToChange").val();
+    objtype = $("#objtype").val();
+    commentsChangeState = $("#commentsChangeState").val();
+
+    descriptionSpan = document.getElementById("descriptionId");
+    descriptionID = descriptionSpan.textContent;
+
+    if (commentsChangeState != "") {
+      if (annotationId != "") {
+
+
+        //descriptionID = '{{description['id']}}';
+        urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='state' ) }}`;
+        urlPost = urlPost.replace("DESCRIPTIONID", descriptionID);
+        urlPost = urlPost.replace("ANNOTATIONID", annotationId);
+
+
+        //Para el caso que sea un reply
+        function successSearch(data) {
+          let nuevoEstado = data["state"];
+          $("#repState-" + annotationId).text(nuevoEstado);
+
+          //Muestro solamente cuando esta prohibido
+          if (nuevoEstado == 3) {
+            $("#repStateText-" + annotationId).text(getStateText(nuevoEstado));
+          } else {
+            $("#repStateText-" + annotationId).text("");
+          }
+
+          $("#notificationAcceptBtn").hide();
+          $("#notificationBox").modal("hide");
+          document.location.reload(true)
+        }
+
+
+      } else {
+
+
+        urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='state' ) }}`;
+        urlPost = urlPost.replace("DESCRIPTIONID", descriptionID);
+        urlPost = urlPost.replace("ANNOTATIONID", annotationId);
+
+        //Para el caso que es una anotacion base
+        function successSearch(data) {
+          let nuevoEstado = data["state"];
+          $("#currentStateAnnotation").text(nuevoEstado);
+          $("#currentStateAnnotationText").text(getStateText(nuevoEstado));
+          $("#notificationAcceptBtn").hide();
+          $("#notificationBox").modal("hide");
+          document.location.reload(true)
+        }
+
+      }
+
+      $.ajax({
+        method: "POST",
+        url: urlPost,
+        contentType: "application/json;charset=UTF-8",
+        data: JSON.stringify({
+          stateToChange: stateToChange,
+          commentsChangeState: commentsChangeState,
+          objtype: objtype,
+        }),
+      }).done(successSearch);
+
+    } else {
+      $("#notificationBody").append(
+        "<p style='color:red;'>* {{ _('A final comment is required') }}</p>"
+      );
+    }
+
+  });
+
 
 
 </script>
@@ -256,22 +482,78 @@
 <hr />
 
 <div style="display: block">
-  <div class="row">
-    <div class="col-8" style="text-align: center;margin-top: 4px;display: inline-flex;">
-      
-     <button type="button" id="enlaceAugment" class="btn btn-outline-secondary position-relative  bi-eye" 
-      style="border-color: gainsboro;border:0px;padding: 0px 5px 0px 5px !important;zoom: 2;-moz-transform: scale(2);padding: 0rem;margin-right: 0.2em;" 
-      
-      onclick="window.location.href='{{ url_for('views.augment',rutaPagina=urlMainPage) }}?description={{description['id']}}&integrationInterlinker=True';" >
-              </button>
-
-       <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
+  <div style="padding-bottom: 20;display: flex;">
+    <div style="text-align: center;">
+      <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
       <span id="descriptionUri" hidden>{{description['url']}}</span>
       <span id="descriptionId" hidden>{{description['id']}}</span>
 
+    </div>
+    <div style="flex: auto;text-align: right;flex-direction: row;">
+
+      <button type="button" title="{{ _('Report') }}" class="btn btn-secondary"
+        style='min-width: 120px; margin-left: 5px;'
+        onclick="window.location.href='{{ url_for('authInterlink.genReport',descriptionId= description['id'] ) }}';"
+        style="padding: -2px;margin:0px;margin-left=5px;border: 0px;margin-right: 5px;">
+
+        <i class="fa-solid fa-file-export"></i> | {{_('Generate Report')}}
+
+
+      </button>
+
+      <button class="btn btn-success" style='min-width: 173px; margin-left: 5px;'
+        onclick="window.location.href='{{ url_for('views.augment',rutaPagina=urlMainPage) }}?description={{description['id']}}&integrationInterlinker=True';"><i
+          class="fa-solid fa-play"></i> | {{_('Annotate')}}</button>
+
+
+
+
+
+
+
 
     </div>
-    <div class="col-4">
+
+  </div>
+  <div class="row">
+    <div class="col-4" style="display: flex;flex-direction: row;">
+      <input id="searchBox" class="form-control me-2" type="search" placeholder="{{ _('Search') }}" aria-label="Search"
+        onkeydown="searchTextEnter(event)" style="min-width: 200px;" />
+      <button class="btn btn-outline-secondary" type="button" id="expFormModeration" data-bs-toggle="collapse"
+        data-bs-target="#advanseSearchTools" aria-expanded="false" aria-controls="collapseExample"
+        data-bs-toggle="tooltip" data-bs-placement="bottom" title="More Filters" alt="Filters">
+        <i class="fa-solid fa-filter"></i>
+      </button>
+      <button class="btn btn-outline-secondary" onclick="searchText(event)">{{ _('Search') }}</button>
+
+
+
+    </div>
+  </div>
+
+
+</div>
+
+<div class="collapse" id="advanseSearchTools">
+  <hr />
+
+  <div class="row">
+    <div class="col-4" style="display: flex;flex-direction: row;justify-content: left;">
+      <h6>Type:</h6>
+    </div>
+    <div class="col-4" style="display: flex;flex-direction: row;justify-content: left;">
+      <h6>State:</h6>
+    </div>
+    <div class="col-4" style="display: flex;flex-direction: row;justify-content: left;">
+      <h6>Others:</h6>
+    </div>
+
+  </div>
+
+  <div class="row">
+
+
+    <div class="col-4" style="display: flex; flex-direction: row;justify-content: center;flex-wrap: wrap;">
 
 
       <div class="hstack gap-0">
@@ -280,7 +562,7 @@
 
 
 
-         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
           {% if categoryLabel == 'feedback'%}
           <input type="radio" class="btn-check" name="rbFeedback" id="rbFeedback" autocomplete="off"
             onclick="selectCategory(event);" checked>
@@ -320,61 +602,23 @@
           <label class="btn btn-outline-primary" for="rbAll">{{ _('All') }}</label>
         </div>
 
-        <button type="button" title="{{ _('Report') }}" class="btn btn-outline-secondary" onclick="window.location.href='{{ url_for('authInterlink.genReport',descriptionId= description['id'] ) }}';" style="padding: -2px;margin:0px;margin-left=5px;border: 0px;margin-right: 5px;" >
-         
-          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-journal-check" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M10.854 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"></path>
-            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"></path>
-            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"></path>
-          </svg> 
-          
 
-        </button>
 
       </div>
 
     </div>
-  </div>
-
-  
-
-</div>
-
-<hr />
-
-<div class="row">
-
-  <div class="col-4" style="display: flex;flex-direction: row;">
-    <input id="searchBox" class="form-control me-2" type="search" placeholder="{{ _('Search') }}" aria-label="Search"
-      onkeydown="searchTextEnter(event)" style="min-width: 200px;" />
-    <button class="btn btn-outline-secondary" onclick="searchText(event)">{{ _('Search') }}</button>
-
-    
-
-  </div>
-
-  <div class="col-4">
-    <div style="display: flex; flex-direction: row-reverse;">
 
 
-      <div class="form-check" style="padding-right: 10px;">
-        <input class="form-check-input" type="checkbox" id="checkMyContributions" onchange="filterState(event)" >
-        <label class="form-check-label" for="checkMyContributions">{{ _('My Contributions') }}</label>
-      </div>
 
-    </div>
-  </div>
 
-   <div class="col-4">
-    <div style="display: flex; flex-direction: row-reverse;">
-
+    <div class="col-4" style="display: flex; flex-direction: row-reverse;justify-content: center;flex-wrap: wrap;">
 
       <div class="form-check form-switch" style="padding-right: 10px;">
         <input class="form-check-input" type="checkbox" id="checkInProgress" onchange="filterState(event)" checked>
         <label class="form-check-label" for="checkInProgress">{{ _('In Progress') }}</label>
       </div>
       <div class="form-check form-switch" style="padding-right: 10px;">
-        <input class="form-check-input" type="checkbox" id="checkArchived" onchange="filterState(event)" >
+        <input class="form-check-input" type="checkbox" id="checkArchived" onchange="filterState(event)">
         <label class="form-check-label" for="checkArchived">{{ _('Archived') }}</label>
       </div>
       <div class="form-check form-switch" style="padding-right: 10px;">
@@ -385,10 +629,21 @@
 
 
     </div>
+
+    <div class="col-4" style="display: flex; flex-direction: row-reverse;justify-content: center;flex-wrap: wrap;">
+
+      <div class="form-check" style="padding-right: 10px;">
+        <input class="form-check-input" type="checkbox" id="checkMyContributions" onchange="filterState(event)">
+        <label class="form-check-label" for="checkMyContributions">{{ _('My Contributions') }}</label>
+      </div>
+
+
+    </div>
+
+
   </div>
-
-
 </div>
+
 <hr />
 
 
@@ -396,14 +651,13 @@
 <table class="table">
   <thead>
     <tr>
-      <th scope="col-1">{{ _('Category') }}</th>
-      <th scope="col-1" style="text-align: center;">{{ _('Page') }}</th>
-      <th scope="col-2" style="text-align: center;">{{ _('State') }}</th>
-      <th scope="col-2" style="text-align: center;">{{ _('Nro Replies') }}</th>
-      <th scope="col-2" style="min-width: 200px;">{{ _('Description') }}</th>
-      <th scope="col-2" style="text-align: center;">{{ _('Update Date') }}</th>
-      <th scope="col-2" style="text-align: center;">{{ _('Option') }}</th>
+      <th class="priority-2" scope="col-1"></th>
 
+      <th class="priority-1" scope="col-2" style="min-width: 200px;">{{ _('Description') }}</th>
+      <th class="priority-1" scope="col-1" style="text-align: center;">{{ _('State') }}</th>
+
+      <th class="priority-3" scope="col-2" style="text-align: center;">{{ _('Nro Replies') }}</th>
+      <th class="priority-1" scope="col-2" style="text-align: center;">{{ _('Option') }}</th>
 
     </tr>
   </thead>
@@ -411,176 +665,168 @@
     {% for anotation in anotations %} {% if anotation.category != 'reply' %}
 
 
-    {% if anotation.state == 1 %}
-    <tr style="color: rgba(141, 140, 140, 0.774);">
-      <td>
-        <button class='btn btn-light'
-          onclick="window.location.href='{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}';"
-          style="height: 30px;min-width:100px;" alt="{{ anotation.state|estadosAnnotation}}"
-          title="{{ anotation.state|estadosAnnotation}}">
 
-
-          {% elif anotation.state == 2 %}
-    <tr style="color: rgba(0, 0, 0, 0.774);font-weight: bold;">
-      <td>
-        {% if anotation.category == 'feedback' %}
-
-        <button class='btn btn-success'
-          onclick="window.location.href='{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}';"
-          style="height: 30px;min-width:100px;font-weight: bold;" alt="{{ anotation.state|estadosAnnotation}}"
-          title="{{ anotation.state|estadosAnnotation}}">
-
-
-          {% elif anotation.category == 'question' %}
-
-
-          <button class='btn btn-warning'
-            onclick="window.location.href='{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}';"
-            style="height: 30px;min-width:100px;font-weight: bold;" alt="{{ anotation.state|estadosAnnotation}}"
-            title="{{ anotation.state|estadosAnnotation}}">
-
-
-            {% elif anotation.category == 'term' %}
-
-            <button class='btn btn-danger'
-              onclick="window.location.href='{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}';"
-              style="height: 30px;min-width:100px;font-weight: bold;background-color: #df06d4;border-color: #af02a7;"
-              alt="{{ anotation.state|estadosAnnotation}}" title="{{ anotation.state|estadosAnnotation}}">
-
-
-              {% endif %}
-
-
-
-              {% else %}
-
-              {% if anotation.category == 'feedback' %}
-              <!--  <tr style="background-color: #d0ffdc;" >
+    {% if anotation.category == 'feedback' %}
+    <!--  <tr style="background-color: #d0ffdc;" >
           -->
     <tr>
-      <td>
-        <button class='btn annotation-cat-feedback'
-          onclick="window.location.href='{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}';"
-          style="height: 30px;min-width:100px;" alt="{{ anotation.state|estadosAnnotation}}"
-          title="{{ anotation.state|estadosAnnotation}}">
+      <td class="priority-2" style="vertical-align: middle;text-align: center;">
+        <!-- Quito on click para evitar confusion.
+        // onclick="window.location.href='{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}';" 
+        <button class='btn'
+          
+          style="height: 30px;" alt="{{ _('Feedback') }}" title="{{ _('Feedback') }}">
 
-          {% endif %}
-          {% if anotation.category == 'question' %}
-          <!--  <tr style="background-color: #f6ffa8;" >
-          -->
-    <tr></tr>
-    <td>
-      <button class='btn annotation-cat-question'
-        onclick="window.location.href='{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}';"
-        style="height: 30px;min-width:100px;" alt="{{ anotation.state|estadosAnnotation}}"
-        title="{{ anotation.state|estadosAnnotation}}">
+          
+        </button> -->
+
+        <i class="fa-solid fa-file-pen" style="color:rgb(152, 82, 140);"></i>
+
 
         {% endif %}
-        {% if anotation.category == 'term' %}
-        <!--  <tr style="background-color: #ffa7fb;" >
+        {% if anotation.category == 'question' %}
+        <!--  <tr style="background-color: #f6ffa8;" >
           -->
-        <tr>
-          <td>
+    <tr></tr>
+    <td class="priority-2" style="vertical-align: middle;text-align: center;">
+      <!-- Quito on click para evitar confusion.
+        // onclick="window.location.href='{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}';"  
+      <button class='btn'
+        
+        style="height: 30px;" alt="{{ _('Question') }}" title="{{ _('Question') }}">
 
-            <button class='btn annotation-cat-term'
-              onclick="window.location.href='{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}';"
-              style="height: 30px;min-width:100px;" alt="{{ anotation.state|estadosAnnotation}}"
-              title="{{ anotation.state|estadosAnnotation}}">
+        
+      </button>-->
 
-              {% endif %}
+      <i class="fa-solid fa-file-circle-question" style="color:rgb(212, 211, 122);"></i>
 
-              {% endif%}
+      {% endif %}
+      {% if anotation.category == 'term' %}
+      <!--  <tr style="background-color: #ffa7fb;" >
+          -->
+      <tr>
+        <td class="priority-2" style="vertical-align: middle;text-align: center;">
+          <!-- Quito on click para evitar confusion.
+        // onclick="window.location.href='{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}';" 
+          <button class='btn'
+            
+            style="height: 30px;" alt="{{ _('Term') }}" title="{{ _('Term') }}">
 
-              {% if anotation.state == 1 %}
-              <span style="position: relative;top: -5px;text-decoration: line-through;">
- 
-                  {% if anotation.category == 'feedback'  %}
-                    {{ _('Feedback') }}
-                  {% elif anotation.category == 'term' %}
-                    {{ _('Term') }}
-                  {% elif anotation.category == 'question' %}
-                  {{ _('Question') }}
-                  {% endif %}
+            <i class="fa-solid fa-file-pen" style="color:rgb(152, 82, 140);"></i>
+          </button>-->
 
+          <i class="fa-solid fa-file-circle-exclamation" style="color:rgb(107, 205, 166);"></i>
 
-              </span>
-              {% else %}
-              <span style="position: relative;top: -5px;">
-
-                {% if anotation.category == 'feedback'  %}
-                  {{ _('Feedback') }}
-                {% elif anotation.category == 'term' %}
-                  {{ _('Term') }}
-                {% elif anotation.category == 'question' %}
-                {{ _('Question') }}
-                {% endif %}
-
-                
-              </span>
-              {% endif%}
-
-            </button>
-
-          </td>
-
-          <td style="text-align: left;">
-            {% set uriPath = anotation.uri.split('/') %}
-
-            <a href="{{ url_for('views.augment',rutaPagina='')}}{{anotation.uri}}?description={{ description.id }}&annotationId={{ anotation.id }}&integrationInterlinker=True">/{{ uriPath[-1:] |join('')}}</a>
-         
-
-          </td>
-
-          <td style="text-align: center;">
-
-            {{ anotation.state|estadosAnnotation}}
-
-          </td>
+          {% endif %}
 
 
 
-          <!-- 
+
+
+
+
+        </td>
+
+
+
+
+
+
+
+        <!-- 
       <td style="text-align: center;">{{ anotation.id}} </td>
       <td style="text-align: center;"> </td>
       -->
-          <td style="text-align: center;">
-            <h5>
+
+
+        {% set soloTexto= anotation.text|striptags%}
+        {% if soloTexto|length > 200 %}
+        {% set soloTexto= anotation.text|striptags%}
+        {% set textoCortado= soloTexto[0:200] %}
+        <td class="priority-1">{{ textoCortado }}... <br> {{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}
+        </td>
+        {% else %}
+        {% set soloTexto= anotation.text|striptags%}
+        <td>{{ soloTexto }} <br> <span style="opacity: 0.5;"> {{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}
+          </span> </td>
+        {% endif %}
+
+        <td class="priority-1" style="text-align: center;">
+
+
+
+          <select onchange="getval(this);" annotationId="{{ anotation.id }}" class="form-select"
+            style="min-width:120px ;max-width: 170px;" aria-label="Default select example">
+
+            <option value="0" {% if anotation.state==0 %} selected {% endif %}>
+              {{ _('In Progress') }}</option>
+            <option value="2" {% if anotation.state==2 %} selected {% endif %}>
+              {{ _('Approved') }}</option>
+            <option value="1" {% if anotation.state==1 %} selected {% endif %}>{{ _('Archived') }}
+            </option>
+          </select>
+
+        </td>
+
+
+
+
+
+        <td class="priority-3" style="text-align: center;">
+          <h5>
             <a class="badge bg-light text-dark position-relative" style="text-decoration: none;">
               {{ anotation.nroReplies }}
 
             </a>
-            </h5>
+          </h5>
 
-          </td>
-
-          {% set soloTexto= anotation.text|striptags%}
-          {% if soloTexto|length > 200 %}
-          {% set soloTexto= anotation.text|striptags%}
-          {% set textoCortado= soloTexto[0:200] %}
-          <td>{{ textoCortado }}... </td>
-          {% else %}
-          {% set soloTexto= anotation.text|striptags%}
-          <td>{{ soloTexto }} </td>
-          {% endif %}
+        </td>
 
 
 
-
-          <td style="text-align: center;">{{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
-          <td>
-            <a href="{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}" class="btn btn-outline-secondary"
-              style="margin: 0% 20% 0% 20%;min-width: 70px;"><i class="bi bi-box-arrow-in-right " style="width:100px;"></i></a>
-
-          </td>
+        <td class="priority-1">
 
 
-        </tr>
-        {% endif %} {% endfor %}
+
+          <div class="dropdown  dropstart">
+            <a class="btn btn-outline-secondary dropdown-toggle" style="max-width: 130;" href="#" role="button"
+              id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+              {{_('Options')}}
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
+              <li><a class="dropdown-item"
+                  href="{{ url_for('views.augment',rutaPagina='')}}{{anotation.uri}}?description={{ description.id }}&annotationId={{ anotation.id }}&integrationInterlinker=True">
+                  <i class="fa-solid fa-eye"></i> | {{_('See in Page')}}</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+
+
+
+              <li><a class="dropdown-item"
+                  href="{{ url_for('views.assetSubject',descriptionId= description.id,annotatorId=anotation.id ) }}">
+                  <i class="fa-solid fa-circle-chevron-down"></i> | {{_('More Details')}} </a>
+              </li>
+
+            </ul>
+          </div>
+
+        </td>
+
+
+      </tr>
+      {% endif %} {% endfor %}
   </tbody>
 </table>
 
+
+
+
+
 <h6 id="searchStats">{{ _('Total found') }} : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span
-    id='page'>{{paginacion.page}}</span> {{ _('of') }} <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> {{ _('Pages') }}).</h6>
+    id='page'>{{paginacion.page}}</span> {{ _('of') }} <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> {{
+  _('Pages') }}).</h6>
 
 
 <div class="container" style="align-content: center; justify-content: center; display: flex">
@@ -604,7 +850,7 @@
 
 
 
-{% endblock %}
+
 
 <script>
   var tooltipTriggerList = [].slice.call(
@@ -613,6 +859,14 @@
   var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
+  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+  var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    return new bootstrap.Popover(popoverTriggerEl)
+  });
+
+  $('[data-toggle="tooltip"]').tooltip();
 </script>
+
+{% endblock %}
 
 {% endblock %}

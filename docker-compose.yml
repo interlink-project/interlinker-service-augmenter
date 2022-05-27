@@ -71,6 +71,9 @@ services:
       - elasticsearch-config:/usr/share/elasticsearch/config
     networks:
       - default
+    ports:
+      - "9200:9200"
+      - "9300:9300"
 
   augmenterservice:
     build: .

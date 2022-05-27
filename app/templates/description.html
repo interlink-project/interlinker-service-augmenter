@@ -319,11 +319,10 @@ block content %}
     
   }
 
-function getval(sel)
-{
-  let annotationId= sel.getAttribute("annotationId");
-  registrarEstadoAnnotation(annotationState=sel.value,annotationId=annotationId,objtype='annotation_state');
-}
+  function getval(sel) {
+    let annotationId = sel.getAttribute("annotationId");
+    registrarEstadoAnnotation(annotationState = sel.value, annotationId = annotationId, objtype = 'annotation_state');
+  }
 
 
   function registrarEstadoAnnotation(
@@ -331,43 +330,43 @@ function getval(sel)
     annotationId = "",
     objtype = "annotation_state"
   ) {
-  
-      //  Muestro el panel de ingreso de razon:
-      var myModal = new bootstrap.Modal(
-        document.getElementById("notificationBox"),
-        {}
-      );
-      $("#notificationBoxLabel").text("{{ _('Information') }}");
-      $("#notificationBody").text("");
-      $("#notificationBody").append(
-        "<div class='mb-3'> <label for='commentsChangeState' class='form-label'> {{ _('Please enter comments on your decision') }}. </label>      <textarea class='form-control' id='commentsChangeState' rows='3'></textarea>    </div>"
-      );
 
-      $("#notificationBody").append(
-        "<input type='hidden' name='stateToChange' id='stateToChange' value='" +
-          annotationState +
-          "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
-      );
+    //  Muestro el panel de ingreso de razon:
+    var myModal = new bootstrap.Modal(
+      document.getElementById("notificationBox"),
+      {}
+    );
+    $("#notificationBoxLabel").text("{{ _('Information') }}");
+    $("#notificationBody").text("");
+    $("#notificationBody").append(
+      "<div class='mb-3'> <label for='commentsChangeState' class='form-label'> {{ _('Please enter comments on your decision') }}. </label>      <textarea class='form-control' id='commentsChangeState' rows='3'></textarea>    </div>"
+    );
 
-      $("#notificationBody").append(
-        "<input type='hidden' name='annotationId' id='annotationId' value='" +
-          annotationId +
-          "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
-      );
+    $("#notificationBody").append(
+      "<input type='hidden' name='stateToChange' id='stateToChange' value='" +
+      annotationState +
+      "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
+    );
 
-      $("#notificationBody").append(
-        "<input type='hidden' name='objtype' id='objtype' value='" +
-          objtype +
-          "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
-      );
+    $("#notificationBody").append(
+      "<input type='hidden' name='annotationId' id='annotationId' value='" +
+      annotationId +
+      "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
+    );
 
-      $("#notificationAcceptBtn").text("{{ _('Accept') }}");
-      $("#notificationAcceptBtn").show();
-      //$('#notificationAcceptBtn').hide();
+    $("#notificationBody").append(
+      "<input type='hidden' name='objtype' id='objtype' value='" +
+      objtype +
+      "'  style='width: 200px;margin:0px 10px 10px 0px;' class='form-control mr-sm-4' readonly/>"
+    );
 
-      $("#createUrl").val("");
-      myModal.show();
-    
+    $("#notificationAcceptBtn").text("{{ _('Accept') }}");
+    $("#notificationAcceptBtn").show();
+    //$('#notificationAcceptBtn').hide();
+
+    $("#createUrl").val("");
+    myModal.show();
+
   }
 
   function getStateText(val) {
@@ -391,35 +390,35 @@ function getval(sel)
     return res;
   }
 
- //Defino el evento de cerrar el modal: (En este caso refrescar lista)
- $("#cerrarVentanaBtn").click(function () {
+  //Defino el evento de cerrar el modal: (En este caso refrescar lista)
+  $("#cerrarVentanaBtn").click(function () {
     annotationId = $("#annotationId").val();
     $("#notificationBox").modal("hide");
     document.location.reload(true)
- });
+  });
 
 
-//Defino el evento de accept del modal: (En este caso submit a form)
+  //Defino el evento de accept del modal: (En este caso submit a form)
   $("#notificationAcceptBtn").click(function () {
     annotationId = $("#annotationId").val();
     stateToChange = $("#stateToChange").val();
     objtype = $("#objtype").val();
     commentsChangeState = $("#commentsChangeState").val();
 
-    descriptionSpan = document.getElementById("descriptionId"); 
+    descriptionSpan = document.getElementById("descriptionId");
     descriptionID = descriptionSpan.textContent;
 
     if (commentsChangeState != "") {
       if (annotationId != "") {
 
-       
+
         //descriptionID = '{{description['id']}}';
         urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='state' ) }}`;
-        urlPost = urlPost.replace("DESCRIPTIONID",descriptionID);
-        urlPost = urlPost.replace("ANNOTATIONID",annotationId);
+        urlPost = urlPost.replace("DESCRIPTIONID", descriptionID);
+        urlPost = urlPost.replace("ANNOTATIONID", annotationId);
 
 
-         //Para el caso que sea un reply
+        //Para el caso que sea un reply
         function successSearch(data) {
           let nuevoEstado = data["state"];
           $("#repState-" + annotationId).text(nuevoEstado);
@@ -436,13 +435,13 @@ function getval(sel)
           document.location.reload(true)
         }
 
-    
+
       } else {
 
 
         urlPost = `{{ url_for('authInterlink.changeAnnotation', descriptionId= 'DESCRIPTIONID', annotatorId='ANNOTATIONID', option='state' ) }}`;
-        urlPost = urlPost.replace("DESCRIPTIONID",descriptionID);
-        urlPost = urlPost.replace("ANNOTATIONID",annotationId);
+        urlPost = urlPost.replace("DESCRIPTIONID", descriptionID);
+        urlPost = urlPost.replace("ANNOTATIONID", annotationId);
 
         //Para el caso que es una anotacion base
         function successSearch(data) {
@@ -472,10 +471,10 @@ function getval(sel)
         "<p style='color:red;'>* {{ _('A final comment is required') }}</p>"
       );
     }
-   
+
   });
 
-  
+
 
 </script>
 
@@ -484,7 +483,7 @@ function getval(sel)
 
 <div style="display: block">
   <div style="padding-bottom: 20;display: flex;">
-    <div  style="text-align: center;width: 100vh;">
+    <div style="text-align: center;">
 
 
       <h4 style="color: rgb(0, 110, 153);">{{description['title']|striptags}}</h4>
@@ -495,20 +494,20 @@ function getval(sel)
     <div style="flex: auto;text-align: right;flex-direction: row;">
 
       <button type="button" title="{{ _('Report') }}" class="btn btn-secondary"
-      style='min-width: 120px; margin-left: 5px;'
-      onclick="window.location.href='{{ url_for('authInterlink.genReport',descriptionId= description['id'] ) }}';"
-      style="padding: -2px;margin:0px;margin-left=5px;border: 0px;margin-right: 5px;">
+        style='min-width: 120px; margin-left: 5px;'
+        onclick="window.location.href='{{ url_for('authInterlink.genReport',descriptionId= description['id'] ) }}';"
+        style="padding: -2px;margin:0px;margin-left=5px;border: 0px;margin-right: 5px;">
 
-      <i class="fa-solid fa-file-export"></i> | {{_('Generate Report')}}
+        <i class="fa-solid fa-file-export"></i> | {{_('Generate Report')}}
 
 
-    </button>
+      </button>
 
-      <button class="btn btn-success" style='min-width: 170px; margin-left: 5px;'
+      <button class="btn btn-success" style='min-width: 173px; margin-left: 5px;'
         onclick="window.location.href='{{ url_for('views.augment',rutaPagina=urlMainPage) }}?description={{description['id']}}';"><i
           class="fa-solid fa-play"></i> | {{_('Annotate')}}</button>
 
-     
+
 
 
     </div>
@@ -670,7 +669,7 @@ function getval(sel)
           style="height: 30px;" alt="{{ _('Feedback') }}" title="{{ _('Feedback') }}">
 
           
-        </button> --> 
+        </button> -->
 
         <i class="fa-solid fa-file-pen" style="color:rgb(152, 82, 140);"></i>
 
@@ -705,7 +704,7 @@ function getval(sel)
             style="height: 30px;" alt="{{ _('Term') }}" title="{{ _('Term') }}">
 
             <i class="fa-solid fa-file-pen" style="color:rgb(152, 82, 140);"></i>
-          </button>--> 
+          </button>-->
 
           <i class="fa-solid fa-file-circle-exclamation" style="color:rgb(107, 205, 166);"></i>
 
@@ -735,7 +734,8 @@ function getval(sel)
         {% if soloTexto|length > 200 %}
         {% set soloTexto= anotation.text|striptags%}
         {% set textoCortado= soloTexto[0:200] %}
-        <td class="priority-1">{{ textoCortado }}... <br> {{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}} </td>
+        <td class="priority-1">{{ textoCortado }}... <br> {{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}
+        </td>
         {% else %}
         {% set soloTexto= anotation.text|striptags%}
         <td>{{ soloTexto }} <br> <span style="opacity: 0.5;"> {{ anotation.updated|datetimeformat('DD-MM-YYYY HH:mm')}}
@@ -746,7 +746,8 @@ function getval(sel)
 
 
 
-          <select onchange="getval(this);" annotationId="{{ anotation.id }}" class="form-select" style="min-width:120px ;max-width: 170px;" aria-label="Default select example">
+          <select onchange="getval(this);" annotationId="{{ anotation.id }}" class="form-select"
+            style="min-width:120px ;max-width: 170px;" aria-label="Default select example">
 
             <option value="0" {% if anotation.state==0 %} selected {% endif %}>
               {{ _('In Progress') }}</option>
@@ -779,8 +780,8 @@ function getval(sel)
 
 
           <div class="dropdown  dropstart">
-            <a class="btn btn-outline-secondary dropdown-toggle" style="max-width: 130;" href="#" role="button" id="dropdownMenuLink"
-              data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="btn btn-outline-secondary dropdown-toggle" style="max-width: 130;" href="#" role="button"
+              id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
               {{_('Options')}}
             </a>
 

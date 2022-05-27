@@ -1336,6 +1336,10 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     timermeLibScript = soup.new_tag(
         'script', src=url_for('static', filename='lib/timeme.min.js'))
 
+    fontawsomeLibScript = soup.new_tag(
+        'script', src='https://kit.fontawesome.com/edd7ce77d1.js',crossorigin="anonymous")
+
+
     # Agrego las librerias personalizadas:
 
     # Defino la funcion de navegacion entre enlaces:
@@ -1408,6 +1412,7 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
 
         bodyTag.append(socketioLibScript)
         bodyTag.append(timermeLibScript)
+        bodyTag.append(fontawsomeLibScript)
 
     except:
         #print("Excepcion en ccs1")

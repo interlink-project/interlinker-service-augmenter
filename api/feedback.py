@@ -8,6 +8,10 @@ MAPPING = {
             "type": "string",
             "index": "no"
         },
+        "user_id": {
+            "type": "string",
+            "index": "no"
+        },
         "pregunta_1": {
             "type": "integer",
             "index":"no"

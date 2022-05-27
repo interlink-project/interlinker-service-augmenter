@@ -82,6 +82,7 @@ def create_app():
             notification.Notification.create_all(index="notification")
             #survey.Survey.drop_all(index="survey")
             survey.Survey.create_all(index="survey")
+            #feedback.Feedback.drop_all(index="feedback")
             feedback.Feedback.create_all(index="feedback")
             description.Description.create_all(index="description")
             document.Document.create_all()

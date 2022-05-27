@@ -241,6 +241,7 @@ def storefeedback():
 
     emailOp = argumentos.pop("emailOp")
     feedtext = argumentos.pop("feedtext")
+    user_id = current_user.email
     pregunta_1 = argumentos.pop("pregunta_1")
     pregunta_2 = argumentos.pop("pregunta_2")
     pregunta_3 = argumentos.pop("pregunta_3")
@@ -248,7 +249,7 @@ def storefeedback():
     pregunta_5 = argumentos.pop("pregunta_5")
 
 
-    newfeedback = Feedback(emailOp=emailOp, feedtext=feedtext,
+    newfeedback = Feedback(emailOp=emailOp,user_id=user_id, feedtext=feedtext,
                                      pregunta_1=pregunta_1, pregunta_2=pregunta_2,
                                      pregunta_3=pregunta_3,
                                      pregunta_4=pregunta_4, pregunta_5=pregunta_5
