@@ -39,7 +39,8 @@ var i18n_dict = {
                 "Enter your email address in case you like to keep in touch with INTERLINK to provide more detailed feedback":"En el caso de que quieras proporcionar más comentarios y participar en los eventos que celebremos en INTERLINK, por favor, danos tu correo electrónico",
                 "Email address":"Correo electrónico",
                 "Submit":"Enviar",
-                "Annotations":"Anotaciones"
+                "Annotations":"Anotaciones",
+                "View":"Skats"
 
                 
 
