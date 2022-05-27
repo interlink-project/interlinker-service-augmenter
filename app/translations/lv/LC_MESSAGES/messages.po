@@ -621,3 +621,7 @@ msgstr "iesniegt"
 #: templates/dashboard.html:
 msgid "Annotations"
 msgstr "Anotācijas"
+
+#: templates/description.html:
+msgid "View"
+msgstr "Skats"

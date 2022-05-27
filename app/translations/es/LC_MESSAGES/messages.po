@@ -167,7 +167,7 @@ msgstr "Estado"
 
 #: templates/description.html:393
 msgid "Nro Replies"
-msgstr "Nro Replicas"
+msgstr "Nro Réplicas"
 
 #: templates/description.html:394 templates/descriptionDetail.html:379
 #: templates/profile.html:14 templates/surveys.html:258
@@ -627,3 +627,8 @@ msgstr "Enviar"
 #: templates/dashboard.html:
 msgid "Annotations"
 msgstr "Anotaciones"
+
+
+#: templates/description.html:
+msgid "View"
+msgstr "Ver"
