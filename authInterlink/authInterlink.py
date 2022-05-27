@@ -650,7 +650,7 @@ def genReport(descriptionId=None):
         'websitepage': _('Website Page'),
         'openingtext': _('Opening Text'),
         'referencetext': _('Reference Text'),
-        'closingstatement': _('Closing Statement'),
+        'closingstatement': _('CLOSING STATEMENT'),
         'date': _('Date')
 
     }

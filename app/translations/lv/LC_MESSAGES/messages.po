@@ -519,8 +519,8 @@ msgid "Reference Text"
 msgstr "Atsauces teksts"
 
 #: Report
-msgid "Closing Statement"
-msgstr "Noslēguma paziņojums"
+msgid "CLOSING STATEMENT"
+msgstr "NOSLĒGUMA PĀRSKATS"
 
 #: Report
 msgid "Date"
@@ -617,3 +617,7 @@ msgstr "E-pasta adrese"
 #: templates/feedback.html:
 msgid "Submit"
 msgstr "iesniegt"
+
+#: templates/dashboard.html:
+msgid "Annotations"
+msgstr "Anotācijas"

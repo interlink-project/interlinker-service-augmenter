@@ -516,8 +516,8 @@ msgid "Reference Text"
 msgstr "Texto de referencia"
 
 #: Report
-msgid "Closing Statement"
-msgstr "Declaración de cierre"
+msgid "CLOSING STATEMENT"
+msgstr "DECLARACIÓN DE CIERRE"
 
 #: Report
 msgid "Date"
@@ -623,3 +623,7 @@ msgstr "Correo electrónico"
 msgid "Submit"
 msgstr "Enviar"
 
+
+#: templates/dashboard.html:
+msgid "Annotations"
+msgstr "Anotaciones"

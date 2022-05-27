@@ -39,7 +39,8 @@ var i18n_dict = {
         "Provide feedback about the app":"Sniedziet atsauksmes par lietotni",
         "Enter your email address in case you like to keep in touch with INTERLINK to provide more detailed feedback":"Ievadiet savu e-pasta adresi, ja vēlaties sazināties ar INTERLINK, lai sniegtu detalizētākas atsauksmes.",
         "Email address":"E-pasta adrese",
-        "Submit":"iesniegt"
+        "Submit":"iesniegt",
+        "Annotations":"Anotācijas"
 
 
 };

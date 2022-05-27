@@ -383,7 +383,7 @@
       </div>
       <div class="col">
         <button
-          class="btn btn-outline-dark"
+          class="btn btn-success"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#advanseSearchTools"
@@ -466,29 +466,30 @@
         <table class="table" style="height: auto">
           <thead>
             <tr>
-              <th scope="col-2">{{ _('Category') }}</th>
-              <th scope="col-3">{{ _('Title') }}</th>
-              <th scope="col-2" style="text-align: center;">{{ _('Progress') }}</th>
-              <th scope="col-2"  style="text-align: center;">{{ _('Updated Date') }}</th>
-              <th scope="col-1"  style="text-align: center;max-width: 5px;">{{ _('Setting') }}</th>
-              <th scope="col-1"  style="text-align: center;">{{ _('Access') }}</th>
+            
+              <th class="priority-1" scope="col-4">{{ _('Title') }}</th>
+              <th class="priority-2" scope="col-2" style="text-align: center;">{{ _('Progress') }}</th>
+              <th class="priority-2" scope="col-2" style="text-align: center;">{{ _('Annotations') }}</th>
+           
+              <th class="priority-1" scope="col-2"  style="text-align: center;max-width: 5px;">{{ _('Options') }}</th>
+       
             </tr>
           </thead>
           <tbody id="tablaDescriptions">
             {% for description in descriptions %}
   
             <tr>
-              <td>{{ description.padministration }}</td>
+            
   
             {% if description.title|length > 75 %}
             {% set textoCortado= description.title[0:75] %}
-            <td>{{ textoCortado }}... </td>
+            <td class="priority-1">{{ textoCortado }}... <br> <span style="opacity: 0.5;">/{{ description.padministration }} - {{ description.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</span></td>
             {% else %}
-            <td>{{ description.title }}</td>
+            <td class="priority-1">{{ description.title }} <br> <span style="opacity: 0.5;">/{{ description.padministration }} - {{ description.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</span></td>
             {% endif %}
   
   
-              <td  style="text-align: center;">
+              <td class="priority-2"  style="text-align: center;">
   
                 <div class="progress" style="height: 20px;">
                   <div class="progress-bar" role="progressbar" style="width: {{ description.progressTotal }}%;" aria-valuenow={{ description.progressTotal }} aria-valuemin="0" aria-valuemax="100" ></div>
@@ -498,138 +499,150 @@
                   
                 
               </td>
-              <td  style="text-align: center;">{{ description.updated|datetimeformat('DD-MM-YYYY HH:mm')}}</td>
+
+              <td class="priority-2"  style="text-align: center;">
   
-              <td  >     
-                <a  href="{{ url_for('authInterlink.editDescription',descriptionId= description.id , option= 'edit') }}" class="btn btn-outline-secondary bi-tools"  ></a>
-              </td>
-  
-  
-              <td  style="text-align: center;">
                 <div class="btn-group" role="group" aria-label="Basic example">
                   
                 
                 
-                {% set classeCatelbl="bg-secondary" %}
-                {% set classeCateBtn="btn-outline-secondary" %}
-                {% if description.progressQues!=100.0 and description.nroQuest!=0 %}
-                {% set classeCatelbl="bg-danger" %}
-                {% set classeCateBtn="btn-warning" %}
-                {% endif %}
-  
-                
-                
-                <button
-                  type="button"
-                  class="btn {{ classeCateBtn }} position-relative"
-                  alt="Question"
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="bottom"
-                  title="Question"
-                  onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}?category=question';"
-                >
-                  {{description.nroQuest}}
+                  {% set classeCatelbl="bg-secondary" %}
+                  {% set classeCateBtn="btn-outline-secondary" %}
+                  {% if description.progressQues!=100.0 and description.nroQuest!=0 %}
+                  {% set classeCatelbl="bg-danger" %}
+                  {% set classeCateBtn="btn-warning" %}
+                  {% endif %}
     
-                  <span
-                    class="
-                      position-absolute
-                      top-0
-                      start-60
-                      translate-middle
-                      badge
-                      rounded-pill
-                      {{ classeCatelbl }}
-                    "
-                    style="opacity: 0.8"
-                  >
-                  Q
-                    <span class="visually-hidden">unread messages</span>
-                  </span>
-                </button>
-  
-                {% set classeCatelbl="bg-secondary" %}
-                {% set classeCateBtn="btn-outline-secondary" %}
-                {% if description.progressFeed!=100.0  and description.nroFeeds!=0 %}
-                {% set classeCatelbl="bg-success" %}
-                {% set classeCateBtn="btn-success" %}
-                {% endif %}
-  
-                <button
-                  type="button"
-                  class="btn {{ classeCateBtn }} position-relative"
-                  alt="Feedback"
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="bottom"
-                  title="Feedback"
-                  onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}?category=feedback';"
-                
-                  >
                   
-                  {{description.nroFeeds}}
-                  <span
-                    class="
-                      position-absolute
-                      top-0
-                      start-60
-                      translate-middle
-                      badge
-                      rounded-pill
-                      {{ classeCatelbl }}
-                    "
-                    style="opacity: 0.8"
+                  
+                  <button
+                    type="button"
+                    class="btn {{ classeCateBtn }} position-relative"
+                    alt="Question"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    title="Question"
+                    onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}?category=question';"
                   >
-                  F
-                    <span class="visually-hidden">unread messages</span>
-                  </span>
-                </button>
+                    {{description.nroQuest}}
+      
+                    <span
+                      class="
+                        position-absolute
+                        top-0
+                        start-60
+                        translate-middle
+                        badge
+                        rounded-pill
+                        {{ classeCatelbl }}
+                      "
+                      style="opacity: 0.8"
+                    >
+                    Q
+                      <span class="visually-hidden">unread messages</span>
+                    </span>
+                  </button>
+    
+                  {% set classeCatelbl="bg-secondary" %}
+                  {% set classeCateBtn="btn-outline-secondary" %}
+                  {% if description.progressFeed!=100.0  and description.nroFeeds!=0 %}
+                  {% set classeCatelbl="bg-success" %}
+                  {% set classeCateBtn="btn-success" %}
+                  {% endif %}
+    
+                  <button
+                    type="button"
+                    class="btn {{ classeCateBtn }} position-relative"
+                    alt="Feedback"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    title="Feedback"
+                    onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}?category=feedback';"
+                  
+                    >
+                    
+                    {{description.nroFeeds}}
+                    <span
+                      class="
+                        position-absolute
+                        top-0
+                        start-60
+                        translate-middle
+                        badge
+                        rounded-pill
+                        {{ classeCatelbl }}
+                      "
+                      style="opacity: 0.8"
+                    >
+                    F
+                      <span class="visually-hidden">unread messages</span>
+                    </span>
+                  </button>
+                
+    
+                  {% set classeCatelbl="bg-secondary" %}
+                  {% set classeCateBtn="btn-outline-secondary" %}
+                  {% if description.progressTerm!=100.0 and description.nroTerms!=0 %}
+                  {% set classeCatelbl="bg-primary" %}
+                  {% set classeCateBtn="btn-info" %}
+                  {% endif %}
+    
+                  <button
+                    type="button"
+                    class="btn {{ classeCateBtn }} position-relative"
+                    alt="Term"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    title="Term"
+                    onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}?category=term';"
+                  
+                  >
+                  {{description.nroTerms}} 
+                    <span
+                      class="
+                        position-absolute
+                        top-0
+                        start-60
+                        translate-middle
+                        badge
+                        rounded-pill
+                        {{ classeCatelbl }}
+                        
+                      "
+                      style="opacity: 0.8"
+                    >
+                      
+                      T
+                      <span class="visually-hidden">unread messages</span>
+                    </span>
+                  </button>
+                </div>
+                
+              </td>
               
   
-                {% set classeCatelbl="bg-secondary" %}
-                {% set classeCateBtn="btn-outline-secondary" %}
-                {% if description.progressTerm!=100.0 and description.nroTerms!=0 %}
-                {% set classeCatelbl="bg-primary" %}
-                {% set classeCateBtn="btn-info" %}
-                {% endif %}
-  
-                <button
-                  type="button"
-                  class="btn {{ classeCateBtn }} position-relative"
-                  alt="Term"
-                  data-bs-toggle="tooltip"
-                  data-bs-placement="bottom"
-                  title="Term"
-                  onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}?category=term';"
+              <td class="priority-1" style="text-align: center;" >  
                 
-                >
-                {{description.nroTerms}} 
-                  <span
-                    class="
-                      position-absolute
-                      top-0
-                      start-60
-                      translate-middle
-                      badge
-                      rounded-pill
-                      {{ classeCatelbl }}
-                      
-                    "
-                    style="opacity: 0.8"
-                  >
-                    
-                    T
-                    <span class="visually-hidden">unread messages</span>
-                  </span>
-                </button>
-              </div>
+                <button type="button" class="btn btn-secondary"
+                alt="All"
+    
+                title="{{ _('Access') }}"
+                onclick="window.location.href='{{ url_for('authInterlink.editDescription',descriptionId= description.id , option= 'edit') }}';"
+              
+              ><i class="fa-solid fa-screwdriver-wrench"></i> {{ _('Edit') }}</button>
+
+
+             
+                
   
               <div class="btn-group me-2" role="group" aria-label="Second group">
                 <button type="button" class="btn btn-primary"
                   alt="All"
       
-                  title="{{ _('All') }}"
+                  title="{{ _('Access') }}"
                   onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}';"
                 
-                >{{ _('All') }}</button>
+                >{{ _('Access') }}</button>
               </div>
   
               </td>
