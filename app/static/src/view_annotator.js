@@ -168,8 +168,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     };
 
     AnnotatorViewer.prototype.onLikeClick = function (event) {
+
       event.stopPropagation();
       this.click;
+
+      var valorClassAttr=$(event.target).attr("class");
+      if(valorClassAttr.includes("solid")){
+        $(event.target).attr("class", 'fa-regular fa-heart annotator-viewer-like  fa-lg');
+      }else{
+        $(event.target).attr("class", 'fa-solid fa-heart annotator-viewer-like  fa-lg');
+      }
+      
+
+
       return this.onButtonClick(event, "like");
     };
 
@@ -424,7 +435,7 @@ if(divreply.is(":hidden")){
         xmlhttp.send(JSON.stringify({stateToChange: '1',
           commentsChangeState: '',
           objtype: 'annotation.like'}));
-          alert('You have successfully registered a like!');
+          //alert('You have successfully registered a like!');
       }
 
       /*let annotator_textArea=item.find("div.anotador_text");
@@ -865,11 +876,24 @@ if(divreply.is(":hidden")){
     };
 
     AnnotatorViewer.prototype.onLikeMouseover = function (event) {
-      $(event.target).attr("class", 'fa-solid fa-heart annotator-viewer-like  fa-lg');
+
+      var valorClassAttr=$(event.target).attr("class");
+      if(valorClassAttr.includes("solid")){
+        $(event.target).attr("class", 'fa-regular fa-heart annotator-viewer-like  fa-lg');
+      }else{
+        $(event.target).attr("class", 'fa-solid fa-heart annotator-viewer-like  fa-lg');
+      }
+
+      
     };
 
     AnnotatorViewer.prototype.onLikeMouseout = function (event) {
-      $(event.target).attr("class", 'fa-regular fa-heart annotator-viewer-like  fa-lg');
+      var valorClassAttr=$(event.target).attr("class");
+      if(valorClassAttr.includes("solid")){
+        $(event.target).attr("class", 'fa-regular fa-heart annotator-viewer-like  fa-lg');
+      }else{
+        $(event.target).attr("class", 'fa-solid fa-heart annotator-viewer-like  fa-lg');
+      }
     };
 
     AnnotatorViewer.prototype.onReplyMouseover = function (event) {
@@ -1222,6 +1246,8 @@ if(divreply.is(":hidden")){
 
         $("li.annotator-marginviewer-element").each(function (index) {
           const annotationId = this["id"];
+
+          
 
           //Obtengo los replies:
           let listReplies = [];
@@ -1748,9 +1774,28 @@ if(divreply.is(":hidden")){
 
       var like_icon = "";
       likeTxt = i18n_dict.Like;
+
+      //Obtengo el valor del like.
+
+      estadosAnnotation=annotation["statechanges"];
+
+      likethisAnnotation=false;
+      for (let i = 0; i < estadosAnnotation.length; i++) {
+        if(estadosAnnotation[i]["objtype"]=="annotation_like" && estadosAnnotation[i]["user"]==currentUser){
+          likethisAnnotation=true;
+        }
+      }
+
+
       if (replyPermission) {
-        like_icon =
-        `<i style="float: right;margin-top:10px;margin-left:3px;" class="fa-regular fa-heart  fa-lg annotator-viewer-like"></i>`;
+        if(likethisAnnotation){
+          like_icon =
+          `<i style="float: right;margin-top:10px;margin-left:3px;" class="fa-solid fa-heart  fa-lg annotator-viewer-like"></i>`;
+        
+        }else{
+          like_icon =
+          `<i style="float: right;margin-top:10px;margin-left:3px;" class="fa-regular fa-heart  fa-lg annotator-viewer-like"></i>`;
+        }
       }
 
       if (annotation.estat == 1 || annotation.permissions.read.length === 0) {

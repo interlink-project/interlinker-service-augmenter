@@ -807,21 +807,23 @@ def subjectPage(descriptionId=None, annotatorId=None):
     res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
                                       'InProgress': True, 'Archived': False, 'Approved': True}, descriptionId=descriptionId, category='reply', notreply=False, page='all')
 
-    nroReplies = res['numRes']
+    #nroReplies = res['numRes']
     replies = res['annotations']
+
+    nroReplies = len(Annotation.getReplies(Annotation, annotationId=annotatorId,listChildrenRep=[]))
 
     # nroReplies = Annotation.count(
     #     query={'idReplyRoot': annotatorId, 'category': 'reply'})
     # replies = Annotation.search(
     #     query={'idReplyRoot': annotatorId, 'category': 'reply'}, limit=nroReplies)
 
-    nroRepliesOfAnnotation = nroReplies
+    #nroRepliesOfAnnotation = nroReplies
     #nroRepliesOfAnnotation = Annotation.count(query={ '_id': description['id'] ,'category':'reply','idReplyRoot':annotatorId  })
 
     # Cargo las Notificaciones
     listNotifications, numRes = cargarNotifications()
 
-    return render_template("subjectPage.html", user=current_user, annotation=annotation, description=description, categoryLabel=annotation['category'], replies=replies, nroReplies=nroRepliesOfAnnotation, urlMainPage=urlMainPage, notifications=listNotifications, notificationNum=numRes)
+    return render_template("subjectPage.html", user=current_user, annotation=annotation, description=description, categoryLabel=annotation['category'], replies=replies, nroReplies=nroReplies, urlMainPage=urlMainPage, notifications=listNotifications, notificationNum=numRes)
    # return 'la desc: '+category+'lauri is'+str(uri)
 
 
@@ -908,7 +910,7 @@ def changeAnnotation(descriptionId=None, annotatorId=None, option=None):
             elif vote == -1:
                 initState = int(annotation['dislike'])
                 annotation['dislike'] = initState+1
-                objtype = 'annotation_like'
+                objtype = 'annotation_dislike'
 
             # Registro el cambio de estado
             annotation['statechanges'].append({

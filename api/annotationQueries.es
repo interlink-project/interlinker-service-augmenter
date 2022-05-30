@@ -11,7 +11,7 @@ POST annotator/annotation/_search
             "must": [
                 {
                     "match": {
-                        "text": "relevant"
+                        "_id": "1653465716079"
                     }
                 }
             ]
@@ -126,7 +126,7 @@ POST annotator/annotation/_search
             "must": [
                 {
                     "match": {
-                        "_id": "1637225312399"
+                        "_id": "1653465716079"
                     }
                 },
                 {
