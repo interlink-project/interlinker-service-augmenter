@@ -960,6 +960,25 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
         pageSource = driver.find_element_by_xpath(
             "//*").get_attribute("outerHTML")
 
+        #pageSource= driver.page_source
+        
+        #FInd element
+        #form_textfield = driver.find_element(By.NAME, 'username')
+        
+        #Obtener las css de un elemento:
+        we = driver.find_element_by_tag_name("div")
+
+        we.value_of_css_property("color")
+
+
+        script = ("var s = '';"
+                "var o = getComputedStyle(arguments[0]); "
+                "for(var i = 0; i < o.length; i++){"
+                "s+=o[i] + ':' + o.getPropertyValue(o[i])+';';}" 
+                "return s;")
+
+        driver.execute_script(script, we)
+
         resp_Contenido = pageSource
 
     # print(resp_Contenido.decode())
