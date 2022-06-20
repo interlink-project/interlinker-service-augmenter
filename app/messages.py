@@ -38,46 +38,6 @@ class UUIDEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-exchange_name = settings.EXCHANGE_NAME
-rabbitmq_host = settings.RABBITMQ_HOST
-rabbitmq_user = settings.RABBITMQ_USER
-rabbitmq_password = settings.RABBITMQ_PASSWORD
-
-
-def log(data: dict):
-    if is_logging_disabled():
-        return
-
-    try:
-        #data["user_id"] = context.data.get("user", {}).get("sub", None)
-        data["user_id"] = current_user.email
-    except:
-        data["user_id"] = None
-    #data["service"] = "coproduction"
-
-    request = b64encode(json.dumps(data, cls=UUIDEncoder).encode())
-
-    logging.info('RabbitHost:'+rabbitmq_host)
-
-    credentials = pika.PlainCredentials(rabbitmq_user, rabbitmq_password)
-    parameters = pika.ConnectionParameters(
-        host=rabbitmq_host, credentials=credentials)
-
-    connection = pika.BlockingConnection(parameters)
-
-    channel = connection.channel()
-
-    channel.exchange_declare(
-        exchange=exchange_name, exchange_type='direct'
-    )
-
-    channel.basic_publish(
-        exchange=exchange_name,
-        routing_key='logging',
-        body=request
-    )
-
-
 def logapi(data: dict):
 
     if is_logging_disabled():
