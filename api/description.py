@@ -8,74 +8,71 @@ TYPE = 'description'
 MAPPING = {
 
     "id": {
-        "type": "string",
-        "index": "no"
+        "type": "text",
+        "index": "false"
     },
 
     "title": {
-        "type": "string",
+        "type": "text",
         "analyzer": "standard"
     },
 
     "description": {
-        "type": "string",
+        "type": "text",
         "analyzer": "standard"
     },
 
     "keywords": {
-        "type": "string",
+        "type": "text",
         "analyzer": "standard"
     },
 
     "moderators": {
         "type": "nested",
         "properties": {
-            "email": {"type": "string"},
+            "email": {"type": "text"},
             "createdat": {
-                "type": "date",
-                "format": "dateOptionalTime"
+                "type": "date"
             },
             "expire": {
-                "type": "date",
-                "format": "dateOptionalTime"
+                "type": "date"
             }
         }
     },
 
 
     "padministration": {
-        "type": "string",
-        "index": "not_analyzed"
+        "type": "keyword",
+        "index": "false"
     },
 
     "is_portal": {
         "type": "boolean",
-        "index": "not_analyzed"
+        "index": "false"
     },
 
     "url": {
-        "type": "string",
-        "index": "not_analyzed"
+        "type": "text",
+        "index": "false"
     },
 
     "urls": {
         "type": "nested",
         "properties": {
             "createdate": {
-                "type": "date",
-                "format": "dateOptionalTime"
+                "type": "date"
             },
             "ismain": {
                 "type": "boolean"},
             "url": {
-                "type": "string",
-                "index": "not_analyzed"
+                "type": "keyword",
+                "index": "false"
             },
             "language": {
-                "type": "string",
-                "index": "not_analyzed"
+                "type": "text",
+                "index": "false"
             },
-            "email": {"type": "string"},
+            "email": {"type": "text"},
         }
     },
 
@@ -83,12 +80,11 @@ MAPPING = {
     'updated': {'type': 'date'},
 
     'permissions': {
-        'index_name': 'permission',
         'properties': {
-            'read': {'type': 'string'},
-            'update': {'type': 'string'},
-            'delete': {'type': 'string'},
-            'admin': {'type': 'string'}
+            'read': {'type': 'text'},
+            'update': {'type': 'text'},
+            'delete': {'type': 'text'},
+            'admin': {'type': 'text'}
         }
     }
 
@@ -112,7 +108,7 @@ class Description(es.Model):
                 {
                     "updated": {
                         "order": "desc",
-                        "ignore_unmapped": True
+                        "unmapped_type": "date"
                     }
                 }
             ],
@@ -129,9 +125,9 @@ class Description(es.Model):
             }
         }
         res = cls.es.conn.search(index="description",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        return [cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
 
     @classmethod
     def _get_by_title(cls, searchText="", padministration='', domain=''):
@@ -145,9 +141,9 @@ class Description(es.Model):
         }
 
         res = cls.es.conn.search(index="description",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        return [cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
 
     @classmethod
     def _get_uniqueValues(cls, campo=""):
@@ -164,7 +160,7 @@ class Description(es.Model):
         }
 
         res = cls.es.conn.search(index="description",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
         resultadosDistintos = res["aggregations"]["group_by_url"]["buckets"]
@@ -199,7 +195,7 @@ class Description(es.Model):
         # print(q)
 
         res = cls.es.conn.search(index="description",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
         if(len(res['aggregations']['moderators']['group_by_user']['buckets']) > 0):
@@ -232,7 +228,7 @@ class Description(es.Model):
         }
 
         res = cls.es.conn.search(index="description",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
         resultadosDistintos = res["aggregations"]["urls"]["group_by_url"]["buckets"]
@@ -256,10 +252,10 @@ class Description(es.Model):
         # print(q)
 
         res = cls.es.conn.search(index="description",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        return [cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
 
     """
     totalRegistros = 0
@@ -490,10 +486,10 @@ class Description(es.Model):
         # print(q)
 
         res = cls.es.conn.search(index="description",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        return [cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
 
     def _get_checkPermisos_byURI(cls, **kwargs):
 
@@ -530,7 +526,7 @@ class Description(es.Model):
         # print(q)
 
         res = cls.es.conn.count(index="description",
-                                doc_type=cls.__type__,
+                                #doc_type=cls.__type__,
                                 body=q)
 
         return res['count']
@@ -570,7 +566,7 @@ class Description(es.Model):
         # print(q)
 
         res = cls.es.conn.count(index="description",
-                                doc_type=cls.__type__,
+                                #doc_type=cls.__type__,
                                 body=q)
 
         return res['count']
@@ -613,12 +609,12 @@ class Description(es.Model):
         # print(q)
 
         res = cls.es.conn.search(index="description",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
         descriptions = [cls(d['_source'], id=d['_id'])
-                        for d in res['hits']['hits']]
-        numRes = res['hits']['total']
+                        for d in res._body['hits']['hits']]
+        numRes = res._body['hits']['total']['value']
 
         resultado = {'descriptions': descriptions, 'numRes': numRes}
         return resultado
@@ -652,7 +648,7 @@ class Description(es.Model):
         # print(q)
 
         res = cls.es.conn.count(index="description",
-                                doc_type=cls.__type__,
+                                #doc_type=cls.__type__,
                                 body=q)
 
         return res['count']
@@ -699,9 +695,9 @@ class Description(es.Model):
         # print(q)
 
         res = cls.es.conn.count(index="description",
-                                doc_type=cls.__type__,
+                                #doc_type=cls.__type__,
                                 body=q)
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        return [cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
 
     @classmethod
     def _get_by_multiple(cls, **kwargs):
@@ -721,7 +717,7 @@ class Description(es.Model):
                 {
                     "updated": {
                         "order": "desc",
-                        "ignore_unmapped": True
+                        "unmapped_type": "date"
                     }
                 }
             ],
@@ -849,12 +845,12 @@ class Description(es.Model):
         # print(q)
 
         res = cls.es.conn.search(index="description",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
         descriptions = [cls(d['_source'], id=d['_id'])
-                        for d in res['hits']['hits']]
-        numRes = res['hits']['total']
+                        for d in res._body['hits']['hits']]
+        numRes = res._body['hits']['total']['value']
 
         resultado = {'descriptions': descriptions, 'numRes': numRes}
         return resultado
@@ -934,7 +930,7 @@ class Description(es.Model):
         # print(q)
 
         res = cls.es.conn.count(index="description",
-                                doc_type=cls.__type__,
+                                #doc_type=cls.__type__,
                                 body=q)
 
         return res['count']
@@ -949,7 +945,7 @@ class Description(es.Model):
                 {
                     "updated": {
                         "order": "desc",
-                        "ignore_unmapped": True
+                        "unmapped_type": "date"
                     }
                 }
             ],
@@ -998,9 +994,9 @@ class Description(es.Model):
         # print(q)
 
         res = cls.es.conn.search(index="description",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        return [cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
 
     def save(self, *args, **kwargs):
         _add_default_permissions(self)

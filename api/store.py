@@ -608,6 +608,7 @@ def create_annotation():
 @store.route('/annotations/<docid>')
 def read_annotation(docid):
     annotation = g.annotation_class.fetch(docid)
+    #annotation = Annotation._get_Annotation_byId(id=docid)[0]
     if not annotation:
         return jsonify('Annotation not found!', status=404)
 

@@ -5,11 +5,11 @@ TYPE = 'notification'
 MAPPING = {
 
             "id": {
-                "type": "string",
-                "index": "no"
+                "type": "text",
+                "index": "false"
             },
             "email": {
-                "type": "string"
+                "type": "text"
             },
 
             "resolved": {
@@ -23,18 +23,18 @@ MAPPING = {
             },
 
             "category": {
-                "type": "string"
+                "type": "text"
             },
             "title": {
-                "type": "string",
+                "type": "text",
                 "analyzer": "standard"
             },
             "description": {
-                "type": "string",
+                "type": "text",
                 "analyzer": "standard"
             },
             "target_url": {
-                "type": "string"
+                "type": "text"
             },
 
             
@@ -43,13 +43,13 @@ MAPPING = {
             },
 
             "idAsset": {
-                "type": "string"
+                "type": "text"
             },
             "triggerEvent": {
-                "type": "string"
+                "type": "text"
             },
             "triggerDate": {
-                "type": "string"
+                "type": "text"
             }
 }
 
@@ -81,7 +81,7 @@ class Notification(es.Model):
             {
             "updated": {
                 "order": "desc",
-                "ignore_unmapped": True
+                "unmapped_type": "date"
             }
             }
         ],
@@ -98,9 +98,9 @@ class Notification(es.Model):
         }
         }
         res = cls.es.conn.search(index="notification",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        return [cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
 
 
     @classmethod
@@ -119,12 +119,12 @@ class Notification(es.Model):
 
 
         res = cls.es.conn.search(index="notification",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
 
-        notifications=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        notifications=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'notifications':notifications,'numRes':numRes}
 
@@ -147,12 +147,12 @@ class Notification(es.Model):
 
     
         res = cls.es.conn.search(index="notification",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
        
 
-        notifications=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        notifications=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'notifications':notifications,'numRes':numRes}
 
@@ -175,12 +175,12 @@ class Notification(es.Model):
 
     
         res = cls.es.conn.search(index="notification",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
        
 
-        notifications=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        notifications=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'notifications':notifications,'numRes':numRes}
 
@@ -221,12 +221,12 @@ class Notification(es.Model):
 
     
         res = cls.es.conn.search(index="notification",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
 
-        notifications=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        notifications=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'notifications':notifications,'numRes':numRes}
 

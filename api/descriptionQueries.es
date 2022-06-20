@@ -494,8 +494,7 @@ POST description/description/_search
             {
             "updated": {
                 "order": "desc",
-                "ignore_unmapped": true
-            }
+                "unmapped_type": "date"
             }
         ],
     "from": 0,

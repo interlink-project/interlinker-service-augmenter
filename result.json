@@ -1,30 +1,18 @@
 {
-    "took": 1,
+    "took": 3,
     "timed_out": false,
     "_shards": {
-        "total": 5,
-        "successful": 5,
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
         "failed": 0
     },
     "hits": {
-        "total": 9,
-        "max_score": 0,
+        "total": {
+            "value": 0,
+            "relation": "eq"
+        },
+        "max_score": null,
         "hits": []
-    },
-    "aggregations": {
-        "group_by_user": {
-            "doc_count_error_upper_bound": 0,
-            "sum_other_doc_count": 0,
-            "buckets": [
-                {
-                    "key": "d.silva@deusto.es",
-                    "doc_count": 8
-                },
-                {
-                    "key": "Annonymous",
-                    "doc_count": 1
-                }
-            ]
-        }
     }
 }

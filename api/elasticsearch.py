@@ -16,6 +16,7 @@ RESULTS_MAX_SIZE = 200
 RESULTS_DEFAULT_SIZE = 10
 
 
+
 class ElasticSearch(object):
     """
     Thin wrapper around an ElasticSearch connection to make connection handling
@@ -54,9 +55,7 @@ class ElasticSearch(object):
         if parsed.path:
             connargs['url_prefix'] = parsed.path
         #print(connargs)
-        conn = elasticsearch.Elasticsearch(
-            hosts=[connargs],
-            connection_class=elasticsearch.Urllib3HttpConnection)
+        conn = elasticsearch.Elasticsearch(host)
         return conn
 
     @property
@@ -64,6 +63,7 @@ class ElasticSearch(object):
         if not hasattr(self, '_connection'):
             self._connection = self._connect()
         return self._connection
+
 
 
 class _Model(dict):
@@ -94,36 +94,47 @@ class _Model(dict):
 
         log.info("Creating index '%s'.", index)
         conn = cls.es.conn
-        conn.indices.create(index, ignore=400)
+        conn.indices.create(index=index)
         mapping = cls.get_mapping()
         conn.indices.put_mapping(index=index,
-                                 doc_type=cls.__type__,
                                  body=mapping)
 
     @classmethod
     def get_mapping(cls):
+        # return {
+        #     cls.__type__: {
+        #         '_id': {
+        #             'path': 'id',
+        #         },
+        #         '_source': {
+        #             'excludes': ['id'],
+        #         },
+        #         'analyzer': 'keyword',
+        # #         'properties': cls.__mapping__,
+        #     }
+        # }
         return {
-            cls.__type__: {
-                '_id': {
-                    'path': 'id',
-                },
                 '_source': {
-                    'excludes': ['id'],
-                },
-                'analyzer': 'keyword',
-                'properties': cls.__mapping__,
-            }
+                     'excludes': ['id'],
+                 },
+                'properties': cls.__mapping__
+         
         }
+
 
     @classmethod
     def drop_all(cls, index=""):
         if(index ==""):
             index=cls.es.index
 
+        if cls.es.conn.indices.exists(index=index):
+            cls.es.conn.indices.close(index=index)
+            cls.es.conn.indices.delete(index=index)
 
-        if cls.es.conn.indices.exists(index):
-            cls.es.conn.indices.close(index)
-            cls.es.conn.indices.delete(index)
+
+        # if cls.es.conn.indices.exists(index):
+        #     cls.es.conn.indices.close(index)
+        #     cls.es.conn.indices.delete(index)
 
     # It would be lovely if this were called 'get', but the dict semantics
     # already define that method name.
@@ -134,7 +145,7 @@ class _Model(dict):
             index=cls.es.index
 
         doc = cls.es.conn.get(index=index,
-                              doc_type=cls.__type__,
+                              #doc_type=cls.__type__,
                               ignore=404,
                               id=docid)
         if doc.get('found', True):
@@ -182,7 +193,7 @@ class _Model(dict):
         if params is None:
             params = {}
         res = cls.es.conn.search(index=index,
-                                 doc_type=cls.__type__,
+                                # doc_type=cls.__type__,
                                  body=query,
                                  **params)
         if not raw_result:
@@ -194,9 +205,9 @@ class _Model(dict):
     def count(cls, **kwargs):
         """Like search, but only count the number of matches."""
         kwargs.setdefault('params', {})
-        kwargs['params'].update({'search_type': 'count'})
+        #kwargs['params'].update({'search_type': 'count'})
         res = cls.search(raw_result=True, **kwargs)
-        return res['hits']['total']
+        return res._body['hits']['total']['value']
 
     def save(self, refresh=True, index=""):
 
@@ -213,7 +224,7 @@ class _Model(dict):
             op_type = 'index'
 
         res = self.es.conn.index(index=index,
-                                 doc_type=self.__type__,
+                                 #doc_type=self.__type__,
                                  body=self,
                                  op_type=op_type,
                                  refresh=refresh)
@@ -235,7 +246,7 @@ class _Model(dict):
         op_type = 'index'
 
         res = self.es.conn.update(index=index,
-                                    doc_type=self.__type__,
+                                    #doc_type=self.__type__,
                                     body=body,
                                     id=self['id'],
                                     refresh=refresh)
@@ -248,7 +259,7 @@ class _Model(dict):
 
         if 'id' in self:
             self.es.conn.delete(index=index,
-                                doc_type=self.__type__,
+                                #doc_type=self.__type__,
                                 id=self['id'])
 
 
@@ -283,13 +294,13 @@ def _build_query(query, offset, limit, sort, order):
         'sort': [{sort: {
             # Sort most recent first
             'order': order
-            #,
+            ,
             # While we do always provide a mapping for the field, elasticsearch
             # will bomb if there are no documents in the index. Although this
             # is an edge case, we don't want the API to return a 500 with an
             # empty index, so ignore this sort instruction if the field appears
             # unmapped due to an empty index.
-            #'ignore_unmapped': true,
+            "unmapped_type": "date"
         }}],
         'from': max(0, offset),
         'size': min(RESULTS_MAX_SIZE, max(0, limit)),

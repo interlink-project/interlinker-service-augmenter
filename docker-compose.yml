@@ -46,17 +46,41 @@ services:
       - default
 
   # Elasticsearch Docker Images: https://www.docker.elastic.co/
-  elasticsearch:
-    image: elasticsearch:1.7.6-alpine
-    container_name: elasticsearch
+  # elasticsearch:
+  #   image: elasticsearch:1.7.6-alpine
+  #   container_name: elasticsearch
+  #   environment:
+  #     - node.name=elasticsearch
+  #     - xpack.security.enabled=false
+  #     - discovery.type=single-node
+  #     - http.cors.enabled=true
+  #     - http.cors.allow-origin=*
+  #     - discovery.zen.ping.unicast.hosts=127.0.0.1
+
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #     nofile:
+  #       soft: 65536
+  #       hard: 65536
+  #   cap_add:
+  #     - IPC_LOCK
+  #   volumes:
+  #     - elasticsearch-data:/usr/share/elasticsearch/data
+  #     - elasticsearch-config:/usr/share/elasticsearch/config
+  #   networks:
+  #     - default
+  #   ports:
+  #     - "9200:9200"
+  #     - "9300:9300"
+
+  newelasticsearch:
+    image: elasticsearch:8.2.2
     environment:
-      - node.name=elasticsearch
       - xpack.security.enabled=false
       - discovery.type=single-node
-      - http.cors.enabled=true
-      - http.cors.allow-origin=*
-      - discovery.zen.ping.unicast.hosts=127.0.0.1
-
+      - ES_JAVA_OPTS=-Xms750m -Xmx750m
     ulimits:
       memlock:
         soft: -1
@@ -64,16 +88,18 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-    cap_add:
-      - IPC_LOCK
-    volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
-      - elasticsearch-config:/usr/share/elasticsearch/config
     networks:
-      - default
+      - traefik-public
+    volumes:
+      - newelasticsearch-data:/usr/share/elasticsearch/data
+      - newelasticsearch-config:/usr/share/elasticsearch/config
     ports:
       - "9200:9200"
       - "9300:9300"
+    logging:
+      driver: "json-file"
+      options:
+        tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
 
   augmenterservice:
     build: .
@@ -84,7 +110,7 @@ services:
     env_file:
       - .env
     environment:
-      - ELASTICSEARCH_URL=http://elasticsearch:9200 
+      - ELASTICSEARCH_URL=http://newelasticsearch:9200 
       - SURVEYINTERLINK_URL=http://${DOMAIN}/surveymod
       - AUTHINTERLINK_URL=http://${DOMAIN}/auth
       - HOST=0.0.0.0
@@ -95,7 +121,7 @@ services:
 
  
     depends_on:
-      - elasticsearch
+      - newelasticsearch
       - survey
       - auth
       - rabbitmq
@@ -238,9 +264,9 @@ services:
 
 
 volumes:
-  elasticsearch-data:
+  newelasticsearch-data:
     driver: local
-  elasticsearch-config:
+  newelasticsearch-config:
     driver: local
   mongodb-data:
     driver: local

@@ -1598,6 +1598,7 @@ if(divreply.is(":hidden")){
       socket.onerror = function (error) {
         alert(`[error] ${error.message}`);
       };
+
     };
 
     AnnotatorViewer.prototype.onAnnotationDeleted = function (annotation) {
@@ -1780,11 +1781,17 @@ if(divreply.is(":hidden")){
       estadosAnnotation=annotation["statechanges"];
 
       likethisAnnotation=false;
-      for (let i = 0; i < estadosAnnotation.length; i++) {
-        if(estadosAnnotation[i]["objtype"]=="annotation_like" && estadosAnnotation[i]["user"]==currentUser){
-          likethisAnnotation=true;
+
+      if(estadosAnnotation){
+        for (let i = 0; i < estadosAnnotation.length; i++) {
+          if(estadosAnnotation[i]["objtype"]=="annotation_like" && estadosAnnotation[i]["user"]==currentUser){
+            likethisAnnotation=true;
+          }
         }
       }
+
+  
+      
 
 
       if (replyPermission) {

@@ -827,6 +827,12 @@ block content %}
 
 
 <script>
+
+  if ("{{categoryLabel}}" != ""){
+    $('#advanseSearchTools').addClass('show');
+  }
+
+
   var tooltipTriggerList = [].slice.call(
     document.querySelectorAll('[data-bs-toggle="tooltip"]')
   );
@@ -839,6 +845,11 @@ block content %}
   });
 
   $('[data-toggle="tooltip"]').tooltip();
+
+
+
+
+
 </script>
 
 

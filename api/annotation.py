@@ -5,34 +5,32 @@ import datetime
 
 TYPE = 'annotation'
 MAPPING = {
-    'id': {'type': 'string', 'index': 'no'},
-    'descriptionid': {'type': 'string', 'index': 'no'},
-    'annotator_schema_version': {'type': 'string'},
+    'id': {'type': 'text', 'index': 'false'},
+    'descriptionid': {'type': 'text', 'index': 'false'},
+    'annotator_schema_version': {'type': 'text'},
     'created': {'type': 'date'},
     'updated': {'type': 'date'},
-    'quote': {'type': 'string', 'analyzer': 'standard'},
-    'tags': {'type': 'string', 'index_name': 'tag'},
-    'text': {'type': 'string', 'analyzer': 'standard'},
-    'category': {'type': 'string'},
-    'uri': {'type': 'string'},
-    'user': {'type': 'string'},
-    'consumer': {'type': 'string'},
+    'quote': {'type': 'text', 'analyzer': 'standard'},
+    'tags': {'type': 'text'},
+    'text': {'type': 'text', 'analyzer': 'standard'},
+    'category': {'type': 'keyword'},
+    'uri': {'type': 'keyword'},
+    'user': {'type': 'keyword'},
+    'consumer': {'type': 'text'},
     'ranges': {
-        'index_name': 'range',
         'properties': {
-            'start': {'type': 'string'},
-            'end': {'type': 'string'},
+            'start': {'type': 'text'},
+            'end': {'type': 'text'},
             'startOffset': {'type': 'integer'},
             'endOffset': {'type': 'integer'},
         }
     },
     'permissions': {
-        'index_name': 'permission',
         'properties': {
-            'read': {'type': 'string'},
-            'update': {'type': 'string'},
-            'delete': {'type': 'string'},
-            'admin': {'type': 'string'}
+            'read': {'type': 'text'},
+            'update': {'type': 'text'},
+            'delete': {'type': 'text'},
+            'admin': {'type': 'text'}
         }
     },
 
@@ -41,10 +39,10 @@ MAPPING = {
         "properties": {
             "initstate": {"type": "byte"},
             "endstate": {"type": "byte"},
-            "objtype": {"type":"string"},
-            "text": {"type": "string"},
-            "date": {"type": "date","format": "dateOptionalTime"},
-            "user": {"type": "string"}
+            "objtype": {"type":"text"},
+            "text": {"type": "text"},
+            "date": {"type": "date"},
+            "user": {"type": "text"}
         }
     },
 
@@ -52,35 +50,35 @@ MAPPING = {
 
     "state": {
         "type": "byte",
-        "index": "not_analyzed"
+        "index": "false"
     },
 
 
 
     "likes": {
         "type": "integer",
-        "index": "not_analyzed"
+        "index": "false"
     },
 
     "dislikes": {
         "type": "integer",
-        "index": "not_analyzed"
+        "index": "false"
     },
 
     "replies": {
         "type": "integer",
-        "index": "not_analyzed"
+        "index": "false"
     },
 
 
-    'document': {
-        'properties': document.MAPPING
-    },
+    # 'document': {
+    #     'properties': document.MAPPING
+    # },
     'idAnotationReply': {
-        'type': 'string'
+        'type': 'keyword'
     },
     'idReplyRoot': {
-        'type': 'string'
+        'type': 'keyword'
     }
 }
 
@@ -220,7 +218,7 @@ class Annotation(es.Model):
 
     
         res = cls.es.conn.search(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
 
@@ -272,7 +270,7 @@ class Annotation(es.Model):
 
     
         res = cls.es.conn.search(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
 
@@ -315,7 +313,7 @@ class Annotation(es.Model):
 
 
         res = cls.es.conn.search(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
 
@@ -355,10 +353,10 @@ class Annotation(es.Model):
 
 
         res = cls.es.conn.search(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
-        annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        annotations=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
         
 
         resultado={'annotations':annotations,'numRes':numRes,'query':q}
@@ -385,7 +383,7 @@ class Annotation(es.Model):
 
     
         res = cls.es.conn.search(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
 
@@ -441,7 +439,7 @@ class Annotation(es.Model):
 
     
         res = cls.es.conn.count(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
     
         return res['count']
@@ -462,7 +460,7 @@ class Annotation(es.Model):
                 {
                 "updated": {
                     "order": "desc",
-                    "ignore_unmapped": True
+                    "unmapped_type": "date"
                 }
                 }
             ],
@@ -553,10 +551,10 @@ class Annotation(es.Model):
         #print(q)
 
         res = cls.es.conn.search(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
-        annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        annotations=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'annotations':annotations,'numRes':numRes}
         return resultado
@@ -570,7 +568,7 @@ class Annotation(es.Model):
                 {
                 "category": {
                     "order": "desc",
-                    "ignore_unmapped": True
+                    "unmapped_type": "date"
                 }
                 }
             ],
@@ -628,10 +626,10 @@ class Annotation(es.Model):
         #Run the query:
 
         res = cls.es.conn.search(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
-        annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        annotations=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
 
         #Re formateo los campos text por que tienen tags y deben ser solamente textos.
@@ -653,8 +651,7 @@ class Annotation(es.Model):
             "sort": [
                 {
                 "category": {
-                    "order": "desc",
-                    "ignore_unmapped": True
+                    "order": "desc"
                 }
                 }
             ],
@@ -710,10 +707,10 @@ class Annotation(es.Model):
         #Run the query:
 
         res = cls.es.conn.search(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
-        annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        annotations=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
 
         #Re formateo los campos text por que tienen tags y deben ser solamente textos.
@@ -763,7 +760,7 @@ class Annotation(es.Model):
                 {
                 "updated": {
                     "order": "desc",
-                    "ignore_unmapped": True
+                    "unmapped_type": "date"
                 }
                 }
             ],
@@ -879,10 +876,10 @@ class Annotation(es.Model):
         #print(q)
 
         res = cls.es.conn.search(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
-        annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        annotations=[cls(d['_source']|{'id':d['_id']}) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'annotations':annotations,'numRes':numRes}
 
@@ -959,7 +956,7 @@ class Annotation(es.Model):
                     ,
                     {
                         "match":{
-                        "idAnotationReply":"annotation-"+annotationId
+                        "idAnotationReply":"annotation-"+str(annotationId)
                         }
                     }
                     
@@ -977,10 +974,10 @@ class Annotation(es.Model):
         }
 
         res = cls.es.conn.search(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
-        annotations=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        annotations=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'annotations':annotations,'numRes':numRes}
 
@@ -1074,7 +1071,7 @@ class Annotation(es.Model):
         #print(q)
 
         res = cls.es.conn.count(index="description",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
     
         return res['count']
@@ -1150,21 +1147,21 @@ class Annotation(es.Model):
 
         # attempt to expand query to include uris for other representations
         # using information we may have on hand about the Document
-        if 'uri' in query:
-            clauses = q['query']['bool']
-            doc = document.Document.get_by_uri(query['uri'])
-            if doc:
-                for clause in clauses['must']:
-                    # Rewrite the 'uri' clause to match any of the document URIs
-                    if 'match' in clause and 'uri' in clause['match']:
-                        uri_matchers = []
-                        for uri in doc.uris():
-                            uri_matchers.append({'match': {'uri': uri}})
-                        del clause['match']
-                        clause['bool'] = {
-                            'should': uri_matchers,
-                            'minimum_should_match': 1
-                        }
+        # if 'uri' in query:
+        #     clauses = q['query']['bool']
+        #     doc = document.Document.get_by_uri(query['uri'])
+        #     if doc:
+        #         for clause in clauses['must']:
+        #             # Rewrite the 'uri' clause to match any of the document URIs
+        #             if 'match' in clause and 'uri' in clause['match']:
+        #                 uri_matchers = []
+        #                 for uri in doc.uris():
+        #                     uri_matchers.append({'match': {'uri': uri}})
+        #                 del clause['match']
+        #                 clause['bool'] = {
+        #                     'should': uri_matchers,
+        #                     'minimum_should_match': 1
+        #                 }
 
         return q
 
@@ -1185,10 +1182,10 @@ class Annotation(es.Model):
 
 
         res = cls.es.conn.search(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        return [cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
 
 
 
@@ -1208,10 +1205,10 @@ class Annotation(es.Model):
 
 
         res = cls.es.conn.search(index="annotator",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
-        return [cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
+        return [cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
 
 
 def _add_default_permissions(ann):

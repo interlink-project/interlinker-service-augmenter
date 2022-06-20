@@ -5,18 +5,18 @@ TYPE = 'survey'
 MAPPING = {
 
         "id": {
-            "type": "string",
-            "index": "no"
+            "type": "text",
+            "index": "false"
         },
         "idAsset": {
-            "type": "string"
+            "type": "text"
         },
         "title": {
-            "type": "string",
+            "type": "text",
             "analyzer": "standard"
         },
         "description": {
-            "type": "string",
+            "type": "text",
             "analyzer": "standard"
         },
         "isMandatory":{
@@ -59,7 +59,7 @@ class Survey(es.Model):
             {
             "updated": {
                 "order": "desc",
-                "ignore_unmapped": True
+                "unmapped_type": "date"
             }
             }
         ],
@@ -76,12 +76,12 @@ class Survey(es.Model):
         }
         }
         res = cls.es.conn.search(index="survey",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
  
 
-        surveys=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        surveys=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'surveys':surveys,'numRes':numRes}
 
@@ -104,12 +104,12 @@ class Survey(es.Model):
 
 
         res = cls.es.conn.search(index="survey",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
 
-        surveys=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        surveys=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'surveys':surveys,'numRes':numRes}
 
@@ -146,12 +146,12 @@ class Survey(es.Model):
 
     
         res = cls.es.conn.search(index="survey",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
        
 
-        surveys=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        surveys=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'surveys':surveys,'numRes':numRes}
 
@@ -174,12 +174,12 @@ class Survey(es.Model):
 
     
         res = cls.es.conn.search(index="survey",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
        
 
-        surveys=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        surveys=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'surveys':surveys,'numRes':numRes}
 

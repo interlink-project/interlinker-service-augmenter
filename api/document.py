@@ -2,16 +2,16 @@ from api import es
 
 TYPE = 'document'
 MAPPING = {
-    'id': {'type': 'string', 'index': 'no'},
-    'annotator_schema_version': {'type': 'string'},
+    'id': {'type': 'text', 'index': 'false'},
+    'annotator_schema_version': {'type': 'text'},
     'created': {'type': 'date'},
     'updated': {'type': 'date'},
-    'title': {'type': 'string', 'analyzer': 'standard'},
+    'title': {'type': 'text', 'analyzer': 'standard'},
     'link': {
         'type': 'nested',
         'properties': {
-            'type': {'type': 'string'},
-            'href': {'type': 'string'},
+            'type': {'type': 'text'},
+            'href': {'type': 'text'},
         }
     },
     'dc': {
@@ -20,7 +20,7 @@ MAPPING = {
             # by default elastic search will try to parse this as
             # a date but unfortunately the data that is in the wild
             # may not be parsable by ES which throws an exception
-            'date': {'type': 'string'}
+            'date': {'type': 'text'}
         }
     }
 }
@@ -55,7 +55,8 @@ class Document(es.Model):
                                    # index, so ignore this sort instruction if
                                    # 'updated' appears unmapped due to an empty
                                    # index.
-                                   'ignore_unmapped': True}}]}
+                                   "unmapped_type": "date"
+                                   }}]}
 
         res = cls.es.conn.search(index=cls.es.index,
                                  doc_type=cls.__type__,

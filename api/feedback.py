@@ -5,40 +5,40 @@ TYPE = 'feedback'
 MAPPING = {
 
         "id": {
-            "type": "string",
-            "index": "no"
+            "type": "text",
+            "index": "false"
         },
         "user_id": {
-            "type": "string",
-            "index": "no"
+            "type": "text",
+            "index": "false"
         },
         "pregunta_1": {
             "type": "integer",
-            "index":"no"
+            "index":"false"
         },
         "pregunta_2": {
             "type": "integer",
-            "index":"no"
+            "index":"false"
         },
         "pregunta_3": {
             "type": "integer",
-            "index":"no"
+            "index":"false"
         },
         "pregunta_4": {
             "type": "integer",
-            "index":"no"
+            "index":"false"
         },
         "pregunta_5": {
             "type": "integer",
-            "index":"no"
+            "index":"false"
         },
         "feedtext": {
-            "type": "string",
+            "type": "text",
             "analyzer": "standard"
         },
         "emailOp": {
-            "type": "string",
-            "index":"no"
+            "type": "text",
+            "index":"false"
         },
         "created": {
             "type": "date"
@@ -77,7 +77,7 @@ class Feedback(es.Model):
             {
             "updated": {
                 "order": "desc",
-                "ignore_unmapped": True
+                "unmapped_type": "date"
             }
             }
         ],
@@ -94,12 +94,12 @@ class Feedback(es.Model):
         }
         }
         res = cls.es.conn.search(index="feedback",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
  
 
-        feedbacks=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        feedbacks=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'feedbacks':feedbacks,'numRes':numRes}
 
@@ -122,12 +122,12 @@ class Feedback(es.Model):
 
 
         res = cls.es.conn.search(index="feedback",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
 
 
-        feedbacks=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        feedbacks=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'feedbacks':feedbacks,'numRes':numRes}
 
@@ -164,12 +164,12 @@ class Feedback(es.Model):
 
     
         res = cls.es.conn.search(index="feedback",
-                                 doc_type=cls.__type__,
+                                 #doc_type=cls.__type__,
                                  body=q)
        
 
-        feedbacks=[cls(d['_source'], id=d['_id']) for d in res['hits']['hits']]
-        numRes=res['hits']['total']
+        feedbacks=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
 
         resultado={'feedbacks':feedbacks,'numRes':numRes}
 

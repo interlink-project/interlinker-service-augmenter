@@ -272,8 +272,8 @@ def inicio():
 
     totalRegistros = 0
     if(textoABuscar == None or textoABuscar == ''):
-        res = Description.search(offset=registroInicial)
-        totalRegistros = Description.count()
+        res = Description.search(offset=registroInicial,limit=2000)
+        totalRegistros = len(res)
     else:
         res = Description._get_Descriptions(
             textoABuscar=textoABuscar, padministration=padministration, url=domain, offset=registroInicial)

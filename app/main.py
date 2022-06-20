@@ -78,14 +78,23 @@ def create_app():
             # document.Document.drop_all()
 
             # Creo los indices necesarios:
+            annotation.Annotation.drop_all()
             annotation.Annotation.create_all()
+            
+            notification.Notification.drop_all(index="notification")
             notification.Notification.create_all(index="notification")
-            #survey.Survey.drop_all(index="survey")
+            
+            survey.Survey.drop_all(index="survey")
             survey.Survey.create_all(index="survey")
-            #feedback.Feedback.drop_all(index="feedback")
-            feedback.Feedback.create_all(index="feedback")
+            
+            description.Description.drop_all(index="description")
             description.Description.create_all(index="description")
+            
+            feedback.Feedback.drop_all(index="feedback")
+            feedback.Feedback.create_all(index="feedback")
+            
             document.Document.create_all()
+            pass
 
         except elasticsearch.exceptions.RequestError as e:
             if e.error.startswith('MergeMappingException'):

@@ -184,13 +184,13 @@ POST annotator/annotation/_search
     }
 }
 
-POST annotator/annotation/_search
+POST annotator/_search
 {
     "sort": [
         {
             "updated": {
                 "order": "desc",
-                "ignore_unmapped": "True"
+                "unmapped_type": "date"
             }
         }
     ],
