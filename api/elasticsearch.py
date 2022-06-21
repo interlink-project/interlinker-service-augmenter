@@ -55,7 +55,7 @@ class ElasticSearch(object):
         if parsed.path:
             connargs['url_prefix'] = parsed.path
         #print(connargs)
-        conn = elasticsearch.Elasticsearch(host)
+        conn = elasticsearch.Elasticsearch(host, basic_auth=(settings.ELASTIC_USERNAME, settings.ELASTIC_PASSWORD))
         return conn
 
     @property

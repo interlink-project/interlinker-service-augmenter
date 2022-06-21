@@ -8,6 +8,9 @@ import os
 class Settings(BaseSettings):
 
     ELASTICSEARCH_URL: str = os.getenv("ELASTICSEARCH_URL")
+    ELASTIC_USERNAME: str = os.getenv("ELASTIC_USERNAME")
+    ELASTIC_PASSWORD: str = os.getenv("ELASTIC_PASSWORD")
+
     SURVEYINTERLINK_URL: str = os.getenv("SURVEYINTERLINK_URL")
     AUTHINTERLINK_URL: str = os.getenv("AUTHINTERLINK_URL")
     PORT: str = os.getenv("PORT")

@@ -101,6 +101,9 @@ services:
       options:
         tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
 
+
+
+
   augmenterservice:
     build: .
     restart: always
