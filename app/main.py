@@ -93,7 +93,7 @@ def create_app():
             feedback.Feedback.drop_all(index="feedback")
             feedback.Feedback.create_all(index="feedback")
             
-            document.Document.create_all()
+            #document.Document.create_all()
             pass
 
         except elasticsearch.exceptions.RequestError as e:
