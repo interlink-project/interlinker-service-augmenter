@@ -757,7 +757,13 @@ def description(descriptionId=None):
     # Cargo las Notificaciones
     listNotifications, numRes = cargarNotifications()
 
-    return render_template("description.html", user=current_user, description=description, anotations=res, categoryLabel=categoria, paginacion=paginacion, urlMainPage=urlMainPage, notifications=listNotifications, notificationNum=numRes)
+    #Es el usuario moderador?
+    ismoderator = False
+    for moderator in description['moderators']:
+        if(current_user.email == moderator['email']):
+            ismoderator=True
+
+    return render_template("description.html", user=current_user, description=description, anotations=res, categoryLabel=categoria, paginacion=paginacion, urlMainPage=urlMainPage, notifications=listNotifications, notificationNum=numRes,ismoderator=ismoderator)
    # return 'la desc: '+category+'lauri is'+str(uri)
 
 
@@ -832,6 +838,17 @@ def subjectPage(descriptionId=None, annotatorId=None):
 def changeAnnotation(descriptionId=None, annotatorId=None, option=None):
 
     if option == 'state':
+
+        description = Description._get_Descriptions_byId(id=descriptionId)[0]
+
+        #Es el usuario moderador?
+        ismoderator = False
+        for moderator in description['moderators']:
+            if(current_user.email == moderator['email']):
+                ismoderator=True
+        
+        if ismoderator == False:
+            return jsonify({'ErrorInfo':'You need to be a moderator to change state of an annotation.'})
 
         argumentos = request.json
         newstate = argumentos.pop('stateToChange')

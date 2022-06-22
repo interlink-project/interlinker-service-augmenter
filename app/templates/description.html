@@ -222,10 +222,13 @@ block content %}
                              <option value="1">  {{ _('Archived') }}</option>`;
         }
 
-
+        labelDisable='disabled';
+        if('{{ ismoderator }}'){
+          labelDisable='';
+        }
 
         selectionStateAn = ` 
-          <select id='sel-${dataItem.id}' onchange="getval(this);" annotationId="${dataItem.id}"  class="form-select" style="min-width:120px ;max-width: 170px;" aria-label="Default select example">
+          <select id='sel-${dataItem.id}' onchange="getval(this);" annotationId="${dataItem.id}"  class="form-select" style="min-width:120px ;max-width: 170px;" aria-label="Default select example" ${labelDisable}>
             ${optionsSelectAn}
           </select >`;
 
@@ -233,26 +236,21 @@ block content %}
           ` ${sectionCategoria}
     
             <td> ${shortTextItemDesc} <br> <span style="opacity: 0.5;">${ISODateString(dateUpdated)} </span> </td>
-            <td> ${selectionStateAn} </td> 
-
-             
             
-            <td style="text-align: center;"> 
+            <td class="priority-3" style="text-align: center;"> 
               <h5>
               <a class="badge bg-light text-dark position-relative" style="text-decoration: none;" > ${dataItem.nroReplies} </a>
               </h5>
             </td>
             
-              
-     
             
-            <td> 
+            <td class="priority-1" style="text-align: center;display: flex;justify-content: center;flex-wrap: wrap;"> 
 
-
-               <div class="dropdown  dropstart">
+              ${selectionStateAn} 
+               <div class="dropdown  dropstart" style="padding-left: 10px;">
             <a class="btn btn-outline-secondary dropdown-toggle" style="max-width: 130;" href="#" role="button" id="dropdownMenuLink"
               data-bs-toggle="dropdown" aria-expanded="false">
-              {{_('Options')}}
+              {{_('View')}}
             </a>
 
             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
@@ -756,10 +754,15 @@ block content %}
 
         <td class="priority-1" style="text-align: center;display: flex;justify-content: center;flex-wrap: wrap;">
 
-
+          
+          {% if ismoderator %}
+            {% set ismoderatorlabel= ''%}
+          {% else %}
+           {% set ismoderatorlabel= 'disabled'%}
+          {% endif %}
 
           <select onchange="getval(this);" annotationId="{{ anotation.id }}" title="{{_('Select State')}}" class="form-select"
-            style="min-width:120px ;max-width: 170px;" aria-label="Default select example">
+            style="min-width:120px ;max-width: 170px;" aria-label="Default select example" {{ ismoderatorlabel }}>
 
             <option value="0" {% if anotation.state==0 %} selected {% endif %}>
               {{ _('In Progress') }}</option>
