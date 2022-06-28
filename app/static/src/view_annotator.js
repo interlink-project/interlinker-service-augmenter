@@ -1467,8 +1467,12 @@ if(divreply.is(":hidden")){
             annotationId = itemTag.getAttribute("id");
             let timeSpentOnElement =
               TimeMe.getTimeOnElementInSeconds(annotationId);
-            document.getElementById("time-" + annotationId).textContent =
+            if(document.getElementById("time-" + annotationId)==null){
+              //console.log("Este id no existe:"+"time-" + annotationId);
+            }else{
+              document.getElementById("time-" + annotationId).textContent =
               timeSpentOnElement.toFixed(2);
+            }
           }
 
           /*let timeSpentOnElement =
