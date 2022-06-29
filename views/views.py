@@ -931,7 +931,7 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
 
     # If the page is a single page try to load code:
     # Working with React Pages.
-    if False:
+    if True:
         from selenium.webdriver.chrome.options import Options
         from selenium import webdriver
         import time
@@ -979,7 +979,7 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
 
         driver.execute_script(script, we)
 
-        resp_Contenido = pageSource
+        resp_Contenido = '<!DOCTYPE html>'+pageSource
 
     # print(resp_Contenido.decode())
     #soup = BeautifulSoup(resp_Contenido, 'html5lib')
@@ -1061,6 +1061,7 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
                     if 'advertising' in itemClass:
                         div.decompose()
                         break
+
 
     # Special configuration for a page:
     # -------------------------------------------------
