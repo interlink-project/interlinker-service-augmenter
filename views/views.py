@@ -957,7 +957,10 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
         driver.get(url)
         time.sleep(5)  # Let the user actually see something!
 
-        pageSource = driver.find_element_by_xpath(
+        #pageSource = driver.find_element_by_xpath(
+        #    "//*").get_attribute("outerHTML")
+
+        pageSource = driver.find_element("xpath", 
             "//*").get_attribute("outerHTML")
 
         #pageSource= driver.page_source
