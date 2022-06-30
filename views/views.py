@@ -933,6 +933,7 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     # Working with React Pages.
     if True:
         from selenium.webdriver.chrome.options import Options
+        from selenium.webdriver.common.by import By
         from selenium import webdriver
         import time
 
@@ -969,7 +970,9 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
         #form_textfield = driver.find_element(By.NAME, 'username')
         
         #Obtener las css de un elemento:
-        we = driver.find_element_by_tag_name("div")
+        #we = driver.find_element_by_tag_name("div")
+
+        we = driver.find_element(By.TAG_NAME, 'div')
 
         we.value_of_css_property("color")
 
