@@ -1388,8 +1388,10 @@ if(divreply.is(":hidden")){
 
         if (accion == "remove") {
           //alert('quito'+annotationId);
-          if(annotationId!=null){
+          
           anotacion = $("#" + annotationId).data("annotation");
+          
+          if(anotacion!=null){
 
           //Quito los highlights:
           //Para que el metodo on delete no trate de borrarlo (solo quito highlights)
