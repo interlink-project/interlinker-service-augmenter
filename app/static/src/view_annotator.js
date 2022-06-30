@@ -1388,7 +1388,7 @@ if(divreply.is(":hidden")){
 
         if (accion == "remove") {
           //alert('quito'+annotationId);
-
+          if(annotationId!=null){
           anotacion = $("#" + annotationId).data("annotation");
 
           //Quito los highlights:
@@ -1407,6 +1407,7 @@ if(divreply.is(":hidden")){
             $(".container-anotacions").find(".annotator-marginviewer-element")
               .length
           );
+        }
         }
       }
 
