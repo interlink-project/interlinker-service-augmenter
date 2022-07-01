@@ -376,7 +376,10 @@ if(divreply.is(":hidden")){
 
         //Obtengo los valores:
         idReferencia = annotator_textArea.prevObject.prevObject[0].id;
-        item.id = idReferencia.split("-")[1];
+        //item.id = idReferencia.split("-")[1];
+
+        let listSubtrings=idReferencia.split("-");
+        item.id = listSubtrings.slice(1,listSubtrings.leght);
 
         var localInstance = this;
 
@@ -417,7 +420,10 @@ if(divreply.is(":hidden")){
         const descriptionId = urlParams.get("description");
 
   
-        annotatorId=item[0]["id"].split("-")[1];
+        //annotatorId=item[0]["id"].split("-")[1];
+
+        let listSubtrings=item[0]["id"].split("-");
+        annotatorId = listSubtrings.slice(1,listSubtrings.leght);
     
 
         const urlpost = servicepediaPath + `/subjectPage/${descriptionId}/${annotatorId}/like`;
@@ -450,7 +456,10 @@ if(divreply.is(":hidden")){
 
         //Obtengo los valores:
         idReferencia = annotator_textArea.prevObject.prevObject[0].id;
-        item.id = idReferencia.split("-")[1];
+        //item.id = idReferencia.split("-")[1];
+
+        let listSubtrings=idReferencia.split("-");
+        item.id =  listSubtrings.slice(1,listSubtrings.leght);
 
         var localInstance = this;
 
@@ -536,7 +545,9 @@ if(divreply.is(":hidden")){
       item
     ) {
       idReferencia = annotator_textArea.prevObject.prevObject[0].id;
-      item.id = idReferencia.split("-")[1];
+      //item.id = idReferencia.split("-")[1];
+      let listSubtrings=idReferencia.split("-");
+      item.id =  listSubtrings.slice(1,listSubtrings.leght);
 
       //Busco si ya fue cargado
 
