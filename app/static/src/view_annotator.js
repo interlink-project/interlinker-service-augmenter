@@ -423,7 +423,7 @@ if(divreply.is(":hidden")){
         //annotatorId=item[0]["id"].split("-")[1];
 
         let listSubtrings=item[0]["id"].split("-");
-        annotatorId = listSubtrings.slice(1,listSubtrings.leght);
+        annotatorId = listSubtrings.slice(1,listSubtrings.leght).join('-');
     
 
         const urlpost = servicepediaPath + `/subjectPage/${descriptionId}/${annotatorId}/like`;
@@ -459,7 +459,7 @@ if(divreply.is(":hidden")){
         //item.id = idReferencia.split("-")[1];
 
         let listSubtrings=idReferencia.split("-");
-        item.id =  listSubtrings.slice(1,listSubtrings.leght);
+        item.id =  listSubtrings.slice(1,listSubtrings.leght).join('-');
 
         var localInstance = this;
 
@@ -547,7 +547,7 @@ if(divreply.is(":hidden")){
       idReferencia = annotator_textArea.prevObject.prevObject[0].id;
       //item.id = idReferencia.split("-")[1];
       let listSubtrings=idReferencia.split("-");
-      item.id =  listSubtrings.slice(1,listSubtrings.leght);
+      item.id =  listSubtrings.slice(1,listSubtrings.leght).join('-');
 
       //Busco si ya fue cargado
 
