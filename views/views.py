@@ -1049,7 +1049,7 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     count = 0
 
     # Quito las propagandas de la pagina:
-
+    # Quito div por class
     listDiv = soup.find_all("div")
     for div in listDiv:
         if div.attrs != None:
@@ -1067,7 +1067,49 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
                     if 'advertising' in itemClass:
                         div.decompose()
                         break
+                    if 'notification-global' in itemClass:#latvia.lv
+                        div.decompose()     
+                        break
+                    if 'fc-consent-root' in itemClass:#bbc
+                        div.decompose()
+                        break
+                    if 'bbc-n7zdg2' in itemClass:#bbc
+                        div.decompose()
+                        break
+                    if 'bbc-p3fogx' in itemClass:#bbc
+                        div.decompose()
+                        break
+    #Quito div por id
+    listDiv = soup.find_all("div")
+    for div in listDiv:
+        if div.attrs != None:
+            if div.attrs.get("id"):
+                idStr = div.attrs['id']
+                if 'onetrust-consent-sdk' in idStr: #cnn español
+                    div.decompose()
+                    break
+                    
+    #Quito section que no interesa
+    listDiv = soup.find_all("section")
+    for div in listDiv:
+        if div.attrs != None:
+            if div.attrs.get("class"):
+                classesStr = div.attrs['class']
 
+                for itemClass in classesStr:
+
+                    if 'bbc-p3fogx' in itemClass:#bbc
+                        div.decompose()
+                        break
+
+    #Reseteo el scroll del body
+    listDiv = soup.find_all("body")
+    for body in listDiv:
+        if body.attrs != None:
+            if body.attrs.get("style"):
+                classesStr = body.attrs['style']
+                body.attrs['style']=classesStr.replace("overflow: hidden", "overflow: auto")
+    
 
     # Special configuration for a page:
     # -------------------------------------------------
