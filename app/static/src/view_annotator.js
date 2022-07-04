@@ -379,7 +379,7 @@ if(divreply.is(":hidden")){
         //item.id = idReferencia.split("-")[1];
 
         let listSubtrings=idReferencia.split("-");
-        item.id = listSubtrings.slice(1,listSubtrings.leght);
+        item.id = listSubtrings.slice(1,listSubtrings.leght).join('-');
 
         var localInstance = this;
 
