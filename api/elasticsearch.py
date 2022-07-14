@@ -232,6 +232,28 @@ class _Model(dict):
 
         self['id'] = res['_id']
 
+    @classmethod
+    def guardar(cls,dictInput, refresh=True, index=""):
+
+        if(index ==""):
+            index=self.es.index
+
+        print(dictInput)
+
+        if 'id' not in dictInput:
+            op_type = 'create'
+        else:
+            op_type = 'index'
+
+
+        res = cls.es.conn.index(index=index, 
+                                id=dictInput['id'], 
+                                document=dictInput
+        )
+
+        print(res)
+        return res['_id']
+
         
     def updateFields(self, refresh=True, index="",body=""):
 

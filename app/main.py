@@ -78,8 +78,8 @@ def create_app():
             # document.Document.drop_all()
 
             # Creo los indices necesarios:
-            #annotation.Annotation.drop_all()
-            #annotation.Annotation.create_all()
+            annotation.Annotation.drop_all()
+            annotation.Annotation.create_all()
             
             #notification.Notification.drop_all(index="notification")
             #notification.Notification.create_all(index="notification")
@@ -87,8 +87,8 @@ def create_app():
             #survey.Survey.drop_all(index="survey")
             #survey.Survey.create_all(index="survey")
             
-            #description.Description.drop_all(index="description")
-            #description.Description.create_all(index="description")
+            description.Description.drop_all(index="description")
+            description.Description.create_all(index="description")
             
             #feedback.Feedback.drop_all(index="feedback")
             #feedback.Feedback.create_all(index="feedback")

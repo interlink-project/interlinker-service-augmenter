@@ -931,7 +931,7 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
 
     # If the page is a single page try to load code:
     # Working with React Pages.
-    if True:
+    if False:
         from selenium.webdriver.chrome.options import Options
         from selenium.webdriver.common.by import By
         from selenium import webdriver
