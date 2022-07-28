@@ -536,7 +536,7 @@ def descriptionsIndex():
         registroInicial = (int(page)-1)*10
 
         #logging.info(
-            'El registro inicial (/description post) es:'+str(registroInicial))
+        #    'El registro inicial (/description post) es:'+str(registroInicial))
 
         descriptions = Description._getDescriptionsUser_Stats_onSearch(
             textoABuscar=textoABuscar, padministration=padministration, domain=domain, registroInicial=registroInicial, user=current_user.email)
