@@ -28,6 +28,20 @@ content %}
     }
   }
 
+  function goModeratorPage(event, descriptionId){
+    if (event.type == 'click') {
+      event.preventDefault();
+
+
+      urlRef = `{{ url_for('authInterlink.editRoles',descriptionId= 'DESCRIPTIONID') }}`;
+      urlRef = urlRef.replace("DESCRIPTIONID", descriptionId);
+
+      window.location.href = urlRef;
+
+    }
+
+  }
+
   function filterState(event) {
     if (event.type == 'change') {
       aplicoFiltros(event);
@@ -481,6 +495,11 @@ content %}
 
 <hr />
 
+{% set ns = namespace(ismoderator=false) %} {% for moderator in
+  description.moderators %} {% if user.email == moderator.email %} {% set
+  ns.ismoderator = true %} {% endif %} {% endfor %}
+
+
 <div style="display: block">
   <div style="padding-bottom: 20;display: flex;">
     <div style="text-align: center;">
@@ -501,11 +520,13 @@ content %}
 
       </button>
 
+      {% if ns.ismoderator is true %}
       <button type="button" class="btn btn-secondary"
       alt="Moderators"
       title="{{ _('Moderators') }}"
-      onclick="window.location.href='{{ url_for('authInterlink.editRoles',descriptionId= description['id']) }}';"
+      onclick="goModeratorPage(event,descriptionId= '{{ description['id'] }}')"
      ><i class="fa-solid fa-user-tie"></i> {{ _('Moderators') }}</button>
+     {% endif%}
 
       <button class="btn btn-success" style='min-width: 173px; margin: 5px;'
         onclick="window.location.href='{{ url_for('views.augment',rutaPagina=urlMainPage) }}?description={{description['id']}}&integrationInterlinker=True';"><i
