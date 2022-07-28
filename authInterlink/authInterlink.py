@@ -329,13 +329,13 @@ def dashboard():
     totalRegistros = res['numRes']
     res = res['descriptions']
 
-    logging.info('El registro inicial es')
-    logging.info(registroInicial)
-    logging.info('Num of registers obtained')
-    logging.info(len(res))
+    #logging.info('El registro inicial es')
+    #logging.info(registroInicial)
+    #logging.info('Num of registers obtained')
+    #logging.info(len(res))
 
-    logging.info('El numero de registro es ')
-    logging.info(totalRegistros)
+    #logging.info('El numero de registro es ')
+    #logging.info(totalRegistros)
 
     pagesNumbers = math.ceil(totalRegistros/10)
 
@@ -795,6 +795,74 @@ def editDescription(descriptionId=None, option='Edit'):
 # Cargo las Notificaciones
     listNotifications, numRes = cargarNotifications()
     return render_template("descriptionDetail.html", user=current_user, description=description, option=option, publicsa=paList, notifications=listNotifications, notificationNum=numRes, noShowMenEmpty=True)
+
+
+
+@authInterlink.route('/description/<string:descriptionId>/roles',)
+@login_required
+def editRoles(descriptionId=None):
+
+    vectorPAs = Description._get_uniqueValues(campo="padministration")
+    paList = []
+    for pas in vectorPAs:
+        key = pas["key"]
+
+        if key == "":
+            key = 'Unassigned'
+
+        paList.append(key)
+    if not ('Global' in paList):
+        paList.insert(0, 'Global')
+    # print(paList)
+
+    description = Description._get_Descriptions_byId(id=descriptionId)[0]
+
+    for itemUrl in description['urls']:
+        if itemUrl['language'] != 'Undefined':
+            itemUrl['langText'] = getLanguagesList()[itemUrl['language']]
+        else:
+            itemUrl['langText'] = "Undefined"
+
+
+    #Obtengo el listado de moderadores:
+
+    
+
+    page = request.args.get("page", 1)
+    registroInicial = (int(page)-1)*10
+
+
+    res = description['moderators']
+    totalRegistros = len(res)
+    
+
+    pagesNumbers = math.ceil(totalRegistros/10)
+
+    textoABuscar = ""
+
+    paginacion = {'page': page, 'pagesNumbers': pagesNumbers, 'totalRegisters': totalRegistros,
+                  'searchBox': textoABuscar}
+
+    # Cargo las Notificaciones
+    listNotifications, numRes = cargarNotifications()
+
+
+    today = date.today()
+
+    from datetime import timedelta
+    endDate = date.today() + timedelta(days=30)
+    #logging.info(endDate)
+
+    #endDate = today.replace(today.year + 1)
+
+    # from datetime import timedelta
+    # initDate = datetime.datetime.now(iso8601.iso8601.UTC).isoformat()
+    # endDate = (datetime.datetime.now(iso8601.iso8601.UTC) +
+    #             timedelta(days=30)).isoformat()
+    
+
+    return render_template("roles.html", moderators=res, description = description, paginacion=paginacion, notifications=listNotifications, notificationNum=numRes, now=today.strftime("%Y-%m-%d"), endDate=endDate.strftime("%Y-%m-%d"))
+
 
 
 @authInterlink.route('/subjectPage/<string:descriptionId>/<string:annotatorId>',)

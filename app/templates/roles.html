@@ -1,0 +1,490 @@
+{% extends "templateV2.html" %} {% block title %} Servicepedia {% endblock %} {%
+    block head %} {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/accordion.css') }}" />
+    {% endblock %} {% block content %}
+    
+    <script>
+        //Falta cargar de nuevo cuando se tenga una consulta en memoria
+    
+    
+        function searchText(event) {
+            if (event.type == 'click') {
+                event.preventDefault();
+    
+                textoBox = document.getElementById("searchBox");
+                texto = textoBox.value
+    
+                padministration = document.getElementById("padministration");
+                padministrationSel = padministration.selectedOptions[0].label;
+    
+                if (padministration.selectedOptions[0].index == 0) {
+                    padministrationSel = "";
+                }
+    
+                domain = document.getElementById("domain");
+                domainSel = domain.selectedOptions[0].label;
+    
+                let page = event.target.getAttribute('page');
+                if (page == null) {
+                    page = 1;
+                }
+    
+    
+    
+                if (domain.selectedOptions[0].index == 0) {
+                    domainSel = "";
+                }
+    
+                //window.location = '/?searchText=' + texto+'&padministration=' + padministrationSel+'&domain=' + domainSel;
+                //recargarTabla();
+    
+                function addShow(data) {
+    
+                    entries = Object.entries(data)
+                    descripcionesList = entries['0'][1]
+                    numeroReg = entries[1][1]
+    
+                    $('#tablaDescriptions').empty();
+    
+                    for (let dataItem of descripcionesList) {
+                        $('#tablaDescriptions').append(' <tr> <td> ' + dataItem.padministration + ' </td> <td> ' + dataItem
+                            .title + ' </td>  <td> ' + dataItem.created +
+                            ' </td> <td> <i class="bi bi-tools " style="width:100px;"></i> </td></tr>')
+                    }
+    
+                    $('#totalRegisters').text(numeroReg);
+    
+                    $('#page').text('1');
+    
+                    numeroPaginas = Math.ceil(numeroReg / 10);
+                    $('#pagesNumbers').text(numeroPaginas);
+    
+    
+    
+    
+    
+                    textoBox = document.getElementById("searchBox");
+                    texto = textoBox.value
+    
+                    padministration = document.getElementById("padministration");
+                    padministrationSel = padministration.selectedOptions[0].label;
+    
+                    if (padministration.selectedOptions[0].index == 0) {
+                        padministrationSel = "";
+                    }
+    
+                    domain = document.getElementById("domain");
+                    domainSel = domain.selectedOptions[0].label;
+    
+    
+                    if (domain.selectedOptions[0].index == 0) {
+                        domainSel = "";
+                    }
+    
+    
+                    $('#paginador').empty();
+                    for (var j = 1; j < numeroPaginas + 1; j++) {
+                        //$('#paginador').append(" <li class='page-item'><a class='page-link' href='?page="+j+"&textoABuscar="+texto+"&padministration="+padministrationSel+"&domain="+domainSel+"'>"+j+"</a></li>");
+                        $('#paginador').append(
+                            " <li class='page-item'><a class='page-link' onclick='searchText(event);' page='" + j +
+                            "'  >" + j + "</a></li>");
+                    }
+    
+    
+    
+                }
+    
+    
+    
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ url_for("store.descriptionsIndex")|tojson }}',
+                    contentType: 'application/json;charset=UTF-8',
+                    data: JSON.stringify({
+                        "textoABuscar": texto,
+                        "padministration": padministrationSel,
+                        "domain": domainSel,
+                        "page": page
+                    })
+                }).done(addShow);
+    
+            }
+        }
+    
+    
+    
+        function createNew(event) {
+            if (event.type == 'click') {
+    
+                window.location = '/descriptionDetail';
+    
+            }
+        }
+    
+        function removerUrl(event){
+            if (event.type == 'click') {
+                event.target.parentNode.remove();
+            }
+    
+        }
+    
+        function agregarUrl(event){
+            
+            if (event.type == 'click') {
+                event.preventDefault();
+                event.stopPropagation();
+                var urltext =$('#oneUrl').val();
+                urltext=urltext.toLowerCase();
+                //Obtain the description related with this url
+    
+                
+    
+                if(urltext!=''){
+                    obtenerDescription(urltext);
+                    
+    
+                }else{
+                    $("#oneUrlVal").text("A valid url must be entered.");
+                }
+                
+            }
+    
+        }
+    
+        function obtenerDescription(urltext){
+            //No encuentra una description:
+            urlPost="{{ url_for('authInterlink.description', descriptionId= '') }}"+urltext;
+    
+            function onSucess(data) {
+    
+                //Miramos si no se asignado anteriormente esta descripcion al listado
+                listadoActualDesc=$("#urlList").find( "input.idUrl");
+                listadoIdDescriptions=[];
+                for (var i = 0; i < listadoActualDesc.length; i++){
+                    listadoIdDescriptions.push(listadoActualDesc[i].value);
+                }
+                
+    
+                if( data!=[] && data.length!=0){
+    
+                    title=data['title'];
+                    description=data['description'];
+                    urls=data['urls'];
+                    descriptionId=data['id'];
+    
+                    if( listadoIdDescriptions.includes(descriptionId)){
+                        //Ya existe en el listado
+                         $("#oneUrlVal").text("This url already exist in a description of the list.");
+                    }else{
+                        //Agrego la descripcion al listado
+    
+                         var contador=$('#urlList').children().length+1;
+                    
+                        //Agrego los datos de la moderator. 
+                        var liUrl = '<div class="input-group"> <button class="bi-x" onclick="removerUrl(event)" ></button> <input type="text" class="form-control idUrl" value='+descriptionId+' name="id_'+contador+'" id="id_'+contador+'" placeholder="Id"> <input type="text" class="form-control" value="'+title+'"" name="url_'+contador+'" id="url_'+contador+'" placeholder="Link"></div>';
+                        
+                        $('#oneUrl').val('');
+    
+                        $('#urlList').append(liUrl);
+    
+                        $("#oneUrlVal").text("");
+                        }
+    
+                   
+    
+                }else{
+                    $("#oneUrlVal").text("A description with this url does not exist.");
+                }
+                
+            }
+    
+            $.ajax({
+                    method: 'POST',
+                    url: urlPost,
+                    contentType: 'application/json;charset=UTF-8',
+                    data: JSON.stringify({
+                        "url": urltext
+                    })
+                }).done(onSucess);
+    
+    
+        }
+    
+    
+        function validarURL(event) { 
+            var code = event.keyCode || event.which;
+            if ( code == 13 || code == 9 ) {
+                event.preventDefault();
+                inputUrl= document.getElementById("oneUrl");
+    
+                listrl= document.getElementById("urlList");
+    
+                if(inputUrl.value=="" && listrl.childElementCount==0){
+                    $("#oneUrlVal").text("* At least one Url most be added.")
+                }else{
+                    $("#oneUrlVal").text("");
+                }
+    
+            }
+        }
+    
+        $(function() {
+            $(".collapse").on('show.bs.collapse', function(e) {
+                if ($(this).is(e.target)) {
+            
+                $("#expFormModeration").removeClass("bi-plus-circle");
+                $("#expFormModeration").addClass("bi-dash-circle");
+                }
+            })
+            });
+    
+            $(function() {
+            $(".collapse").on('hide.bs.collapse', function(e) {
+                if ($(this).is(e.target)) {
+            
+                $("#expFormModeration").removeClass("bi-dash-circle");
+                $("#expFormModeration").addClass("bi-plus-circle");
+                }
+            })
+            });
+    
+    
+        $(function() {
+            $('#FormModerator').validator().on('submit', function (e) {
+            if (e.isDefaultPrevented()) {
+                // handle the invalid form...
+                nroDescriptions=$("#urlList").find( "input.idUrl").length;
+                if(nroDescriptions==0){
+                    $("#oneUrlVal").text("* At least one Url most be added.");
+                }
+            } else {
+                // everything looks good!
+    
+            }
+            })
+        });
+       
+    
+    
+    </script>
+    
+    <hr />
+    <div class="shadow-none p-3 mb-5 bg-light rounded">
+        <div class="row">
+            <div class="col-2"><h6>Description:</h6></div>
+            <div class="col-10" style="text-align: center;"><h7> {{description.title}}</h7></div>
+  
+            
+        </div>
+        
+    </div>
+    <hr />
+
+
+
+    <div class="container">
+        <div class="row">
+            <div
+            class="col"
+            style="align-content: center; justify-content: center; display: flex;align-items: center;"
+          >
+            <img src="{{url_for('static', filename='moderator.png')}}" style="width:40px ;" alt="Activities">
+            <h4 style="padding-left: 25px;">{{ _('Moderators') }}</h4>
+      
+          </div>
+    
+    
+    
+        </div>
+        <hr />
+    
+        <div id="result"></div>
+    
+        <div class="row">
+            <div class="table-responsive">
+               
+                <table class="table" style="height: auto" >
+                    <thead>
+                        <tr>
+                            
+                            <th scope="col-3">{{ _('User') }}</th>
+                            <th scope="col-2" style="text-align: center;">{{ _('Period') }}</th>
+                            <th scope="col-2" style="text-align: center;">{{ _('Options') }}</th>
+                           
+                        </tr>
+                    </thead>
+                    <tbody id="tablaDescriptions">
+                        
+                        {% for moderator in moderators %}
+                        
+                        <tr>
+
+                            <td>{{ moderator.email}}</td>
+    
+                            <td   class="priority-1" style="text-align: center;">
+                                <div class="container">
+                                    <div class="col">
+                                      
+                                       
+                                        <div class="row" style="justify-content: center;">
+                                            {{ moderator.created|datetimeformat('DD-MM-YYYY') }} -> {{ moderator.expire|datetimeformat('DD-MM-YYYY')}}
+                                        </div>
+                              
+    
+    
+                                    </div>
+                                </div>
+    
+                            </td>
+                            <td  class="priority-1" style="text-align: center;">
+                                
+    
+                                <button type="button" class="btn btn-secondary"
+                                alt="Remove"
+                                title="{{ _('Remove') }}"
+                                type="submit" 
+                                onclick="window.location.href='{{ url_for('views.removeModerator',descriptionId= description.id, moderatorId= moderator.email) }}';"
+                               ><i class="fa-solid fa-trash-can"></i> {{ _('Remove') }}</button>
+                                    
+                            
+
+                            </td>
+                            
+                        </tr>
+    
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <h6 id="searchStats">{{ _('Total found') }} : <span id='totalRegisters'>{{paginacion.totalRegisters}}</span>, (<span id='page'>{{paginacion.page}}</span> {{ _('of') }} <span id='pagesNumbers'>{{paginacion.pagesNumbers}}</span> {{ _('Pages') }}).</h6>
+        
+    
+                <div
+                class="container"
+                style="align-content: center; justify-content: center; display: flex"
+              >
+                <div class="row">
+                  <div class="col">
+                    <nav aria-label="...">
+                      <ul class="pagination" id="paginador">
+          
+          
+                      {% for i in range(paginacion.pagesNumbers|int) %}
+                        <li class="page-item"><a class="page-link" href='?page={{ i+1 }}'>{{i+1}}</a></li>
+                      {% endfor %}
+          
+          
+          
+                      </ul>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+    
+           <!--  <div class="container">
+                <div class="row">
+                    <div class="col" style="align-content: center; justify-content: center; display: flex">
+                        <h4>Edit information of a registered description:</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="inputGroupSelect01">Description Url:</label>
+                    <select class="form-select" id="inputGroupSelect01">
+                        <option selected>Choose...</option>
+                        <option value="1">domain1</option>
+                        <option value="2">domain2</option>
+                        <option value="3">domain3</option>
+                    </select>
+                    <input type="text" class="form-control" placeholder="Url Page" aria-label="Url Page">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2">Edit</button>
+                </div>
+            </div>
+    
+            <hr /> -->
+        </div>
+    </div>
+    
+    
+    
+    
+    <div class="container">
+        <div class="row">
+            <div class="col" style="align-content: left; justify-content: left; display: flex">
+                <h5>{{ _('Add moderator') }}:</h5>
+                <button
+                    class="btn bi-plus-circle"
+                    type="button"
+                    id="expFormModeration"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#advanseSearchTools"
+                    aria-expanded="false"
+                    aria-controls="collapseExample"
+                >
+            
+          </button>
+            </div>
+        </div>
+    
+        <div class="collapse" id="advanseSearchTools">
+        <div class="row">
+    
+    
+            <form class="form-inline my-2 my-lg-0" id="FormModerator" action="{{ url_for('views.addModerator')}}"  enctype="multipart/form-data" method="POST">
+    
+    
+                <div class="grid-container">
+    
+                    
+                    <div class="row">
+                        <div class="form-floating">
+                            <input class="form-control" type="email" id="email" name="email" placeholder="name@example.com" required>
+                            <label for="floatingInput">{{ _('Email') }}</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label>{{ _('Initial Date') }}</label>
+                        <div class="form-floating">
+                            
+                        
+                            <input type="date" name="ini_date" id="ini_date"
+                        placeholder="select initial date" value="{{ now }}" min="{{ now }}" max="{{ now }}" >
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label >{{ _('End Date') }}</label>
+                        <div class="form-floating">
+                            
+                        
+                            <input type="date" name="end_date" id="end_date}"
+                        placeholder="select expiration date" value="{{ endDate }}" min="{{ now }}" >
+                        </div>
+                    </div>
+
+                    <input id="descriptionId" name="descriptionId" type="hidden" value='{{ description.id}}'>
+
+    
+                    <hr />
+                    <div class="row" style="align-content: center; justify-content: center;">
+                        <div class="col" style="align-content: center; justify-content: center;text-align: center;">
+                            <button type="submit" class="btn btn-secondary">{{ _('Add') }}</button>
+    
+                        </div>
+                    </div>
+    
+            </form>
+    
+            <hr />
+    
+    
+        </div>
+        </div>
+    
+    </div>
+    </div>
+    
+    
+    {% endblock %}

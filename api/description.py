@@ -3,6 +3,7 @@ from api import es, authz
 import datetime
 
 from api.annotation import Annotation
+import logging
 
 TYPE = 'description'
 MAPPING = {
@@ -30,7 +31,7 @@ MAPPING = {
     "moderators": {
         "type": "nested",
         "properties": {
-            "email": {"type": "text"},
+            "email": {"type": "keyword"},
             "createdat": {
                 "type": "date"
             },
@@ -72,7 +73,7 @@ MAPPING = {
                 "type": "text",
                 "index": "false"
             },
-            "email": {"type": "text"},
+            "email": {"type": "keywords"},
         }
     },
 
@@ -607,6 +608,8 @@ class Description(es.Model):
         # Parametros de busqueda:
 
         # print(q)
+        #print(q)
+        #logging.info(q)
 
         res = cls.es.conn.search(index="description",
                                  #doc_type=cls.__type__,

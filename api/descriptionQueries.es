@@ -1,6 +1,6 @@
 # Para correr estas queries es necesario habilitar ElasticSearch entorno.
 
-POST description/description/_search
+POST description/_search
 
 DELETE description
 
@@ -110,7 +110,7 @@ POST description
 
 
 
-POST description/description/_search
+POST description/_search
 {
 "query": {
         "prefix": {
@@ -120,9 +120,9 @@ POST description/description/_search
     }
 }
 
-DELETE description/description/AXzB72JcW2WuxQVN8aJF
+DELETE description/AXzB72JcW2WuxQVN8aJF
 
-POST description/description/9
+POST description/9
 {
     "id":"9",
     "title":"la descripcion titulada9",
@@ -147,7 +147,7 @@ POST description/description/9
 }
 
 
-POST description/description/
+POST description/
 {
     "title":"la demanda12 mucho demas gusto",
     "description":"es el texto de la 12",
@@ -171,7 +171,7 @@ POST description/description/
     "updated":1635334650
 }
 
-PUT description/description/
+PUT description/
 {
     "title":"la demanda12 mucho demas gusto",
     "description":"es el texto de la 12",
@@ -195,20 +195,20 @@ PUT description/description/
     "updated":1635334650
 }
 
-PUT description/description/AX0ljS0D8dyVuOp-TDl4
+PUT description/AX0ljS0D8dyVuOp-TDl4
 {
   "url" : "la demanda12 mucho demas gusto1"
 }
 
 
-POST description/description/AX0ljS0D8dyVuOp-TDl4/_update
+POST description/AX0ljS0D8dyVuOp-TDl4/_update
 {
  "doc" : {
  "url" : "http://www.riga.lv/en/services/burial-riga-municipal-cemeteries"
  }
 }
 
-POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
+POST description/AXzvKf1iW2WuxQVN8aKY/_update
 {
     "doc": {
         "moderators": [
@@ -228,7 +228,7 @@ POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
 }
 
 
-POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
+POST description/AXzvKf1iW2WuxQVN8aKY/_update
 {
   "script": {
     "source": "ctx._source.moderators.add(params.moderator)",
@@ -243,18 +243,18 @@ POST description/description/AXzvKf1iW2WuxQVN8aKY/_update
 }
 
 
-DELETE description/description/AX0Kg2vFCEacbMWTC_E2
+DELETE description/AX0Kg2vFCEacbMWTC_E2
 
-GET description/description/AXzvKf1iW2WuxQVN8aKY
-
-
-GET description/description/_search
+GET description/AXzvKf1iW2WuxQVN8aKY
 
 
-POST description/description/_search
+GET description/_search
 
 
-POST description/description/_search
+POST description/_search
+
+
+POST description/_search
 {
  
     "query": {
@@ -265,7 +265,7 @@ POST description/description/_search
                     "must": [
                         {
                             "match": {
-                                "moderators.email": "d.silvad@hotmasil.com"
+                                "moderators.email": "d.silvad@deusto.es"
                             }
                         }
                     ]
@@ -276,7 +276,7 @@ POST description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
  
     "query": {
@@ -298,7 +298,7 @@ POST description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
 
     "query": {
@@ -320,7 +320,7 @@ POST description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "bool": {
@@ -335,7 +335,7 @@ POST description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "bool": {
@@ -367,7 +367,7 @@ POST description/description/_search
 }
 
 
-POST description/description/_search?search_type=count
+POST description/_search?search_type=count
 ,
                 "inner_hits": {
                     "_source": {
@@ -383,13 +383,13 @@ POST description/description/_search?search_type=count
                     }
                 }
 
-POST description/description/_search?search_type=count
+POST description/_search?search_type=count
 
-GET description/description/AXzB72JcW2WuxQVN8aJF
+GET description/AXzB72JcW2WuxQVN8aJF
 
-DELETE description/description/AXzB72JcW2WuxQVN8aJF
+DELETE description/AXzB72JcW2WuxQVN8aJF
 
-POST description/description/_search?search_type=count
+POST description/_search?search_type=count
 {
     "query": {
         "bool": {
@@ -407,7 +407,7 @@ POST description/description/_search?search_type=count
 
 
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "prefix":{
@@ -418,9 +418,9 @@ POST description/description/_search
     }
 }
 
-POST description/description/_search
+POST description/_search
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "match":{
@@ -431,7 +431,7 @@ POST description/description/_search
     }
 }
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "match": {
@@ -443,7 +443,7 @@ POST description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "prefix":{
@@ -457,7 +457,7 @@ POST description/description/_search
 
 
 
-GET description/description/_search
+GET description/_search
 {
     "query": {
         "filtered":{
@@ -471,7 +471,7 @@ GET description/description/_search
 }
 
 
-GET description/description/_search
+GET description/_search
 {
     "query": {
         "bool": {
@@ -488,7 +488,7 @@ GET description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
     "sort": [
             {
@@ -517,7 +517,7 @@ POST description/description/_search
 
 
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "bool": {
@@ -539,10 +539,10 @@ POST description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "bool": {
@@ -568,7 +568,7 @@ POST description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "bool": {
@@ -584,7 +584,7 @@ POST description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "bool": {
@@ -625,13 +625,13 @@ POST description/description/_search
 }
 
 
-GET description/description/_search
+GET description/_search
 {
     "from":1,"size":1
 }
 
 #Agregacion de documentos
-POST description/description/_search
+POST description/_search
 {
     "aggs": {
         "group_by_url": {
@@ -644,7 +644,7 @@ POST description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
     "aggs" : {
         "urls" : {
@@ -664,7 +664,7 @@ POST description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
     "aggs" : {
         "moderators" : {
@@ -687,7 +687,7 @@ POST description/description/_search
 
 
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "bool": {
@@ -704,7 +704,7 @@ POST description/description/_search
 
 
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "match":{
@@ -716,7 +716,7 @@ POST description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "match_all":{}
@@ -725,7 +725,7 @@ POST description/description/_search
     }
 }
 
-POST description/description/_search
+POST description/_search
 {
     
     "query": {
@@ -740,7 +740,7 @@ POST description/description/_search
 }
 
 #Busca las palabras que comiencen con la busqueda
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "query_string":{
@@ -757,18 +757,18 @@ POST description/description/_search
 
 
 
-POST description/description/_search
+POST description/_search
 
 
 
 
 #Obtengo una description usando id:
 
-POST description/description/_search
+POST description/_search
 
 
 
-GET description/description/_search
+GET description/_search
 {
 
     "query": {
@@ -783,7 +783,7 @@ GET description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
   "query": {
     "terms": {
@@ -872,7 +872,7 @@ GET annotator/annotation/_search
 /search?uri=http%3A%2F%2Fwww.interior.gob.es%2Fweb%2Fservicios-al-ciudadano%2Fextranjeria%2Fregime
 
 
-GET description/description/_search
+GET description/_search
 {
 
     "query": {
@@ -887,10 +887,10 @@ GET description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 
 
-POST description/description/_search
+POST description/_search
 {
     "query": {
         "bool": {
@@ -923,7 +923,7 @@ POST description/description/_search
 
 
 
-POST description/description/_search
+POST description/_search
 {
     "sort": [
         {
@@ -975,7 +975,7 @@ POST description/description/_search
 }
 
 
-POST description/description/_search
+POST description/_search
 {
   
     "query": {
@@ -990,3 +990,44 @@ POST description/description/_search
         }
     }
 }
+
+POST description/_search
+{
+    "from": 0,
+    "query": {
+        "nested": {
+            "path": "moderators",
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "match": {
+                                "moderators.email": "d.silva@deusto.es"
+                            }
+                        }
+                    ]
+                }
+            },
+            "score_mode": "sum"
+        }
+    }
+}
+
+PUT /description/_mapping
+{
+  "properties": {
+    "moderators": {
+        "type": "nested",
+        "properties": {
+            "email": {"type": "keyword"},
+            "createdat": {
+                "type": "date"
+            },
+            "expire": {
+                "type": "date"
+            }
+        }
+    }
+  }
+}
+

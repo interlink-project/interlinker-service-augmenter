@@ -130,7 +130,7 @@ def create_app():
 
             data=ws.receive()
 
-            logging.info('la info que llega es:'+ data )
+            #logging.info('la info que llega es:'+ data )
 
             dataListado=data.split('#')
             descriptionId=dataListado[0]
@@ -139,7 +139,7 @@ def create_app():
             res = []
             
             #descriptionId=data['descriptionId']
-            logging.info('la descriptionId es:'+ descriptionId )
+            #logging.info('la descriptionId es:'+ descriptionId )
 
 
             actualLastAnnotations=dataListado[1].split(',')
@@ -167,16 +167,16 @@ def create_app():
                     annotationG['notpublish']=True
                     
                     listAnnotationsAgregadas.append(annotationG['id']) 
-                    logging.info('la listAnnotationsAgregadas es:'+ ','.join(listAnnotationsAgregadas) )
+                    #logging.info('la listAnnotationsAgregadas es:'+ ','.join(listAnnotationsAgregadas) )
                     actualLastAnnotations.append(annotationG['id'])
 
                     
-            logging.info('El largo de las Annotations Agregadas es:'+ str(len(listAnnotationsAgregadas)) )
+            #logging.info('El largo de las Annotations Agregadas es:'+ str(len(listAnnotationsAgregadas)) )
 
             #Las anotations a incrementadas son:
             if(len(listAnnotationsAgregadas)>0):
                 #ws.send({'accion':'add','list':listAnnotationsAgregadas})
-                logging.info('la info que llega es:'+ 'add'+'#'+','.join(listAnnotationsAgregadas) )
+                #logging.info('la info que llega es:'+ 'add'+'#'+','.join(listAnnotationsAgregadas) )
                 ws.send('add'+'#'+','.join(listAnnotationsAgregadas))
                 
 
@@ -187,14 +187,14 @@ def create_app():
             for annotationA in actualLastAnnotations:
                 if(annotationA not in listIdGrabadas):
                     listAnnotationsBorradas.append(annotationA) 
-                    logging.info('El listAnnotationsBorradas es:'+ ','.join(listAnnotationsBorradas) )
+                    #logging.info('El listAnnotationsBorradas es:'+ ','.join(listAnnotationsBorradas) )
                     actualLastAnnotations.remove(annotationA)
 
-            logging.info('El largo de las listAnnotationsBorradas es:'+ str(len(listAnnotationsBorradas)) )
+            #logging.info('El largo de las listAnnotationsBorradas es:'+ str(len(listAnnotationsBorradas)) )
 
             #Las anotations a borradas son:
             if(len(listAnnotationsBorradas)>0):
-                logging.info('la info que llega es:'+ 'remove'+'#'+','.join(listAnnotationsBorradas) )
+                #logging.info('la info que llega es:'+ 'remove'+'#'+','.join(listAnnotationsBorradas) )
                 ws.send('remove'+'#'+','.join(listAnnotationsBorradas))
                 
 

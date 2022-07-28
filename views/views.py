@@ -95,8 +95,8 @@ def instantiateInterlinker():
 def assetData(id):
 
     descriptiondata = Description._get_Descriptions_byId(id=id)[0]
-    logging.info('La informacion del asset es:' + id)
-    logging.info(descriptiondata)
+    #logging.info('La informacion del asset es:' + id)
+    #logging.info(descriptiondata)
     return jsonify(
         name=descriptiondata['title'],
         created_at=descriptiondata['created'],
@@ -315,8 +315,8 @@ def buscar():
 # Formulatio de carga de Pagina
 @views.route("/registrar", methods=["POST"])
 def saveDescription():
-    logging.info('Los datos a guardar son:')
-    logging.info(request.form)
+    #logging.info('Los datos a guardar son:')
+    #logging.info(request.form)
     itemsDict = request.form.to_dict()
 
     title = itemsDict.pop("createTitle")
@@ -765,6 +765,176 @@ def aproveModerator():
 
     return render_template("approveClaim.html", email=email, argumentos=urlList, now=today.strftime("%Y-%m-%d"), endDate=endDate.strftime("%Y-%m/%d"))
 
+@views.route("/addModerator", methods=["POST"])
+def addModerator():
+
+    
+
+    argumentos = request.form.to_dict()
+    #logging.info(argumentos)
+    usuarioModerator = argumentos.pop('email')
+    initDate=argumentos.pop('ini_date')
+    endDate=argumentos.pop('end_date')
+    descriptionId = argumentos.pop('descriptionId')
+
+    descriptionAct = Description._get_Descriptions_byId(id=descriptionId)[0]
+
+
+    #Es el usuario moderador?
+    ismoderator = False
+    for moderator in descriptionAct['moderators']:
+        if(current_user.email == moderator['email']):
+            ismoderator=True
+    
+    if ismoderator == False:
+        return jsonify({'ErrorInfo':'You need to be a moderator or creator to add new a moderator.'})
+
+
+
+    #logging.info(descriptionAct)
+    #logging.info(descriptionAct['moderators'])
+
+    descModerators=descriptionAct['moderators']
+    
+
+    if(len(descModerators) == 0):
+        descModerators = []
+
+    #Compruebo que no se ya moderador:
+    yaexiste=False
+    for moderatorItem in descModerators:
+        if(moderatorItem['email']==usuarioModerator):
+            yaexiste=True
+
+    
+
+    listMsg = []
+
+    if yaexiste==False:
+
+        descriptionAct['moderators'].append({
+        "created": initDate,
+        "expire": endDate,
+        "email": usuarioModerator
+        })
+
+        descriptionAct.updateModerators(index="description")
+        listMsg.append("The moderation of " +
+                    descriptionAct['title']+" has been assigned.")
+    else:
+        listMsg.append("This user is already a moderator of : " +
+                    descriptionAct['title']+".")
+
+    for msnItem in listMsg:
+        flash(msnItem, "info")
+    descModerators=descriptionAct['moderators']
+    totalRegistros = len(descModerators)
+    
+
+    pagesNumbers = math.ceil(totalRegistros/10)
+    page = request.args.get("page", 1)
+
+    textoABuscar = ""
+
+    paginacion = {'page': page, 'pagesNumbers': pagesNumbers, 'totalRegisters': totalRegistros,
+                  'searchBox': textoABuscar}
+
+    # Cargo las Notificaciones
+    listNotifications, numRes = cargarNotifications()
+
+
+  
+    return render_template("roles.html", moderators=descModerators, description = descriptionAct, paginacion=paginacion, notifications=listNotifications, notificationNum=numRes)
+
+
+@views.route("/removeModerator", methods=["GET"])
+def removeModerator():
+
+    argumentos = request.args.to_dict()
+    #argumentos = request.form.to_dict()
+    #logging.info(argumentos)
+    usuarioModerator = argumentos.pop('moderatorId')
+    descriptionId = argumentos.pop('descriptionId')
+
+    descriptionAct = Description._get_Descriptions_byId(id=descriptionId)[0]
+
+
+    
+    #Es el usuario moderador?
+    ismoderator = False
+    for moderator in descriptionAct['moderators']:
+        if(current_user.email == moderator['email']):
+            ismoderator=True
+    
+    if ismoderator == False:
+        return jsonify({'ErrorInfo':'You need to be a moderator or creator to remove a moderator.'})
+
+
+
+
+    descModerators=descriptionAct['moderators']
+    
+    if(len(descModerators) == 0):
+        descModerators = []
+
+    listMsg = []
+
+    #Compruebo que exista el moderador:
+    yaexiste=False
+    for moderatorItem in descModerators:
+        if(moderatorItem['email']==usuarioModerator):
+            yaexiste=True
+
+            #Quito el moderador:
+            descriptionAct['moderators'].remove(moderatorItem)
+
+            if len(descriptionAct['moderators'])==0:
+                listMsg.append("There must be at least one moderator .")
+            else:
+                descriptionAct.updateModerators(index="description")
+                listMsg.append("A moderation of " +
+                        descriptionAct['title']+", has been removed.")
+            break
+
+    
+
+   
+
+    if yaexiste==False:
+        listMsg.append("This user is not a moderator of : " +
+                    descriptionAct['title']+".")
+
+    for msnItem in listMsg:
+        flash(msnItem, "info")
+    descModerators=descriptionAct['moderators']
+    totalRegistros = len(descModerators)
+    
+
+    pagesNumbers = math.ceil(totalRegistros/10)
+    page = request.args.get("page", 1)
+
+    textoABuscar = ""
+
+    paginacion = {'page': page, 'pagesNumbers': pagesNumbers, 'totalRegisters': totalRegistros,
+                  'searchBox': textoABuscar}
+
+    # Cargo las Notificaciones
+    listNotifications, numRes = cargarNotifications()
+
+
+  
+    return render_template("roles.html", moderators=descModerators, description = descriptionAct, paginacion=paginacion, notifications=listNotifications, notificationNum=numRes)
+
+
+def cargarNotifications():
+    # Cargo las Notificaciones
+    listNotifications = Notification._get_Notification_byModerCategory(
+        category="survey", user=current_user.email)
+
+    numRes = listNotifications['numRes']
+    listNotifications = listNotifications['notifications']
+    return listNotifications, numRes
+
 
 @views.route("/aprovarClaimsList", methods=["POST"])
 def aprovarClaimsList():
@@ -1018,26 +1188,26 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
 
     listScript = soup.find_all('script')
     listScriptRelatedEstilos = []
-    logging.info('Los script son:')
+    #logging.info('Los script son:')
 
     for itemScript in listScript:
         if itemScript.attrs.get("src"):
             if 'bootstrap' in itemScript.attrs.get("src"):
                 completeSrc = urljoin(rutaPagina, itemScript.attrs.get("src"))
                 listScriptRelatedEstilos.append(completeSrc)
-                logging.info(completeSrc)
+                #logging.info(completeSrc)
             if 'moment' in itemScript.attrs.get("src"):
                 completeSrc = urljoin(rutaPagina, itemScript.attrs.get("src"))
                 listScriptRelatedEstilos.append(completeSrc)
-                logging.info(completeSrc)
+                #logging.info(completeSrc)
             if 'jquery' in itemScript.attrs.get("src"):
                 completeSrc = urljoin(rutaPagina, itemScript.attrs.get("src"))
                 listScriptRelatedEstilos.append(completeSrc)
-                logging.info(completeSrc)
+                #logging.info(completeSrc)
 
-    logging.info('Los script Seleccionados:')
-    logging.info(listScriptRelatedEstilos)
-    logging.info('')
+    #logging.info('Los script Seleccionados:')
+    #logging.info(listScriptRelatedEstilos)
+    #logging.info('')
 
     # Quitamos los scripts:
     for data in soup(['script', 'pre', 'noscript']):
@@ -1452,8 +1622,8 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
 
     # Agrego librerias de estilos para funcionalidad (bootstrap)
     for itemScript in listScriptRelatedEstilos:
-        logging.info('El estilo que trato de cargar es:')
-        logging.info(itemScript)
+        #logging.info('El estilo que trato de cargar es:')
+        #logging.info(itemScript)
         jsEstilosPage = soup.new_tag('script', src=itemScript)
         bodyTag.append(jsEstilosPage)
 

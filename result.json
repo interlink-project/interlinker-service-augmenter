@@ -1,18 +1,13 @@
 {
-    "took": 3,
-    "timed_out": false,
-    "_shards": {
-        "total": 1,
-        "successful": 1,
-        "skipped": 0,
-        "failed": 0
+    "error": {
+        "root_cause": [
+            {
+                "type": "illegal_argument_exception",
+                "reason": "mapper [moderators.email] cannot be changed from type [text] to [keyword]"
+            }
+        ],
+        "type": "illegal_argument_exception",
+        "reason": "mapper [moderators.email] cannot be changed from type [text] to [keyword]"
     },
-    "hits": {
-        "total": {
-            "value": 0,
-            "relation": "eq"
-        },
-        "max_score": null,
-        "hits": []
-    }
+    "status": 400
 }

@@ -15,14 +15,14 @@ async def get_collection() -> AsyncIOMotorCollection:
     return db.client[settings.MONGODB_DATABASE][settings.COLLECTION_NAME]
 
 async def connect_to_mongo():
-    logging.info("Connecting to database...")
+    #logging.info("Connecting to database...")
     db.client = AsyncIOMotorClient(settings.MONGODB_URL,
                                    maxPoolSize=MAX_CONNECTIONS_COUNT,
                                    minPoolSize=MIN_CONNECTIONS_COUNT)
-    logging.info("Database connected！")
+    #logging.info("Database connected！")
 
 
 async def close_mongo_connection():
-    logging.info("Closing database connection...")
+    #logging.info("Closing database connection...")
     db.client.close()
-    logging.info("Database closed！")
+    #logging.info("Database closed！")

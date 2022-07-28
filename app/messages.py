@@ -66,7 +66,7 @@ def logapi(data: dict):
     url = 'http://logging/api/v1/log'
 
     print(url)
-    logging.info('La url es: '+url)
+    #logging.info('La url es: '+url)
 
     requestdata = b64encode(json.dumps(data, cls=UUIDEncoder).encode())
 

@@ -624,20 +624,24 @@
               <td class="priority-1" style="text-align: center;" >  
                 
                 <button type="button" class="btn btn-secondary"
-                alt="All"
+                alt="Edit"
     
-                title="{{ _('Access') }}"
+                title="{{ _('Edit') }}"
                 onclick="window.location.href='{{ url_for('authInterlink.editDescription',descriptionId= description.id , option= 'edit') }}';"
               
               ><i class="fa-solid fa-screwdriver-wrench"></i> {{ _('Edit') }}</button>
 
 
-             
+              <button type="button" class="btn btn-secondary"
+              alt="Roles"
+              title="{{ _('Roles') }}"
+              onclick="window.location.href='{{ url_for('authInterlink.editRoles',descriptionId= description.id) }}';"
+             ><i class="fa-solid fa-user-tie"></i> {{ _('Roles') }}</button>
                 
   
               
                 <button type="button" class="btn btn-primary"
-                  alt="All"
+                  alt="Access"
       
                   title="{{ _('Access') }}"
                   onclick="window.location.href='{{ url_for('authInterlink.description',descriptionId= description.id ) }}';"
