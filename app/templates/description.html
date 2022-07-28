@@ -492,7 +492,7 @@ block content %}
     <div style="flex: auto;text-align: right;flex-direction: row;">
 
       <button type="button" title="{{ _('Report') }}" class="btn btn-secondary"
-        style='min-width: 120px; margin-left: 5px;'
+        style='min-width: 120px; margin: 5px;'
         onclick="window.location.href='{{ url_for('authInterlink.genReport',descriptionId= description['id'] ) }}';"
         style="padding: -2px;margin:0px;margin-left=5px;border: 0px;margin-right: 5px;">
 
@@ -501,7 +501,13 @@ block content %}
 
       </button>
 
-      <button class="btn btn-success" style='min-width: 173px; margin-left: 5px;'
+      <button type="button" class="btn btn-secondary"
+      alt="Roles"
+      title="{{ _('Roles') }}"
+      onclick="window.location.href='{{ url_for('authInterlink.editRoles',descriptionId= description['id']) }}';"
+     ><i class="fa-solid fa-user-tie"></i> {{ _('Moderators') }}</button>
+
+      <button class="btn btn-success" style='min-width: 173px; margin: 5px;'
         onclick="window.location.href='{{ url_for('views.augment',rutaPagina=urlMainPage) }}?description={{description['id']}}';"><i
           class="fa-solid fa-play"></i> | {{_('Annotate')}}</button>
 
