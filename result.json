@@ -1,13 +1,54 @@
 {
-    "error": {
-        "root_cause": [
-            {
-                "type": "illegal_argument_exception",
-                "reason": "mapper [moderators.email] cannot be changed from type [text] to [keyword]"
-            }
-        ],
-        "type": "illegal_argument_exception",
-        "reason": "mapper [moderators.email] cannot be changed from type [text] to [keyword]"
+    "took": 4,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
     },
-    "status": 400
+    "hits": {
+        "total": {
+            "value": 1,
+            "relation": "eq"
+        },
+        "max_score": 2.3671236,
+        "hits": [
+            {
+                "_index": "description",
+                "_id": "jJW2PoIBjZQiHzLa-Hpt",
+                "_score": 2.3671236,
+                "_source": {
+                    "title": "Test Daniel prueba",
+                    "description": "description de la prueba",
+                    "keywords": "key1 key2",
+                    "moderators": [
+                        {
+                            "created": "2022-07-27T08:12:34.783316+00:00",
+                            "expire": "2022-08-26T08:12:34.783325+00:00",
+                            "email": "d.silva@deusto.es"
+                        }
+                    ],
+                    "padministration": "Global",
+                    "permissions": {
+                        "read": [
+                            "group:__world__"
+                        ]
+                    },
+                    "urls": [
+                        {
+                            "createdate": "2022-07-27T08:12:34",
+                            "url": "https://latvija.lv/en/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
+                            "language": "en",
+                            "ismain": true,
+                            "email": "d.silva@deusto.es"
+                        }
+                    ],
+                    "is_portal": true,
+                    "created": "2022-07-27T08:12:34.783356+00:00",
+                    "updated": "2022-07-28T12:22:40"
+                }
+            }
+        ]
+    }
 }

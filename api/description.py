@@ -73,7 +73,7 @@ MAPPING = {
                 "type": "text",
                 "index": "false"
             },
-            "email": {"type": "keywords"},
+            "email": {"type": "keyword"}
         }
     },
 
