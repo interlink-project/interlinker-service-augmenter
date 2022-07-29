@@ -1,54 +1,62 @@
-{
-    "took": 4,
-    "timed_out": false,
-    "_shards": {
-        "total": 1,
-        "successful": 1,
-        "skipped": 0,
-        "failed": 0
+[
+    {
+        "health": "yellow",
+        "status": "open",
+        "index": "description",
+        "uuid": "zXs6QBSpTE2LBv1HFkUJHg",
+        "pri": "1",
+        "rep": "1",
+        "docs.count": "49",
+        "docs.deleted": "0",
+        "store.size": "15.6kb",
+        "pri.store.size": "15.6kb"
     },
-    "hits": {
-        "total": {
-            "value": 1,
-            "relation": "eq"
-        },
-        "max_score": 2.3671236,
-        "hits": [
-            {
-                "_index": "description",
-                "_id": "jJW2PoIBjZQiHzLa-Hpt",
-                "_score": 2.3671236,
-                "_source": {
-                    "title": "Test Daniel prueba",
-                    "description": "description de la prueba",
-                    "keywords": "key1 key2",
-                    "moderators": [
-                        {
-                            "created": "2022-07-27T08:12:34.783316+00:00",
-                            "expire": "2022-08-26T08:12:34.783325+00:00",
-                            "email": "d.silva@deusto.es"
-                        }
-                    ],
-                    "padministration": "Global",
-                    "permissions": {
-                        "read": [
-                            "group:__world__"
-                        ]
-                    },
-                    "urls": [
-                        {
-                            "createdate": "2022-07-27T08:12:34",
-                            "url": "https://latvija.lv/en/ppk/dzives-situacija/apakssituacija/p5551/procesaapraksts",
-                            "language": "en",
-                            "ismain": true,
-                            "email": "d.silva@deusto.es"
-                        }
-                    ],
-                    "is_portal": true,
-                    "created": "2022-07-27T08:12:34.783356+00:00",
-                    "updated": "2022-07-28T12:22:40"
-                }
-            }
-        ]
+    {
+        "health": "yellow",
+        "status": "open",
+        "index": "survey",
+        "uuid": "vcoNJurAT_yiKovttvEitA",
+        "pri": "1",
+        "rep": "1",
+        "docs.count": "0",
+        "docs.deleted": "0",
+        "store.size": "225b",
+        "pri.store.size": "225b"
+    },
+    {
+        "health": "yellow",
+        "status": "open",
+        "index": "feedback",
+        "uuid": "WoUxTYfASOC10g9JEGgKHQ",
+        "pri": "1",
+        "rep": "1",
+        "docs.count": "0",
+        "docs.deleted": "0",
+        "store.size": "225b",
+        "pri.store.size": "225b"
+    },
+    {
+        "health": "yellow",
+        "status": "open",
+        "index": "notification",
+        "uuid": "4Yrl-xycSJamJRWdgwFTsg",
+        "pri": "1",
+        "rep": "1",
+        "docs.count": "0",
+        "docs.deleted": "0",
+        "store.size": "225b",
+        "pri.store.size": "225b"
+    },
+    {
+        "health": "yellow",
+        "status": "open",
+        "index": "annotator",
+        "uuid": "R6Q8DMMbQK-wUEVcFrZA3A",
+        "pri": "1",
+        "rep": "1",
+        "docs.count": "116",
+        "docs.deleted": "0",
+        "store.size": "56.4kb",
+        "pri.store.size": "56.4kb"
     }
-}
+]
