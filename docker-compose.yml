@@ -127,7 +127,6 @@ services:
  
     depends_on:
       - newelasticsearch
-      - survey
       - auth
 
     networks:
@@ -146,42 +145,12 @@ services:
 
 #gunicorn -k gevent -w 1 module:app
 
- # Survey Interlinker
-  survey:
-    build:
-      context: ./surveyapp
-      dockerfile: Dockerfile
-      target: dev
-    volumes:
-      - ./surveyapp/app:/app
-    container_name: ${STACK_NAME?Variable not set}-survey
-    env_file:
-      - ./.env
-    environment:
-      - MODE=integrated
-      - SERVER_NAME=${DOMAIN?Variable not set}
-      - PORT=${PORT}
-      - BASE_PATH=/surveymod
-      - PROTOCOL=http://
-      - MONGODB_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb:27017/${MONGODB_DATABASE}?retryWrites=true&w=majority
-      - COLLECTION_NAME=survey_assets
-      - BACKEND_CORS_ORIGINS=["http://localhost","http://127.0.0.1","http://augmenterservice"]
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=traefik-public
-      - traefik.http.services.${STACK_NAME?Variable not set}-surveymod.loadbalancer.server.port=${PORT}
-      - traefik.http.routers.${STACK_NAME?Variable not set}-surveymod.rule=Host(`${DOMAIN}`) && PathPrefix(`/surveymod`)
-      - traefik.http.routers.${STACK_NAME?Variable not set}-surveymod.middlewares=surveymod-stripprefix
-      - traefik.http.middlewares.surveymod-stripprefix.stripprefix.prefixes=/surveymod
-    networks:
-      - traefik-public
-      - default
 
 
   # Auth Service
   auth:
-    image: interlinkproject/backend-auth:master
-    container_name: ${STACK_NAME?Variable not set}-auth
+    image: interlinkproject/backend-auth:${AUTH_VERSION}
+    container_name: ${STACK_NAME}-auth
     environment:
       - SERVER_NAME=${DOMAIN?Variable not set}
       - PORT=${PORT}
@@ -189,10 +158,11 @@ services:
       - PROTOCOL=http://
       - MONGODB_URL=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongodb:27017/${MONGODB_DATABASE}?retryWrites=true&w=majority
       - COLLECTION_NAME=users
+      - CLIENT_SECRET=${CLIENT_SECRET}
       - SERVER_METADATA_URL=https://aac.platform.smartcommunitylab.it/.well-known/openid-configuration
-
+      - SERVER_URL=https://aac.platform.smartcommunitylab.it
     env_file:
-      - ./.env
+      - .env
     labels:
       - traefik.enable=true
       - traefik.docker.network=traefik-public
@@ -201,7 +171,7 @@ services:
     networks:
       - traefik-public
       - default
-
+   
  
   logging:
     image: interlinkproject/backend-logging:master
@@ -210,10 +180,10 @@ services:
     env_file:
       - ./.env
     environment:
-      - RABBITMQ_HOST=${RABBITMQ_HOST}
-      - RABBITMQ_USER=${RABBITMQ_USER}
-      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}
-      - EXCHANGE_NAME=${EXCHANGE_NAME}
+      - ELASTIC_HOST
+      - ELASTIC_PORT
+      - ELASTIC_USERNAME
+      - ELASTIC_PASSWORD
       - DOMAIN=${DOMAIN}
       - PORT=${PORT}
       - BASE_PATH=/logging
@@ -233,10 +203,7 @@ services:
     networks:
       - traefik-public
       - default
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-    command: ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "-c", "gunicorn_conf.py", "main:app"]
+    command: "wait-for-it --service ${ELASTIC_HOST}:${ELASTIC_PORT} -- uvicorn main:app --reload --host 0.0.0.0 --port ${PORT}"
     logging:
       driver: "json-file"
       options:

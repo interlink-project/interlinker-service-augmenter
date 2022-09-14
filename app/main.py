@@ -12,7 +12,7 @@ from flask_mail import Mail, Message
 
 import elasticsearch
 from flask import request
-from api import es, annotation, auth, authz, document, notification, store, description, survey,feedback
+from api import es, annotation, auth, authz, document, notification, store, description, survey, feedback
 from api.survey import Survey
 from api.feedback import Feedback
 from authInterlink import authInterlink
@@ -78,35 +78,36 @@ def create_app():
             # document.Document.drop_all()
 
             # Creo los indices necesarios:
-            #annotation.Annotation.drop_all()
-            #annotation.Annotation.create_all()
-            
-            #notification.Notification.drop_all(index="notification")
-            #notification.Notification.create_all(index="notification")
-            
-            #survey.Survey.drop_all(index="survey")
-            #survey.Survey.create_all(index="survey")
-            
-            #description.Description.drop_all(index="description")
-            #description.Description.create_all(index="description")
-            
-            #feedback.Feedback.drop_all(index="feedback")
-            #feedback.Feedback.create_all(index="feedback")
-            
-            #document.Document.create_all()
+            # annotation.Annotation.drop_all()
+            annotation.Annotation.create_all()
+
+            # notification.Notification.drop_all(index="notification")
+            notification.Notification.create_all(index="notification")
+
+            # survey.Survey.drop_all(index="survey")
+            survey.Survey.create_all(index="survey")
+
+            # description.Description.drop_all(index="description")
+            description.Description.create_all(index="description")
+
+            # feedback.Feedback.drop_all(index="feedback")
+            feedback.Feedback.create_all(index="feedback")
+
+            document.Document.create_all()
             pass
 
         except elasticsearch.exceptions.RequestError as e:
-            if e.error.startswith('MergeMappingException'):
-                date = time.strftime('%Y-%m-%d')
-                log.fatal("Elasticsearch index mapping is incorrect! Please "
-                          "reindex it. You can use reindex.py for this, e.g. "
-                          "python reindex.py --host %s %s %s-%s",
-                          es.host,
-                          es.index,
-                          es.index,
-                          date)
-            raise
+            # if e.error.startswith('MergeMappingException'):
+            #     date = time.strftime('%Y-%m-%d')
+            #     log.fatal("Elasticsearch index mapping is incorrect! Please "
+            #               "reindex it. You can use reindex.py for this, e.g. "
+            #               "python reindex.py --host %s %s %s-%s",
+            #               es.host,
+            #               es.index,
+            #               es.index,
+            #               date)
+            # raise
+            print(e)
 
     app.config.update({
         'SECRET_KEY': secrets.token_urlsafe(16)
@@ -118,114 +119,101 @@ def create_app():
 
     login_manager.init_app(app)
 
-
     sock = Sock(app)
 
     @sock.route('/eventsocket')
     def eventsocket(ws):
         import time
         while True:
-            #text=ws.receive()
-            #ws.send(text[::-1])
+            # text=ws.receive()
+            # ws.send(text[::-1])
 
-            data=ws.receive()
+            data = ws.receive()
 
             #logging.info('la info que llega es:'+ data )
 
-            dataListado=data.split('#')
-            descriptionId=dataListado[0]
+            dataListado = data.split('#')
+            descriptionId = dataListado[0]
 
             from api.annotation import Annotation
             res = []
-            
-            #descriptionId=data['descriptionId']
+
+            # descriptionId=data['descriptionId']
             #logging.info('la descriptionId es:'+ descriptionId )
 
-
-            actualLastAnnotations=dataListado[1].split(',')
-            #actualLastAnnotations=data['annotationsIds']
-        
+            actualLastAnnotations = dataListado[1].split(',')
+            # actualLastAnnotations=data['annotationsIds']
 
             res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
-                                      'InProgress': True, 'Archived': False, 'Approved': True}, 
-                                      descriptionId=descriptionId, category='', 
-                                      notreply=False, page='all')
-            
-            
-            
-            annotationsGrabadas=res['annotations']
-            
-            #Obtengo la lista de Identificadores
-            listIdGrabadas=[]
+                'InProgress': True, 'Archived': False, 'Approved': True},
+                descriptionId=descriptionId, category='',
+                notreply=False, page='all')
+
+            annotationsGrabadas = res['annotations']
+
+            # Obtengo la lista de Identificadores
+            listIdGrabadas = []
             for annotationG in annotationsGrabadas:
                 listIdGrabadas.append(annotationG['id'])
 
-            #Miro si hay annotaciones agregadas:
-            listAnnotationsAgregadas=[]
+            # Miro si hay annotaciones agregadas:
+            listAnnotationsAgregadas = []
             for annotationG in annotationsGrabadas:
                 if(annotationG['id'] not in actualLastAnnotations):
-                    annotationG['notpublish']=True
-                    
-                    listAnnotationsAgregadas.append(annotationG['id']) 
+                    annotationG['notpublish'] = True
+
+                    listAnnotationsAgregadas.append(annotationG['id'])
                     #logging.info('la listAnnotationsAgregadas es:'+ ','.join(listAnnotationsAgregadas) )
                     actualLastAnnotations.append(annotationG['id'])
 
-                    
             #logging.info('El largo de las Annotations Agregadas es:'+ str(len(listAnnotationsAgregadas)) )
 
-            #Las anotations a incrementadas son:
-            if(len(listAnnotationsAgregadas)>0):
-                #ws.send({'accion':'add','list':listAnnotationsAgregadas})
-                #logging.info('la info que llega es:'+ 'add'+'#'+','.join(listAnnotationsAgregadas) )
+            # Las anotations a incrementadas son:
+            if(len(listAnnotationsAgregadas) > 0):
+                # ws.send({'accion':'add','list':listAnnotationsAgregadas})
+                # logging.info('la info que llega es:'+ 'add'+'#'+','.join(listAnnotationsAgregadas) )
                 ws.send('add'+'#'+','.join(listAnnotationsAgregadas))
-                
 
-            
-               
-            #Miro si hay annotaciones borradas:
-            listAnnotationsBorradas=[]
+            # Miro si hay annotaciones borradas:
+            listAnnotationsBorradas = []
             for annotationA in actualLastAnnotations:
                 if(annotationA not in listIdGrabadas):
-                    listAnnotationsBorradas.append(annotationA) 
+                    listAnnotationsBorradas.append(annotationA)
                     #logging.info('El listAnnotationsBorradas es:'+ ','.join(listAnnotationsBorradas) )
                     actualLastAnnotations.remove(annotationA)
 
             #logging.info('El largo de las listAnnotationsBorradas es:'+ str(len(listAnnotationsBorradas)) )
 
-            #Las anotations a borradas son:
-            if(len(listAnnotationsBorradas)>0):
-                #logging.info('la info que llega es:'+ 'remove'+'#'+','.join(listAnnotationsBorradas) )
+            # Las anotations a borradas son:
+            if(len(listAnnotationsBorradas) > 0):
+                # logging.info('la info que llega es:'+ 'remove'+'#'+','.join(listAnnotationsBorradas) )
                 ws.send('remove'+'#'+','.join(listAnnotationsBorradas))
-                
-
-
 
     # Setting Socket:
-    
+
     # socketio=SocketIO(app)
 
     # @socketio.on('event')
     # def event(data):
-       
+
     #     import time
-       
+
     #     while True:
     #         time.sleep(5)
-            
+
     #         from api.annotation import Annotation
     #         res = []
-            
+
     #         descriptionId=data['descriptionId']
     #         actualLastAnnotations=data['annotationsIds']
-        
 
     #         res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
-    #                                   'InProgress': True, 'Archived': False, 'Approved': True}, 
-    #                                   descriptionId=descriptionId, category='', 
+    #                                   'InProgress': True, 'Archived': False, 'Approved': True},
+    #                                   descriptionId=descriptionId, category='',
     #                                   notreply=False, page='all')
-            
+
     #         annotationsGrabadas=res['annotations']
-            
+
     #         #Obtengo la lista de Identificadores
     #         listIdGrabadas=[]
     #         for annotationG in annotationsGrabadas:
@@ -236,28 +224,23 @@ def create_app():
     #         for annotationG in annotationsGrabadas:
     #             if(annotationG['id'] not in actualLastAnnotations):
     #                 annotationG['notpublish']=True
-    #                 listAnnotationsAgregadas.append(annotationG) 
+    #                 listAnnotationsAgregadas.append(annotationG)
     #                 actualLastAnnotations.append(annotationG['id'])
-                    
-            
+
     #         #Las anotations a incrementadas son:
     #         if(len(listAnnotationsAgregadas)>0):
     #             emit('event',{'accion':'add','list':listAnnotationsAgregadas})
-               
+
     #         #Miro si hay annotaciones borradas:
     #         listAnnotationsBorradas=[]
     #         for annotationA in actualLastAnnotations:
     #             if(annotationA not in listIdGrabadas):
-    #                 listAnnotationsBorradas.append(annotationA) 
+    #                 listAnnotationsBorradas.append(annotationA)
     #                 actualLastAnnotations.remove(annotationA)
-            
+
     #         #Las anotations a borradas son:
     #         if(len(listAnnotationsBorradas)>0):
     #             emit('event',{'accion':'remove','list':listAnnotationsBorradas})
-            
-             
-
-        
 
     # Babel Settings
 
