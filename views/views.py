@@ -1084,8 +1084,14 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
         ssl._create_default_https_context = _create_unverified_https_context
 
     # Obtengo el codigo:
-    response = requests.get(rutaPagina, headers=headersUserAgent, verify=False)
-    resp_Contenido = response.content
+    resp_Contenido=''
+    try:
+        response = requests.get(rutaPagina, headers=headersUserAgent, verify=False)
+        resp_Contenido = response.content
+    except requests.exceptions.RequestException as err:
+        return 'TimeoutError'
+       
+
 
     # Valido si el sitio es sensible al Mayusculas y Minusculas.
     isCaseSensitive = False
@@ -1748,6 +1754,9 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
 def augment(rutaPagina, integrationInterlinker='False'):
 
     soup = mostrarPagina(rutaPagina, integrationInterlinker)
+
+    if soup == 'TimeoutError':
+        return make_response("<h1 style='font-size:3vw;'><b>The resquested page is not online!</b></h1>  <br> Please, verify: <b>"+rutaPagina+"</b> is online. <br><br> <a href="+rutaPagina+">"+rutaPagina+"</a>")
 
     headers = {'Content-Type': 'text/html',
                'x-annotator-auth-token': generate_token()}
