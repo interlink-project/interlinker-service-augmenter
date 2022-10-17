@@ -1,1 +1,0 @@
-Json forms app and nextjs apps are not used

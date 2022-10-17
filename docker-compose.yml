@@ -45,35 +45,7 @@ services:
     networks:
       - default
 
-  # Elasticsearch Docker Images: https://www.docker.elastic.co/
-  # elasticsearch:
-  #   image: elasticsearch:1.7.6-alpine
-  #   container_name: elasticsearch
-  #   environment:
-  #     - node.name=elasticsearch
-  #     - xpack.security.enabled=false
-  #     - discovery.type=single-node
-  #     - http.cors.enabled=true
-  #     - http.cors.allow-origin=*
-  #     - discovery.zen.ping.unicast.hosts=127.0.0.1
 
-  #   ulimits:
-  #     memlock:
-  #       soft: -1
-  #       hard: -1
-  #     nofile:
-  #       soft: 65536
-  #       hard: 65536
-  #   cap_add:
-  #     - IPC_LOCK
-  #   volumes:
-  #     - elasticsearch-data:/usr/share/elasticsearch/data
-  #     - elasticsearch-config:/usr/share/elasticsearch/config
-  #   networks:
-  #     - default
-  #   ports:
-  #     - "9200:9200"
-  #     - "9300:9300"
 
   newelasticsearch:
     image: elasticsearch:8.2.2
@@ -138,12 +110,8 @@ services:
       - traefik.http.services.${STACK_NAME?Variable not set}-augmenterservice.loadbalancer.server.port=${PORT_SERVICEPEDIA}
       - traefik.http.routers.${STACK_NAME?Variable not set}-augmenterservice.rule=Host(`${DOMAIN}`) 
     command: gunicorn --reload --log-level debug  --bind 0.0.0.0:${PORT_SERVICEPEDIA} --workers 1 --threads 100  "app.main:create_app()" --preload
-    #command: gunicorn --worker-class eventlet -w 1 "app.main:create_app()" --preload
 
 
-# command: gunicorn --reload --log-level info  --bind 0.0.0.0:${PORT_SERVICEPEDIA} --workers 1 "app.main:create_app()" --preload
-
-#gunicorn -k gevent -w 1 module:app
 
 
 
@@ -176,7 +144,6 @@ services:
   logging:
     image: interlinkproject/backend-logging:master
     container_name: ${STACK_NAME}-logging
-    profiles: ["all", "logging", "loggingworker"]
     env_file:
       - ./.env
     environment:
