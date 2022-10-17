@@ -38,18 +38,7 @@ jobs:
             interlinkproject/publicservice-servicepedia:augmenterservice.${{ github.ref_name }}.${{ steps.date.outputs.date }}
           cache-from: type=registry,ref=interlinkproject/publicservice-servicepedia:augmenterservice-buildcache
           cache-to: type=registry,ref=interlinkproject/publicservice-servicepedia:augmenterservice-buildcache,mode=max
-      - name: Build and push Docker Image Survey modified
-        id: docker_build_surveymod
-        uses: docker/build-push-action@v2
-        with:
-          context: ./surveyapp/.
-          file: surveyapp/Dockerfile
-          push: true
-          tags: |
-            interlinkproject/publicservice-servicepedia:surveymod.${{ github.ref_name }}
-            interlinkproject/publicservice-servicepedia:surveymod.${{ github.ref_name }}.${{ steps.date.outputs.date }}
-          cache-from: type=registry,ref=interlinkproject/publicservice-servicepedia:surveymod-buildcache
-          cache-to: type=registry,ref=interlinkproject/publicservice-servicepedia:surveymod-buildcache,mode=max
+      
       - name: Trigger Dev Deployment
         uses: octokit/request-action@v2.x
         id: trigger_dev_deployment
