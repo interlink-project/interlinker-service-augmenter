@@ -1433,7 +1433,7 @@ if(divreply.is(":hidden")){
         //}
       });
 
-      TimeMe.callAfterTimeElapsedInSeconds(4, function () {
+      /* TimeMe.callAfterTimeElapsedInSeconds(4, function () {
         console.log(
           "The user has been using the page for 4 seconds! Let's prompt them with something."
         );
@@ -1443,7 +1443,7 @@ if(divreply.is(":hidden")){
         console.log(
           "The user has been using the page for 9 seconds! Let's prompt them with something."
         );
-      });
+      }); */
 
       window.onload = function () {
         //Obtengo todas las anotaciones
@@ -1973,7 +1973,7 @@ if(divreply.is(":hidden")){
           "</div>" +
           '<div class="area-of-interest" id="timecont-' +
           annotation.id +
-          '" hidden>' +
+          '" >' +
           'Interaction: <span id="time-annotation-' +
           annotation.id +
           '"></span> seconds.' +

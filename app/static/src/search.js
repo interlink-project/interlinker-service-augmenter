@@ -140,7 +140,7 @@ Annotator.Plugin.Search = (function (_super) {
         <a id='logoViewer' href = "${urlRef}" width='500px'><input type="button"  style="background-image: url('${servicepediaPath}/static/${logoViewer}');background-size: 75%;width:90%;height:75px " class="botonIcon" /></a>
         <br/>      
         
-        <div class="time-message" hidden>
+        <div class="time-message" >
           <h4>
             <span id="timeInSeconds">0</span> <span>seconds</span>
           </h4>
