@@ -69,7 +69,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       ".annotator-viewer-reply mouseout": "onReplyMouseout",
       ".annotator-viewer-like mouseover": "onLikeMouseover",
       ".annotator-viewer-like mouseout": "onLikeMouseout",
-
     };
 
     AnnotatorViewer.prototype.field = null;
@@ -168,18 +167,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
     };
 
     AnnotatorViewer.prototype.onLikeClick = function (event) {
-
       event.stopPropagation();
       this.click;
 
-      var valorClassAttr=$(event.target).attr("class");
-      if(valorClassAttr.includes("solid")){
-        $(event.target).attr("class", 'fa-regular fa-heart annotator-viewer-like  fa-lg');
-      }else{
-        $(event.target).attr("class", 'fa-solid fa-heart annotator-viewer-like  fa-lg');
+      var valorClassAttr = $(event.target).attr("class");
+      if (valorClassAttr.includes("solid")) {
+        $(event.target).attr(
+          "class",
+          "fa-regular fa-heart annotator-viewer-like  fa-lg"
+        );
+      } else {
+        $(event.target).attr(
+          "class",
+          "fa-solid fa-heart annotator-viewer-like  fa-lg"
+        );
       }
-      
-
 
       return this.onButtonClick(event, "like");
     };
@@ -378,8 +380,8 @@ if(divreply.is(":hidden")){
         idReferencia = annotator_textArea.prevObject.prevObject[0].id;
         //item.id = idReferencia.split("-")[1];
 
-        let listSubtrings=idReferencia.split("-");
-        item.id = listSubtrings.slice(1,listSubtrings.leght).join('-');
+        let listSubtrings = idReferencia.split("-");
+        item.id = listSubtrings.slice(1, listSubtrings.leght).join("-");
 
         var localInstance = this;
 
@@ -402,7 +404,7 @@ if(divreply.is(":hidden")){
       }
 
       if (type == "like") {
-       // 
+        //
 
         //Punto de acceso:
         ///subjectPage/<string:descriptionId>/<string:annotatorId>/<string:option>
@@ -413,20 +415,19 @@ if(divreply.is(":hidden")){
           .getAttribute("servicepediapath");
 
         xmlhttp = new XMLHttpRequest();
-        
 
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const descriptionId = urlParams.get("description");
 
-  
         //annotatorId=item[0]["id"].split("-")[1];
 
-        let listSubtrings=item[0]["id"].split("-");
-        annotatorId = listSubtrings.slice(1,listSubtrings.leght).join('-');
-    
+        let listSubtrings = item[0]["id"].split("-");
+        annotatorId = listSubtrings.slice(1, listSubtrings.leght).join("-");
 
-        const urlpost = servicepediaPath + `/subjectPage/${descriptionId}/${annotatorId}/like`;
+        const urlpost =
+          servicepediaPath +
+          `/subjectPage/${descriptionId}/${annotatorId}/like`;
 
         xmlhttp.open("POST", urlpost, true);
 
@@ -435,13 +436,16 @@ if(divreply.is(":hidden")){
           "application/json;charset=UTF-8"
         );
 
-
         let timeSpentOnPage = TimeMe.getTimeOnAllPagesInSeconds();
 
-        xmlhttp.send(JSON.stringify({stateToChange: '1',
-          commentsChangeState: '',
-          objtype: 'annotation.like'}));
-          //alert('You have successfully registered a like!');
+        xmlhttp.send(
+          JSON.stringify({
+            stateToChange: "1",
+            commentsChangeState: "",
+            objtype: "annotation.like",
+          })
+        );
+        //alert('You have successfully registered a like!');
       }
 
       /*let annotator_textArea=item.find("div.anotador_text");
@@ -458,8 +462,8 @@ if(divreply.is(":hidden")){
         idReferencia = annotator_textArea.prevObject.prevObject[0].id;
         //item.id = idReferencia.split("-")[1];
 
-        let listSubtrings=idReferencia.split("-");
-        item.id =  listSubtrings.slice(1,listSubtrings.leght).join('-');
+        let listSubtrings = idReferencia.split("-");
+        item.id = listSubtrings.slice(1, listSubtrings.leght).join("-");
 
         var localInstance = this;
 
@@ -546,8 +550,8 @@ if(divreply.is(":hidden")){
     ) {
       idReferencia = annotator_textArea.prevObject.prevObject[0].id;
       //item.id = idReferencia.split("-")[1];
-      let listSubtrings=idReferencia.split("-");
-      item.id =  listSubtrings.slice(1,listSubtrings.leght).join('-');
+      let listSubtrings = idReferencia.split("-");
+      item.id = listSubtrings.slice(1, listSubtrings.leght).join("-");
 
       //Busco si ya fue cargado
 
@@ -887,31 +891,38 @@ if(divreply.is(":hidden")){
     };
 
     AnnotatorViewer.prototype.onLikeMouseover = function (event) {
-
-      var valorClassAttr=$(event.target).attr("class");
-      if(valorClassAttr.includes("solid")){
-        $(event.target).attr("class", 'fa-regular fa-heart annotator-viewer-like  fa-lg');
-      }else{
-        $(event.target).attr("class", 'fa-solid fa-heart annotator-viewer-like  fa-lg');
+      var valorClassAttr = $(event.target).attr("class");
+      if (valorClassAttr.includes("solid")) {
+        $(event.target).attr(
+          "class",
+          "fa-regular fa-heart annotator-viewer-like  fa-lg"
+        );
+      } else {
+        $(event.target).attr(
+          "class",
+          "fa-solid fa-heart annotator-viewer-like  fa-lg"
+        );
       }
-
-      
     };
 
     AnnotatorViewer.prototype.onLikeMouseout = function (event) {
-      var valorClassAttr=$(event.target).attr("class");
-      if(valorClassAttr.includes("solid")){
-        $(event.target).attr("class", 'fa-regular fa-heart annotator-viewer-like  fa-lg');
-      }else{
-        $(event.target).attr("class", 'fa-solid fa-heart annotator-viewer-like  fa-lg');
+      var valorClassAttr = $(event.target).attr("class");
+      if (valorClassAttr.includes("solid")) {
+        $(event.target).attr(
+          "class",
+          "fa-regular fa-heart annotator-viewer-like  fa-lg"
+        );
+      } else {
+        $(event.target).attr(
+          "class",
+          "fa-solid fa-heart annotator-viewer-like  fa-lg"
+        );
       }
     };
 
     AnnotatorViewer.prototype.onReplyMouseover = function (event) {
       $(event.target).attr("src", IMAGE_REPLY_OVER);
     };
-
-
 
     AnnotatorViewer.prototype.onDeleteMouseout = function (event) {
       $(event.target).attr("src", IMAGE_DELETE);
@@ -1258,8 +1269,6 @@ if(divreply.is(":hidden")){
         $("li.annotator-marginviewer-element").each(function (index) {
           const annotationId = this["id"];
 
-          
-
           //Obtengo los replies:
           let listReplies = [];
           listReplies = getReplies(idAnnotation, listReplies);
@@ -1399,28 +1408,27 @@ if(divreply.is(":hidden")){
 
         if (accion == "remove") {
           //alert('quito'+annotationId);
-          
+
           anotacion = $("#" + annotationId).data("annotation");
-          
-          if(anotacion!=null){
 
-          //Quito los highlights:
-          //Para que el metodo on delete no trate de borrarlo (solo quito highlights)
-          anotacion["notpublish"] = true;
-          Annotator.prototype.deleteAnnotation(anotacion);
+          if (anotacion != null) {
+            //Quito los highlights:
+            //Para que el metodo on delete no trate de borrarlo (solo quito highlights)
+            anotacion["notpublish"] = true;
+            Annotator.prototype.deleteAnnotation(anotacion);
 
-          //Quito del Panel:
-          AnnotatorViewer.prototype.onAnnotationDeleted(anotacion);
+            //Quito del Panel:
+            AnnotatorViewer.prototype.onAnnotationDeleted(anotacion);
 
-          //quitarHighlight(anotacion);
-          //quitarSidePanel(anotacion);
+            //quitarHighlight(anotacion);
+            //quitarSidePanel(anotacion);
 
-          //Pongo el contador con el numero correcto:
-          $("#count-anotations").text(
-            $(".container-anotacions").find(".annotator-marginviewer-element")
-              .length
-          );
-        }
+            //Pongo el contador con el numero correcto:
+            $("#count-anotations").text(
+              $(".container-anotacions").find(".annotator-marginviewer-element")
+                .length
+            );
+          }
         }
       }
 
@@ -1481,11 +1489,11 @@ if(divreply.is(":hidden")){
             annotationId = itemTag.getAttribute("id");
             let timeSpentOnElement =
               TimeMe.getTimeOnElementInSeconds(annotationId);
-            if(document.getElementById("time-" + annotationId)==null){
+            if (document.getElementById("time-" + annotationId) == null) {
               //console.log("Este id no existe:"+"time-" + annotationId);
-            }else{
+            } else {
               document.getElementById("time-" + annotationId).textContent =
-              timeSpentOnElement.toFixed(2);
+                timeSpentOnElement.toFixed(2);
             }
           }
 
@@ -1616,7 +1624,6 @@ if(divreply.is(":hidden")){
       socket.onerror = function (error) {
         alert(`[error] ${error.message}`);
       };
-
     };
 
     AnnotatorViewer.prototype.onAnnotationDeleted = function (annotation) {
@@ -1796,30 +1803,26 @@ if(divreply.is(":hidden")){
 
       //Obtengo el valor del like.
 
-      estadosAnnotation=annotation["statechanges"];
+      estadosAnnotation = annotation["statechanges"];
 
-      likethisAnnotation=false;
+      likethisAnnotation = false;
 
-      if(estadosAnnotation){
+      if (estadosAnnotation) {
         for (let i = 0; i < estadosAnnotation.length; i++) {
-          if(estadosAnnotation[i]["objtype"]=="annotation_like" && estadosAnnotation[i]["user"]==currentUser){
-            likethisAnnotation=true;
+          if (
+            estadosAnnotation[i]["objtype"] == "annotation_like" &&
+            estadosAnnotation[i]["user"] == currentUser
+          ) {
+            likethisAnnotation = true;
           }
         }
       }
 
-  
-      
-
-
       if (replyPermission) {
-        if(likethisAnnotation){
-          like_icon =
-          `<i style="float: right;margin-top:10px;margin-left:3px;" class="fa-solid fa-heart  fa-lg annotator-viewer-like"></i>`;
-        
-        }else{
-          like_icon =
-          `<i style="float: right;margin-top:10px;margin-left:3px;" class="fa-regular fa-heart  fa-lg annotator-viewer-like"></i>`;
+        if (likethisAnnotation) {
+          like_icon = `<i style="float: right;margin-top:10px;margin-left:3px;" class="fa-solid fa-heart  fa-lg annotator-viewer-like"></i>`;
+        } else {
+          like_icon = `<i style="float: right;margin-top:10px;margin-left:3px;" class="fa-regular fa-heart  fa-lg annotator-viewer-like"></i>`;
         }
       }
 
@@ -1882,8 +1885,9 @@ if(divreply.is(":hidden")){
           //'<span id="nrep-'+annotation.id+'"> </span>' +
           '<button  id="nrep-' +
           annotation.id +
-          '" type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button isexpand" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg></button> ' +
+          '" type="button" class="annotator-viewer-collapse btn  anotator_chevron_button isexpand" style="border-width: 0px; background-color: transparent;  min-height: 0px;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg></button> ' +
           "</div>" +
+          "daniel" +
           '<div class="flex-replyBox">' +
           //'<div style="border-radius: 3px;flex-basis:3px;background-color:#d4d4d4;width:3.58px;" ></div>'+
           textoLineasNiveles +
@@ -1947,7 +1951,7 @@ if(divreply.is(":hidden")){
           "</div>" +
           '<button id="nrep-' +
           annotation.id +
-          '" type="button" class="annotator-viewer-collapse btn btn-secondary anotator_chevron_button isexpand" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg></button>' +
+          '" type="button" class="annotator-viewer-collapse btn  anotator_chevron_button isexpand" style="border-width: 0px; background-color: transparent;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg></button>' +
           "</div>";
         var annotation_stateCode = annotation.state;
         var annotation_stateSpan = "";
@@ -2201,4 +2205,4 @@ if(divreply.is(":hidden")){
 
     return AnnotatorViewer;
   })(Annotator.Plugin);
-}.call(this));
+}).call(this);

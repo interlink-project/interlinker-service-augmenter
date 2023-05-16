@@ -102,7 +102,7 @@ Annotator.Plugin.Search = (function (_super) {
       adminPanelTxt = i18n_dict.admin_panel;
       logIntxt = i18n_dict.log_in;
 
-      var etiquetaBoton = `<i class='fa fa-home'></i> ${adminPanelTxt}`;
+      var etiquetaBoton = `<img src="/static/src/img/house.png" style=" float:right;margin-top:3px;;margin-left:3px">  ${adminPanelTxt}`;
 
       //En el caso que sea la llamada desde el colaborative env:
 

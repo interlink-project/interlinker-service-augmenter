@@ -33,6 +33,7 @@ from api.description import Description
 from api.notification import Notification
 from app.languages import getLanguagesList
 from authInterlink.authentication import get_current_active_user, get_current_user
+from app.messages import logapi
 
 authInterlink = Blueprint('authInterlink', __name__,
                           template_folder="./app/templates")
@@ -696,6 +697,10 @@ def genReport(descriptionId=None):
 
         os.remove(txtRaiz+root)
         return response
+    
+    # Guardo en el log la accion de generar el reporte:
+    logapi(
+        {"action": "gen_report", "object_id": descriptionId, "model": "description"})
 
     return send_file(root, name, as_attachment=True,
                      attachment_filename=os.path.basename(name))
@@ -762,6 +767,11 @@ def description(descriptionId=None):
     for moderator in description['moderators']:
         if(current_user.email == moderator['email']):
             ismoderator=True
+
+    
+    # Guardo en el log la accion open description:
+    logapi(
+        {"action": "open_description", "object_id": descriptionId, "model": "description"})
 
     return render_template("description.html", user=current_user, description=description, anotations=res, categoryLabel=categoria, paginacion=paginacion, urlMainPage=urlMainPage, notifications=listNotifications, notificationNum=numRes,ismoderator=ismoderator)
    # return 'la desc: '+category+'lauri is'+str(uri)
@@ -897,6 +907,10 @@ def subjectPage(descriptionId=None, annotatorId=None):
     # Cargo las Notificaciones
     listNotifications, numRes = cargarNotifications()
 
+    # Guardo en el log la accion open annotation details page:
+    logapi(
+        {"action": "open_annotation", "object_id": annotatorId, "model": "annotation"})
+
     return render_template("subjectPage.html", user=current_user, annotation=annotation, description=description, categoryLabel=annotation['category'], replies=replies, nroReplies=nroReplies, urlMainPage=urlMainPage, notifications=listNotifications, notificationNum=numRes)
    # return 'la desc: '+category+'lauri is'+str(uri)
 
@@ -956,6 +970,11 @@ def changeAnnotation(descriptionId=None, annotatorId=None, option=None):
         annotation['state'] = int(newstate)
         annotation.updateState()
 
+        # Guardo en el log la accion de cambiar el estado de una anotación:
+        logapi(
+            {"action": "changeAnnotationState", "object_id": annotatorId, "model": "annotation"})
+
+
         return jsonify(annotation)
 
     elif option == 'like':
@@ -1009,6 +1028,11 @@ def changeAnnotation(descriptionId=None, annotatorId=None, option=None):
 
             annotation.updateLike()
             annotation.updateState()
+
+             # Guardo en el log la accion de darle un like a una annotación:
+            logapi(
+            {"action": "likeAnnotation", "object_id": annotatorId, "model": "annotation"})
+
 
         return jsonify(annotation)
 

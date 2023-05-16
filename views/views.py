@@ -1039,6 +1039,11 @@ def survey():
 
 
 def mostrarPagina(rutaPagina, integrationInterlinker='False'):
+    print('Entra en el metodo a cargar')
+    print('la ruta es: '+rutaPagina)
+    logging.info('Entra en el metodo a cargar: '+rutaPagina)
+
+
     # En el caso que se tiene interes en una anotacion en particular
     argumentos = request.args.to_dict()
     anotationSel = ''
@@ -1086,8 +1091,23 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     # Obtengo el codigo:
     resp_Contenido=''
     try:
+        import urllib3
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         response = requests.get(rutaPagina, headers=headersUserAgent, verify=False)
         resp_Contenido = response.content
+
+        #Write the response content to the file:
+        """ if response.status_code == 200:
+            # Open a file in write mode
+            with open('output.html', 'w') as file:
+                # Write the response content to the file
+                file.write(response.text)
+                print("File saved successfully.")
+        else:
+            print("Request was not successful. Status code:", response.status_code) """
+
+
+
     except requests.exceptions.RequestException as err:
         return 'TimeoutError'
        
@@ -1100,8 +1120,9 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
 
     import codecs
 
+    resp_ContenidoTemp=''
     try:
-        resp_Contenido = codecs.decode(resp_Contenido, 'utf-8')
+        resp_ContenidoTemp = codecs.decode(resp_Contenido, 'utf-8')
     except:
         print('Trato de cargar con utf-8')
 
@@ -1237,6 +1258,9 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
                     if 'header-ad' in itemClass:
                         div.decompose()
                         break
+                    if 'cookieBackground' in itemClass:
+                        div.decompose()
+                        break
                     if 'ad-' in itemClass:
                         div.decompose()
                         break
@@ -1255,6 +1279,10 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
                     if 'bbc-p3fogx' in itemClass:#bbc
                         div.decompose()
                         break
+                    if 'access-container' in itemClass:#latvia.lv
+                        div.decompose()
+                        break
+                    
     #Quito div por id
     listDiv = soup.find_all("div")
     for div in listDiv:
@@ -1262,6 +1290,9 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
             if div.attrs.get("id"):
                 idStr = div.attrs['id']
                 if 'onetrust-consent-sdk' in idStr: #cnn español
+                    div.decompose()
+                    break
+                if 'skip' in idStr:#latvia.lv
                     div.decompose()
                     break
                     
@@ -1293,6 +1324,16 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
     # The guardian:
     listCssToAvoid.append('print.css')
     listCssToAvoid.append('.js')
+
+    # For Latvian Page:
+    # en
+    listCssToAvoid.append('zWvVeMRk.css')
+    listCssToAvoid.append('NurDQvmzTKyiYQ.css')
+    listCssToAvoid.append('Dhm5yPjD0T6GLhNxX8.css')
+    # lv
+    listCssToAvoid.append('puxJyxZHxCKFj-Nal4.css')
+    listCssToAvoid.append('qLqGQqKzQ0EXvMr-RmlOOpLs6sWr08.css')
+    
 
     # Lista de atributos que deben cambiar de nombre:
     # Reemplazo del tag video el attributo data-src por src
@@ -1761,8 +1802,11 @@ def augment(rutaPagina, integrationInterlinker='False'):
     headers = {'Content-Type': 'text/html',
                'x-annotator-auth-token': generate_token()}
 
-    return make_response(soup.prettify(), 200, headers)
+    print('El codigo final es:',soup.prettify)
+    #return make_response(soup.prettify(), 200, headers)
 
+    html_code=soup.prettify()
+    return html_code
 # Cargo la pagina desde beautifulSoup y la muestro en pantalla
 
 

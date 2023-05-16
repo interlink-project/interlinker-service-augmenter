@@ -1,62 +1,54 @@
-[
-    {
-        "health": "yellow",
-        "status": "open",
-        "index": "description",
-        "uuid": "zXs6QBSpTE2LBv1HFkUJHg",
-        "pri": "1",
-        "rep": "1",
-        "docs.count": "49",
-        "docs.deleted": "0",
-        "store.size": "15.6kb",
-        "pri.store.size": "15.6kb"
+{
+    "took": 1,
+    "timed_out": false,
+    "_shards": {
+        "total": 1,
+        "successful": 1,
+        "skipped": 0,
+        "failed": 0
     },
-    {
-        "health": "yellow",
-        "status": "open",
-        "index": "survey",
-        "uuid": "vcoNJurAT_yiKovttvEitA",
-        "pri": "1",
-        "rep": "1",
-        "docs.count": "0",
-        "docs.deleted": "0",
-        "store.size": "225b",
-        "pri.store.size": "225b"
-    },
-    {
-        "health": "yellow",
-        "status": "open",
-        "index": "feedback",
-        "uuid": "WoUxTYfASOC10g9JEGgKHQ",
-        "pri": "1",
-        "rep": "1",
-        "docs.count": "0",
-        "docs.deleted": "0",
-        "store.size": "225b",
-        "pri.store.size": "225b"
-    },
-    {
-        "health": "yellow",
-        "status": "open",
-        "index": "notification",
-        "uuid": "4Yrl-xycSJamJRWdgwFTsg",
-        "pri": "1",
-        "rep": "1",
-        "docs.count": "0",
-        "docs.deleted": "0",
-        "store.size": "225b",
-        "pri.store.size": "225b"
-    },
-    {
-        "health": "yellow",
-        "status": "open",
-        "index": "annotator",
-        "uuid": "R6Q8DMMbQK-wUEVcFrZA3A",
-        "pri": "1",
-        "rep": "1",
-        "docs.count": "116",
-        "docs.deleted": "0",
-        "store.size": "56.4kb",
-        "pri.store.size": "56.4kb"
+    "hits": {
+        "total": {
+            "value": 1,
+            "relation": "eq"
+        },
+        "max_score": 1,
+        "hits": [
+            {
+                "_index": "description",
+                "_id": "0wGE5YMBYMFOWSdq4ujQ",
+                "_score": 1,
+                "_source": {
+                    "title": "MI nuevo pais",
+                    "description": "description pais",
+                    "keywords": "defasd",
+                    "moderators": [
+                        {
+                            "created": "2022-10-17T10:37:14.812801+00:00",
+                            "expire": "2022-11-16T10:37:14.812810+00:00",
+                            "email": "d.silva@deusto.es"
+                        }
+                    ],
+                    "padministration": "Global",
+                    "permissions": {
+                        "read": [
+                            "group:__world__"
+                        ]
+                    },
+                    "urls": [
+                        {
+                            "createdate": "2022-10-17T11:37:14",
+                            "url": "https://elpais.com/",
+                            "language": "en",
+                            "ismain": true,
+                            "email": "d.silva@deusto.es"
+                        }
+                    ],
+                    "is_portal": true,
+                    "created": "2022-10-17T10:37:14.812828+00:00",
+                    "updated": "2022-10-17T10:37:14.812830+00:00"
+                }
+            }
+        ]
     }
-]
+}

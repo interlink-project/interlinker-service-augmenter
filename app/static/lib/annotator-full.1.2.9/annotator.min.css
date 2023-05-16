@@ -4,8 +4,8 @@
   font-family: "Helvetica Neue", Arial, Helvetica, sans-serif !important;
   font-weight: normal !important;
   text-align: left !important;
-  margin: 0 ;
-  padding: 0 ;
+  margin: 0;
+  padding: 0;
   background: 0 !important;
   -webkit-transition: none !important;
   -moz-transition: none !important;
@@ -288,6 +288,7 @@
   display: inline;
   margin: 0 4px 0 0;
   cursor: pointer;
+  appearance: auto !important;
 }
 .annotator-editor .annotator-checkbox {
   padding: 8px 6px;
@@ -347,7 +348,7 @@
 }
 .annotator-editor a,
 .annotator-filter .annotator-filter-property label {
-  position: relative  !important;
+  position: relative !important;
   display: inline-block !important;
   padding: 0 6px 0 22px !important;
   color: #363636 !important;

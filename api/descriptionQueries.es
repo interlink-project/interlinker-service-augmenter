@@ -1,5 +1,7 @@
 # Para correr estas queries es necesario habilitar ElasticSearch entorno.
 
+DELETE description
+
 POST description/_search
 
 DELETE description
