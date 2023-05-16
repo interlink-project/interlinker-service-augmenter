@@ -91,7 +91,7 @@ def instantiateInterlinker():
 
 
 @views.route('/assets/<id>')
-@login_required
+
 def assetData(id):
 
     descriptiondata = Description._get_Descriptions_byId(id=id)[0]
