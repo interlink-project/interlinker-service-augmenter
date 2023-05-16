@@ -1885,9 +1885,8 @@ if(divreply.is(":hidden")){
           //'<span id="nrep-'+annotation.id+'"> </span>' +
           '<button  id="nrep-' +
           annotation.id +
-          '" type="button" class="annotator-viewer-collapse btn  anotator_chevron_button isexpand" style="border-width: 0px; background-color: transparent;  min-height: 0px;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg></button> ' +
+          '" type="button" class="annotator-viewer-collapse btn  anotator_chevron_button isexpand" style="border-width: 0px; background-color: transparent;  min-height: 27px;"  ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"></path></svg></button> ' +
           "</div>" +
-          "daniel" +
           '<div class="flex-replyBox">' +
           //'<div style="border-radius: 3px;flex-basis:3px;background-color:#d4d4d4;width:3.58px;" ></div>'+
           textoLineasNiveles +
@@ -1975,13 +1974,13 @@ if(divreply.is(":hidden")){
           '<div class="annotator-marginviewer-date">' +
           $.format.date(annotation.data_creacio, "dd/MM/yyyy HH:mm:ss") +
           "</div>" +
-          '<div class="area-of-interest" id="timecont-' +
+          '<!--<div class="area-of-interest" id="timecont-' +
           annotation.id +
           '" >' +
           'Interaction: <span id="time-annotation-' +
           annotation.id +
           '"></span> seconds.' +
-          "</div>" +
+          "</div> -->" +
           '<div class="annotator-marginviewer-quote">' +
           annotation.quote +
           '</div><div class="annotator-marginviewer-footer">' +
