@@ -169,6 +169,19 @@ def index():
     annotations = g.annotation_class.search(user=user)
     return jsonify(annotations)
 
+@store.route('/<descriptionId>/annotations')
+def getAnnotationsByDescriptionId(descriptionId):
+    if current_app.config.get('AUTHZ_ON'):
+        # Pass the current user to do permission filtering on results
+        user = g.user
+    else:
+        user = None
+
+    annotations = g.annotation_class._get_anotations_by_description(descriptionId=descriptionId)
+    return jsonify(annotations)
+
+
+
 # INDEX
 
 
@@ -617,6 +630,31 @@ def read_annotation(docid):
         return failure
 
     return jsonify(annotation)
+
+
+# UPDATE
+@store.route('/annotations/updatetext/<docid>', methods=['PUT'])
+def update_annotation_text(docid):
+    annotation = g.annotation_class.fetch(docid)
+    if not annotation:
+        return jsonify('Annotation not found! No update performed.',
+                       status=404)
+    failure = _check_action(annotation, 'update')
+    if failure:
+        return failure
+    
+    if request.json is not None:
+        textoActualiza=request.json['text']
+        body={
+            "text": textoActualiza
+        }
+
+        annotation.updateField(field_name="text", field_value=textoActualiza)
+        logapi(
+                {"action": "update_annotation", "object_id": annotation['id'], "model": "annotation", 'annotation_data': annotation})
+
+    return jsonify(annotation)
+
 
 
 # UPDATE

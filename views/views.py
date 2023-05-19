@@ -550,7 +550,7 @@ def logwithapi():
 
     try:
         JSON_sent = request.get_json()
-        print(JSON_sent)
+        #print(JSON_sent)
 
         logapi(
             {"action": "time_registration", "object_id": "times123", "model": "times", 'timer-data': JSON_sent})
@@ -1039,9 +1039,9 @@ def survey():
 
 
 def mostrarPagina(rutaPagina, integrationInterlinker='False'):
-    print('Entra en el metodo a cargar')
-    print('la ruta es: '+rutaPagina)
-    logging.info('Entra en el metodo a cargar: '+rutaPagina)
+    #print('Entra en el metodo a cargar')
+    #print('la ruta es: '+rutaPagina)
+    #logging.info('Entra en el metodo a cargar: '+rutaPagina)
 
 
     # En el caso que se tiene interes en una anotacion en particular
@@ -1295,6 +1295,7 @@ def mostrarPagina(rutaPagina, integrationInterlinker='False'):
                 if 'skip' in idStr:#latvia.lv
                     div.decompose()
                     break
+
                     
     #Quito section que no interesa
     listDiv = soup.find_all("section")
@@ -1802,7 +1803,7 @@ def augment(rutaPagina, integrationInterlinker='False'):
     headers = {'Content-Type': 'text/html',
                'x-annotator-auth-token': generate_token()}
 
-    print('El codigo final es:',soup.prettify)
+    #print('El codigo final es:',soup.prettify)
     #return make_response(soup.prettify(), 200, headers)
 
     html_code=soup.prettify()

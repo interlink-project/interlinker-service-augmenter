@@ -702,7 +702,7 @@ class Annotation(es.Model):
         
         q['query']['bool']['must'].append(seccionState)
 
-        print(q)
+        #print(q)
         
         #Run the query:
 
@@ -723,6 +723,73 @@ class Annotation(es.Model):
         resultado={'annotations':annotations,'numRes':numRes}
         return resultado
 
+    @classmethod
+    def _get_anotations_by_description(cls,**kwargs):
+        descriptionId=kwargs.pop('descriptionId')
+
+        q= {
+            "sort": [
+                {
+                    "created": {
+                        "format": "strict_date_optional_time_nanos",
+                        "order": "desc"
+                    }
+                }
+            ],
+            "size": 10000,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "bool": {
+                                "should": [
+                                    {
+                                        "match": {
+                                            "state": 0
+                                        }
+                                    },
+                                    {
+                                        "match": {
+                                            "state": 2
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "match": {
+                                "descriptionId": descriptionId
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+
+     
+      
+    
+
+        #print(q)
+        
+        #Run the query:
+
+        res = cls.es.conn.search(index="annotator",
+                                 #doc_type=cls.__type__,
+                                 body=q)
+        annotations=[cls(d['_source'], id=d['_id']) for d in res._body['hits']['hits']]
+        numRes=res._body['hits']['total']['value']
+
+
+        #Re formateo los campos text por que tienen tags y deben ser solamente textos.
+
+        for annotation in annotations:
+            soup=BeautifulSoup(annotation['text'], features="html.parser")
+            annotation['text']= soup.get_text()
+
+
+        resultado={'annotations':annotations,'numRes':numRes}
+        return resultado
 
 
     def _get_by_multiple(cls,**kwargs):
@@ -873,6 +940,7 @@ class Annotation(es.Model):
                     
 
         #print('_get_by_multiple')
+        #print(q)
         #print(q)
 
         res = cls.es.conn.search(index="annotator",

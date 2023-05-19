@@ -2,23 +2,57 @@
 
 DELETE annotator
 
-POST annotator/annotation/_search
+GET annotator/_search
 
-POST annotator/annotation/_search
+POST annotator/_search
 {
+    "sort": [
+        {
+            "created": {
+                "format": "strict_date_optional_time_nanos",
+                "order": "desc"
+            }
+        }
+    ],
     "query": {
         "bool": {
             "must": [
                 {
                     "match": {
-                        "_id": "1653465716079"
+                        "descriptionId": "VcAoM4gBaQZSsIEWHVwi"
                     }
                 }
             ]
         }
     }
+}
+
+GET annotator/OcAsL4gBaQZSsIEWS1wG
+
+PUT annotator/_doc/OcAsL4gBaQZSsIEWS1wG
+{
+    "text": "<p>the last of us</p>"
+}
+
+
+POST annotator/_search
+{
+    "sort" : [
+    { "created" : {"format": "strict_date_optional_time_nanos","order" : "desc"}}
+  ],
+    "query": {
+        "range": {
+            "data_creacio":  {
+                        "gte": "1684394792800"
+                    }
+               
+        }
+    }
     
 }
+
+
+
 
 
 POST annotator/annotation/_search
@@ -34,8 +68,16 @@ POST annotator/annotation/_search
   }
 }
 
-POST annotator/annotation/_search
+POST annotator/_search
 {
+    "sort": [
+        {
+            "created": {
+                "format": "strict_date_optional_time_nanos",
+                "order": "desc"
+            }
+        }
+    ],
     "query": {
         "bool": {
             "must": [
@@ -49,11 +91,6 @@ POST annotator/annotation/_search
                             },
                             {
                                 "match": {
-                                    "state": 1
-                                }
-                            },
-                            {
-                                "match": {
                                     "state": 2
                                 }
                             }
@@ -62,12 +99,7 @@ POST annotator/annotation/_search
                 },
                 {
                     "match": {
-                        "text": "relevant"
-                    }
-                },
-                {
-                    "match": {
-                        "uri": "http://www.interior.gob.es/web/servicios-al-ciudadano/extranjeria/regimen-general/tarjeta-de-identidad-de-extranjero"
+                        "descriptionId": "VcAoM4gBaQZSsIEWHVwi"
                     }
                 }
             ]
@@ -245,7 +277,7 @@ POST annotator/annotation/_search
                                     "uri": {
                                         "createdate": "2021-12-10T10:01:06",
                                         "language": "lv",
-                                        "url": "https://latvija.lv/PPK/dzives-situacija/apakssituacija/p5551/ProcesaApraksts",
+                                        "url": "https://elpais.com/espana/2023-05-17/el-cis-da-ganador-al-psoe-con-19-puntos-de-ventaja-y-situa-a-sumar-como-tercera-fuerza-tras-adelantar-a-vox.html",
                                         "email": "d.silva@deusto.es"
                                     }
                                 }
@@ -372,7 +404,7 @@ POST annotator/annotation/_search
 POST annotator/annotation/_search
 
 
-POST annotator/annotation/_search
+POST annotator/_search
 {
     "query": {
         "bool": {

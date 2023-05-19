@@ -247,7 +247,7 @@ POST description/AXzvKf1iW2WuxQVN8aKY/_update
 
 DELETE description/AX0Kg2vFCEacbMWTC_E2
 
-GET description/AXzvKf1iW2WuxQVN8aKY
+GET description/u5gbKogBXZJ6KRd3nVxx
 
 
 GET description/_search
@@ -807,10 +807,10 @@ POST annotator/annotation/_search
 }
 
 
-POST annotator/annotation/_search
+POST annotator/_search
 
 
-POST annotator/annotation/_search
+POST annotator/_search
 {
     "sort": [
         {
@@ -834,7 +834,7 @@ POST annotator/annotation/_search
     }
 }
 
-GET annotator/annotation/_search 
+GET annotator/_search 
 {
     "query": {
         "bool": {
@@ -856,7 +856,7 @@ GET annotator/annotation/_search
 
 
 
-GET annotator/annotation/_search 
+GET annotator/_search 
 {
     "query": {
         "bool": {

@@ -37,6 +37,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
       child.__super__ = parent.prototype;
       return child;
     };
+  let socket;
 
   var pathOrigen = document
     .getElementById("databackend")
@@ -436,7 +437,7 @@ if(divreply.is(":hidden")){
           "application/json;charset=UTF-8"
         );
 
-        let timeSpentOnPage = TimeMe.getTimeOnAllPagesInSeconds();
+        //let timeSpentOnPage = TimeMe.getTimeOnAllPagesInSeconds();
 
         xmlhttp.send(
           JSON.stringify({
@@ -938,6 +939,23 @@ if(divreply.is(":hidden")){
         $(".container-anotacions").find(".annotator-marginviewer-element")
           .length
       );
+
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const descriptionId = urlParams.get("description");
+
+      //alert("create_anotation" + "#" + descriptionId);
+      socket.send(
+        "create_anotation" +
+          "#" +
+          descriptionId +
+          "#" +
+          annotation.user +
+          "#" +
+          annotation.text +
+          "#" +
+          annotation.category
+      );
     };
     function htmlEntities(str) {
       return String(str)
@@ -1038,7 +1056,7 @@ if(divreply.is(":hidden")){
       ).text(strippedHtmlText);
 
       request = $.ajax({
-        url: servicepediaPath + "/annotations/" + annotation.id,
+        url: servicepediaPath + "/annotations/updatetext/" + annotation.id,
         dataType: "json",
         type: "put",
         contentType: "application/json",
@@ -1049,6 +1067,23 @@ if(divreply.is(":hidden")){
           console.log(errorThrown);
         },
       });
+
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const descriptionId = urlParams.get("description");
+
+      alert("update_anotation" + "#" + descriptionId);
+      socket.send(
+        "update_anotation" +
+          "#" +
+          descriptionId +
+          "#" +
+          annotation.user +
+          "#" +
+          annotation.text +
+          "#" +
+          annotation.category
+      );
     };
 
     AnnotatorViewer.prototype.onAnnotationsLoaded = function (annotations) {
@@ -1339,6 +1374,19 @@ if(divreply.is(":hidden")){
       }
 
       function updateAnnotationsVisibles(accion, annotationId) {
+        if (accion == "update") {
+          const listAnnotationsTagsLast = $(".container-anotacions").find(
+            ".annotator-marginviewer-element"
+          );
+
+          var listIds = [];
+          for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
+            itemTag = listAnnotationsTagsLast[i];
+            annotationId = itemTag.getAttribute("id");
+            listIds.push(annotationId.substring(11));
+          }
+        }
+
         //Agregar una annotacion
         if (accion == "add") {
           //alert('agrego'+annotationId);
@@ -1432,14 +1480,14 @@ if(divreply.is(":hidden")){
         }
       }
 
-      TimeMe.initialize({
+      /* TimeMe.initialize({
         currentPageName: window.location.href, // current page
         idleTimeoutInSeconds: 5, // stop recording time due to inactivity
         //websocketOptions: { // optional
         //	websocketHost: "ws://your_host:your_port",
         //	appId: "insert-your-made-up-app-id"
         //}
-      });
+      }); */
 
       /* TimeMe.callAfterTimeElapsedInSeconds(4, function () {
         console.log(
@@ -1463,50 +1511,50 @@ if(divreply.is(":hidden")){
         for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
           itemTag = listAnnotationsTagsLast[i];
           annotationId = itemTag.getAttribute("id");
-          TimeMe.trackTimeOnElement(annotationId);
+          //TimeMe.trackTimeOnElement(annotationId);
         }
 
         //TimeMe.trackTimeOnElement("area-of-interest-1");
         //TimeMe.trackTimeOnElement("area-of-interest-2");
-        setInterval(function () {
-          let timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
-          document.getElementById("timeInSeconds").textContent =
-            timeSpentOnPage.toFixed(2);
+        // setInterval(function () {
+        //   let timeSpentOnPage = TimeMe.getTimeOnCurrentPageInSeconds();
+        //   document.getElementById("timeInSeconds").textContent =
+        //     timeSpentOnPage.toFixed(2);
 
-          if (
-            TimeMe.isUserCurrentlyOnPage &&
-            TimeMe.isUserCurrentlyIdle === false
-          ) {
-            document.getElementById("activityStatus").textContent =
-              "You are actively using this page.";
-          } else {
-            document.getElementById("activityStatus").textContent =
-              "You have left the page.";
-          }
+        //   if (
+        //     TimeMe.isUserCurrentlyOnPage &&
+        //     TimeMe.isUserCurrentlyIdle === false
+        //   ) {
+        //     document.getElementById("activityStatus").textContent =
+        //       "You are actively using this page.";
+        //   } else {
+        //     document.getElementById("activityStatus").textContent =
+        //       "You have left the page.";
+        //   }
 
-          for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
-            itemTag = listAnnotationsTagsLast[i];
-            annotationId = itemTag.getAttribute("id");
-            let timeSpentOnElement =
-              TimeMe.getTimeOnElementInSeconds(annotationId);
-            if (document.getElementById("time-" + annotationId) == null) {
-              //console.log("Este id no existe:"+"time-" + annotationId);
-            } else {
-              document.getElementById("time-" + annotationId).textContent =
-                timeSpentOnElement.toFixed(2);
-            }
-          }
+        //   for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
+        //     itemTag = listAnnotationsTagsLast[i];
+        //     annotationId = itemTag.getAttribute("id");
+        //     let timeSpentOnElement =
+        //       TimeMe.getTimeOnElementInSeconds(annotationId);
+        //     if (document.getElementById("time-" + annotationId) == null) {
+        //       //console.log("Este id no existe:"+"time-" + annotationId);
+        //     } else {
+        //       document.getElementById("time-" + annotationId).textContent =
+        //         timeSpentOnElement.toFixed(2);
+        //     }
+        //   }
 
-          /*let timeSpentOnElement =
-           TimeMe.getTimeOnElementInSeconds("area-of-interest-1");
-         document.getElementById("area-of-interest-time-1").textContent =
-           timeSpentOnElement.toFixed(2);
+        //   /*let timeSpentOnElement =
+        //    TimeMe.getTimeOnElementInSeconds("area-of-interest-1");
+        //  document.getElementById("area-of-interest-time-1").textContent =
+        //    timeSpentOnElement.toFixed(2);
 
-         let timeSpentOnElement2 =
-           TimeMe.getTimeOnElementInSeconds("area-of-interest-2");
-         document.getElementById("area-of-interest-time-2").textContent =
-           timeSpentOnElement2.toFixed(2);*/
-        }, 37);
+        //  let timeSpentOnElement2 =
+        //    TimeMe.getTimeOnElementInSeconds("area-of-interest-2");
+        //  document.getElementById("area-of-interest-time-2").textContent =
+        //    timeSpentOnElement2.toFixed(2);*/
+        // }, 37);
       };
 
       window.onbeforeunload = function (event) {
@@ -1525,9 +1573,9 @@ if(divreply.is(":hidden")){
           "application/json;charset=UTF-8"
         );
 
-        let timeSpentOnPage = TimeMe.getTimeOnAllPagesInSeconds();
+        // let timeSpentOnPage = TimeMe.getTimeOnAllPagesInSeconds();
 
-        xmlhttp.send(JSON.stringify(timeSpentOnPage));
+        // xmlhttp.send(JSON.stringify(timeSpentOnPage));
       };
 
       //Me conecto al socket
@@ -1544,8 +1592,13 @@ if(divreply.is(":hidden")){
       }
 
       // servicepedia.dev.interlink-project.eu
-      let socket = new WebSocket(
-        protocolSocket + "://" + hostname + ":" + puertoSocket + "/eventsocket"
+      socket = new WebSocket(
+        protocolSocket +
+          "://" +
+          hostname +
+          ":" +
+          puertoSocket +
+          "/connectsocket"
       );
 
       socket.onopen = function (e) {
@@ -1574,50 +1627,166 @@ if(divreply.is(":hidden")){
           //alert('Se envian la description '+descriptionId);
         }
 
+        buscoCambios();
+
         //Comienzo un loop que pregunte cada 3 segundos
 
-        function myLoop() {
-          //  create a loop function
-          setTimeout(function () {
-            //  call a 3s setTimeout when the loop is called
-            buscoCambios(); //  your code here
-            //  increment the counter
-            if (true) {
-              //  if the counter < 10, call the loop function
-              myLoop(); //  ..  again which will trigger another
-            } //  ..  setTimeout()
-          }, 5000);
-        }
+        // function myLoop() {
+        //   //  create a loop function
+        //   setTimeout(function () {
+        //     //  call a 3s setTimeout when the loop is called
+        //     buscoCambios(); //  your code here
+        //     //  increment the counter
+        //     if (true) {
+        //       //  if the counter < 10, call the loop function
+        //       myLoop(); //  ..  again which will trigger another
+        //     } //  ..  setTimeout()
+        //   }, 5000);
+        // }
 
-        myLoop();
+        // myLoop();
       };
 
       socket.onmessage = function (event) {
-        //alert(`[message] Data received from server: ${event.data}`);
-        stringData = event.data.split("#");
-        dataAccion = stringData[0];
-        datalst = stringData[1];
-        listIds = datalst.split(",");
+        // alert(`[message] Data received from server: ${event.data}`);
+        stringData = JSON.parse(event.data);
+        dataAccion = stringData["action"];
+        user_email = stringData["user"];
 
+        var currentUser = document
+          .getElementById("databackend")
+          .getAttribute("currentuser");
+
+        async function consultoAnnotationsbyDescrition(action) {
+          var servicepediaPath = document
+            .getElementById("databackend")
+            .getAttribute("servicepediapath");
+
+          const queryString = window.location.search;
+          const urlParams = new URLSearchParams(queryString);
+          const descriptionId = urlParams.get("description");
+          const urlpost = servicepediaPath + `/${descriptionId}/annotations`;
+
+          function sleep(ms) {
+            return new Promise((resolve) => setTimeout(resolve, ms));
+          }
+          await sleep(2000);
+
+          let response = await fetch(urlpost);
+          let data = await response.text();
+
+          listAnnotationsGuardadas = JSON.parse(data)["annotations"];
+
+          var listIdsGrabados = [];
+          for (let i = 0; i < listAnnotationsGuardadas.length; i++) {
+            listIdsGrabados.push(listAnnotationsGuardadas[i].id);
+          }
+
+          //let listIdsGrabadas = datalst.split(","); //Grabadas
+
+          //Obtengo el listado de anotaciones actuales
+
+          const listAnnotationsTagsLast = $(".container-anotacions").find(
+            ".annotator-marginviewer-element"
+          );
+
+          if (action == "remove" || action == "add") {
+            var listIds = [];
+            for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
+              itemTag = listAnnotationsTagsLast[i];
+              annotationId = itemTag.getAttribute("id");
+              listIds.push(annotationId.substring(11));
+            }
+
+            //Miro cuales deben ser eliminadas o agregadas:
+            //alert("Los que tengo:" + listIds);
+            //alert("Los que tengo grabados:" + listIdsGrabados);
+
+            listIds.forEach(function (item, index) {
+              if (listIdsGrabados.includes(item)) {
+                //No hago nada
+              } else {
+                //Quito
+                // alert("Quito la anotacion:" + item);
+                updateAnnotationsVisibles("remove", item);
+              }
+            });
+
+            listIdsGrabados.forEach(function (item, index) {
+              if (listIds.includes(item)) {
+                //No hago nada
+              } else {
+                //alert("Agrego la anotacion:" + item);
+                //Agrego
+                updateAnnotationsVisibles("add", item);
+              }
+            });
+
+            //Pongo el contador con el numero correcto:
+            $("#count-anotations").text(listIdsGrabados.length);
+          }
+          if (action == "update") {
+            //Set all new text in the annotation list:
+            var listIds = [];
+            for (let i = 0; i < listAnnotationsTagsLast.length; i++) {
+              itemTag = listAnnotationsTagsLast[i];
+              annotationId = itemTag.getAttribute("id").substring(11);
+
+              for (let i = 0; i < listAnnotationsGuardadas.length; i++) {
+                if (listAnnotationsGuardadas[i].id == annotationId) {
+                  itemTag.children[0].children[3].innerHTML =
+                    listAnnotationsGuardadas[i].text;
+
+                  break;
+                }
+              }
+
+              //Pongo el contador con el numero correcto:
+              $("#count-anotations").text(listAnnotationsGuardadas.length);
+            }
+          }
+
+          return data;
+        }
+
+        if (dataAccion == "nroUsers") {
+          //alert("With you there are " + stringData["user"] + " users.");
+        }
+
+        let isUpdate = false;
+        if (dataAccion == "add" && user_email != currentUser) {
+          //alert("An annotation has been added by user " + user_email);
+          consultoAnnotationsbyDescrition(dataAccion);
+
+          //Consulto todas las anotaciones de esta description:
+        }
+
+        if (dataAccion == "remove" && user_email != currentUser) {
+          //alert("An annotation has been removed by user " + user_email);
+          consultoAnnotationsbyDescrition(dataAccion);
+        }
+
+        if (dataAccion == "update" && user_email != currentUser) {
+          //alert("An annotation has been updated by user " + user_email);
+          consultoAnnotationsbyDescrition(dataAccion);
+        }
+
+        /* 
         for (let i = 0; i < listIds.length; i++) {
           annotationId = listIds[i];
           updateAnnotationsVisibles(dataAccion, annotationId);
-        }
-
-        //Pongo el contador con el numero correcto:
-        $("#count-anotations").text(
-          $(".container-anotacions").find(".annotator-marginviewer-element")
-            .length
-        );
+        } */
       };
 
       socket.onclose = function (event) {
         if (event.wasClean) {
-          //alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+          alert(
+            `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
+          );
         } else {
           // e.g. server process killed or network down
           // event.code is usually 1006 in this case
-          //alert('[close] Connection died');
+          alert("[close] Connection died");
         }
       };
 
@@ -1700,6 +1869,23 @@ if(divreply.is(":hidden")){
         }
 
         $("li").remove("#annotation-" + annotation.id);
+
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const descriptionId = urlParams.get("description");
+
+        //alert("create_anotation" + "#" + descriptionId);
+        socket.send(
+          "remove_anotation" +
+            "#" +
+            descriptionId +
+            "#" +
+            annotation.user +
+            "#" +
+            annotation.text +
+            "#" +
+            annotation.category
+        );
       }
       $("#count-anotations").text(
         $(".container-anotacions").find(".annotator-marginviewer-element")

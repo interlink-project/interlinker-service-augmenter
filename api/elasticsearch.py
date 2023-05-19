@@ -238,7 +238,7 @@ class _Model(dict):
         if(index ==""):
             index=self.es.index
 
-        print(dictInput)
+        #print(dictInput)
 
         if 'id' not in dictInput:
             op_type = 'create'
@@ -251,7 +251,7 @@ class _Model(dict):
                                 document=dictInput
         )
 
-        print(res)
+       # print(res)
         return res['_id']
 
         
@@ -273,6 +273,29 @@ class _Model(dict):
                                     id=self['id'],
                                     refresh=refresh)
 
+    # Just update a single field of an annotation
+    def updateField(self, refresh=True, index="", field_name="", field_value=""):
+            
+           
+        if(index ==""):
+            index=self.es.index
+
+        _add_updated(self)
+    
+        op_type = 'index'
+
+
+        update_params = {
+            'doc': {
+                field_name: field_value,
+                'updated': datetime.datetime.now(iso8601.iso8601.UTC).isoformat()
+            }
+        }
+
+        # Perform the update operation
+        res = self.es.conn.update(index=index, id=self['id'], body=update_params,refresh=refresh)
+
+           
 
 
     def delete(self, index=""):
@@ -296,7 +319,7 @@ def _build_query(query, offset, limit, sort, order):
     listqueryNotMust={}
 
     for attr, value in query.items():
-        print(attr, '=', value)
+       # print(attr, '=', value)
         if (attr.startswith('not_')):
             listqueryNotMust[attr[4:]]=value
         else:

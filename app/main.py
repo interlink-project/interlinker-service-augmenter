@@ -6,6 +6,7 @@ import os
 import logging
 import sys
 import time
+import json
 
 from flask import Flask, g, current_app, redirect, url_for, session, flash, abort
 from flask_mail import Mail, Message
@@ -43,9 +44,9 @@ from flask_sock import Sock
 logging.basicConfig(format='%(asctime)s %(process)d %(name)s [%(levelname)s] '
                            '%(message)s',
                     datefmt='%Y-%m-%d %H:%M:%S',
-                    level=logging.INFO)
-logging.getLogger('elasticsearch').setLevel(logging.WARN)
-logging.getLogger('urllib3').setLevel(logging.WARN)
+                    level=logging.ERROR)
+logging.getLogger('elasticsearch').setLevel(logging.ERROR)
+logging.getLogger('urllib3').setLevel(logging.ERROR)
 log = logging.getLogger('annotator')
 
 here = os.path.dirname(__file__)
@@ -121,127 +122,103 @@ def create_app():
 
     sock = Sock(app)
 
-    @sock.route('/eventsocket')
-    def eventsocket(ws):
-        import time
+    # Un ejemplo de conexion seria: {["socketId":"1","user":"1","room":"1"}
+    listUsersRooms = []
+    
+
+    @sock.route('/connectsocket')
+    def connectsocket(ws):
+
+        def sendToUserDescription(locationdescriptionId, message):
+            #Envio el mensaje a todos los clientes
+            
+            #logging.info("Envio el mensaje a todos los clientes"+"("+locationdescriptionId+")")
+            
+            for userRoom in listUsersRooms:
+
+                descriptionId=userRoom['room']
+
+                if(descriptionId==locationdescriptionId):
+                    
+                    clientws=userRoom['socketId']
+
+                    try:
+                        clientws.send(json.dumps(message))
+                    except:
+            
+                        #clientws.close()
+                        listUsersRooms.remove(userRoom)
+       
         while True:
-            # text=ws.receive()
-            # ws.send(text[::-1])
-
             data = ws.receive()
-
-            #logging.info('la info que llega es:'+ data )
-
             dataListado = data.split('#')
-            descriptionId = dataListado[0]
 
-            from api.annotation import Annotation
-            res = []
+            locationdescriptionId = dataListado[0]
+          
+            #Locate the description Id of the annotation created:
 
-            # descriptionId=data['descriptionId']
-            #logging.info('la descriptionId es:'+ descriptionId )
 
-            actualLastAnnotations = dataListado[1].split(',')
-            # actualLastAnnotations=data['annotationsIds']
 
-            res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
-                'InProgress': True, 'Archived': False, 'Approved': True},
-                descriptionId=descriptionId, category='',
-                notreply=False, page='all')
+            if(locationdescriptionId=='create_anotation'):
+                
+                #Obtengo los datos relevantes de la anotación.
+                userEmail=dataListado[2]
 
-            annotationsGrabadas = res['annotations']
+                #logging.info("A user created an annotation in the description: "+dataListado[1])
+                #Need to broadcast to all users connected to the same room
+               
+                sendToUserDescription(descriptionId, {'action':'add','user':userEmail})
+               
+                
 
-            # Obtengo la lista de Identificadores
-            listIdGrabadas = []
-            for annotationG in annotationsGrabadas:
-                listIdGrabadas.append(annotationG['id'])
+            elif(locationdescriptionId=='remove_anotation'):
+                  #Obtengo los datos relevantes de la anotación.
+    
+                userEmail=dataListado[2]
 
-            # Miro si hay annotaciones agregadas:
-            listAnnotationsAgregadas = []
-            for annotationG in annotationsGrabadas:
-                if(annotationG['id'] not in actualLastAnnotations):
-                    annotationG['notpublish'] = True
+                #logging.info("A user removed an annotation in the description: "+dataListado[1])
+                #Need to broadcast to all users connected to the same room
+               
+                sendToUserDescription(descriptionId, {'action':'remove','user':userEmail})
 
-                    listAnnotationsAgregadas.append(annotationG['id'])
-                    #logging.info('la listAnnotationsAgregadas es:'+ ','.join(listAnnotationsAgregadas) )
-                    actualLastAnnotations.append(annotationG['id'])
+            elif(locationdescriptionId=='update_anotation'):
 
-            #logging.info('El largo de las Annotations Agregadas es:'+ str(len(listAnnotationsAgregadas)) )
+                userEmail=dataListado[2]
 
-            # Las anotations a incrementadas son:
-            if(len(listAnnotationsAgregadas) > 0):
-                # ws.send({'accion':'add','list':listAnnotationsAgregadas})
-                # logging.info('la info que llega es:'+ 'add'+'#'+','.join(listAnnotationsAgregadas) )
-                ws.send('add'+'#'+','.join(listAnnotationsAgregadas))
+                #logging.info("A user updated an annotation in the description: "+dataListado[1])
+                
+                sendToUserDescription(descriptionId, {'action':'update','user':userEmail})
 
-            # Miro si hay annotaciones borradas:
-            listAnnotationsBorradas = []
-            for annotationA in actualLastAnnotations:
-                if(annotationA not in listIdGrabadas):
-                    listAnnotationsBorradas.append(annotationA)
-                    #logging.info('El listAnnotationsBorradas es:'+ ','.join(listAnnotationsBorradas) )
-                    actualLastAnnotations.remove(annotationA)
 
-            #logging.info('El largo de las listAnnotationsBorradas es:'+ str(len(listAnnotationsBorradas)) )
+            else:
 
-            # Las anotations a borradas son:
-            if(len(listAnnotationsBorradas) > 0):
-                # logging.info('la info que llega es:'+ 'remove'+'#'+','.join(listAnnotationsBorradas) )
-                ws.send('remove'+'#'+','.join(listAnnotationsBorradas))
+                listUsersRooms.append({'socketId': ws, 'room': locationdescriptionId})
+                #logging.info("A user got connected to the room: "+locationdescriptionId)
 
-    # Setting Socket:
+                
+                for userRoom in listUsersRooms:
 
-    # socketio=SocketIO(app)
+                    descriptionId=userRoom['room']
 
-    # @socketio.on('event')
-    # def event(data):
+                    if(descriptionId==locationdescriptionId):
+                        #Just send the number of users connected in the same room
+                        clientws=userRoom['socketId']
 
-    #     import time
+                        try:
+                            listUserInTheRoom= [d for d in listUsersRooms if d['room'] in [locationdescriptionId]]
+                            clientws.send(json.dumps({
+                                'action':'nroUsers','user': len(listUserInTheRoom)
+                            }))
+                        except:
+                            #logging.info('Quito de la lista a un cliente que se ha desconectado')
+                            #clientws.close()
+                            listUsersRooms.remove(userRoom)
 
-    #     while True:
-    #         time.sleep(5)
 
-    #         from api.annotation import Annotation
-    #         res = []
+            
+        
 
-    #         descriptionId=data['descriptionId']
-    #         actualLastAnnotations=data['annotationsIds']
-
-    #         res = Annotation._get_by_multiple(Annotation, textoABuscar='', estados={
-    #                                   'InProgress': True, 'Archived': False, 'Approved': True},
-    #                                   descriptionId=descriptionId, category='',
-    #                                   notreply=False, page='all')
-
-    #         annotationsGrabadas=res['annotations']
-
-    #         #Obtengo la lista de Identificadores
-    #         listIdGrabadas=[]
-    #         for annotationG in annotationsGrabadas:
-    #             listIdGrabadas.append(annotationG['id'])
-
-    #         #Miro si hay annotaciones agregadas:
-    #         listAnnotationsAgregadas=[]
-    #         for annotationG in annotationsGrabadas:
-    #             if(annotationG['id'] not in actualLastAnnotations):
-    #                 annotationG['notpublish']=True
-    #                 listAnnotationsAgregadas.append(annotationG)
-    #                 actualLastAnnotations.append(annotationG['id'])
-
-    #         #Las anotations a incrementadas son:
-    #         if(len(listAnnotationsAgregadas)>0):
-    #             emit('event',{'accion':'add','list':listAnnotationsAgregadas})
-
-    #         #Miro si hay annotaciones borradas:
-    #         listAnnotationsBorradas=[]
-    #         for annotationA in actualLastAnnotations:
-    #             if(annotationA not in listIdGrabadas):
-    #                 listAnnotationsBorradas.append(annotationA)
-    #                 actualLastAnnotations.remove(annotationA)
-
-    #         #Las anotations a borradas son:
-    #         if(len(listAnnotationsBorradas)>0):
-    #             emit('event',{'accion':'remove','list':listAnnotationsBorradas})
-
+   
     # Babel Settings
 
     babel = Babel(app)

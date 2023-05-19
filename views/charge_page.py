@@ -58,14 +58,14 @@ def writeToFile(content, fileName):
     with open(fileName, 'w') as file:
         # Write the response content to the file
         file.write(content)
-        print("File saved successfully.")
+        #print("File saved successfully.")
 
 # This function is used to load the page.
 
 def loadPage(rutaPagina):
     
-    print('Enter the method load page')
-    print('the path is: '+rutaPagina)
+    #print('Enter the method load page')
+    #print('the path is: '+rutaPagina)
    
 
     # In case is important one annotation:

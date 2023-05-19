@@ -65,17 +65,17 @@ def logapi(data: dict):
     # Local:
     url = 'http://logging/api/v1/log'
 
-    print(url)
+    #print(url)
     #logging.info('La url es: '+url)
 
     requestdata = b64encode(json.dumps(data, cls=UUIDEncoder).encode())
 
     try:
         responseOut = requests.post(url, json=data)
-        print(responseOut.text)
+        #print(responseOut.text)
     except:
         print('Error while saving the logging informacion.')
 
     
 
-    print("--- %s seconds ---" % (time.time() - start_time))
+    #print("--- %s seconds ---" % (time.time() - start_time))

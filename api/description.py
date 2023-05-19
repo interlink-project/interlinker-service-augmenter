@@ -166,7 +166,7 @@ class Description(es.Model):
 
         resultadosDistintos = res["aggregations"]["group_by_url"]["buckets"]
 
-        print(resultadosDistintos)
+        #print(resultadosDistintos)
 
         return resultadosDistintos
 
@@ -234,7 +234,7 @@ class Description(es.Model):
 
         resultadosDistintos = res["aggregations"]["urls"]["group_by_url"]["buckets"]
 
-        print(resultadosDistintos)
+        #print(resultadosDistintos)
 
         return resultadosDistintos
 
@@ -334,8 +334,8 @@ class Description(es.Model):
         # Guardo el numero total de descriptions found:
         numTotalOfDescFound = len(listDescription)
 
-        current_app.logger.info(
-            'Guardo el numero total de descriptions found:'+str(numTotalOfDescFound))
+        #current_app.logger.info(
+        #    'Guardo el numero total de descriptions found:'+str(numTotalOfDescFound))
 
         res = listDescription
 
@@ -441,8 +441,8 @@ class Description(es.Model):
 
             itemDesc['progressTotal'] = round(progressTotal)
 
-        current_app.logger.info(
-            'Los valores de res son :'+str(len(res)))
+        #current_app.logger.info(
+        #    'Los valores de res son :'+str(len(res)))
 
         limitefinal = registroInicial+10
         if(limitefinal > len(res)):
@@ -450,11 +450,11 @@ class Description(es.Model):
 
         res = res[registroInicial:limitefinal]
 
-        current_app.logger.info(
-            'Corto el listado en :'+str(registroInicial)+' ->'+str(limitefinal))
+        #current_app.logger.info(
+        #    'Corto el listado en :'+str(registroInicial)+' ->'+str(limitefinal))
 
-        current_app.logger.info(
-            'Los valores de res despues filtrado :'+str(len(res)))
+        #current_app.logger.info(
+        #    'Los valores de res despues filtrado :'+str(len(res)))
 
         resultado = {'descriptions': res, 'numRes': numTotalOfDescFound}
 
@@ -1098,7 +1098,7 @@ class Description(es.Model):
         q = super(Description, cls)._build_query(
             query, offset, limit, sort, order)
 
-        print(str(q))
+        #print(str(q))
 
         # Create range query from before and/or after
         if before is not None or after is not None:
